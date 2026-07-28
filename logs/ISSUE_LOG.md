@@ -60,3 +60,50 @@ real gap and is stated rather than assumed away.
 
 **Resolution:** open — tracked, first reported when n ≥ 8 resolved.
 **Pattern tag:** `metric-undefined-at-cold-start`
+
+---
+
+## I-004 · 2026-07-28 · Forward-lag family may be inadmissible on data length · Severity: HIGH · Owner: quant-validation
+
+**Description.** Charter §4.4 requires backtest length **≥ 4 years and ≥ 1 full
+regime cycle**, with a holdout window **≥ 12 months**. The forward-lag family's
+binding leg is Polymarket, whose history the Charter itself describes as thin
+(§3.2). If usable contract history is under four years, the family **cannot pass
+Gate 1 at any Sharpe** — the failure is evidentiary length, not absence of edge.
+
+**Why this is filed at intake rather than discovered later.** §4.3 exists so that
+impossibility is found at the cheapest stage. Spending Pod B's four Sonnet units on
+a design that cannot reach a Gate would be exactly the waste the Gate 0 structure
+is built to prevent.
+
+**Interaction with P-1 (D-003):** because the holdout becomes `[C, G]` and grows
+with elapsed calendar time, a family short on holdout today can become admissible
+by waiting. That is the only legitimate use of elapsed time here — the in-sample
+set does not grow with it.
+
+**Blocking action:** Data & Infra reports **measured** usable Polymarket history as
+its first deliverable, before Pod B spends a unit. Validation then rules ADMITTED /
+ADMITTED-AS-EXPLORATORY / REJECTED at Gate 0.
+
+**Resolution:** open.
+**Pattern tag:** `evidentiary-length-ceiling`
+
+---
+
+## I-005 · 2026-07-28 · Harness holdout contract does not implement P-1 · Severity: HIGH · Owner: quant-validation → head-of-data-infra
+
+**Description.** Principal amendment P-1 (D-003) requires that holdout data never
+be fetched until Gate 1. `HoldoutVault.lock(df, passphrase)` requires the complete
+series in hand at lock time and `open_once()` decrypts an already-stored payload.
+The harness therefore **cannot express the regime the Principal just mandated**.
+
+**Consequence.** A divergence between the Charter and the harness is a defect by
+the Charter's own terms (Appendix D closing line). Until it is closed, any holdout
+locked through the current code path violates P-1.
+
+**Blocking action:** no ingest begins until Validation rules on the proposed
+specification-sealing design and on whether cutoff `C` is pinned at
+pre-registration. Data & Infra then implements to that ruling.
+
+**Resolution:** open — blocks I-001.
+**Pattern tag:** `charter-harness-divergence`
