@@ -107,3 +107,30 @@ pre-registration. Data & Infra then implements to that ruling.
 
 **Resolution:** open — blocks I-001.
 **Pattern tag:** `charter-harness-divergence`
+
+---
+
+## I-006 · 2026-07-28 · Seats not invocable in the activation session · Severity: MEDIUM · Owner: fable-5-cio
+
+**Description.** The nine seat definitions are on the discovery path and visible to
+the Principal under `/agents`, but this session's agent registry was fixed at
+startup — before `.claude/agents` existed — so `quant-validation` was not callable
+by name. Dispatch failed with "Agent type not found."
+
+**Workaround used, and its cost.** Validation Ruling 001 was dispatched through a
+generic Opus agent instructed to read `.claude/agents/quant-validation.md` in full
+and adopt it as its operating definition. This preserves the seat's instructions,
+its independence framing, and its Opus tier. It does **not** preserve the
+definition's `tools:` restriction, so the invoked agent held broader tool access
+than the seat is scoped for.
+
+**Why this is logged rather than absorbed.** Substituting a generic agent for a
+registered independent seat is a structural change, and Charter house rule 7
+forbids resolving those silently. The firm's independence guarantee rests on the
+seat's instructions and on the CIO not overruling it — neither of which the
+registry enforced anyway — so the degradation is narrower than it first appears.
+It is still a degradation and it is on the record.
+
+**Resolution:** self-clearing. A new session picks up the registered seats. Artifacts
+are written to disk, so nothing is lost by restarting at any point.
+**Pattern tag:** `session-startup-registry-lag`
