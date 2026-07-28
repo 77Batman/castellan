@@ -1,0 +1,17 @@
+[project]
+name = "castellan-harness"
+version = "0.1.0"
+description = "Castellan Capital backtest harness: registry-enforced trials, encrypted single-use holdout, shared cost library, Gate 1 validation"
+requires-python = ">=3.10"
+dependencies = ["numpy", "pandas", "scipy", "cryptography", "pyarrow"]
+
+[project.optional-dependencies]
+data = ["yfinance", "ccxt"]
+dev = ["pytest"]
+
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["castellan*"]
