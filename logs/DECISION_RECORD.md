@@ -190,4 +190,62 @@ immediately as ADMITTED-AS-EXPLORATORY with trials accruing honestly, Gate 1 cla
 when the forward window matures — gives A's schedule with B's guarantee. Its stated
 cost is the ability to say "validated" in 2026.
 
+**CLOSED by D-006, 2026-07-28.** Principal selected Option D.
+
 **Review date:** first Monthly Letter, 2026-08-01.
+
+---
+
+## D-006 · 2026-07-28 · Principal takes the `C`-placement decision — Option D
+
+**Decision (Principal):** **Option D approved.** `C` = today. Forward holdout. The
+forward-lag family enters as **ADMITTED-AS-EXPLORATORY immediately**, trials
+accruing honestly from the first run, Gate 1 claimable when the forward window
+matures.
+
+**Principal's rider — the pre-registration freeze:** the **full pre-registration is
+frozen before `C`**, so the forward window is unseeable relative to a **fixed
+hypothesis**.
+
+**Why the rider matters, stated plainly.** Option D without it is weaker than it
+looks. If the pre-registration could still be edited after `C`, a researcher could
+tune the hypothesis while the forward window accrued — and the window would be
+out-of-sample against a *moving* claim, which is not out-of-sample at all. The rider
+converts "unseen data" into "unseen data tested against a fixed prediction," which
+is the property that makes a forward holdout worth waiting for.
+
+**CIO finding on implementability** [measured]: `TrialRegistry.open_hypothesis`
+documents itself as idempotent on family with fields immutable after creation. **But
+nothing hashes the pre-registration.** There is no `prereg_sha256`, no sealing
+event, and no field binding a Validation Report to the exact pre-registration text
+it was evaluated against. Immutability is *asserted by the API*, not *evidenced* — a
+direct SQLite write would go undetected.
+
+This is exactly the distinction Validation drew in Ruling 001 §2.1 between a
+tamper-evident **payload** and a tamper-evident **promise**, and the holdout spec
+already gets the stronger treatment (A1/A4/E3: sha256 sealed to the registry,
+embedded in the report). Under this rider the pre-registration becomes equally
+load-bearing and has none of it. **Routed to Validation with the acceptance review;
+not resolved by the CIO.**
+
+**Interaction with I-011, which the freeze does not fix.** Freezing binds the
+hypothesis from `C` onward. It does nothing about the search embedded in the
+researcher *before* the freeze — model priors contaminate hypothesis *formation*,
+upstream of any freeze. Option D plus the rider closes the forward channel; I-011
+remains open and untouched by it.
+
+**Further Principal decisions, same instruction:**
+- Ruling 002's four replacements **R1–R4 accepted as binding.**
+- **I-011 goes in the first Monthly Letter (2026-08-01) as the sprint's most
+  important finding.**
+- **Fourth Validation Opus unit approved**, funded by the pre-committed cut: the
+  **second Monday Risk meeting is dropped**. Opus stays exactly at the 10-unit
+  ceiling — Validation 4, Director of Research 3, Devil's Advocate 2, CRO 1.
+- I-013 correction **accepted as handled** — append, never rewrite. Explicit-path
+  staging binding on the CIO.
+
+**Named dissent:** none. Validation recommended D and the Principal selected D; the
+firm's independent line and its Principal agree here, which is recorded as such
+rather than presented as vindication.
+
+**Review date:** sprint close, 2026-08-11.
