@@ -1,0 +1,1492 @@
+# PRE-REGISTRATION 002 — the funding-carry conditioning family
+
+**Seat:** Director of Research (Seat 2) · **Date:** 2026-07-28
+**To:** the Principal · cc CIO, Quant Validation, Devil's Advocate, PM Pod B, Head of Data & Infrastructure, CRO
+**Family identifier:** `funding-carry-conditioning-002`
+**Status:** **DRAFT, COMPLETE, SEALABLE.** Not sealed. Not registered. `book/registry.db` is untouched by this seat.
+
+**What this document is.** The Charter §4.3 Gate 0 pre-registration record for the funding-carry conditioning family, in §7.2 Research Memo structure adapted for a pre-registration. All seven Gate 0 items are labelled `GATE 0 (n)`. §21 is the seal block: the exact binding field set for `TrialRegistry.open_hypothesis`, ready to execute.
+
+**What this document is not.** It is not an intake verdict — that is Validation's, at Gate 0, and it is final short of the Principal. It is not a seal. **Sealing fixes `C` (D-007) and is Pod B's act after Validation's intake.** Nothing may be added after sealing: acceptance item **P7** fails Gate 1 if `hypothesis_sealed` postdates `C` at UTC day granularity, and every field left blank at sealing is a field a later retrieval can still move (Ruling 002 §3.5). This document is therefore written to be complete rather than skeletal.
+
+**Origin, stated because it is the point.** This is the **first Director-originated hypothesis in the firm's history.** I-025 records today's origin ratio as **4 of 4 = 100% Principal-originated** and D-009 §4 directs that the Sprint 2 agenda contain Director-originated hypotheses. This document is that directive discharged by doing the work rather than by writing a justification for not doing it. It is not thereby entitled to a lower bar, and §19 recommends against it in one specific respect.
+
+House rule 6 applies throughout: **[measured]** = read or executed in this repository this session · **[cited]** = external or internal named source · **[inferred]** = reasoned from measured/cited facts · **[assumed]** = unverified premise, flagged.
+
+---
+
+## 0. Provenance — what was read, what was run, and what this seat did not do
+
+**Read this session** [measured]: `FUND_CHARTER.md` Parts II (Seats 2, 7, 9, 10), III (§3.1–3.5), IV (§4.1–4.6), V (§5.1–5.4), VI (§6.6), VII (§7.2–7.8), Appendices C and D · `CLAUDE.md` · `.claude/agents/director-of-research.md` · `research/PREREG-001-forward-lag.md` **in full** · `research/DATA-INGEST-001-crypto-etf.md` **in full** · `VALIDATION-RULING-002` §3.4 (R1–R4) in full · `VALIDATION-ACCEPTANCE-001` §5 (P1–P8) and §6 (G1–G5) in full · `VALIDATION-RULING-001` §3–4 headings · **`VALIDATION-GATE0-001-forward-lag.md` §1.2–1.6 (C-001 and the E1–E5 conditions), §2 (C-002 capacity), §4.1.1 (the four F-001 defects), §4.3** · `logs/DECISION_RECORD.md` D-006, D-007, D-008, D-009 in full · `logs/ISSUE_LOG.md` I-011, I-019, I-023, I-024, I-025, I-026, I-027, I-028, **I-029, I-030, I-031, I-032, I-033** in full · `harness/castellan/{costs,engine,grid,gates,registry,loaders,data,holdout}.py`.
+
+**Validation's Gate 0 ruling on PREREG-001 landed while this document was being drafted, and it changed it.** **I-029 — *"Falsifier F-001 passes pure noise ~31% of the time"* — is filed against this seat**, and the standard it sets is the standard F-002 must meet. **§5.5 is the audit of F-002 against all four of the F-001 defects, and two of them were live in this document's first draft and are repaired here rather than argued around.** I-030's ruling that *delay is strictly cheaper than sealing defective* likewise overturns the sequencing rationale this document originally carried; **§20 now adopts Validation's position against this seat's earlier one.**
+
+**Ran** [measured]:
+
+| What | Why it is not a trial |
+|---|---|
+| `castellan.stats.expected_max_sharpe` and `min_backtest_length_years` at candidate `N` | Closed-form functions of `N` and `SR`. They touch no market data and produce no backtest number. |
+| `castellan.costs.CRYPTO_PERP_TAKER.per_side_cost` / `.carry_per_bar` / `.scaled` on scalar unit notionals | Arithmetic on the preset's own constants. No price series is involved. §12 is the result. |
+| `SELECT source, symbol, field, COUNT(*), MIN(event_time), MAX(event_time)` on `book/pit.db` | **Row counts and calendar spans only.** No price was read into memory, no return computed, no correlation, no signal. Per instruction, and because computing one here would be an unlogged trial — the I-011 failure exactly. |
+
+**Did not do:** no data fetched, no backtest run, no signal or return statistic computed on `pit.db`, no registry write, no vault seal, no git commit. Per instruction and per seat boundary.
+
+**State of the world at the time of writing** [measured]:
+
+| Fact | Value |
+|---|---|
+| Families in `book/registry.db` | **0** — `hypotheses` table empty |
+| Trials logged | **0** |
+| Sealed holdout vaults | **0** — `book/vaults/` contains only `.gitkeep` |
+| `book/pit.db :: ingest_ceiling` | **0 rows** — no ceiling on any of the fourteen datasets |
+| BTC/USDT, ETH/USDT spot daily close | **2,401 rows each**, `2020-01-01` → `2026-07-28`, **0 gaps** |
+| SOL/USDT spot daily close | **2,178 rows**, `2020-08-11` → `2026-07-28`, **0 gaps** |
+| BTC/USDT:USDT, ETH/USDT:USDT funding | **7,203 prints each**, `2020-01-01` → `2026-07-28T16:00Z`, 8h cadence, **0 gaps** |
+| SOL/USDT:USDT funding | **6,508 prints**, `2020-09-13T16:00:00.004Z` → `2026-07-28T16:00Z`, **0 gaps** |
+| **Perpetual *price* series (`binanceusdm` OHLCV)** | **ZERO ROWS. Not ingested.** See §8 — this is the family's one open data dependency. |
+| ccxt OHLCV loader (`fetch_ccxt_ohlcv`) | **exists and is exercised** — the same function that produced the spot panel |
+
+**The honest starting position, in one line:** this family has clean, gap-free, 6.57-year funding and spot history already on disk, no prior search to charge itself for, and exactly one missing series that an existing loader retrieves in a single session.
+
+---
+
+## 1. Recommendation box
+
+| Field | Value |
+|---|---|
+| **Hypothesis** | The *unconditioned* delta-neutral long-spot / short-perp position is crypto **carry factor** exposure, which Charter §5.4 explicitly does not pay for. The claim under test is narrower: **de-scaling that position as the realized funding rate rises above its own trailing baseline produces positive alpha to the unconditioned position**, because the funding premium is compensation for a crowding-cascade tail that is worst precisely where funding is richest. |
+| **Verdict sought** | **Gate 0 intake.** Director of Research recommends **ADMITTED** — not ADMITTED-AS-EXPLORATORY — **conditional on C1, C3 and C11 (§20)**, and **recommends against sealing today (§20.1, adopting I-030 against this seat's own earlier position)**. This is a stronger recommendation than PREREG-001 received and §19.1 gives the arithmetic reason. |
+| **Expected Sharpe net** | **Unknown. No forecast is offered and none may be inferred from this document.** No admissible number exists: `book/registry.db` is empty and nothing has been run. |
+| **Proposed sizing** | **USD 250,000** intended initial allocation (§13). 12.5% of Pod B's $2M; **2.5% of the firm's $10M paper book.** |
+| **Horizon** | Continuous. Daily rebalance with a turnover band. No event trigger, no holding-period cap. |
+| **Conviction** | **Moderate on the mechanism; low on the conditioning claim; high on the falsifier's ability to settle it.** This seat's stated expectation (§19.3) is that the family produces a **KILL memo naming a successor**, and that the kill comes from bar granularity rather than from the market. |
+| **Trial count `N` at seal** | **`N_inherited` = 0** [measured — no prior search exists]. **`N_conditioning` = 6**, declared with menus at §7. **Declared floor `N` = 6.** |
+| **Trial budget** | **80** post-seal trials. Ceiling `N` = 86. **Absolute admissible ceiling `N` = 110** — §10.4 shows why, and it is arithmetic, not preference. |
+| **Breakeven cost** (house rule 5) | **Cannot be stated, and the reason is a defect not an omission.** `CRYPTO_PERP_TAKER` charges funding as a cost on **gross** notional, so on this family's delta-neutral pair it applies **−21.9%/yr** where the strategy **receives** +10.95%/yr [measured — §12]. The sign is inverted and the base doubled. **No net number from this family means anything until that is repaired.** |
+| **Falsifier decisiveness** (I-029) | **P(F-002 survives \| the conditioning is pure noise) ≈ 1.3 × 10⁻⁴**, against F-001's measured **31%** [cited — I-029]. **F-002 contains no `argmax` and no selection of any kind.** Nulls, α, and a minimum-sample leg are stated at §5.3; the audit against all four F-001 defects is §5.5, including **two that were live in this document's first draft and are repaired rather than argued around.** |
+
+---
+
+## 2. Thesis in three bullets
+
+- **The claim.** Perpetual funding is the rental price of leverage, not a mispricing, and 11%/yr is roughly the fair price of the tail a carry supplier bears. Harvesting it at constant size therefore earns the crypto carry factor and nothing more. **The testable claim is that the price of the tail is not linear in the observable — that the marginal funding point beyond a threshold is *over*-compensated by cascade risk, so a position that shrinks into rich funding gives up less mean than it gives up tail, and the difference is alpha to the unconditioned position.**
+- **Why it might persist.** The crowded trade is the *constant-size* carry. This family does not claim the crowd has missed the premium — it claims the crowd is wrong about how to **size** it, because the participants who supply the carry at scale are structurally the ones least able to de-scale (they are running it as a yield product against liabilities, not as a risk-managed sleeve). That is a narrower, weaker, and consequently more defensible claim than "the premium is free."
+- **Why the firm's own rules may kill it anyway.** The strategy's risk materializes intraday — liquidation cascades, basis blowouts, margin calls — and `book/pit.db` holds **daily** bars. **A daily backtest of this family will look better than the family is, by an amount the daily data cannot measure.** §5 leg (ii) exists to catch that, §16 states what remains uncatchable, and §19.3 predicts this is where the family dies.
+
+---
+
+## 3. GATE 0 (1) — MECHANISM
+
+*Charter §4.3(1): a written hypothesis stating the economic or structural mechanism — why this effect should exist, in terms of who is on the other side and why they accept the loss. "The data says so" is not a mechanism.*
+
+### 3.1 What the Charter has already established, and which this section does not re-derive
+
+Charter Seat 7 states the structural fact this family is built on [cited — `FUND_CHARTER.md` §II Seat 7]:
+
+> *perpetual funding at the 0.01%/8h baseline is roughly **11% per year** [measured: 0.01% × 3 × 365 = 10.95%] against a structurally long perp position. Any long-perp strategy must clear that before it clears anything else. Conversely, funding is a documented carry source for structurally short-perp positioning — **with a fat left tail when funding inverts**.*
+
+Appendix C sources the baseline and adds: funding positive **>92% of Q3 2025** [cited — BitMEX funding study, Q3 2025].
+
+**The Charter has therefore already granted this family its premise and already named its trap in the same sentence.** This section's job is not to re-establish that funding is positive. It is to answer the two questions the Charter leaves open: *who pays, and why do they keep paying* — and then to explain why a premium that satisfies both is nevertheless **not an edge**, which is the argument that forces the hypothesis into its actual, narrower form.
+
+### 3.2 Who is on the other side
+
+| # | Population | Why they pay |
+|---|---|---|
+| **1** | **Leveraged directional retail buying leverage as a service.** | The perpetual swap is the cheapest and most accessible leveraged long in crypto: no expiry, no roll, no dated-contract basis to manage, high leverage available, and reachable by account types and jurisdictions that cannot access CME futures or prime brokerage. **Funding is the rental price of that leverage, not an error.** They keep paying for the same reason a credit-card revolver keeps paying: the alternative on offer is not a cheaper rate, it is not having the position. |
+| **2** | **Structurally long allocators using perps as an index proxy.** | Funds, treasuries and offshore vehicles that want crypto exposure without self-custody, key management, or an audited wallet policy take it in perps. Funding is paid as a substitute for custody-and-operations cost, and it is paid knowingly. |
+| **3** | **Hedgers of illiquid crypto exposure** — miners, token treasuries, locked or vesting positions. | These are **short** perp. They are not a source of the positive premium; **they are the reason funding inverts in drawdowns**, when their hedging demand spikes at the same moment leveraged longs are being liquidated. They are named here because they are the mechanism of the left tail, not of the carry. |
+
+**This is a mechanism and not a data observation.** Populations 1 and 2 are paying a price for a service they are receiving. That is the strongest form a persistence argument can take, because it does not require anyone to be making a mistake.
+
+### 3.3 The trap: a mechanism this good is a reason *not* to expect an edge
+
+**A premium that persists because it is a fair price for a service is, by construction, not alpha.** If the answer to "why do they keep paying" is "because they are buying something," then the answer to "why has it not been arbitraged" is "it has been priced," and the supplier's expected return is the risk they bear. This seat's position, stated before any measurement:
+
+> **The ~11%/yr baseline is approximately the market-clearing price of three risks that a carry supplier genuinely bears**, and there is no prior reason to expect it to exceed them:
+>
+> 1. **Venue insolvency.** The short-perp leg and its margin sit on the same exchange whose failure is a live base rate, not a hypothetical (FTX, November 2022) [cited — general market record; **not measured in this repository**].
+> 2. **Liquidation and basis dislocation.** In a cascade the perp can trade far from spot for an extended interval. A delta-neutral pair is first-order flat to *spot*, but it is not flat to the **basis**, and the basis is where the loss arrives — while the spot collateral backing the short-perp margin is falling at the same time.
+> 3. **Funding inversion in exactly the wrong state.** Funding turns negative in drawdowns, so the carry stops paying precisely in the periods when the position is losing on the basis. The two losses are positively correlated by construction.
+
+**Therefore the unconditioned carry is not admitted as the hypothesis, and Charter §5.4 is what forces the issue.** §5.4's attribution decomposition names **carry** explicitly as a *factor*:
+
+```
+├── Factor P&L  = Σ (exposure × factor return) → momentum, value, size, sector, carry
+├── Idiosyncratic = residual                   → THE ONLY THING THE FIRM PAYS FOR
+```
+
+> **A strategy whose entire return is harvesting funding decomposes to 100% factor P&L and 0% idiosyncratic under the firm's own attribution scheme. It could pass every Gate 1 criterion and still score zero on the only line the firm pays for.** That is not a risk this family runs; it is a certainty about the unconditioned form, and it is why §5's falsifier is written against a benchmark rather than against zero.
+
+### 3.4 The mechanism of the actual claim
+
+If ~11%/yr is the fair price of the tail, the only way to earn something the market is not already paying for is to **bear less tail per unit of premium collected**. That is a claim about sizing, and it is testable.
+
+**The specific asymmetry claimed.** Funding is a direct observable of long-side positioning crowding — it is high precisely when leveraged longs are numerous and levered. Cascade severity is convex in crowding: a liquidation cascade's depth depends on the stock of positions that must be force-closed, which grows faster than the funding rate that signals it. **The claim is that the funding premium is roughly linear in crowding while the tail is convex in it**, so beyond some level of funding the marginal premium no longer pays for the marginal tail.
+
+**Who is on the other side of *this* claim, and why they accept the loss.** The marginal supplier of carry at scale is running it as a **yield product** — a structured note, a "delta-neutral yield" vault, an exchange earn programme, a treasury overlay with a stated target return. Those vehicles have three properties that make de-scaling costly or impossible for them: they advertise a yield and lose subscriptions when they stop earning it; they de-scale into a redemption cycle rather than a risk signal; and their mandate is written in terms of notional deployed rather than risk taken. **They accept the tail because their liability structure will not let them step aside for it.** That is a structural constraint, not a mistake, and constraints of that kind are the most durable source of a persistent premium the firm can hope to find.
+
+**What is explicitly not offered as mechanism.** *"Leveraged longs are impatient."* That sentence is a restatement of the observation, not an explanation, and this seat rejects it. It is named here because the dispatch asked whether the persistence question could be answered better than that; §3.2 and this section are the attempt, and §4 records what would falsify them.
+
+---
+
+## 4. Variant perception, and the persistence escape this family picks
+
+*§7.2(4): what does the market believe, what do we believe, why does the mispricing persist?*
+
+**What the market believes:** funding is a premium to be harvested, and more funding is better. **What we believe:** funding is a premium *and* a crowding gauge, and past some level the second meaning dominates the first.
+
+**Why it would persist.** Three candidate escapes were considered and one is selected.
+
+| Escape | Selected? | Reason |
+|---|---|---|
+| (a) **The premium is simply un-arbitraged** | **No.** | Rejected on its face. Cash-and-carry is the single most institutionalized trade in crypto. Claiming it is un-arbitraged would be the "nobody has looked" argument the Devil's Advocate correctly refuses [cited — REDTEAM-001 §B.3.1, applied here by analogy]. |
+| (b) **Capital constraint** — not enough balance sheet supplies the carry | **No.** | This was true in 2019–2021 and is decreasingly true. An escape whose validity decays with market maturation is a trade with an expiry date, not a validated edge — the same objection PREREG-001 §4 raised against regulatory and settlement-friction escapes, and it applies with equal force here. |
+| **(c) Mandate segmentation** — the marginal supplier of carry cannot de-scale | **Yes.** | It is the only escape that supports a durable edge, and it is falsifiable: it makes a specific claim about *who* supplies the carry and *what they are prevented from doing*. |
+
+**What would falsify escape (c)** — recorded here because a persistence argument with no falsifier is a story:
+
+> Evidence that the marginal carry supplier does de-scale — i.e. that aggregate short-perp open interest **falls** as funding rises above its trailing baseline, rather than rising or staying flat. If the supply side already contracts into rich funding, then the sizing behaviour this family claims is unoccupied is in fact occupied, and (c) is dead.
+
+**Measurability of that falsifier, stated honestly.** Aggregate open interest is **not in `book/pit.db`** and **no loader exists for it** [measured — `castellan.loaders` exposes yfinance, ccxt OHLCV, ccxt funding, EDGAR, and nothing else]. `ccxt` exposes OI history on major venues [assumed — not verified this session]. **This is therefore a named, currently-unmeasured falsifier of the persistence claim, not a measured one, and it is listed at §20 as a non-blocking condition.** Recording it as unmeasured is the correct treatment; recording it as satisfied would be the defect.
+
+---
+
+## 5. GATE 0 (2) — THE FALSIFIER · **F-002**
+
+*Charter §4.3(2) and house rule 2: the specific observable that means the hypothesis is wrong.*
+
+**Design note, stated so the seat's judgment is auditable.** KC-002 (§14) is a *kill condition*: an economic verdict on a forward window, on a date. F-002 is a *falsifier*: a verdict on whether the structural claim was ever true. The Charter requires **both** and they are not substitutes. A carry strategy can make money for six months with no mechanism at all — that is the defining property of a short-tail payoff — so a kill condition alone would be actively misleading for this family. **F-002 is mine.**
+
+### 5.1 The three return series F-002 is computed on
+
+All produced by `castellan.run_backtest` against this family, all net of the full §4.6 cost stack as repaired per C1, all on the same daily UTC index over the full in-sample `[2020-01-01, C]`:
+
+| Series | Definition |
+|---|---|
+| **`R_bench`** | The **unconditioned** benchmark. Delta-neutral long-spot / short-perp, **constant** notional `w ≡ 1.0`, equal-weight across the primary universe, rebalanced daily inside the turnover band. *This is the crypto carry factor as this family would actually trade it, and it is the thing the strategy must beat.* |
+| **`R_strat`** | The **conditioned** strategy. Identical in every respect except that per-asset notional is scaled by `w(t)` per the declared state variable, direction, cap and deadband (§7, K1/K2). |
+| **`R_bench_scaled`** | **The exposure-matched benchmark.** `R_bench` × `c`, where `c` = (time-average of `R_strat`'s gross exposure) ÷ (time-average of `R_bench`'s gross exposure), computed over the full in-sample. **A constant-notional position holding the same *average* size as the conditioned strategy.** §5.5(d) explains why this series is load-bearing and not a refinement. |
+
+**Three backtest runs. Registered as `N = 3`.** *(`R_bench_scaled` is a constant rescaling of `R_bench` and could in principle be derived arithmetically rather than run. It is run anyway, and counted, because a derived series is a number produced outside the engine and A2 makes those inadmissible.)*
+
+### 5.2 F-002, in full
+
+> **The hypothesis is FALSIFIED — and the family is written up as a KILL memo — if ANY of the following four legs fires.**
+>
+> **(0) INSUFFICIENT SAMPLE — the qualifying floor.** Fewer than **1,800 qualifying daily bars** on the common primary-universe index. *Fires before any other leg is evaluated, and when it fires the verdict is **INSUFFICIENT-DATA, not survival.*** 1,800 is ~75% of the 2,398 bars the in-sample span implies at 365 bars/year [measured], so the floor is breached only by a material data failure. **This leg exists because I-029(c) is filed against this seat: a falsifier with no minimum observation count is a statistic with a decimal point on noise.**
+>
+> **(iii) NO PREMIUM TO CONDITION ON.** The annualized **net** return of `R_bench` over the full in-sample is **≤ 0**. There is nothing to size, on this venue, at this trade size, once both legs are charged. *Cheapest leg; requires only the benchmark run; **runs first**.* Kills the family root and branch.
+>
+> **(i) NO ALPHA TO THE FACTOR.** In the OLS regression `R_strat = α + β·R_bench + ε` over the full in-sample, the **Newey–West `t`-statistic on `α`, at a 21-bar lag truncation, is ≤ 3.0** — the firm's own multiple-testing hurdle (§4.2 `T_STAT_HURDLE`), applied to the residual rather than to the raw return. *Newey–West rather than OLS standard errors because a carry residual is autocorrelated by construction and an OLS `t` on it is inflated in a known direction; 21 bars is one calendar month, pre-committed.* The conditioning contributes nothing the constant-size position did not already have; the family is carry factor beta, which Charter §5.4 does not pay for.
+>
+> **(ii) NO TAIL REDUCTION PER UNIT OF EXPOSURE GIVEN UP.** The mean of `R_strat`'s **20 worst daily net returns** is not better (less negative) than the mean of **`R_bench_scaled`**'s 20 worst daily net returns by at least **25%**. **The comparison is against the exposure-matched benchmark, never against `R_bench`.** *The mechanism's entire content is tail reduction achieved by choosing **when** to be small, not by being smaller on average. If the tail is not reduced on an exposure-matched basis, the mechanism is wrong **even if leg (i) passes** — and an alpha with no accompanying tail reduction is an unexplained alpha in a family the wider market has searched heavily, which is a measurement finding rather than an edge.*
+
+**No leg contains an `argmax`, a peak, a grid search, or any selection over candidates. Every threshold is a pre-committed constant with a stated basis and a stated null.**
+
+### 5.3 The falsifier's constants, its nulls, and its stated α
+
+**I-029(b) — *"no null distribution and no significance level… this is the root defect"* — is answered here explicitly rather than by assertion.** The rider at §7 applies to F-002's own constants as much as to the strategy's.
+
+| Leg | Threshold | Basis of the threshold | **Null hypothesis** | **P(leg fails to fire \| null)** |
+|---|---|---|---|---:|
+| **(0)** | ≥ 1,800 bars | ~75% of the 2,398 bars the span implies [measured] | — (a data condition, not a test) | — |
+| **(iii)** | `R_bench` net ann. return > 0 | Zero is the only non-arbitrary threshold available | **H₀: no funding premium net of costs**, i.e. true net drift ≤ 0 | **< 0.05** [inferred] — with a strictly negative cost drag, a zero-edge series' net mean is negative in expectation and the sample mean's sign is decided over ~2,398 observations |
+| **(i)** | Newey–West `t(α) > 3.0` | Charter §4.2 `T_STAT_HURDLE`. Not invented here. | **H₀: α = 0** — the conditioning is noise. Test statistic asymptotically standard normal under H₀ | **α = 0.0013**, one-sided [measured — `1 − Φ(3.0)`] |
+| **(ii)** | ≥ 25% tail improvement vs. **`R_bench_scaled`** | A declared materiality margin, so the leg neither fires nor spares on noise. Not derived; declared as a judgment. **20 days ≈ 0.83% of 2,398** [measured] — the conventional ~1% tail cut and the smallest window that is not a single-observation artifact | **H₀: the conditioning's timing carries no tail information**, i.e. `R_strat` is `R_bench_scaled` re-weighted independently of the tail | **≤ 0.10** [assumed — stated as an assumption, and §5.5(e) records how it becomes measured] |
+
+> **JOINT FALSE-SURVIVAL RATE — the number I-029 demands and which PREREG-001 never stated.**
+>
+> **Under the null that the conditioning carries no information** — which is the null that matters, since the funding premium's existence is not in doubt (Charter Appendix C) and leg (iii) would therefore not fire:
+>
+> ```
+> P(F-002 survives | conditioning is pure noise)  ≤  0.0013 × 0.10  ≈  1.3 × 10⁻⁴
+> ```
+>
+> **Against F-001's measured 31%** [cited — I-029], **that is a factor of roughly 2,400.** The difference is structural and not a matter of tuning: **F-001's leading term is an `argmax` over a 73-candidate grid; F-002 contains no selection at all.**
+>
+> **Under the joint null that there is also no premium**, leg (iii) fires with probability > 0.95 on its own and the joint survival rate falls below `10⁻⁵`.
+>
+> **Stated honestly: the `≤ 0.10` on leg (ii) is [assumed], and it is the one term in this arithmetic that is not derived.** If Validation requires it measured before sealing, the route is §5.5(e) and this seat does not resist it.
+
+### 5.4 The interaction with the R4(b) haircut, stated so it is not conflated later
+
+F-002's leg (i) tests the **pre-haircut** `t(α)`. Gate 1's `t ≥ 3.0` applies to **net returns after** the §4.6 50% published-signal haircut, which this family accepts in full (§11.5). A 50% haircut on expected return halves the t-statistic without touching the standard error, so **clearing Gate 1's t-hurdle post-haircut requires a pre-haircut `t(α) ≈ 6.0`, twice F-002's bar** [inferred].
+
+**These are deliberately different bars and the difference is deliberate.** F-002 asks whether the family should continue to exist. Gate 1 asks whether it should receive capital. A family that clears the first and not the second is a legitimate outcome and is written up as a PARK-WITH-TRIGGER, not a PROCEED.
+
+**Live defect that makes this less certain than it reads.** §4.6 does not specify the **point of application** of the haircut — halve the return series, halve the Sharpe, or halve the alpha — and the three give materially different Gate 1 outcomes. **I-019 records that R4(a)/(b) have schema and no computation attached**, so nothing in the harness resolves it either. **This is escalated to Validation at Gate 0 intake as an interpretive question this seat does not own** (§20, C5).
+
+### 5.5 F-002 audited against the four F-001 defects · **I-029, filed against this seat**
+
+**I-029 is owned by the Director of Research and it is the correct owner.** F-001 was this seat's design, this seat asserted it "selects nothing from a menu and is registered as `N = 1`," and Validation demonstrated the assertion false. The obligation that creates is not to apologize but to show that the successor does not repeat it — **defect by defect, including the two that were live in this document's first draft.**
+
+| I-029 defect in F-001 | Present in F-002? | Disposition |
+|---|---|---|
+| **(a) `argmax` over 73 lags asserted as `N = 1`; ~31% pure-noise survival** | **NO** | F-002 contains **no `argmax`, no grid, no peak, and no selection over candidates of any kind.** There is no lag dimension — the strategy holds both legs simultaneously and continuously, so there is nothing to time. Every statistic is a fixed functional of three pre-specified series. |
+| **(b) No null distribution, no stated α — "the root defect"** | **WAS PRESENT. REPAIRED.** | The first draft of this document named thresholds and stated no null and no α — **the same defect, one document later.** §5.3 now states H₀ for every leg, the test statistic's distribution where one exists, the α, and the **joint false-survival rate of ≈1.3 × 10⁻⁴**. Leg (i) is additionally moved from an OLS `t` to a **Newey–West `t`**, because a carry residual is autocorrelated and an OLS `t` on it is inflated in a known direction — a second, independent route to the same over-survival that (b) describes. |
+| **(c) No minimum qualifying-bar count** | **WAS PRESENT. REPAIRED.** | **Leg (0)** adds a **1,800-bar floor**, and it returns **INSUFFICIENT-DATA rather than survival** when breached. The distinction matters: a falsifier whose sample-size failure reads as "not falsified" is a falsifier that rewards missing data. |
+| **(d) Leg (iii) of F-001 evaluates capture at the argmax of its own sample — biased toward the falsifier's own survival** | **NOT PRESENT IN THAT FORM. AN ANALOGUE WAS PRESENT AND IS REPAIRED.** | F-002 selects no exit and no lag. **But leg (ii) carried a structurally identical bias:** `R_strat` is a re-weighted `R_bench`, and **any rule that reduces average size mechanically improves the tail whether or not the mechanism is real.** Comparing `R_strat`'s tail to `R_bench`'s would therefore have been biased toward the falsifier's survival by construction — Validation's (d), transposed from a lag axis to a size axis. **The repair is `R_bench_scaled`** (§5.1): leg (ii) compares against a constant-notional benchmark holding the **same average exposure**, so any tail improvement must come from **when** the size was reduced and cannot come from **how much** on average. |
+| *(minor) F-001's D1 clause is a percentage difference on a small integer index — undefined at zero, and 2 vs 3 is 50%* | **NO ANALOGUE** | F-002's thresholds are all on continuous quantities: an annualized return, a `t`-statistic, and a ratio of two tail means. None is a percentage of a small integer. |
+
+**Two further disciplines adopted from Validation's C-001 conditions, which govern how F-002 may be *used* rather than how it is defined:**
+
+- **E2 — computed once.** F-002 is evaluated **once**, on the first complete run of the three series after C1 lands. **There is no re-run "with the corrected costs," no second look, and no "we also checked."** If C1's repair changes the cost stack after F-002 has been computed, that is a **new family**, not a re-computation — because a falsifier that may be re-run until it spares the family is not a falsifier. *This is why §15 puts C1 at step 0 and F-002 at steps 2–3, and not the reverse.*
+- **E3 — no forward search wearing a confirmation as a hat.** Validation's E3 names PREREG-001's 30 forward trials specifically. **This family's ≤25 forward trials (§10.5) are `N_forward`, they are logged as trials, and no reported result may be selected from among them.** KC-002 is computed on the sealed specification once, and §14.2 records what KC-002 does and does not establish.
+
+**(e) How leg (ii)'s `≤ 0.10` becomes measured rather than assumed.** It is the one term in §5.3 that is [assumed]. It is measurable **before sealing and without touching market data**: a block-bootstrap or sign-randomization of the conditioning schedule against the *realized* `R_bench` series, holding average exposure fixed, gives the null distribution of leg (ii)'s statistic directly. **That is a computation on `pit.db` and is therefore a trial**, and this seat will not run it in this document. **It is offered to Validation as condition precedent C11**, at a cost of 1–2 trials against a budget of 80, and this seat's recommendation is that Validation require it — because I-029's finding is that an unstated α is how a formality gets reported as a falsifier, and one assumed probability in an otherwise derived chain is exactly where that returns.
+
+---
+
+## 6. GATE 0 (3) — UNIVERSE, HORIZON, REBALANCE FREQUENCY, SUCCESS CRITERIA
+
+*Stated before the first run, per §4.3(3).*
+
+### 6.1 Universe
+
+| Element | Specification |
+|---|---|
+| **Venue** | `binance` (spot) and `binanceusdm` (perpetual). **Single venue, both legs.** Declared as conditioning choice **K5** (§7). |
+| **Primary universe** | **BTC/USDT and ETH/USDT** spot, paired against **BTC/USDT:USDT and ETH/USDT:USDT** perpetuals. Common span **2020-01-01 → `C`** = **6.571 years** [measured]. |
+| **Secondary, reported separately and never pooled** | **SOL**, on its own span. SOL spot begins 2020-08-11 (5.96 yr) and SOL funding begins 2020-09-13 (5.87 yr) [measured]. Pooling SOL into the primary would truncate the panel to **5.87 years** and cut the admissible trial ceiling from **110 to 74** (§10.4) — a real cost paid for a third asset. Declared as conditioning choice **K4** (§7). SOL is reported with its own span, its own `N`, and its own verdict, following **R2**'s refusal to average windows of different character. |
+| **Unit of observation** | **The asset-day.** One daily UTC bar of one (spot, perp) pair. |
+| **Position construction** | Per asset, per day: **long 1.0 unit spot notional, short `w(t)` units perp notional**, where `w(t) ∈ [0, w_max]` and `w(t) = 1.0` for the benchmark. Delta-neutral at `w = 1.0`. The position is **never long perp** — declared as conditioning choice **K2** (§7). |
+| **Position notional** | `P_notional = USD 125,000` per asset (2 assets × $125,000 = $250,000 allocated, §13). Gross at `w = 1.0` is **$500,000** — two legs. |
+| **Capacity screen** | Trailing-20-session median daily notional ≥ **20 × `P_notional` = USD 2,500,000** per leg, per asset, evaluated on a trailing window ending **strictly before** the day screened. **The instrument to measure this is already on disk** — the `volume` field of the spot panel — and arrives for the perp leg with the §15 step-1 ingest. *Unlike PREREG-001, capacity here is measurable with data the firm has* (contrast I-026). |
+| **Regime cells** | Reported separately in every artifact: {funding positive, funding negative} × {trailing spot vol above / below its own median}. **All four cells are traded.** No cell is excluded — declared at **K3** (§7). Pooled figures never stand alone. |
+
+### 6.2 Horizon and rebalance
+
+| Element | Specification |
+|---|---|
+| Signal | `z(t)` = deviation of the trailing-24h realized funding rate from its own trailing **30-day** mean, in units of that window's standard deviation, computed from `event_time ≤ t` funding prints only. |
+| Sizing rule | `w(t) = clip(1.0 − k · max(0, z(t) − d), 0, w_max)`, with `d` = deadband, `k` = de-scale slope, `w_max` = 1.0. **Size falls monotonically as funding gets rich relative to its own baseline; it never rises above the benchmark.** |
+| Entry / exit | Continuous. `run_backtest(execution_lag=1)`. The weight decided at bar `t`'s close earns returns from `t+1`. §4.6's minimum-one-bar rule is satisfied by the engine and is **not** waivable [measured — `SameBarFillError` is raised for `execution_lag < 1`]. |
+| Rebalance | Daily, subject to a turnover band: no trade unless `|w_target − w_held| > band`. |
+| `periods_per_year` | **365.** Crypto trades every calendar day; there are no session gaps on either leg. Matches the `CRYPTO_PERP_TAKER` preset. |
+| Bar granularity | **Daily, UTC.** Funding aggregated as the sum of the day's three 8h prints. Declared as conditioning choice **K6** (§7), and §16 records what it forecloses. |
+| Holding period | **None.** There is no target, no stop, and no maximum hold. A stop on a delta-neutral carry position would convert a mean-reverting basis excursion into a realized loss at the worst possible moment, which is the second-order effect Charter §5.2 names explicitly. Risk is controlled by **size**, which is what the hypothesis is about. |
+
+**On the parameter values.** `lookback = 30 days`, `d`, `k`, `band` and `w_max = 1.0` are **this seat's choices, made now, before any measurement, from no prior work.** There is no inherited tuning to declare and no `N_inherited` to charge — a genuine difference from `forward-lag-001` and the single largest reason this family's arithmetic works (§10). Three of them go into the ±50% grid (§10.5); `w_max` does not, and §10.5 says why.
+
+### 6.3 Success criteria — stated before the first run
+
+| Level | Criterion |
+|---|---|
+| **F-002 survival** | All three legs of §5.2 fail to fire. |
+| **KC-002 survival** | All four clauses of §14 fail to fire, at 2027-01-31. |
+| **Gate 1** | Every criterion of Charter §4.4, unmodified, computed by `castellan.evaluate_gate1` against `book/registry.db`, with `backtest_years` passed **explicitly** as true calendar span and `oos_index` supplied (G1–G5 — without `oos_index` the length criterion is INSUFFICIENT-DATA, never PASS). No threshold relaxation is sought and none would be accepted. |
+| **Plus two criteria §4.4 does not contain, which this seat imposes on itself** | **(1) Alpha to `R_bench`**, not raw Sharpe, is the reported headline. **(2) A skew and expected-shortfall line** on every artifact, because §4.4's battery is Sharpe-centric and structurally cannot see a short-tail payoff (§16). A family that hides behind a Sharpe its own payoff shape invalidates would be this seat's failure, not Validation's. |
+| **What "success" is honestly worth** | §13. At $250,000 an excellent result is worth ~15–30 bp of firm NAV per year, unlevered. |
+
+---
+
+## 7. THE REGIME-CONDITIONING DECLARATION — the Principal's binding rider
+
+> **Principal's rider:** *Regime-conditioning choices are declared at Gate 0 together with the menu they were chosen from.*
+
+**Why this section exists and why it is the most important one in the document.** The forward-lag family is crippled because a single regime exclusion was made after the fact from an unrecorded menu, and the firm then had to reconstruct a factor of 10 by **[inferred]** guesswork (D-009 §B, I-027). `MinBTL(31,250)` at the Gate 1 Sharpe floor is **17.06 years** [measured] — a venue-history requirement no prediction market can meet, imposed not by the market but by the firm's own honest accounting of an unrecorded search.
+
+**This family will not create that problem again.** Every conditioning choice in the design is enumerated below with the full menu it was selected from. Where the design conditions on nothing, it says so explicitly.
+
+### 7.1 The six conditioning choices, each with its menu
+
+| # | Choice | **Selected** | Full menu enumerated | Menu size |
+|---|---|---|---|---:|
+| **K1** | **The state variable** — what position size is conditioned on | **Deviation of realized funding from its own trailing 30-day mean, in units of that window's standard deviation** | (1) raw funding level; **(2) funding deviation from own trailing mean ← SELECTED**; (3) funding **sign** only — the Charter's own framing; (4) trailing realized spot volatility; (5) spot trend / momentum state; (6) spot drawdown from trailing high; (7) basis level (perp − spot) independent of funding; (8) cross-asset funding dispersion across BTC/ETH/SOL; (9) calendar (day-of-week, funding-print-of-day); (10) **no conditioning at all** (= `R_bench`) | **10** |
+| **K2** | **Direction of conditioning** | **De-scale into rich funding.** `w(t)` falls as `z(t)` rises; `w` never exceeds 1.0; the position is never long perp | **(1) de-scale at extremes ← SELECTED**; (2) up-scale at extremes (funding momentum); (3) sign-flip to long-perp when funding inverts | **3** |
+| **K3** | **Period exclusions** | **NONE.** The full span `2020-01-01 → C` is used, **including** COVID-March-2020, May-2021, LUNA/UST May-2022, FTX November-2022, the 2022 bear, the 2024 spot-ETF approval, and every negative-funding episode | **(0) exclude nothing ← SELECTED**; (1) exclude COVID Mar-2020; (2) exclude May-2021; (3) exclude LUNA/UST; (4) exclude FTX; (5) exclude the 2022 bear; (6) exclude the pre-ETF period; (7) exclude the first *n* months after each listing as illiquid; (8) exclude negative-funding regimes | **9** |
+| **K4** | **Asset universe** | **BTC + ETH primary; SOL secondary, reported on its own span and never pooled** | (1) BTC only; **(2) BTC+ETH primary with SOL reported separately ← SELECTED**; (3) BTC+ETH+SOL pooled on the common 5.87-yr span; (4) BTC+ETH only, SOL discarded entirely; (5) a wider alt universe (not ingested, no loader run) | **5** |
+| **K5** | **Venue** | **`binance` / `binanceusdm` only** | **(1) binance ← SELECTED**; (2) coinbase; (3) bybit; (4) kraken; (5) cross-venue pooled or averaged | **5** |
+| **K6** | **Bar granularity** | **Daily, UTC**, funding aggregated as the sum of the day's three prints | **(1) daily ← SELECTED**; (2) 8h (the funding-print cadence); (3) 1h; (4) 1m | **4** |
+
+### 7.2 The `N` contribution, and the rule that makes it honest
+
+> **`N_conditioning` = 6. One per choice. Declared floor `N` at seal = 6, over an `N_inherited` of 0.**
+
+**The reasoning, stated so it can be attacked.** The multiple-testing denominator prices a **search**. A choice made *before any measurement*, from a menu declared *in the sealed pre-registration*, and *binding thereafter*, involves no search over results and contributes **1**, not the menu size. **The menu declaration is precisely what converts a factor of K into a factor of 1** — it is the pre-commitment made checkable.
+
+**And the pre-commitment is enforced, not asserted:**
+
+> **BINDING ESCALATION RULE.** If any of K1–K6 is revised after any result on this family is seen, the revision is **not** an amendment to this family — P3 refuses it and logs `hypothesis_amendment_refused`. It requires a **successor family**, opened with
+>
+> `n_inherited ≥ (menu size of the revised choice) × (this family's final n_trials)`,
+>
+> and if more than one is revised, the **product** of the revised menu sizes. The successor inherits neither this family's schedule, nor its allocation, nor its narrative.
+
+**Why erring toward 1 is not the sycophantic direction here.** D-009 records that erring *low* on `N` is the sycophantic direction and erring *high* is conservative. The escalation rule is what makes 1 conservative rather than convenient: it is cheap only for as long as the choices are never touched, and it becomes ruinous the instant they are. **A researcher who intends to revise pays the full menu price with interest; a researcher who does not, pays 1.** That is the correct incentive and it is the only design this seat could find that gives one.
+
+### 7.3 The counterfactual — the number that makes the rider's value concrete
+
+Had K1–K6 been selected *after* seeing results, from these same menus, the honest `N` contribution would be their product:
+
+```
+10 × 3 × 9 × 5 × 5 × 4  =  27,000
+```
+
+| Quantity at `N` = 27,000 | Value | Provenance |
+|---|---|---|
+| BLP&Z expected max Sharpe on pure noise | **4.10 · σ_SR** | [measured — `expected_max_sharpe(27000, 1.0)`] |
+| **`MinBTL` at the Gate 1 Sharpe floor of 1.0** | **16.79 years** | [measured — `min_backtest_length_years(27000, 1.0, 365)`] |
+| Available history | **6.571 years** | [measured] |
+
+> **16.79 years against 6.571 available.** That is the same death sentence, to within three months, that `MinBTL(31,250) = 17.06` imposes on the forward-lag family. **The two families' data surfaces differ by an order of magnitude in quality and it would not have mattered.** Undeclared conditioning would have killed this one on arithmetic exactly as it killed that one.
+>
+> **This is what the Principal's rider is worth, in years: 16.79 → 6.14** (§10.4). It is not a documentation requirement. It is the difference between a family that can reach Gate 1 and one that cannot.
+
+### 7.4 What this family conditions on that is **not** declared above — the honest sweep
+
+Checked deliberately, because an undeclared conditioning is a defect and the failure mode is forgetting rather than concealing:
+
+| Candidate conditioning | Present? |
+|---|---|
+| Excluded period, date range, or event window | **No.** K3 = none. |
+| Post-event window (post-crash, post-listing, post-halving) | **No.** None used. |
+| Volatility-state filter gating entry | **No.** Volatility appears only as a **reporting** cut (§6.1 regime cells), never as a filter on what is traded. Stated explicitly because a reporting cut and a filter are one edit apart. |
+| Funding-sign filter (trade only when funding > 0) | **No**, and this is deliberate. The negative-funding regime is where the left tail lives; excluding it is the single most tempting and most dishonest exclusion available to this family. K3 forbids it. |
+| Basis-level filter | **No.** Basis is not used as a state variable — that was K1 option (7) and it was not selected. |
+| Winsorization, outlier removal, or return clipping | **No.** None applied anywhere, at any stage. A short-tail strategy that winsorizes its own tail is not measuring itself. |
+| Survivorship selection in the universe | **No** — see §9.1. BTC, ETH and SOL are three named continuously-listed instruments, not a screen output. |
+
+**Nothing else conditions. That is the full declaration.**
+
+---
+
+## 8. GATE 0 (4) — THE REQUIRED DATA EXISTS WITHIN PART III
+
+*§4.3(4): the required data exists within Part III. No inadmissible dependencies.*
+
+**Honest answer: all but one series exists, on disk, gap-free; the missing one is retrieved by a loader the firm has already run.**
+
+| Requirement | Status | Provenance |
+|---|---|---|
+| Crypto exchange data available to the firm | Charter §3.2: *"Deep minute-level history. **Best data surface the firm has**"* | [cited] |
+| BTC/ETH spot daily OHLCV, 2020-01-01 → 2026-07-28 | **PRESENT. 2,401 bars each. Zero gaps.** | [measured — `book/pit.db`] |
+| SOL spot daily OHLCV, 2020-08-11 → 2026-07-28 | **PRESENT. 2,178 bars. Zero gaps.** | [measured] |
+| BTC/ETH 8h funding prints, 2020-01-01 → 2026-07-28T16:00Z | **PRESENT. 7,203 prints each. Zero gaps.** | [measured] |
+| SOL 8h funding prints, 2020-09-13 → 2026-07-28T16:00Z | **PRESENT. 6,508 prints. Zero gaps.** | [measured] |
+| **Perpetual *price* series (`binanceusdm` OHLCV)** | **ABSENT. Zero rows.** | [measured — `book/pit.db` holds `binanceusdm` `funding_rate` only] |
+| Loader for it | **EXISTS** — `fetch_ccxt_ohlcv(store, "binanceusdm", "BTC/USDT:USDT", timeframe="1d", ...)`, the same function that produced the spot panel | [measured — `castellan/loaders.py:103`] |
+| Aggregate open interest (the §4 persistence falsifier) | **ABSENT, no loader.** | [measured] |
+| Intraday bars on either leg | **ABSENT, not fetched.** Available in principle [cited — §3.2]; the volume is large. | [measured — DATA-INGEST-001 §5: "Daily bars only"] |
+
+### 8.1 Why the missing perp price series is decision-relevant and not a footnote
+
+**The strategy has two legs and the harness prices positions from a price panel.** Without `binanceusdm` OHLCV the firm cannot compute the perp leg's mark-to-market, cannot compute the **basis** (perp − spot), and therefore cannot compute the strategy's P&L at all. `run_backtest` takes a `(T, A)` price frame and differences it; there is no path by which a funding-rate series alone produces a position return.
+
+**The tempting shortcut is inadmissible and is named here so it is not taken later.** One could assume `perp ≈ spot` and treat the position's entire return as accrued funding. **That assumption sets the basis to zero, and the basis is exactly the term this family's left tail lives in.** A backtest run on that assumption would produce a smooth, monotone, near-riskless equity curve with a spectacular Sharpe, and it would be measuring the assumption rather than the market. **It is inadmissible under this pre-registration and any result produced under it is void.**
+
+**Cost to close: one Sonnet unit, one session.** The loader exists, the pagination pattern is written and exercised, and the ingest is bounded by the ceiling `HoldoutVault.seal()` writes at `C`. §15 step 1.
+
+### 8.2 A mechanical gap in the sanctioned data path, flagged as small
+
+`pit_adjusted_close` and `pit_price_panel` reconstruct an adjusted **close** from `close` + `split` + `dividend` [measured — `data.py:482`, `:526`]. **There is no sanctioned panel accessor for a `funding_rate` field.** Research must read funding through `PITStore.asof` / `rows_in_window` on `field='funding_rate'`.
+
+**This seat's reading, offered for Validation to confirm or reject rather than assumed:** that path is admissible under A4, because A4's concern is *vendor pre-adjusted series*, and a funding print is never adjusted — it is final at settlement [cited — DATA-INGEST-001 §3 data dictionary: *"Historical funding prints are not revised; each print is final at settlement"*]. The two-timestamp rule still binds and every query filters `knowledge_time ≤ decision_time`. **Routed to Validation at intake (§20, C6) rather than decided here.**
+
+### 8.3 Inadmissible dependencies
+
+**None claimed.** This family requires no point-in-time fundamentals, no survivorship-free equity universe, no equity tick data, no borrow data, no paid news, and no brokerage connectivity. Every Part III hard wall in §3.3 is untouched. **It requires one series the firm does not have and a loader the firm has already run to get it.**
+
+---
+
+## 9. GATE 0 (5) — SURVIVORSHIP AND LOOK-AHEAD EXPOSURE, WITH MITIGATIONS NAMED
+
+*§4.3(5).*
+
+### 9.1 Survivorship
+
+**The exposure is genuinely small here, and the reason is worth stating rather than asserting.** The universe is **three named instruments**, chosen because they are the three the firm ingested, not produced by a screen over a candidate set. There is no delisting channel: BTC/USDT and ETH/USDT have traded continuously on Binance since before the sample opens, and SOL since its listing date, which DATA-INGEST-001 §2 confirms is a **listing date and not a truncation** [cited].
+
+**Where survivorship does enter, and it is not zero:**
+
+| # | Channel | Mitigation | Binding on |
+|---|---|---|---|
+| **S1** | **Asset selection is itself survivorship.** BTC, ETH and SOL are three assets that *are still here in 2026*. The population of 2020-vintage perpetual contracts includes many that delisted, and their funding histories would look worse. | **The claim is stated about these three instruments and is not generalized to "crypto perpetuals."** Any generalization requires a wider universe and a delisted-contract enumeration, neither of which exists. Stated on the face of every artifact. | Director of Research |
+| **S2** | **Venue survivorship.** Binance is a venue that did not fail. FTX-listed carry books did not survive to be backtested. **The strategy's single largest risk is the one the venue's survival selects out of the sample.** | **Named, not mitigable with this data.** It cannot be measured, it cannot be charged (§12(d)), and it is carried into §17 as risk #2 rather than dissolved. | Director of Research → CRO |
+| **S3** | **Zero contracts are excluded for any reason.** No screen, no filter, no ambiguity handling. | K3 = none (§7). There is no removal rate to report because nothing is removed. | — |
+
+**S2 is the honest one and this seat will not dress it up.** A carry strategy backtested on a surviving venue is a carry strategy backtested on the branch where the tail did not happen. **This is a Gate 0(5) exposure that is identified and whose mitigation is disclosure rather than correction**, and Validation should weigh it as such at intake.
+
+### 9.2 Look-ahead
+
+| Channel | Mitigation |
+|---|---|
+| **Filling on the signal bar** | `run_backtest(execution_lag=1)`. `execution_lag < 1` raises `SameBarFillError` [measured — `engine.py:30`]. The weight decided at bar `t`'s close earns returns from `t+1`. Not waivable. |
+| **The funding print vs. the bar it is attributed to** | Funding posts at 00:00 / 08:00 / 16:00 UTC. The day's three prints are complete only at 16:00 UTC, after which no further print lands that calendar day [measured — max `event_time` on every funding series is `T16:00:00Z`]. **The day-`t` aggregate is therefore knowable at 16:00Z on day `t`, and it is consumed as a decision input at day `t`'s close, filling at `t+1`. That is a genuine 8-hour margin, not a boundary case.** Stated explicitly so nobody re-derives it. |
+| **Trailing-window screens** | The 30-day funding baseline, the volatility cut, and the T-capacity screen are all evaluated on windows ending **strictly before** the day screened [cited — Ruling 001 §4.2 overriding constraint]. |
+| **Vendor pre-adjusted series (A4)** | **Not applicable and this is a real advantage.** Neither leg has splits or dividends; nothing is back-adjusted; `auto_adjust` has no meaning for a crypto pair. **A4's hazard does not exist for this family**, in contrast with the eight ETFs in the same store. |
+| **I-020 (`yfinance` UTC offset)** | **Does not touch this family.** I-020 is a `yfinance` defect; `parse_ccxt_ohlcv` and `parse_ccxt_funding` build timestamps from milliseconds-since-epoch, which are absolute [cited — DATA-INGEST-001 §4: *"it holds for ccxt, not for yfinance"*]. **No `yfinance` series is used here.** Stated so this is not read as a general clearance of I-020. |
+| **`knowledge_time` on the backfill** | **Declared limitation** [cited — DATA-INGEST-001 §3]: every row backfilled this session carries `knowledge_time` = the ingestion instant. **This family may not claim to have tested point-in-time *knowledge* for dates before its ingest session.** It tests point-in-time *ordering*, which is what the hypothesis needs. Identical to PREREG-001's position and equally binding. |
+| **I-011 — the search inside the researcher** | Not a look-ahead channel but a selection channel. **Handled at §7 by the menu declaration, which is the only instrument the firm has against it.** `N_inherited = 0` is honest about prior *harness* search; it is silent about model priors, and §7's `N_conditioning = 6` is this seat's attempt to put a countable floor under the part that can be counted. |
+
+### 9.3 I-024 — clock alignment, and why it is **not** a live confound here
+
+I-024 is HIGH severity and open, and PREREG-001 §8.3 devotes its longest section to it. **This family is materially less exposed and the reason is structural, not lucky:**
+
+1. **Both legs trade on the same venue, 24/7, with no session calendar.** `binance` spot and `binanceusdm` perpetual never close. There is no overnight gap, no weekend gap, and no session boundary for a "lag" to hide in.
+2. **Both legs' timestamps are epoch-milliseconds through `parse_ccxt_ohlcv`** — absolute instants with no local-time ambiguity to discard [cited — DATA-INGEST-001 §4].
+3. **The strategy is not a lead-lag strategy.** It holds both legs simultaneously and continuously. There is no asynchrony for a confound to exploit, because nothing is being timed against anything.
+4. **Zero gaps are measured on every series used** [measured — §0].
+
+**The residual, named rather than waved away.** One anomaly is on the record: SOL's first funding print carries `event_time = 2020-09-13T16:00:00.004000+00:00` — a **4-millisecond** offset from the 8h grid [measured]. It is cosmetic at daily granularity and it is recorded here because an unexplained timestamp irregularity that goes unmentioned at pre-registration is the shape of a later argument. It is filed as an observation for Seat 9, not an issue.
+
+---
+
+## 10. GATE 0 (6) — TRIAL COUNTER, `N`, AND THE BUDGET ARITHMETIC
+
+*§4.3(6) as amended by A2: the hypothesis family exists in `book/registry.db` and every backtest routes through `castellan.run_backtest`. A backtest number produced outside the engine is inadmissible in any document.*
+
+### 10.1 The declaration
+
+> **`N_inherited` = 0.** No prior work on this hypothesis exists in this firm or in the Principal's prior work. There is no unreconstructable search to charge the family for. **This is measured, not asserted:** `book/registry.db` `hypotheses` is empty, `trials` is empty, and the hypothesis is originated by this seat in this document [measured].
+>
+> **`N_conditioning` = 6**, declared with full menus at §7, each contributing 1 under the pre-commitment rule and each carrying the §7.2 escalation.
+>
+> **Declared `N` floor at seal = 6.**
+
+### 10.2 Why `N_inherited = 0` is the family's single most valuable property
+
+PREREG-001 §9.4 is unambiguous: seeded at 31,250, `MinBTL` at the Gate 1 Sharpe floor is **17.06 years**, Polymarket does not have 17 years, and *"the family's binding risk is arithmetic, not absence of edge."* At 3,125 — the grid alone, no regime factor — it is still **12.72 years**. Both readings fatal.
+
+**This family starts at 0, and the 6.571 years on disk are therefore usable rather than decorative.** That is not a claim that the hypothesis is better. It is a claim that a verdict on it is *reachable*, which is the property the forward-lag family lacks and which no amount of measurement can give it.
+
+### 10.3 I-027 — the harness still cannot seed `N`, and here it does not matter
+
+**[measured — `registry.py`, `open_hypothesis` signature]** There is no `n_inherited` parameter and no `n_inherited` column. `family_stats` computes `COUNT(*) FROM trials`. **I-027 is open and this family does not fix it.**
+
+**Its consequence here is small and quantified rather than assumed.** The undeliverable quantity is `N_conditioning = 6`, against a trial budget of 80.
+
+| Reading | `N` | `MinBTL` at SR 1.0 | Provenance |
+|---|---:|---:|---|
+| Registry as it will read (budget exhausted, 6 unseeded) | 80 | **6.01 yr** | [measured] |
+| Honest (registry + declared conditioning) | 86 | **6.14 yr** | [measured] |
+| **Difference** | 6 | **0.13 years** | [measured] |
+
+> **I-027 costs this family 0.13 years of required backtest length against 6.571 available. It cost the forward-lag family the difference between 17.06 years and a number in the tens.** For that reason **I-027 is NOT a condition precedent to sealing this family** — the contrast with PREREG-001's blocking condition C1 is deliberate and is stated here so the two documents are not read as making the same demand.
+>
+> **The disclosure obligation survives the immateriality.** Every Validation Report on this family reads on its face: *`declared N = 86; registry-enforced N = <count>; the 6-trial conditioning floor is declared and unenforced (I-027)`.* A control that is immaterial is still not a control that has been satisfied.
+
+### 10.4 The admissible ceiling on `N` — the number that sets the budget
+
+`evaluate_gate1` computes `min_backtest_length_years(max(n_trials, 2), sr_ann, periods_per_year)` and requires `years_calendar ≥ max(4.0, MinBTL)` [measured — `gates.py`]. The binding case is the **Gate 1 Sharpe floor of 1.0**, because a lower realized Sharpe demands a longer history.
+
+Against the primary universe's **6.571 years**:
+
+| `N` | `MinBTL` at SR 1.0 | Verdict against 6.571 yr | Margin |
+|---:|---:|---|---:|
+| 6 | 1.69 yr | clears | 4.88 |
+| 35 | 4.56 yr | clears | 2.01 |
+| 80 | 6.01 yr | clears | 0.56 |
+| **86** *(budget exhausted + conditioning)* | **6.14 yr** | **clears** | **0.43** |
+| 110 | 6.574 yr | **exactly at the span — zero margin** | 0.00 |
+| 125 | 6.80 yr | **FAILS** | — |
+
+> **`N = 110` is the absolute ceiling.** Beyond it, this family is arithmetically dead at the Gate 1 Sharpe floor and **no result can revive it** — exactly the position the forward-lag family occupies from its first day. Stated at pre-registration rather than discovered at Gate 1.
+>
+> On the SOL-inclusive 5.87-year span the ceiling is **74**, which is why K4 puts SOL secondary [measured].
+>
+> **The ceiling relaxes only on a higher realized Sharpe** — `MinBTL(110, 1.5) = 2.92 yr` — but **the budget is not permitted to expand on that basis.** Expanding a trial budget because early results look good is the overfitting operation wearing a schedule's clothing.
+
+### 10.5 Trial budget
+
+> **80 post-seal trials, pre-committed.**
+
+| Allocation | Trials |
+|---|---:|
+| **C11** — the leg-(ii) null calibration (§5.5(e)), if Validation requires it, **run before F-002** | ≤ **2** |
+| **F-002** (§5) — `R_bench`, `R_strat`, `R_bench_scaled` | **3** |
+| Pre-grid diagnostics: per-regime-cell decomposition, capacity measurement, cost sensitivity at 1× / 2× / repaired-preset, skew & expected-shortfall line, SOL on its own span | ≤ **8** |
+| **±50% parameter grid** (below) | **25** |
+| Walk-forward efficiency — Charter §4.4 requires **≥ 10 windows**, each a refit and therefore a logged trial | ≤ **20** |
+| **`N_forward`** — forward-window generation through 2027-01-31. **These are trials, not confirmations** (Validation C-001 **E3**), they are logged as such, and **no reported result may be selected from among them** | ≤ **22** |
+| **Total** | **80** |
+
+**The ±50% grid: 2 parameters × 5 steps = 25 points, and the constraint is measured not chosen.**
+
+`grid_from_center(fraction=0.5, steps=5, max_points=200)` **raises `ValueError` above 200 points** [measured — `grid.py:27`], and independently §10.4 caps total `N` at 110. A 3-parameter grid is 5³ = **125 points**, which alone would put `N` at 125 + 2 + 8 = 135 and **fail the length criterion outright**. A 4-parameter grid is 625 points and the harness refuses it.
+
+> **Therefore: `lookback` and `k` (the de-scale slope) are gridded at ±50%, 5 steps each = 25 points. `d` (the deadband) and `band` (the turnover band) are fixed at pre-registration and are not gridded. `w_max = 1.0` is not a free parameter — it is the statement that the strategy never exceeds the benchmark's size, which is part of K2 and not a tuning knob.**
+>
+> **The choice of which two to grid is itself pre-committed here, from a menu of the four candidates, and falls under the §7.2 escalation rule if revised.**
+
+**Plateau centroid, not argmax — stated as policy, per §4.6 and the CLAUDE.md standing constraint.** `run_parameter_grid` returns both `argmax_params` and `plateau_centroid_params`. **Only `plateau_centroid_params` advances.** `argmax_params` is reported alongside it in every artifact, because the *distance* between the two is itself the overfitting diagnostic: a plateau has them close together and a spike has them far apart. **Every one of the 25 points is a logged trial and is paid for in the DSR** [cited — `grid.py` module docstring].
+
+**The budget is real.** A family over budget is this seat's finding to raise before Validation raises it. The live defect that makes saying so necessary: **I-022 — `gates.py` builds the trial-count criterion with the verdict argument hard-coded to the literal `True`, so an over-budget family reads PASS with a note** [measured — confirmed again this session at `gates.py`, the `_crit("Trial count N (registry)", ..., True, ...)` branch]. **Until I-022 is fixed, the budget is enforced by this seat and by nothing else.**
+
+### 10.6 What `σ_SR` will and will not mean
+
+`deflated_sharpe_ratio` takes `fam.sr_period_std` — the cross-sectional standard deviation of Sharpe ratios across **logged** trials. With 25 grid points plus ~20 walk-forward refits, this family will produce a **genuinely populated** trial distribution, which is the input §4.1's whole apparatus requires and which a family with three hand-run variants cannot supply. **This is a real methodological advantage of budgeting a grid, and it is the argument for spending 25 trials on one rather than treating the grid as a Gate 1 tax.** Recorded so the budget's shape is understood as a design choice.
+
+---
+
+## 11. GATE 0 (7) — HOLDOUT DEFINED AND LOCKED · and the R1–R4 fields
+
+*§4.3(7). R1–R4 are binding under D-006.*
+
+### 11.1 The holdout
+
+| Field | Value |
+|---|---|
+| **Regime** | Option D (D-006). `C` = the pre-registration seal date (D-007). Holdout = `[C, G]`, forward, growing with wall-clock. |
+| **`C`** | **The seal date.** Not fixed by this document. Fixed by Pod B's `open_hypothesis` call, on the same UTC day as the vault seal. |
+| **In-sample** | `[2020-01-01, C]` for BTC/ETH — **6.571 years, gap-free, measured, not estimated.** |
+| **Vault** | One `HoldoutVault` per (dataset, family) under `book/vaults/`, sealed with `family="funding-carry-conditioning-002"`, `cutoff=C`, `holdout_end_rule="open-ended, forward from C"`. **The passphrase is the Principal's and is never written to this repo, to Oracle, or to any file.** Acceptance 001 C-2 writes only a salted one-way verifier, which is what lets `acquire_once()` refuse a wrong-but-non-empty passphrase before any fetch (I-015). |
+| **Sequencing, binding** | The vault is sealed **on or before the calendar day of `C`, in the same session as the `open_hypothesis` call.** P7 fails Gate 1 if the seal postdates `C` at UTC day granularity. |
+| **Ingest ceiling** | `seal()` writes the ceiling into `PITStore`. **The `binanceusdm` perp OHLCV ingest (§15 step 1) occurs after the seal and is bounded by it.** The spot and funding panels already on disk are bounded at `2026-07-28T23:59:59Z` [measured — DATA-INGEST-001 §1.2, §2], conservative against any `C ≥ 2026-07-28`. `book/pit.db :: ingest_ceiling` currently has **zero rows**, so there is no collision to manage [measured]. |
+| **Opened** | Once, at Gate 1, by Validation, with the Principal notified. A second look permanently retires it. |
+
+### 11.2 R1 — holdout classification
+
+> **`holdout_classification = FORWARD`.**
+
+`[C, G]` postdates the pre-registration wall-clock in its entirety and therefore closes channels K1–K5 for that window. **R2 does not fire** — the in-sample is entirely historical, the holdout entirely forward, no mixed window exists to decompose. The R1 sentence required for a HISTORICAL classification is therefore not required and is not reproduced; its absence is deliberate and is stated so it is not read as an omission.
+
+**What FORWARD does not fix:** **I-011**, the search embedded in the researcher before the freeze. It contaminates the in-sample, is invariant to where `C` sits, and cannot be fixed by waiting. §7's menu declaration is this family's only instrument against it, and §10.3 records that the instrument is only partly connected.
+
+### 11.3 An unresolved §4.4 interpretive question, escalated rather than assumed
+
+**Raised because assuming the favourable reading is exactly how a Gate 1 submission gets deferred, and because it bears on both families.**
+
+Under Option D the holdout is forward and grows with wall-clock. Charter §4.4 requires **`Holdout window: most recent 25%, ≥ 12 months, opened once`** and, separately, **`Backtest length ≥ MinBTL(N) and ≥ 4 years`**. `evaluate_gate1` evaluates the length criterion on the **`oos_index` calendar span** [measured — G2/G4]. Three readings give three different earliest-Gate-1 dates:
+
+| Reading of what `oos_index` carries | Earliest Gate 1 | Basis |
+|---|---|---|
+| Purged k-fold OOS across the full in-sample; the forward holdout is a separate criterion | **`C` + 12 months ≈ 2027-07-28** | The 12-month holdout floor binds; length is satisfied by the 6.571-year span |
+| The forward holdout window itself, at the §4.4 ≥12-month floor | **2030-07-28** | The forward window must itself reach 4 years |
+| The forward holdout at a strict **25% of total** | **≈ 2028-10-05** for the 25% clause alone; later still if the 4-year length also binds | 6.571 / 3 = 2.19 years of forward window |
+
+> **This seat does not resolve it and does not assume the first.** It is an admissibility and point-in-time-correctness question, which Charter Seat 3 owns and Seat 2 does not. **Routed to Validation at Gate 0 intake (§20, C4).** It bears identically on `forward-lag-001`, whose §6.3 reads the length criterion against the backtest span, and this seat flags that reading as unconfirmed rather than wrong.
+
+### 11.4 R3 — the forward-window falsifier
+
+R3 is mandatory only for a HISTORICAL classification. **This family carries one anyway**, for the same reason PREREG-001 does: a claim about data that did not exist when the claim was made is worth having regardless of classification.
+
+| R3 field | Value |
+|---|---|
+| `forward_window_start` | `2026-07-28` (= `C`; the seal is intended for today) |
+| `forward_window_min_length` | `12.0` — **units: MONTHS.** Charter §4.4's holdout floor. *Latent defect carried forward from PREREG-001 §10.3: the harness stores this as an unlabelled `REAL`. A float with no unit is a misreading waiting to happen.* |
+| `forward_kill_condition` | **KC-002, §14, in full.** Observation date **2027-01-31**, **absolute** — it does not move with the sprint calendar, the ingest schedule, or the harness. |
+
+### 11.5 R4(a) — model-prior provenance
+
+Which seats originated or ratified each binding design field, with model and stated cutoff. Per **I-009** the firm does not know its own seats' training cutoffs and the authoritative reference does not publish them; every cutoff below therefore reads `unknown` and **that is itself the finding**, recorded rather than filled with a plausible number.
+
+| Binding field | Originated by | Ratified by | Model | Stated cutoff |
+|---|---|---|---|---|
+| Hypothesis statement, mechanism (§3) | **Director of Research** | — | Opus | unknown [assumed] |
+| The §3.3 argument that the unconditioned carry is factor beta under §5.4 | **Director of Research**, on Charter §5.4 as written | — | Opus / human (Charter) | unknown [assumed] |
+| Falsifier F-002 (§5) | **Director of Research** | — | Opus | unknown [assumed] |
+| Conditioning declarations K1–K6 and their menus (§7) | **Director of Research** | **the Principal** (the rider requiring them) | Opus / human | unknown [assumed] |
+| The §7.2 pre-commitment rule and its escalation | **Director of Research** | — | Opus | unknown [assumed] |
+| Universe, sizing rule, parameter centres (§6) | **Director of Research** | — | Opus | unknown [assumed] |
+| Trial budget and the `N ≤ 110` ceiling (§10.4–10.5) | **Director of Research**, on `castellan.stats` output | — | Opus | unknown [assumed] |
+| KC-002 (§14) | **Director of Research**, adopting KC-001's shape (Devil's Advocate, REDTEAM-001 §B.5) including the silence clause | **requires the Principal's signature before any capital** | Opus / human | unknown [assumed] |
+| `CRYPTO_PERP_TAKER` audit (§12) | **Director of Research** [measured from source] | — | Opus | unknown [assumed] |
+| The redirect of Pod B compute to this mandate | **Director of Research** (PREREG-001 §17.2 item 4) · **the Principal** (approved) | — | Opus / human | unknown [assumed] |
+| Holdout regime | Validation (Rulings 001, 002) · **the Principal** (D-006 Option D, D-007 `C` definition) | — | Opus / human | unknown [assumed] |
+
+**The origin line, stated plainly because I-025 asks for it:** every binding design field in this document except the holdout regime and the rider originates with **Seat 2**. It is the firm's first such record.
+
+### 11.6 R4(b) — the published-signal haircut
+
+> **`published_signal_haircut_applied = 0.50`. The presumption is accepted. No exemption is sought.**
+
+Ruling 002 R4(b) makes a hypothesis generated from an LLM seat's priors presumptively an edge derived from published research, carrying §4.6's 50% haircut unless the sponsor argues at Gate 0 that the mechanism is not publicly documented and Validation accepts.
+
+**This seat does not make that argument, and states why so the decision is auditable:**
+
+1. **The carry premium is unambiguously published** — the Charter cites it in its own Appendix C.
+2. **The conditioning claim is also plausibly published.** The nearest analogue is the FX carry-crash literature and its standard prescription, and this family's sizing rule is that prescription transposed. **Claiming novelty here would be a claim this seat does not believe**, and spending Validation's scarcest unit on it would be waste.
+3. **It bites, and this seat states the cost rather than minimizing it.** §5.4: post-haircut Gate 1 clearance requires a pre-haircut `t(α)` of roughly 6.0. **That is the largest single hurdle this family faces and it is accepted deliberately, not conceded.**
+
+**Live defect noted:** **I-019** records that R4(a)/(b) have schema and **no computation attached**. The `0.50` recorded here is a declaration, not an enforced deduction, until I-019 closes — and §5.4 records that even its *point of application* is unspecified.
+
+---
+
+## 12. THE §4.6 COST STACK — and the audit of `CRYPTO_PERP_TAKER`
+
+*§4.6: costs from `castellan.costs.CostModel` presets or Principal-approved additions. No hand-rolled cost numbers, anywhere, including the paper book. Charter Seat 9 standing rule: **researchers may not hand-roll transaction costs. There is one cost library. Every strategy uses it.***
+
+**The dispatch asked whether the crypto preset is also wrong. It is, and it is worse than I-023.**
+
+### 12.1 The preset as shipped
+
+```python
+CRYPTO_PERP_TAKER = CostModel(
+    name="crypto_perp_taker",
+    commission_bps=5.0,          # taker fee, major venue
+    half_spread_bps=1.0,
+    impact_y=1.0,
+    funding_bps_annual=1095.0,   # 0.01%/8h baseline against structural longs
+    periods_per_year=365,
+)
+```
+[measured — `harness/castellan/costs.py`]
+
+### 12.2 Defect (a) — **the sign of the strategy's central term is inverted, and its base is doubled**
+
+`CostModel.carry_per_bar(long_notional, short_notional)` returns
+
+```
+short · borrow_bps/ppy  +  (long + short) · funding_bps/ppy
+```
+
+and `run_backtest` computes `net = gross − (trade_cost + carry)` [measured — `engine.py`]. Funding is therefore **applied to gross notional** and is **always a cost**. There is no sign, no direction, and no way to express a receipt.
+
+On this family's position — long 1.0 spot, short 1.0 perp — gross is **2.0**:
+
+| Quantity | Value | Provenance |
+|---|---:|---|
+| `carry_per_bar(1.0, 1.0)` | `0.0006` per day | [measured] |
+| Annualized | **−21.9%/yr charged** | [measured — `0.0006 × 365`] |
+| What the strategy actually **receives** at the Charter's own baseline | **+10.95%/yr** on 1.0 unit of short-perp notional | [cited — Charter Seat 7] |
+| `carry_per_bar(0.0, 1.0)` — a naked short perp, no spot leg | **−10.95%/yr charged** | [measured] |
+
+> **The preset applies −21.9%/yr where the economics deliver +10.95%/yr. The sign is inverted and the magnitude doubled — a 32.85-point-per-year error on a strategy whose entire claimed edge is 10.95 points per year.**
+>
+> This is not conservatism. A conservative error makes a good strategy look mediocre. **This error makes the strategy's defining revenue line into its largest cost, deterministically, in every backtest, at three times the size of the thing being measured.** Any net number produced by this family under the preset as shipped is not merely wrong — it is wrong in a way that guarantees a KILL verdict regardless of the market.
+
+### 12.3 Defect (b) — funding is a constant, and this family's signal is its variation
+
+`funding_bps_annual` is a scalar. `carry_per_bar` accepts no time-varying input. **The 7,203 realized funding prints per asset sitting in `book/pit.db` cannot enter the P&L through the sanctioned cost path at all** — and the entire hypothesis is a claim about the *variation* of that series.
+
+**The only admissible route is to move funding out of the cost stack and into the return series** — construct a synthetic perp total-return leg from the PIT-consumed perp price and the PIT-consumed funding prints, set `funding_bps_annual = 0.0` so it is not double-counted with the wrong sign, and let the position return carry it.
+
+> **This seat flags that construction as the thing it is least comfortable with in the whole design, and refuses to authorize it unilaterally.** It relocates a cash flow from the cost stack — which Seat 9 owns and researchers may not touch — into the price panel, which researchers build. **That is exactly the boundary the standing rule exists to defend, and a Director of Research quietly redrawing it because the alternative is inconvenient would be a governance failure larger than the arithmetic it fixes.** It is condition precedent **C1** and it is Validation's to specify, not this seat's to implement.
+
+### 12.4 Defect (c) — a two-legged strategy, a one-legged cost model
+
+`run_backtest` accepts **one** `CostModel` for the whole price panel. This family trades a **spot** leg and a **perp** leg with different fee schedules, and there is no `CRYPTO_SPOT_TAKER` preset — the preset list is `US_EQUITY_LARGE`, `US_EQUITY_SHORT`, `CRYPTO_PERP_TAKER`, `POLYMARKET` [measured].
+
+Costing both legs at the perp preset's 5.0 bp commission understates the spot leg, whose taker fee on a major venue is materially higher [assumed — published exchange schedule, **not verified this session**]. Per-side cost under the preset is **6.0 bps** (5.0 commission + 1.0 half-spread) [measured], so a full two-leg round trip is **24 bps** on the preset — and the true figure is higher by the spot/perp fee differential, in a known direction.
+
+**`half_spread_bps = 1.0` is also universe-dependent:** plausible for BTC perp, optimistic for SOL, which is a further reason K4 puts SOL secondary.
+
+### 12.5 Defect (d) — no field can charge the largest risk in the mandate
+
+`CostModel`'s fields are commission, half-spread, impact, borrow, funding, periods-per-year. **Nothing charges for venue insolvency, forced liquidation, or margin-call funding.** This is structurally identical to **I-023(b)** — *"`CostModel` has no field capable of expressing oracle or resolution risk… the paper book will systematically over-report net P&L because it cannot be charged"* — with liquidation-and-insolvency substituted for resolution risk.
+
+**The consequence is the same and its sign is known: the paper book will over-report this family's net by an unmeasured amount.**
+
+### 12.6 Defect (e) — the 2× cost-robustness test stresses the error
+
+`CostModel.scaled(2.0)` multiplies `funding_bps_annual` along with everything else: `1095.0 → 2190.0` [measured]. **Charter §4.4's cost-robustness criterion — "retains t ≥ 3.0 at 2× modelled costs" — therefore doubles the phantom drag to −43.8%/yr for any funding family.** The criterion is not testing cost robustness; it is stress-testing a sign error. **Filed here because a Gate 1 criterion that measures the wrong thing reads as satisfied in every audit that checks the criterion was run.**
+
+### 12.7 Verdict on the preset, and the comparison the dispatch asked for
+
+> **`CRYPTO_PERP_TAKER` is NOT fit for purpose for any funding-carry family, and the defect is more severe than I-023.**
+>
+> | | I-023 (`POLYMARKET`) | This finding (`CRYPTO_PERP_TAKER`) |
+> |---|---|---|
+> | Nature | A cost is **misstated in magnitude** — a bps constant where the true cost is price-proportional | A **revenue is recorded as a cost**, at double the base |
+> | Size | ~2.5× understated at 20¢, ~5× at 10¢ [cited — I-023(a)] | **32.85 points/yr wrong**, on an edge of 10.95 points/yr [measured] |
+> | Direction | Optimistic — flatters the strategy | Pessimistic in sign, but **deterministic and total** — it guarantees a false KILL |
+> | Missing risk field | resolution / oracle risk [cited — I-023(b)] | liquidation / venue insolvency — **the same gap** |
+>
+> **Filed as a new HIGH-severity Issue Log candidate: `the crypto perp cost preset charges funding on gross and cannot express it as a receipt`. Owner: head-of-data-infra → quant-validation. It is the CRO's log to write; this seat raises it.**
+
+**Two things the preset gets right, recorded so the finding is not read as a rejection of the whole preset:** `periods_per_year = 365` is correct for a 24/7 daily-bar crypto strategy, and `impact_y = 1.0` matches Charter §4.2's `IMPACT_PREFACTOR_Y = 1.0` exactly [measured]. **The trading-cost half of the preset is usable; the carry half is not.**
+
+### 12.8 What this family will use
+
+| Component | Source |
+|---|---|
+| Commission and half-spread, both legs | `CRYPTO_PERP_TAKER` as shipped, **plus** a Principal-approved `CRYPTO_SPOT_TAKER` addition if C1's specification calls for one. **No hand-rolled number, under any circumstance.** |
+| Impact | `CRYPTO_PERP_TAKER.impact_y = 1.0`, `impact_exponent = 0.5`, on measured ADV from the `volume` field. |
+| **Funding** | **Realized per-print funding from `book/pit.db`, routed per Validation's C1 specification. `funding_bps_annual` set to `0.0` in the cost model to prevent double-counting.** |
+| Liquidation / venue risk | **Cannot be charged.** Disclosed on the face of every artifact (§16). |
+
+---
+
+## 13. INTENDED INITIAL ALLOCATION — stated honestly, with its materiality consequence
+
+> **Intended initial allocation: USD 250,000.** Order hundreds of thousands.
+> **`P_notional` = USD 125,000 per asset** across BTC and ETH. **Gross at `w = 1.0` is USD 500,000** — the position has two legs and the gross is double the allocation, which is stated here rather than discovered at the Risk Meeting.
+
+### 13.1 Why it is larger than PREREG-001's $50,000, and why that is honest rather than ambitious
+
+| Assumption | Allocation | §4.4 capacity requirement | Measurable? |
+|---|---:|---:|---|
+| `forward-lag-001` (PREREG-001 §11) | $50,000 | $500,000 | **Yes in principle, no in fact** — C-002 rules capacity is an **ADV-plus-impact** construction, not a book-depth one, so I-026 does not sink it; but Polymarket has no ADV series in `pit.db` and no loader [measured] |
+| **This family** | **$250,000** | **$2,500,000** | **Yes, and the instrument is on disk** — the `volume` field of the spot panel, with perp volume arriving at §15 step 1 |
+
+**Validation's C-002 ruling is what makes this straightforward and it is cited rather than re-derived** [cited — `VALIDATION-GATE0-001` §2]: *"§4.4 capacity does NOT require order-book depth. The ADV-plus-impact-model route is not merely permissible — it is the construction the Charter already specifies."* **This family's capacity criterion is therefore evaluated from ADV and `castellan.costs` impact, both of which it has** — `ADV_PARTICIPATION_MAX = 0.05` and `IMPACT_EXPONENT = 0.5` are Charter §4.2 constants and no new instrument is needed.
+
+**The allocation is therefore set by risk appetite rather than by evidentiary convenience.** PREREG-001 was driven toward $50,000 partly because a small number was the only way to make a hard-to-evaluate capacity criterion arguable. **$2.5M of daily ADV on BTC and ETH perpetuals is expected to clear comfortably** [inferred — **not measured**; the measurement is §15 step 4 and it is cheap].
+
+### 13.2 What it costs — materiality, stated now rather than discovered later
+
+| Measure | Value |
+|---|---|
+| $250,000 as a share of Pod B's $2,000,000 | **12.5%** |
+| $250,000 as a share of the firm's $10,000,000 paper book | **2.5%** |
+| Firm contribution at a 6%/yr net sleeve return | $15,000/yr = **~15 bp of firm NAV** [inferred — arithmetic on a stated assumption, not a forecast] |
+| Firm contribution at a 12%/yr net sleeve return | $30,000/yr = **~30 bp of firm NAV** [inferred] |
+
+> **15–30 bp of firm NAV. Better than PREREG-001's 12–25 bp, and still not a firm-moving number.**
+
+### 13.3 The leverage trade, named because it is the honest shape of this family's materiality problem
+
+**Delta-neutrality is what makes the sleeve safe and is the same thing that makes it immaterial.** Hedging out the direction hedges out most of the volatility; a low-volatility sleeve at 2.5% of capital cannot move the firm's return. The only route to materiality is **leverage on the short-perp leg** — and leverage on the short-perp leg is exactly the operation that converts a fat left tail into a solvency event, because it is the margin on that leg that a liquidation cascade attacks.
+
+> **The strategy is immaterial unlevered and uninvestable levered. The interesting region is in between, and locating it — not harvesting the carry — is what this research is actually for.** If F-002 leg (ii) shows the conditioning genuinely reduces the tail, then the levered version becomes discussable at a specific leverage, and that number is the family's real deliverable. If leg (ii) fires, no leverage is defensible and the unlevered version is not worth the firm's compute.
+
+**This seat states that trade at pre-registration rather than discovering it at Gate 1**, per D-009's instruction that the materiality consequence be stated and not found later.
+
+---
+
+## 14. KC-002 — THE BINDING KILL CONDITION
+
+*Charter §4.3(2) / Ruling 002 R3 / D-009 §C. Written to KC-001's shape, including the silence clause, which is not softened by one word.*
+
+> ### KC-002 — funding-carry conditioning family
+>
+> **Sponsor:** PM Pod B. **Accepted by the sponsor in writing, and signed by the Principal, before any capital — paper or real — is allocated to this family.**
+>
+> **Observation date: 2027-01-31**, being 187 days after an intended pre-registration seal `C = 2026-07-28`. **The date is fixed and does not move** with the sprint calendar, the ingest schedule, the cost-model repair, or the harness. If the seal slips, the window shortens; the date does not extend.
+>
+> **Why 187 days and not 95.** KC-001's window suits an event-driven family that either generates signals or does not. This family is continuous and always-on; 187 days yields ~184 daily bars and ~552 funding prints — **enough to measure expectancy and to count conditioning events, and deliberately not enough to measure a Sharpe.** KC-002 tests neither Sharpe nor statistical significance, and clause (b) is what stops it degenerating into "wait longer."
+>
+> **On that date, Validation computes — from `book/registry.db` and `book/pit.db` alone, on the frozen pre-registration, over the forward window `[C, 2027-01-31]`:**
+>
+> **(i)** cumulative **net** return of the sealed conditioned strategy `R_strat`, after the full §4.6 cost stack at **1× modelled costs** using `CRYPTO_PERP_TAKER` **as repaired under condition precedent C1**;
+> **(ii)** the count of days on which the sealed conditioning moved the position's notional by more than **±25%** from the benchmark's constant notional; and
+> **(iii)** the sealed strategy's **worst single-day net return** in the window, expressed as a fraction of allocated sleeve notional.
+>
+> ### The family is KILLED — registry marked TERMINATED, no further trials, no Gate 1 submission ever — if ANY of:
+> ### (a) cumulative net return ≤ 0; OR
+> ### (b) fewer than 30 days on which the conditioning moved notional by more than ±25%; OR
+> ### (c) any single day on which the net loss exceeds 4.0% of allocated sleeve notional.
+>
+> **Clause (b) is not a technicality and must not be waived as one.** It kills on **the conditioning never having conditioned.** If the state variable did not move the position, then whatever the P&L was, it was the benchmark's — the family is the crypto carry factor by construction, and Charter §5.4 pays nothing for it. This is the outcome nobody plans for and which otherwise becomes "the signal will fire eventually" indefinitely. It is KC-001 clause (b)'s logic — kill on insufficient signal — transposed to a continuous strategy.
+>
+> **Clause (c) is the tail clause and it exists because the backtest cannot see it.** A delta-neutral pair at 1× notional should not lose 4% of allocation in a day; if it does, either the hedge failed or a basis dislocation ran through it, and both are the intraday risk that daily bars structurally cannot measure (§16). **4.0% is Charter §5.2's Tier-2 formal-notice threshold, applied to a single day at the sleeve level rather than to a drawdown at the pod level** — a deliberate borrowing, and stated as such. **The firm should not learn how large this tail gets by holding on through it.** At sleeve scale a 4% single-day loss is $10,000, or 10 bp of firm NAV, which is trivial in money and decisive in information; the kill is for the information.
+>
+> **Anti-reinterpretation clauses, binding:**
+> 1. **No re-parameterisation.** All three quantities are computed on the **sealed** specification — not a tuned variant, not the plateau centroid discovered later, not a subset, not "the version we would have run."
+> 2. **No post-`C` exclusions.** Any regime filter, date exclusion, asset exclusion, venue change, or universe restriction not present in the sealed pre-registration is inadmissible in this computation. **This clause is the §7 declaration made enforceable**, and any of K1–K6 revised in order to change this computation's answer is refused by P3 and, if pursued, opens a successor family at the §7.2 escalated `n_inherited`.
+> 3. **No restatement as continuation.** A hypothesis restated after 2027-01-31 is a **new family**, opened with `n_inherited ≥` the killed family's final `n_trials` plus its own, and inherits neither this family's schedule, nor its allocation, nor its narrative.
+> 4. **Kill is automatic on the date.** It requires no meeting, no vote, and no CIO concurrence. **It is not appealable to the CIO.** Only the Principal may reverse it, in writing, logged in `logs/DECISION_RECORD.md` as an Appendix-B-#4 override with its reason on the face of the record and reported in the next Monthly Letter.
+> 5. **SILENCE IS A KILL.** If the computation is not performed on 2027-01-31 — **for any reason, including that the perp price series was never ingested, that the cost model was never repaired, that Validation had no unit available, or that the harness was not ready — the family is killed by default.** A kill condition that can be defeated by not running it is not a kill condition. **This clause is copied deliberately from KC-001, where the Devil's Advocate predicted it would be the one someone tried to soften. It has not been softened here either, and the seat that would benefit most from softening it is the seat that wrote it.**
+
+**Condition precedent, separately binding:** the **C1 cost-model repair** (§12) is specified by Validation and implemented by **sprint close, 2026-08-11**. **If unresolved by that date, the family is ADMITTED-AS-EXPLORATORY only and remains so until it is resolved** — because until then no net number this family produces means anything, and clause (a) would be computing a −21.9%/yr artifact.
+
+### 14.1 What KC-002 is NOT — and it is not what a reader will assume
+
+**Recorded because Validation predicted the exact sentence.** C-001 §1.6 states: *"KC-001 is a kill condition, not a confirmatory test. It tests `expectancy > 0` and `events ≥ 30` — a one-sided screen with no α and no power statement. **Surviving KC-001 confirms nothing at any `N`.** Recorded because 'the family passed its forward test' is the sentence I expect to read on 2026-11-01 if this is not said now."*
+
+> **The identical statement binds KC-002, and this seat makes it here rather than waiting to be told.**
+>
+> **KC-002 is a one-sided kill screen with no α and no power statement. Surviving it confirms nothing at any `N`.** Clauses (a), (b) and (c) are each a bare comparison against a threshold; none has a null distribution; none is a test. **"The family survived its forward window" is not a result and may not appear in any artifact as one.**
+>
+> **This family does not claim the C-001 `N = 1` confirmatory exemption**, and nothing in this pre-registration should be read as claiming it. Should it ever seek one, it must satisfy **E1–E5** — one statistic, one α, named at sealing; computed once; every other forward computation logged to `N_forward`; the freeze mechanically evidenced by P1–P8; and `holdout_classification = FORWARD` — **and it must be entered in the firm-level register of outstanding confirmatory exemptions that I-032 requires and that does not yet exist.** Validation's measured figure — 20 families each holding one exemption gives a **firm-level false-positive rate of ≈2.7%** — is the reason that register is a precondition and not a formality.
+
+### 14.2 Two notes on KC-002, neither of which softens it
+
+1. **The 4.0% in clause (c) is calibrated, not arbitrary.** It is Charter §5.2 Tier 2. This seat expects [inferred, **not measured** — no return statistic has been computed on `pit.db`] that a clause-(c)-scale event occurred at least once in the in-sample period, most plausibly in March 2020 or May 2021. **If the in-sample run shows such days and the family survives F-002 anyway, that is important information and the pre-registration must be read as having anticipated it.** If clause (c) then fires in the forward window, the family dies having already told the firm it might.
+2. **This seat's honest expectation, recorded now so it is not claimed as foresight later** [inferred]: **clause (b) is the most likely killer**, ahead of (a) and (c). A 30-day baseline on a mean-reverting funding series may simply not produce 30 days of ±25% notional movement in 187 days. **That would be a finding about the state variable's dynamic range, not about the market**, and it points directly at the successor family named in §19.3.
+
+---
+
+## 15. METHOD — the sequenced test plan, cheapest kill first
+
+*§7.2(5): universe, data, timestamps, splits, embargo, cost model, trial history. Universe and timestamps are §6 and §9.2. This section is the order of operations.*
+
+| # | Step | Cost | Kills what | Registry trials |
+|---:|---|---|---|---:|
+| **0** | **C1 — Validation specifies the funding-cost repair** (§12): how realized funding enters the P&L, whether via a synthetic perp total-return leg or a signed carry term on `CostModel`, and who implements it. **Nothing downstream produces a valid net number until this lands.** | fraction of an Opus unit | Nothing directly. **Blocks everything.** | 0 |
+| **1** | **Ingest `binanceusdm` daily OHLCV** for BTC/ETH/SOL perpetuals via `fetch_ccxt_ohlcv`, bounded by the sealed ceiling at `C`, two-timestamp discipline, raw only. | ~1 Sonnet unit | Nothing — enabling. §8's single open dependency. | 0 |
+| **1b** | **C11 — the leg-(ii) null calibration** (§5.5(e)), if Validation requires it. Block-bootstrap / sign-randomization of the conditioning schedule against realized `R_bench`, average exposure fixed. **Runs before F-002, never after** — a null measured after seeing the statistic is not a null. | fraction of a unit | Nothing. Converts §5.3's one [assumed] probability to [measured]. | ≤ 2 |
+| **2** | **F-002 leg (0) then leg (iii) — the qualifying-bar count, then the benchmark run alone.** Is the sample sufficient, and is there a premium to condition on net of both legs' costs? | ~1 Sonnet unit | **The family, root and branch.** Cheapest killing test; this seat's standing discipline is to run it first. | **1** |
+| **3** | **F-002 legs (i) and (ii) — the strategy run, the exposure-matched benchmark run, and the two comparisons.** Newey–West alpha to `R_bench`; exposure-matched tail reduction vs `R_bench_scaled`. **Evaluated ONCE (E2). No re-run with corrected costs — that would be a new family.** | shared with step 2 | **The thesis.** Two independent ways it dies. | **2** |
+| **4** | **Capacity measurement** — trailing-20-session median notional per leg per asset against the $2.5M screen; and the skew / expected-shortfall line on both series. | ~1 Sonnet unit | §4.4 capacity, if depth is absent. Reported regardless. | ≤ 2 |
+| **5** | Per-regime-cell decomposition, cost sensitivity at 1× / 2× / repaired preset, SOL on its own span, T-capacity window robustness. | ~1 Sonnet unit | Nothing — required reporting | ≤ 6 |
+| **6** | **±50% grid**, 2 parameters × 5 steps, via `run_parameter_grid`. **Plateau centroid advances; argmax is reported alongside it and never carried forward.** | ~1 Sonnet unit | §4.4 parameter surface | **25** |
+| **7** | Walk-forward, ≥ 10 windows, purged k-fold with 1% embargo. | ~1 Sonnet unit | §4.4 WFE | ≤ 20 |
+| **8** | Forward-window generation through 2027-01-31, for KC-002. | ongoing | KC-002 | ≤ 25 |
+
+> **Steps 0–3 are the whole decision.** Everything from step 4 onward exists to make a *positive* result trustworthy. **None of it is needed to make a negative result decisive**, and if step 2 fires the firm has spent one Sonnet unit and one ingest to kill a family, which is a successful deliverable and is written up as one.
+
+**Standing methodological requirements, all binding and none waived:** prices via `PITStore` only (A4); every backtest through `castellan.run_backtest` against this family (A2); `execution_lag = 1` minimum, enforced by the engine; purged k-fold with 1% embargo; costs from `castellan.costs` presets or Principal-approved additions only — **no hand-rolled cost numbers anywhere, including the paper book**; gross and net always, with the breakeven cost; `backtest_years` passed **explicitly** as true calendar span **and `oos_index` supplied** (G1–G5 — without it the length criterion is INSUFFICIENT-DATA, never PASS).
+
+---
+
+## 16. WHAT CANNOT BE EVALUATED, AND WHY IT MATTERS BEFORE THE FIRST RUN
+
+*Stated at pre-registration rather than discovered at Gate 1.*
+
+| §4.4 criterion / concern | Status | Reason |
+|---|---|---|
+| **Net Sharpe, t-stat, DSR, PBO** | **Computable and — uniquely among the firm's families so far — correctly denominatored** | `N_inherited = 0` is honest, the grid populates `σ_SR` genuinely, and I-027's residual is **0.13 years of MinBTL** (§10.3). |
+| **Backtest length ≥ MinBTL(N) and ≥ 4 years** | **Clears, with margin, at the declared budget** | 6.571 years available; `MinBTL(86, SR 1.0) = 6.14`. **This is the criterion that kills `forward-lag-001` and this family clears it** (§10.4). |
+| **Holdout ≥ 12 months, most recent 25%** | **Reachable but the earliest date is contested** | §11.3 — three readings, three earliest-Gate-1 dates from 2027-07-28 to 2030-07-28. **Escalated to Validation, not assumed.** |
+| **Capacity ≥ 10× allocation** | **Evaluable with data on disk** | The `volume` field already exists for spot; perp volume arrives at step 1. **Contrast I-026**, where the instrument does not exist at all. |
+| **Cost robustness at 2× modelled costs** | **Evaluable but currently meaningless** | **§12.6:** `scaled(2.0)` doubles `funding_bps_annual`, so the 2× test stresses the sign error rather than the costs. Meaningful only after C1. |
+| **Parameter surface — ≥60% of ±50% grid net-profitable** | **Evaluable, and budgeted** | 25 grid points, §10.5. A real advantage over PREREG-001, which authorized no grid. |
+| **Correlation to live pod strategies** | Trivially satisfiable | No live strategies exist. Recorded so the PASS is not read as informative. |
+| **Red-Team Memo with a binding kill condition** | **NOT YET SATISFIED** | KC-002 exists and is written to KC-001's shape, **but no Devil's Advocate memo has been written on this family.** §4.4 requires one and §6.4 defers a packet without it. **Condition precedent C3.** |
+| **Liquidation / venue-insolvency charge** | **Cannot be expressed at all** | **§12.5** — `CostModel` has no field for it. Same shape as I-023(b). **The paper book will over-report this family's net by an unmeasured amount whose sign is known.** |
+| **THE INTRADAY RISK** | **STRUCTURALLY UNMEASURABLE ON THIS DATA** | See below. |
+
+### 16.1 The intraday problem, stated at full strength
+
+**The strategy's risk materializes intraday. `book/pit.db` holds daily bars.**
+
+A liquidation cascade compresses into minutes to hours: the perp dislocates from spot, margin is called on the short-perp leg, and the position is force-closed at the worst basis of the day. **A daily bar shows the open and the close and nothing in between.** A backtest on daily bars sees a basis excursion that opened and closed on the same day as *no event at all*, and it marks a position that would have been liquidated as still held and recovering.
+
+> **The measurable part of this strategy is the part that flatters it. The part that kills it is the part the data cannot see. A daily-bar backtest of a funding-carry family will produce a smoother equity curve, a higher Sharpe, and a shallower maximum drawdown than the strategy has, and the gap is not estimable from within the daily data.**
+
+**This is the same structural shape as I-023(b) and I-026** — the firm's instrument cannot measure the mandate's dominant risk — and it is named at Gate 0 for the same reason: so that a good-looking result is read correctly.
+
+**Three responses, all of which this document takes:**
+
+1. **F-002 leg (ii) is written on the tail**, so the family must demonstrate tail reduction rather than merely a good Sharpe.
+2. **KC-002 clause (c) is a forward-window tail trigger**, which catches at wall-clock what the backtest cannot catch in history.
+3. **Skew and expected shortfall are required on every artifact** (§6.3), because §4.4's battery — Sharpe, t-stat, DSR, subperiod positivity, P&L concentration — **rewards a short-tail carry profile at every single criterion and contains no criterion that can see one.** That is a gap in the firm's own Gate 1 design, surfaced here because this is the first family that walks straight into it. **Proposed as a Charter §4.4 addition for the Principal's consideration; not asserted as binding.**
+
+**The fix that would close it is cheap in principle and expensive in volume:** `ccxt` exposes minute-level history [cited — Charter §3.2 *"Deep minute-level history"*]. 1-hour bars over 6.571 years across 3 assets × 2 legs is ~345,000 bars — feasible, unscheduled, and **not required for a KILL verdict.** It is named in §19.3 as the successor family's data requirement.
+
+---
+
+## 17. RISKS, AND WHAT KILLS THIS
+
+Ranked by how much each should move the decision.
+
+| Rank | Risk | Kills it how |
+|---:|---|---|
+| **1** | **The cost preset inverts the sign of funding (§12)** | Every net number is wrong by 32.85 points/yr, deterministically. **Blocking on every net claim, including the paper book.** Condition precedent C1. Fixable, and the fix is Validation's to specify. |
+| **2** | **The intraday risk is unmeasurable on daily bars (§16.1)** | Not a Gate 1 failure — **worse.** It produces a Gate 1 *pass* that the firm cannot rely on. Mitigated by F-002 (ii), KC-002 (c), and mandatory skew/ES reporting; **not eliminated.** |
+| **3** | **The conditioning never conditions (KC-002 clause b)** | The most likely proximate cause of death [inferred]. A 30-day baseline may not move the position enough to matter. Kills the family and points at the successor. |
+| **4** | **Venue survivorship (§9.1 S2)** | The backtest runs on the branch where the venue survived. **Unmeasurable, uncharageable, disclosed.** |
+| **5** | **Crowding — the alpha is competed away** | The unconditioned carry is unambiguously crowded and §3.3 concedes it. The conditioning claim is narrower and therefore less crowded, but §11.6 accepts the full 50% haircut and §5.4 shows the resulting pre-haircut bar is `t(α) ≈ 6.0`. **This is the largest honest hurdle and it is accepted, not argued down.** |
+| **6** | **Short-vol payoff defeats the firm's own validation battery (§16.1)** | Sharpe, t-stat, DSR, subperiod positivity and P&L concentration all reward a carry profile. **The firm's Gate 1 cannot see the risk it is gating.** Raised as a §4.4 gap, not as this family's excuse. |
+| **7** | **The missing perp price series (§8)** | One session of ingest. **The only reason it is on this list is that the tempting shortcut — assume perp ≈ spot — would zero out the basis and produce a spectacular, meaningless result.** Named so it is not taken. |
+| **8** | **Materiality (§13.2)** | Does not kill the research. **Caps the investment case at 15–30 bp of firm NAV unlevered, and the levered version is the thing the research exists to price.** |
+| **9** | **The §11.3 holdout-reading ambiguity** | Could push earliest Gate 1 from 2027-07-28 to 2030-07-28. **Decidable by Validation for a fraction of a unit; undecided, it is a schedule risk the firm does not know it is carrying.** |
+| **10** | **Three assets is a thin cross-section** | `N_eff` across BTC and ETH will be far below 2 — the two are highly co-moving and their funding series more so. **Raw and effective observation counts are required side by side in every artifact**, as PREREG-001 §15 requires for its own pooling. |
+
+**Three things this seat will not claim as risk mitigation:** that the mechanism's quality is evidence the edge exists; that a good Sharpe on a short-tail payoff is evidence of anything; and that delta-neutrality makes the position safe — it makes it *directionally* neutral and leaves it fully exposed to the basis, which is where the loss lives.
+
+---
+
+## 18. SIZING, LIMITS, EXIT CRITERIA
+
+| Element | Value |
+|---|---|
+| Intended initial allocation | **USD 250,000** (§13) |
+| Per-asset notional | **USD 125,000** × 2 assets |
+| Maximum concurrent gross | **USD 500,000** at `w = 1.0` — two legs. **2.5× the allocation is inside Pod B's 4× gross limit** (§5.1) and it is stated here because a two-legged strategy's gross is not its allocation. |
+| Leverage | **None. `w_max = 1.0`.** The strategy never exceeds delta-neutral. §13.3 records that this is what makes it immaterial and why the leverage question is deferred to a result rather than assumed. |
+| Participation cap | ≤ 5%/day of trailing-20-session volume per leg (§4.2 `ADV_PARTICIPATION_MAX`); liquidity floor ≤ 15% of 20-day ADV (§5.1). |
+| Correlated cluster | **BTC and ETH are one cluster, not two positions.** Their funding series co-move; treating them as independent would understate concentration. Cluster cap 15% of pod capital (§5.1) applies to the crypto-carry cluster as a whole. |
+| Position exit | **None.** No target, no stop, no maximum hold (§6.2). Risk is managed by size, which is the hypothesis. |
+| **Family exit** | **F-002 fires** → KILL memo, written with the same care as a PROCEED memo (house rule 1). **KC-002 fires** → registry TERMINATED, automatic, not appealable to the CIO. **Trial budget exhausted at 80, or `N` reaching 110** → this seat halts the family and reports it before Validation raises it. |
+| Sizing on a Gate 1 pass | ≤ 25% of target allocation initially, ramped on realized performance (§4.5). |
+| Drawdown | Charter §5.2 ladder applies at pod level. **This seat notes for the CRO that a $250k sleeve cannot on its own reach a pod-level Tier 3, which is why KC-002 clause (c) operates at the sleeve level** — the firm's standing ladder is too coarse to see this family fail. |
+
+---
+
+## 19. VERDICT — should this hypothesis get the compute?
+
+*Within this seat's mandate ("decides alone: which hypotheses enter and their priority; test design; when to abandon a line") and given plainly.*
+
+> ### VERDICT: **FUND IT.** Recommended Gate 0 intake verdict: **ADMITTED**, conditional on **C1, C3 and C11**.
+> **Approximately 4 Sonnet units and a fraction of one Opus unit. Not a flagship allocation.**
+> **AND: DO NOT SEAL TODAY (§20.1).** Sealing waits on the three conditions. This seat held the opposite position earlier in this session and states the reversal at §20.1 rather than quietly adopting Validation's.
+
+### 19.1 Why this is a different verdict from PREREG-001's, and the difference is arithmetic
+
+PREREG-001 §17 recommended **ADMITTED-AS-EXPLORATORY** and *"fund the falsifier, not the family."* The reason was not doubt about the mechanism — the Devil's Advocate conceded the mechanism was coherent — but that **Gate 1 was unreachable at any Sharpe**, because `MinBTL(31,250) = 17.06 years` against a venue with less than four.
+
+| | `forward-lag-001` | `funding-carry-conditioning-002` |
+|---|---|---|
+| `N_inherited` | **31,250** [inferred, D-009] | **0** [measured] |
+| `MinBTL` at Gate 1 Sharpe floor | **17.06 yr** | **6.14 yr** at the full budget |
+| History available | **unmeasured; plausibly < 4 yr** [cited — I-004] | **6.571 yr, zero gaps** [measured] |
+| Gate 1 length criterion | **FAILS before the first run** | **CLEARS with 0.43 yr of margin** |
+| Data on disk | **0 rows; no loader; unaccepted spec** [measured] | **all but one series; loader exists and has been run** [measured] |
+| Capacity measurable? | **No** — depth is structurally unreconstructible [cited — I-026] | **Yes** — from the `volume` field on disk |
+| Blocking harness defect | **I-027**, worth a factor of ~1,000 in `N` | **I-027**, worth **0.13 years** — not blocking here |
+| Blocking cost defect | I-023, ~2.5–5× a cost | **§12, a sign inversion — larger, and fixable** |
+
+> **The verdict differs because the arithmetic differs. A hypothesis whose verdict is reachable deserves compute; one whose verdict is not, does not — however good its story.** That is the whole content of the redirect the Principal approved, and it is not an argument that this family's mechanism is better than the other's.
+
+### 19.2 What to spend, and what not to
+
+| Spend | Do not spend |
+|---|---|
+| **C1** — Validation's funding-cost specification. Fraction of an Opus unit. **Everything else is blocked on it.** | Any net-P&L claim, in any document or in the paper book, before C1 lands. |
+| **Steps 1–3** — perp ingest, benchmark run, strategy run, F-002 in full. **~2 Sonnet units.** | Intraday ingest (~345,000 bars) **until F-002 survives.** It is the successor's requirement, not this family's. |
+| **Steps 4–7** — capacity, diagnostics, the 25-point grid, walk-forward. **~2 Sonnet units, conditional on F-002 surviving.** | Any expansion of the trial budget past 80, or of `N` past 110, on the strength of an early result. §10.4. |
+| **One Devil's Advocate Opus unit** for the mandatory Red-Team Memo (C3). | Any Gate 1 apparatus before §11.3's holdout reading is settled. |
+
+### 19.3 The honest expectation, recorded now so it is not claimed as foresight later
+
+[inferred, from the design rather than from any measurement]
+
+- **Leg (iii) survives.** A positive net carry over 6.5 years on BTC and ETH is the most likely of the three outcomes, and it would confirm what the Charter already says rather than discovering anything.
+- **Leg (i) is close to a coin flip**, and the 50% haircut makes clearing Gate 1's version of it (`t(α) ≈ 6.0` pre-haircut) considerably less than even.
+- **Leg (ii) is the most likely killer, and the reason is granularity, not the market.** A daily conditioning signal is being asked to reduce a tail that materializes intraday. **That is asking a daily instrument to dodge an intraday event, and the honest prior is that it cannot.**
+
+> **If leg (ii) fires, the KILL memo names a specific successor and that successor is the family worth the firm's compute:**
+>
+> **the same claim, on 1-hour or 8-hour bars, opened with `predecessor_family = "funding-carry-conditioning-002"` and `n_inherited ≥` this family's final `n_trials`** — carried transitively, per K6's escalation, at the granularity menu's size if K6 is what changed. It would need ~345,000 bars of ccxt history, which the firm can retrieve, and it would be able to see the risk this family cannot.
+>
+> **That is the result this seat actually expects to deliver: not an edge, and not a bare null, but a measured demonstration that the edge is unmeasurable at daily granularity — which is a finding the firm can act on, and which costs ~4 Sonnet units to establish rather than the 20 it would cost to go straight to intraday.**
+
+### 19.4 What this verdict is not
+
+**It is not a claim that the funding carry is an edge.** §3.3 says explicitly that it is not, that it is factor beta under §5.4, and that the firm should not pay for it.
+
+**It is not a recommendation to prefer this family because this seat originated it.** I-025's origin-ratio metric is a diagnostic, not a target, and a Director-originated hypothesis funded because it is Director-originated would corrupt the metric it was created to inform. **The case is made at §19.1 on arithmetic that would hold whoever wrote it.**
+
+**It does not soften KC-002 by one word,** and clause 5 — silence is a kill — binds this seat exactly as KC-001's binds Pod B.
+
+---
+
+## 20. CONDITIONS PRECEDENT TO SEALING
+
+*Nothing may be added after sealing (D-007, P7). These must be resolved — or explicitly accepted as unresolved by Validation at Gate 0 intake — before Pod B calls `open_hypothesis`.*
+
+| # | Condition | Owner | Blocking? |
+|---|---|---|---|
+| **C1** | **The funding-cost repair (§12).** Validation specifies how realized funding enters the P&L — a signed carry term on `CostModel`, or a synthetic perp total-return leg with `funding_bps_annual = 0.0` — **and rules on whether the latter breaches the Seat 9 standing rule that researchers may not hand-roll costs.** A `CRYPTO_SPOT_TAKER` preset is added if the specification requires one, Principal-approved. **Acceptance test authored by Validation before implementation** (I-021). | Quant Validation → head-of-data-infra → Principal | **BLOCKING on every net claim.** Not blocking on sealing — see the note below. |
+| **C2** | Validation's Gate 0 intake verdict on this document. | Quant Validation | **BLOCKING** — sealing is what fixes `C`, and it follows intake |
+| **C3** | **A Devil's Advocate Red-Team Memo on this family.** §4.4 requires one and §6.4 defers a packet without one. **None exists.** KC-002 is written to KC-001's shape but is **this seat's**, not the red team's, and a kill condition authored by the sponsor is structurally weaker than one authored against it. | Devil's Advocate | Blocking on **Gate 1**, not on sealing |
+| **C4** | **Validation's ruling on §11.3** — which window `oos_index` carries under Option D, and therefore the earliest date Gate 1 is reachable. Bears identically on `forward-lag-001`. | Quant Validation | Blocking on **Gate 1 scheduling**, not on sealing |
+| **C5** | **Validation's ruling on §5.4** — the point of application of the §4.6 50% haircut (returns, Sharpe, or alpha), which is unspecified in the Charter and uncomputed in the harness (I-019). | Quant Validation | Blocking on **Gate 1**, not on sealing |
+| **C6** | **Validation confirms §8.2** — that reading `field='funding_rate'` via `PITStore.asof` / `rows_in_window` is an admissible A4 path, there being no `pit_*` panel accessor for a non-close field. | Quant Validation | Blocking on **measurement**, not on sealing |
+| **C7** | Pod B's written acceptance of **KC-002** as sponsor, and the Principal's signature, before any capital paper or real. | PM Pod B / the Principal | **BLOCKING** (KC-002 preamble) |
+| **C8** | The seal and `HoldoutVault.seal()` occur in the **same session, same UTC day**; passphrase supplied by the Principal and written nowhere. | PM Pod B + the Principal | **BLOCKING** (P7) |
+| **C9** | `binanceusdm` perpetual OHLCV ingested for BTC/ETH/SOL, bounded by the sealed ceiling at `C`. | head-of-data-infra | Blocking on **measurement**, not on sealing |
+| **C10** | **I-022** — the trial-count criterion stops returning a literal `True`. Until then the 80-trial budget is enforced by this seat and by nothing else. | head-of-data-infra | Blocking on **Gate 1**, not on sealing |
+| **C11** | **The leg-(ii) null calibration (§5.5(e)).** A block-bootstrap or sign-randomization of the conditioning schedule against the realized `R_bench` series, average exposure held fixed, converting §5.3's `≤ 0.10` from **[assumed]** to **[measured]**. ≤ 2 trials. **This seat recommends Validation require it.** | Director of Research, on Validation's requirement | **Recommended BLOCKING on sealing** — see below |
+
+### 20.1 The sequencing call — this seat adopts Validation's ruling against its own earlier position
+
+**The rationale this document originally carried is overturned and is not repeated.** The first draft argued: seal now, record C1 as unresolved on the face of the document, because `C` is the seal date and every day of delay is forward window that does not accrue. **That is the CIO's rationale from D-009, and Validation overturned it while this document was being written** [cited — I-030; `VALIDATION-GATE0-001` §4.3]:
+
+> *delay is **strictly cheaper** than sealing defective, because P7 freezes the document permanently and the only remedy for a bad seal is a **successor family whose window starts later anyway** — so a bad seal buys nothing and forfeits the correction.*
+
+**The argument is correct and it applies with more force here than it did there.** PREREG-001's unresolved condition would have frozen a decorative denominator. **This family's would freeze a specification whose every P&L number is deterministically wrong by 32.85 points/yr, and freeze a falsifier one of whose four probabilities is assumed.** A seal today buys perhaps a week of forward window and forfeits the ability to fix either.
+
+> ### **THIS SEAT'S SEQUENCING RECOMMENDATION, REVISED: DO NOT SEAL TODAY.**
+>
+> **Seal when C1, C3 and C11 have landed** — the cost-model repair specified, the Devil's Advocate memo written, and leg (ii)'s null measured. **Realistic seal date: on or before sprint close, 2026-08-11.** `C` moves with it, KC-002's observation date moves with it to `C + 187 days`, and the firm loses two weeks of a forward window it will hold for at least twelve months.
+>
+> **What this costs, stated rather than minimized:** two weeks of forward accrual, and a KC-002 date that this document currently writes as 2027-01-31 and which must be restated as `C + 187 days` at sealing. **What it buys: the ability to fix a sign-inverted cost model and an assumed probability, neither of which P7 will let anyone touch afterwards.**
+>
+> **This seat had the other position four hours ago and states the reversal plainly rather than quietly adopting the new one.**
+
+**I-027 is deliberately NOT a condition precedent for this family** (§10.3). It costs 0.13 years of required backtest length against 6.571 available. It remains open, it must still be disclosed on the Validation Report's face, and it must not be closed on the strength of this family's indifference to it. **Note also I-033(1): H2's seeding would make every seeded family read OVER BUDGET, since seeded `N` is compared against a budget counting only real runs. This family is unaffected — `n_inherited = 0` — and that immunity is a fact about this family, not evidence the defect is benign.**
+
+---
+
+## 21. THE SEAL BLOCK — exact binding field set for `TrialRegistry.open_hypothesis`
+
+*P2 names the binding set exhaustively. These strings are what get hashed into `prereg_sha256` and shadow-copied into the `hypothesis_sealed` event. **Pod B executes this. This seat does not.** Note that `n_inherited` is absent from the signature — I-027 — and is 0 for this family in any case.*
+
+```
+family                            = "funding-carry-conditioning-002"
+
+statement                         = "On binance/binanceusdm, a delta-neutral long-spot / short-perpetual
+                                     position in BTC and ETH earns perpetual funding; the UNCONDITIONED
+                                     form of that position is crypto CARRY FACTOR exposure, which Charter
+                                     5.4 attributes to Factor P&L and does not pay for. The claim under
+                                     test is narrower: de-scaling that position as the realized funding
+                                     rate rises above its own trailing 30-day baseline produces POSITIVE
+                                     ALPHA to the unconditioned position, at the firm's own t >= 3.0
+                                     hurdle, over 2020-01-01 to C, net of the full Charter 4.6 cost stack
+                                     on both legs. Position: long 1.0 unit spot notional, short w(t) units
+                                     perp notional, w(t) = clip(1.0 - k*max(0, z(t) - d), 0, 1.0), where
+                                     z(t) is the deviation of the trailing-24h realized funding rate from
+                                     its own trailing 30-day mean in units of that window's standard
+                                     deviation. w never exceeds 1.0 and the position is NEVER long perp."
+
+mechanism                         = "Perpetual funding is the rental price of leverage, not a mispricing.
+                                     Who pays: (1) leveraged directional retail, for whom the perp is the
+                                     cheapest and most accessible leveraged long in crypto - no expiry, no
+                                     roll, no dated-contract basis, reachable by account types and
+                                     jurisdictions that cannot access CME futures or prime brokerage;
+                                     they keep paying because the alternative on offer is not a cheaper
+                                     rate but not having the position; (2) structurally long allocators
+                                     using perps as an index proxy to avoid self-custody, paying funding
+                                     as a custody-and-operations substitute; (3) hedgers of illiquid
+                                     crypto exposure - miners, token treasuries, locked positions - who
+                                     are SHORT perp and are the mechanism of funding INVERSION in
+                                     drawdowns, not of the positive premium.
+
+                                     WHY THIS IS NOT ITSELF AN EDGE, stated at Gate 0: a premium that
+                                     persists because it is a fair price for a service is not alpha. The
+                                     ~11%/yr baseline is approximately the market-clearing price of three
+                                     risks a carry supplier genuinely bears - venue insolvency (FTX is the
+                                     base rate, not a hypothetical), liquidation and basis dislocation
+                                     during cascades, and funding inversion positively correlated with
+                                     basis loss. Under Charter 5.4 the unconditioned carry decomposes to
+                                     100% Factor P&L and 0% idiosyncratic, and the firm pays only for the
+                                     third line.
+
+                                     THE ACTUAL CLAIM: funding is a direct observable of long-side
+                                     positioning crowding. The premium is approximately LINEAR in crowding
+                                     while cascade severity is CONVEX in it, because cascade depth depends
+                                     on the stock of positions that must be force-closed. Beyond some
+                                     funding level the marginal premium no longer pays for the marginal
+                                     tail. Persistence escape selected: MANDATE SEGMENTATION - the
+                                     marginal supplier of carry at scale runs it as a yield product
+                                     (structured note, delta-neutral vault, exchange earn programme,
+                                     treasury overlay) whose liability structure will not permit
+                                     de-scaling: it advertises a yield and loses subscriptions when it
+                                     stops earning it, de-scales on redemption cycles rather than risk
+                                     signals, and is mandated in notional deployed rather than risk taken.
+                                     Escapes REJECTED: (a) 'the premium is un-arbitraged' - rejected on
+                                     its face, cash-and-carry is the most institutionalized trade in
+                                     crypto; (b) capital constraint - decays with market maturation, an
+                                     edge with an expiry date. FALSIFIER OF THE PERSISTENCE CLAIM:
+                                     aggregate short-perp open interest FALLING as funding rises above its
+                                     trailing baseline would show the supply side already de-scales and
+                                     kills escape (c). Open interest is NOT in pit.db and NO LOADER
+                                     EXISTS; this falsifier is declared unmeasured, not satisfied.
+                                     REJECTED AS MECHANISM: 'leveraged longs are impatient' - a
+                                     restatement of the observation, not an explanation."
+
+falsifier                         = "F-002. Computed from THREE runs through castellan.run_backtest
+                                     against this family, on the same daily UTC index over the full
+                                     in-sample [2020-01-01, C], all net of the full Charter 4.6 cost stack
+                                     AS REPAIRED PER CONDITION PRECEDENT C1:
+                                     R_bench = the UNCONDITIONED benchmark (delta-neutral long-spot /
+                                       short-perp, CONSTANT notional w == 1.0, equal-weight, daily
+                                       rebalance inside the turnover band);
+                                     R_strat = identical except notional scaled by w(t) per the declared
+                                       state variable, direction, cap and deadband;
+                                     R_bench_scaled = the EXPOSURE-MATCHED benchmark, R_bench x c where
+                                       c = (time-average gross exposure of R_strat) / (time-average gross
+                                       exposure of R_bench) over the full in-sample - a CONSTANT-notional
+                                       position holding the SAME AVERAGE SIZE as the conditioned strategy.
+                                     The hypothesis is FALSIFIED if ANY of the following four legs fires:
+                                     (0) INSUFFICIENT SAMPLE - fewer than 1,800 qualifying daily bars on
+                                       the common primary-universe index (~75% of the 2,398 bars the span
+                                       implies). Evaluated FIRST, and when it fires the verdict is
+                                       INSUFFICIENT-DATA, NOT survival. Present because I-029(c) is filed
+                                       against this seat: a falsifier with no minimum observation count is
+                                       a statistic with a decimal point on noise, and one whose
+                                       sample-size failure reads as 'not falsified' rewards missing data.
+                                     (iii) NO PREMIUM TO CONDITION ON - annualized NET return of R_bench
+                                       over the full in-sample <= 0. Cheapest leg; requires only the
+                                       benchmark run; RUNS FIRST among the substantive legs; kills the
+                                       family root and branch. H0: no funding premium net of costs.
+                                     (i) NO ALPHA TO THE FACTOR - in the OLS regression R_strat = alpha +
+                                       beta*R_bench + eps over the full in-sample, the NEWEY-WEST
+                                       t-statistic on alpha at a 21-bar (one calendar month, pre-
+                                       committed) lag truncation is <= 3.0 (Charter 4.2 T_STAT_HURDLE
+                                       applied to the residual, not to the raw return). Newey-West rather
+                                       than OLS because a carry residual is autocorrelated by construction
+                                       and an OLS t on it is inflated in a known direction. H0: alpha = 0,
+                                       statistic asymptotically standard normal, ALPHA = 0.0013 one-sided.
+                                       If it fires, the conditioning contributes nothing the constant-size
+                                       position did not have; the family is carry factor beta and Charter
+                                       5.4 pays nothing for it.
+                                     (ii) NO TAIL REDUCTION PER UNIT OF EXPOSURE GIVEN UP - the mean of
+                                       R_strat's 20 WORST daily net returns is not better (less negative)
+                                       than the mean of R_bench_scaled's 20 worst daily net returns by at
+                                       least 25%. THE COMPARISON IS AGAINST THE EXPOSURE-MATCHED
+                                       BENCHMARK, NEVER AGAINST R_bench: R_strat is a re-weighted R_bench,
+                                       so ANY rule that reduces average size mechanically improves the
+                                       tail whether or not the mechanism is real, and comparing against
+                                       R_bench would bias this leg toward the falsifier's own survival -
+                                       I-029(d) transposed from a lag axis to a size axis. Matching
+                                       average exposure forces any tail improvement to come from WHEN size
+                                       was reduced rather than from HOW MUCH on average. H0: the
+                                       conditioning's timing carries no tail information; P(leg fails to
+                                       fire | H0) <= 0.10 [ASSUMED - the one term in this chain that is
+                                       not derived; condition precedent C11 measures it by block-bootstrap
+                                       or sign-randomization of the conditioning schedule against the
+                                       realized R_bench with average exposure held fixed, and this seat
+                                       RECOMMENDS Validation require it before sealing].
+                                     Any single leg firing is sufficient. NO LEG CONTAINS AN ARGMAX, A
+                                     PEAK, A GRID SEARCH, OR ANY SELECTION OVER CANDIDATES; there is no
+                                     lag dimension because the strategy holds both legs simultaneously and
+                                     continuously and there is nothing to time. Thresholds pre-committed
+                                     with stated bases: t >= 3.0 is Charter 4.2, not invented here; 20
+                                     days is ~0.83% of the 2,398-bar in-sample, the conventional ~1% tail
+                                     cut and the smallest window that is not a single-observation
+                                     artifact; 25% is a declared materiality margin so the leg neither
+                                     fires nor spares on noise; 1,800 bars is ~75% of the implied count;
+                                     zero is the only non-arbitrary floor for leg (iii).
+                                     JOINT FALSE-SURVIVAL RATE, the figure I-029 requires and which F-001
+                                     never stated: P(F-002 survives | the conditioning is pure noise) <=
+                                     0.0013 x 0.10 ~ 1.3e-4, against F-001's MEASURED 31% [cited, I-029] -
+                                     a factor of roughly 2,400, structural rather than tuned. Under the
+                                     joint null that there is also no premium, leg (iii) fires with
+                                     probability > 0.95 on its own and joint survival falls below 1e-5.
+                                     F-002 is registered as N=3 (three backtest runs), plus C11's <= 2 if
+                                     required. It is DISTINCT FROM and ADDITIONAL TO the kill condition
+                                     KC-002.
+                                     E2 DISCIPLINE, BINDING (Validation C-001): F-002 is evaluated ONCE,
+                                     on the first complete run of the three series after C1 lands. There
+                                     is NO re-run 'with the corrected costs', no second look, no 'we also
+                                     checked'. If C1's repair changes the cost stack after F-002 has been
+                                     computed, that is a NEW FAMILY, not a re-computation - a falsifier
+                                     that may be re-run until it spares the family is not a falsifier.
+                                     NOTE ON THE HAIRCUT: F-002 leg (i) tests the PRE-haircut t(alpha);
+                                     Gate 1's t >= 3.0 applies POST the R4(b) 50% haircut, which halves
+                                     expected return without touching the standard error, so Gate 1
+                                     clearance requires a pre-haircut t(alpha) of roughly 6.0. These are
+                                     DELIBERATELY DIFFERENT BARS and must not be conflated: F-002 asks
+                                     whether the family should continue to exist, Gate 1 whether it should
+                                     receive capital. A family clearing F-002 but not Gate 1 is written up
+                                     as PARK-WITH-TRIGGER, not PROCEED."
+
+universe                          = "Venue: binance (spot) and binanceusdm (perpetual). SINGLE VENUE, both
+                                     legs. PRIMARY UNIVERSE: BTC/USDT and ETH/USDT spot paired against
+                                     BTC/USDT:USDT and ETH/USDT:USDT perpetuals, common span 2020-01-01 to
+                                     C = 6.571 years, zero gaps [measured]. SECONDARY, reported separately
+                                     with its own span, its own N and its own verdict, NEVER pooled into
+                                     the primary: SOL (spot from 2020-08-11, funding from 2020-09-13,
+                                     5.87 years), because pooling SOL truncates the panel to 5.87 years
+                                     and cuts the admissible trial ceiling from 110 to 74. Unit of
+                                     observation: the ASSET-DAY, one daily UTC bar of one (spot, perp)
+                                     pair. Position: long 1.0 unit spot notional, short w(t) units perp
+                                     notional, w in [0, 1.0]; w = 1.0 for the benchmark; NEVER long perp.
+                                     P_notional = USD 125,000 per asset; intended initial allocation USD
+                                     250,000; gross at w=1.0 is USD 500,000 (two legs). Capacity screen:
+                                     trailing-20-session median daily notional >= 20 x P_notional = USD
+                                     2,500,000 per leg per asset, evaluated on a window ending STRICTLY
+                                     BEFORE the day screened. Regime cells {funding positive, negative} x
+                                     {trailing spot vol above, below own median} are all TRADED and all
+                                     REPORTED SEPARATELY; pooled figures never stand alone. Raw AND
+                                     effective observation counts reported side by side (BTC and ETH
+                                     co-move; N_eff will be far below 2).
+
+                                     REGIME-CONDITIONING DECLARATION (Principal's binding rider - the
+                                     choice AND the menu it was chosen from):
+                                     K1 STATE VARIABLE. Chosen: deviation of realized funding from its own
+                                       trailing 30-day mean, in units of that window's standard deviation.
+                                       Menu of 10: (1) raw funding level; (2) CHOSEN; (3) funding sign
+                                       only; (4) trailing realized spot volatility; (5) spot trend
+                                       /momentum; (6) spot drawdown from trailing high; (7) basis level
+                                       (perp-spot); (8) cross-asset funding dispersion; (9) calendar
+                                       (day-of-week / funding-print-of-day); (10) no conditioning at all.
+                                     K2 DIRECTION. Chosen: DE-SCALE into rich funding; w falls as z rises;
+                                       w never exceeds 1.0; never long perp. Menu of 3: (1) CHOSEN;
+                                       (2) up-scale at extremes (funding momentum); (3) sign-flip to
+                                       long-perp when funding inverts.
+                                     K3 PERIOD EXCLUSIONS. Chosen: NONE. Full span, INCLUDING COVID-Mar
+                                       2020, May-2021, LUNA/UST May-2022, FTX Nov-2022, the 2022 bear, the
+                                       2024 spot-ETF approval, and every negative-funding episode. Menu of
+                                       9: (0) CHOSEN - exclude nothing; (1) COVID; (2) May-2021; (3) LUNA;
+                                       (4) FTX; (5) 2022 bear; (6) pre-ETF; (7) first n months post-
+                                       listing as illiquid; (8) negative-funding regimes.
+                                     K4 ASSET UNIVERSE. Chosen: BTC+ETH primary, SOL reported separately.
+                                       Menu of 5: (1) BTC only; (2) CHOSEN; (3) BTC+ETH+SOL pooled on the
+                                       5.87-yr common span; (4) BTC+ETH only, SOL discarded; (5) a wider
+                                       alt universe (not ingested).
+                                     K5 VENUE. Chosen: binance/binanceusdm only. Menu of 5: (1) CHOSEN;
+                                       (2) coinbase; (3) bybit; (4) kraken; (5) cross-venue pooled.
+                                     K6 BAR GRANULARITY. Chosen: DAILY UTC, funding aggregated as the sum
+                                       of the day's three prints. Menu of 4: (1) CHOSEN; (2) 8h (the
+                                       funding-print cadence); (3) 1h; (4) 1m.
+                                     N CONTRIBUTION: 6 - one per choice. Each was made BEFORE any
+                                     measurement, from a menu declared IN THIS SEALED PRE-REGISTRATION,
+                                     and is BINDING; a choice involving no search over results contributes
+                                     1, not the menu size, and the menu declaration is what makes that
+                                     checkable. BINDING ESCALATION: any revision to any of K1-K6 after any
+                                     result on this family is seen is refused by P3 and requires a
+                                     SUCCESSOR FAMILY opened with n_inherited >= (menu size of the revised
+                                     choice) x this family's final n_trials, or the PRODUCT of the menu
+                                     sizes if more than one is revised; the successor inherits neither
+                                     schedule nor allocation nor narrative. COUNTERFACTUAL, recorded so
+                                     the rider's value is legible: had K1-K6 been selected AFTER seeing
+                                     results, the product 10 x 3 x 9 x 5 x 5 x 4 = 27,000 would give
+                                     MinBTL(27000, SR 1.0) = 16.79 years against 6.571 available - the
+                                     same arithmetic death sentence MinBTL(31,250) = 17.06 imposes on
+                                     forward-lag-001.
+                                     EXPLICITLY NOT CONDITIONED ON, checked deliberately: no excluded
+                                     period, date range or event window; no post-event window; no
+                                     volatility-state filter (volatility is a REPORTING cut only, never a
+                                     filter on what is traded); no funding-sign filter (excluding the
+                                     negative-funding regime is the most tempting and most dishonest
+                                     exclusion available to this family and K3 forbids it); no basis-level
+                                     filter; NO WINSORIZATION, OUTLIER REMOVAL OR RETURN CLIPPING anywhere
+                                     at any stage (a short-tail strategy that winsorizes its own tail is
+                                     not measuring itself); no survivorship screen - BTC, ETH and SOL are
+                                     three named continuously-listed instruments, not a screen output."
+
+horizon                           = "CONTINUOUS. No event trigger, no target, no stop, no maximum holding
+                                     period - a stop on a delta-neutral carry position converts a
+                                     mean-reverting basis excursion into a realized loss at the worst
+                                     moment, the second-order effect Charter 5.2 names explicitly. Risk is
+                                     managed by SIZE, which is what the hypothesis is about. Daily
+                                     rebalance subject to a turnover band: no trade unless
+                                     |w_target - w_held| > band. run_backtest(execution_lag=1): the weight
+                                     decided at bar t's close earns returns from t+1; execution_lag < 1
+                                     raises SameBarFillError and is not waivable. periods_per_year = 365 -
+                                     crypto trades every calendar day and there are no session gaps on
+                                     either leg. Bars daily, UTC, both legs from the same venue and both
+                                     24/7, so I-024's cross-venue clock confound HAS NO SESSION BOUNDARY
+                                     TO HIDE IN here: no overnight gap, no weekend gap, no asynchrony,
+                                     and the strategy is not a lead-lag strategy - it holds both legs
+                                     simultaneously and continuously. Funding is knowable at 16:00Z on day
+                                     t (the day's last print), consumed as a decision input at day t's
+                                     close, filled at t+1 - a genuine 8-hour margin, not a boundary case.
+                                     All trailing windows (30-day funding baseline, volatility cut,
+                                     capacity screen) end STRICTLY BEFORE the day screened. Neither leg
+                                     has splits or dividends, so A4's vendor-pre-adjustment hazard does
+                                     not exist for this family; I-020 is a yfinance defect and no yfinance
+                                     series is used, which is stated so this is not read as a general
+                                     clearance of I-020. Declared limitation carried from DATA-INGEST-001
+                                     section 3: every backfilled row carries knowledge_time = the
+                                     ingestion instant, so this family may NOT claim to have tested
+                                     point-in-time KNOWLEDGE for dates before its ingest session; it tests
+                                     point-in-time ORDERING, which is what the hypothesis needs."
+
+success_criteria                  = "Tiered. (1) F-002 survival: no leg fires, and leg (0) firing is
+                                     INSUFFICIENT-DATA rather than survival. (2) KC-002 survival at
+                                     C + 187 days: no clause fires - and per KC-002's own text, SURVIVING
+                                     IT CONFIRMS NOTHING. (3) Gate 1: every criterion of Charter
+                                     4.4 unmodified, computed by castellan.evaluate_gate1, with
+                                     backtest_years passed EXPLICITLY as true calendar span AND oos_index
+                                     supplied (G1-G5: without oos_index the length criterion is
+                                     INSUFFICIENT-DATA, never PASS). No threshold relaxation is sought.
+                                     PLUS two criteria Charter 4.4 does not contain, which this seat
+                                     imposes on itself: (a) ALPHA TO R_bench, not raw Sharpe, is the
+                                     reported headline; (b) a SKEW AND EXPECTED-SHORTFALL line on every
+                                     artifact, because Charter 4.4's battery - Sharpe, t-stat, DSR,
+                                     subperiod positivity, P&L concentration - rewards a short-tail carry
+                                     profile at every single criterion and contains no criterion that can
+                                     SEE one. Required in every artifact regardless of verdict: per-
+                                     regime-cell decomposition (all four cells); raw AND effective
+                                     observation counts side by side; gross and net with the breakeven
+                                     cost; hit rate PAIRED with slugging ratio (Charter 5.4 - neither
+                                     means anything alone); the plateau centroid AND the argmax reported
+                                     together, with only the centroid advancing, the distance between them
+                                     being itself the overfitting diagnostic; SOL on its own span with its
+                                     own N; the disclosure line 'declared N = 86; registry-enforced N =
+                                     <count>; the 6-trial conditioning floor is declared and unenforced
+                                     (I-027)'; and the disclosure line 'F-002 false-survival rate under
+                                     the no-information null: 1.3e-4 [derived, with the leg-(ii) term
+                                     ASSUMED / MEASURED per C11]' - because I-029's finding is that an
+                                     unstated alpha is how a formality gets reported as a falsifier.
+                                     RECORDED AT PRE-REGISTRATION, all [measured] from castellan.stats:
+                                     n_inherited = 0 (no prior search exists); N_conditioning = 6; trial
+                                     budget 80; ceiling N = 86, MinBTL(86, SR 1.0) = 6.14 years against
+                                     6.571 available, clearing with 0.43 years of margin. ABSOLUTE
+                                     ADMISSIBLE CEILING N = 110, at which MinBTL = 6.574 = the entire
+                                     available span and margin is zero; BEYOND 110 THE FAMILY IS
+                                     ARITHMETICALLY DEAD AT THE GATE 1 SHARPE FLOOR AND NO RESULT CAN
+                                     REVIVE IT. On the SOL-inclusive 5.87-year span the ceiling is 74. The
+                                     ceiling relaxes on a higher realized Sharpe (MinBTL(110,1.5)=2.92)
+                                     but THE BUDGET MAY NOT EXPAND ON THAT BASIS - expanding a trial
+                                     budget because early results look good is the overfitting operation
+                                     wearing a schedule's clothing.
+                                     COST STACK, and this is a Gate 0 finding not a footnote: the shipped
+                                     CRYPTO_PERP_TAKER preset is NOT FIT FOR PURPOSE for this family.
+                                     CostModel.carry_per_bar applies funding to GROSS notional and always
+                                     as a COST (net = gross - cost). On this family's delta-neutral pair
+                                     gross is 2.0, so carry_per_bar(1.0,1.0) = 0.0006/day = -21.9%/yr
+                                     charged [measured] where the economics deliver +10.95%/yr received -
+                                     THE SIGN INVERTED AND THE BASE DOUBLED, a 32.85 point/yr error on an
+                                     edge of 10.95 points/yr. Further: funding_bps_annual is a SCALAR and
+                                     carry_per_bar takes no time-varying input, so the 7,203 realized
+                                     funding prints per asset in pit.db CANNOT ENTER THE P&L THROUGH THE
+                                     SANCTIONED COST PATH AT ALL, and this family's entire signal is that
+                                     series' variation; run_backtest accepts ONE CostModel for a
+                                     TWO-LEGGED strategy and there is no CRYPTO_SPOT_TAKER preset;
+                                     CostModel has NO FIELD for liquidation or venue-insolvency risk (the
+                                     same gap as I-023(b)); and scaled(2.0) doubles funding_bps_annual to
+                                     2190, so Charter 4.4's 2x cost-robustness criterion stress-tests the
+                                     SIGN ERROR rather than the costs. CONDITION PRECEDENT C1: Validation
+                                     specifies the repair - a signed carry term, or a synthetic perp
+                                     total-return leg with funding_bps_annual = 0.0 - and rules whether
+                                     the latter breaches the Seat 9 standing rule that researchers may not
+                                     hand-roll costs. NO NET NUMBER FROM THIS FAMILY, IN ANY DOCUMENT OR
+                                     IN THE PAPER BOOK, IS ADMISSIBLE UNTIL C1 LANDS.
+                                     STRUCTURALLY UNMEASURABLE ON THIS DATA, declared at Gate 0 so a
+                                     good-looking result is read correctly: the strategy's risk
+                                     materializes INTRADAY - liquidation cascades, basis dislocations,
+                                     margin calls - and pit.db holds DAILY bars. A daily backtest marks a
+                                     position that would have been liquidated as still held and
+                                     recovering. The measurable part of this strategy is the part that
+                                     flatters it. F-002 leg (ii), KC-002 clause (c) and mandatory skew/ES
+                                     reporting are the three responses; none eliminates it. Also
+                                     unmeasurable and disclosed rather than corrected: VENUE SURVIVORSHIP
+                                     - the backtest runs on the branch where the venue did not fail, and
+                                     FTX-listed carry books did not survive to be backtested."
+
+trial_budget                      = 80
+
+predecessor_family                = None
+
+holdout_classification            = "FORWARD"
+
+forward_window_start              = "2026-07-28"
+
+forward_window_min_length         = 12.0         # UNITS: MONTHS (Charter 4.4 holdout floor).
+                                                 # I-033(5): the schema stores this as a UNITLESS REAL and
+                                                 # days, months and years are indistinguishable in it.
+
+forward_kill_condition            = "KC-002. Observation date = C + 187 days, fixed at sealing and ABSOLUTE
+                                     thereafter - it does not move with the sprint calendar, the ingest
+                                     schedule, the cost-model repair, or the harness; once written it does
+                                     not extend for any reason. (Drafted against an intended C =
+                                     2026-07-28, giving 2027-01-31; section 20.1 recommends NOT sealing
+                                     that day, so the executed value is whatever C + 187 days resolves to
+                                     and the DRAFTED DATE IS NOT BINDING - the formula is.)
+                                     187 days yields ~184 daily bars and ~552 funding prints -
+                                     enough to measure expectancy and count conditioning events, and
+                                     DELIBERATELY NOT ENOUGH to measure a Sharpe; KC-002 tests neither
+                                     Sharpe nor significance. On that date Validation computes, from
+                                     registry.db and pit.db ALONE, on the FROZEN pre-registration, over
+                                     [C, 2027-01-31]: (i) cumulative NET return of the sealed conditioned
+                                     strategy after the full Charter 4.6 cost stack at 1x modelled costs
+                                     using CRYPTO_PERP_TAKER AS REPAIRED PER C1; (ii) the count of days on
+                                     which the sealed conditioning moved position notional by more than
+                                     +/-25% from the benchmark's constant notional; (iii) the worst single
+                                     day net return as a fraction of allocated sleeve notional. The family
+                                     is KILLED - registry TERMINATED, no further trials, no Gate 1
+                                     submission ever - if ANY of: (a) cumulative net return <= 0; OR
+                                     (b) fewer than 30 days on which the conditioning moved notional by
+                                     more than +/-25%; OR (c) any single day on which the net loss exceeds
+                                     4.0% of allocated sleeve notional.
+                                     Clause (b) kills on THE CONDITIONING NEVER HAVING CONDITIONED: if the
+                                     state variable did not move the position then whatever the P&L was it
+                                     was the benchmark's, and the family is the crypto carry factor by
+                                     construction, which Charter 5.4 does not pay for. It must not be
+                                     waived as a technicality; it is KC-001 clause (b)'s kill-on-
+                                     insufficient-signal transposed to a continuous strategy.
+                                     Clause (c) is the TAIL clause and exists because the backtest cannot
+                                     see it: a delta-neutral pair at 1x notional should not lose 4% of
+                                     allocation in a day, and if it does either the hedge failed or a
+                                     basis dislocation ran through it - both being the intraday risk daily
+                                     bars structurally cannot measure. 4.0% is Charter 5.2's Tier-2
+                                     formal-notice threshold applied to a single day at the SLEEVE level
+                                     rather than to a drawdown at the pod level, a deliberate borrowing
+                                     made because a USD 250,000 sleeve cannot on its own reach a pod-level
+                                     Tier 3 and the firm's standing ladder is too coarse to see this
+                                     family fail. At sleeve scale the loss is USD 10,000, ~10 bp of firm
+                                     NAV: trivial in money, decisive in information, and the kill is for
+                                     the information.
+                                     BINDING ANTI-REINTERPRETATION CLAUSES: (1) No re-parameterisation -
+                                     all three quantities are computed on the SEALED specification, not a
+                                     tuned variant, not the plateau centroid discovered later, not a
+                                     subset, not the version we would have run. (2) No post-C exclusions -
+                                     any regime filter, date exclusion, asset exclusion, venue change or
+                                     universe restriction not present in the sealed pre-registration is
+                                     inadmissible in this computation; this clause is the K1-K6 declaration
+                                     made enforceable, and any of K1-K6 revised in order to change this
+                                     computation's answer is refused by P3 and, if pursued, opens a
+                                     successor family at the escalated n_inherited. (3) No restatement as
+                                     continuation - a hypothesis restated after 2027-01-31 is a NEW family
+                                     opened with n_inherited >= the killed family's final n_trials plus its
+                                     own, inheriting neither schedule nor allocation nor narrative.
+                                     (4) Kill is automatic on the date, requires no meeting, no vote and no
+                                     CIO concurrence, and IS NOT APPEALABLE TO THE CIO; only the Principal
+                                     may reverse it, in writing, logged in DECISION_RECORD.md as an
+                                     Appendix-B-#4 override with its reason on the face of the record and
+                                     reported in the next Monthly Letter. (5) SILENCE IS A KILL - if the
+                                     computation is not performed on 2027-01-31 for ANY reason, INCLUDING
+                                     that the perp price series was never ingested, that the cost model was
+                                     never repaired, that Validation had no unit available, or that the
+                                     harness was not ready, the family is killed by default. A kill
+                                     condition that can be defeated by not running it is not a kill
+                                     condition. This clause is copied deliberately from KC-001, and the
+                                     seat that would benefit most from softening it is the seat that wrote
+                                     it. CONDITION PRECEDENT, separately binding: the C1 cost-model repair
+                                     is specified by Validation and implemented by 2026-08-11; if
+                                     unresolved by that date the family is ADMITTED-AS-EXPLORATORY only and
+                                     remains so until it is, because until then clause (a) would be
+                                     computing a -21.9%/yr artifact.
+                                     WHAT KC-002 IS NOT, stated here rather than waiting to be told
+                                     (Validation C-001 section 1.6 makes the identical statement about
+                                     KC-001): KC-002 IS A KILL CONDITION, NOT A CONFIRMATORY TEST. Clauses
+                                     (a), (b) and (c) are bare one-sided comparisons against thresholds;
+                                     none has a null distribution, an alpha, or a power statement.
+                                     SURVIVING KC-002 CONFIRMS NOTHING AT ANY N, and 'the family passed its
+                                     forward test' may not appear in any artifact as a result. This family
+                                     DOES NOT claim the C-001 N=1 confirmatory exemption; should it ever
+                                     seek one it must satisfy E1-E5 in full and be entered in the
+                                     firm-level register of outstanding confirmatory exemptions that I-032
+                                     requires and that does not yet exist - at 20 families each holding one
+                                     exemption the firm-level false-positive rate is ~2.7% [cited,
+                                     Validation], which is why the register is a precondition and not a
+                                     formality. Separately, per C-001 E3: the family's <= 22 forward-window
+                                     trials are N_forward, they are LOGGED AS TRIALS, and NO REPORTED
+                                     RESULT MAY BE SELECTED FROM AMONG THEM."
+
+model_prior_provenance            = "R4(a). Per I-009 the firm does not know its seats' training cutoffs
+                                     and the authoritative reference does not publish them; every cutoff
+                                     below is [assumed] unknown and that absence is itself the finding.
+                                     THIS IS THE FIRM'S FIRST DIRECTOR-ORIGINATED HYPOTHESIS (I-025:
+                                     today's origin ratio is 4 of 4 = 100% Principal-originated; D-009
+                                     item 4 directs that the Sprint 2 agenda contain Director-originated
+                                     hypotheses). Every binding design field below except the holdout
+                                     regime and the conditioning rider originates with Seat 2, Opus,
+                                     cutoff unknown: hypothesis statement and mechanism; the Charter-5.4
+                                     argument that the unconditioned carry is factor beta; falsifier
+                                     F-002 and each of its four pre-committed constants; conditioning
+                                     declarations K1-K6 and their menus; the pre-commitment rule that a
+                                     menu-declared pre-measurement choice contributes 1 rather than the
+                                     menu size, and its escalation rule; universe, sizing rule and
+                                     parameter centres; the trial budget and the N <= 110 ceiling, derived
+                                     from castellan.stats output; KC-002, adopting KC-001's shape
+                                     (originated by the Devil's Advocate, REDTEAM-001 B.5, Opus) including
+                                     the silence clause verbatim in force; the CRYPTO_PERP_TAKER audit,
+                                     measured from source. The REDIRECT of Pod B compute from the
+                                     forward-lag family to this mandate: originated by the Director of
+                                     Research (PREREG-001 section 17.2 item 4, Opus), approved by the
+                                     Principal (human). The CONDITIONING RIDER requiring that every regime
+                                     choice be declared together with its menu: the Principal (human), and
+                                     it is the single most load-bearing instruction in this document -
+                                     without it the honest N contribution would be 27,000 and MinBTL would
+                                     be 16.79 years against 6.571 available. Holdout regime: Validation
+                                     Rulings 001 and 002 (Opus) and the Principal (D-006 Option D, D-007
+                                     C = the seal date). NOT YET ORIGINATED BY ANYONE AND REQUIRED: a
+                                     Devil's Advocate Red-Team Memo on this family (Charter 4.4; Charter
+                                     6.4 defers a packet without one). KC-002 is the SPONSOR's kill
+                                     condition, which is structurally weaker than one authored against the
+                                     family, and that weakness is recorded here rather than left to be
+                                     noticed."
+
+published_signal_haircut_applied  = 0.50
+```
+
+**Vault seal, same session, same UTC day:**
+
+```
+HoldoutVault(vault_dir="book/vaults/funding-carry-conditioning-002-binance",
+             registry=registry, name="funding-carry-conditioning-002-binance",
+             family="funding-carry-conditioning-002", store=pit_store).seal(
+    source="binance",                       # a second vault for source="binanceusdm"
+    dataset_id=<the ingested dataset identifier>,
+    instrument_identity="BTC/USDT, ETH/USDT, SOL/USDT (spot); "
+                        "BTC/USDT:USDT, ETH/USDT:USDT, SOL/USDT:USDT (perp), "
+                        "fields close/open/high/low/volume and funding_rate",
+    query_semantics=<the exact query, per Ruling 001 section 3.4>,
+    cutoff=<C = this UTC calendar day>,
+    schema_fingerprint=<field names and dtypes>,
+    passphrase=<the Principal's, never written to repo, Oracle, or any file>,
+    holdout_end_rule="open-ended, forward from C",
+    resolution_source="exchange settlement; funding prints final at settlement, never revised",
+    sealed_by="pm-digital-markets")
+```
+
+---
+
+## 22. WHAT WOULD CHANGE THIS SEAT'S MIND
+
+| # | On what | What would change it |
+|---:|---|---|
+| 1 | **The verdict at §19** (fund it, ~4 Sonnet units) | Validation ruling that the §12.3 synthetic-total-return construction breaches the Seat 9 standing rule **and** that no signed carry term will be added to `CostModel`. That would leave the family with no admissible way to price its own central term, and the correct verdict would become REJECTED at Gate 0(4) — not exploratory, rejected — because a strategy whose revenue cannot be expressed in the firm's only cost library cannot be validated to this firm's standard. |
+| 2 | **`N_conditioning` = 6** (§7.2) | A ruling from Validation that a menu-declared, pre-measurement, binding choice nonetheless contributes its full menu size. **If that is the ruling, this family's honest `N` is 27,000, `MinBTL` is 16.79 years against 6.571 available, and the family is dead on arrival exactly as `forward-lag-001` is.** This seat would accept that and write the KILL memo the same day. It is the single ruling that most changes this document. |
+| 2b | **F-002's decisiveness** (§5.3, §5.5) | A measured leg-(ii) false-spare rate materially above 0.10 under C11's calibration. The joint figure of 1.3 × 10⁻⁴ is only as good as its weakest term, and **that term is the one this seat assumed.** If C11 returns 0.4, F-002's joint rate is 5 × 10⁻⁴ — still decisive; if it returns something near 1.0, leg (ii) is decorative and must be replaced before sealing. **I-029 is filed against this seat and the correct response to it is to name the term that could repeat it.** |
+| 3 | **Persistence escape (c)** — mandate segmentation (§4) | Measured aggregate open interest **falling** as funding rises above its trailing baseline. That shows the supply side already de-scales, the sizing behaviour this family claims is unoccupied is occupied, and the only escape supporting a durable edge is dead. **Currently unmeasured: OI is not in `pit.db` and no loader exists.** |
+| 4 | **The bar-granularity choice K6** (daily) | F-002 leg (ii) firing. That would be the measured demonstration that a daily instrument cannot dodge an intraday event, and the response is the successor family at 1h or 8h bars (§19.3) — **not a defence of the daily choice.** |
+| 5 | **The intended allocation of $250,000** (§13) | A measured capacity below $2.5M of daily depth per leg on BTC or ETH perpetuals. The measurement is cheap (§15 step 4) and this seat expects it to clear comfortably [inferred]; if it does not, the allocation falls to whatever 1/10th of measured depth supports, and §13.2's materiality gets worse rather than better. |
+| 6 | **The claim that this family's arithmetic works** (§19.1) | Validation ruling §11.3 in the second or third sense — that `oos_index` must carry the forward holdout window. **Earliest Gate 1 then moves from 2027-07-28 to 2028-10-05 or 2030-07-28, and the honest verdict becomes ADMITTED-AS-EXPLORATORY**, because a family whose verdict is four years out is not meaningfully different from one whose verdict is unreachable. **This is the ruling this seat most wants and least controls.** |
+| 7 | **The recommendation to accept the R4(b) haircut without argument** (§11.6) | Nothing this seat currently anticipates. The FX carry-crash literature is the direct public analogue of this family's sizing rule and this seat is not going to pretend otherwise to save 3 points of t-statistic. |
+| 8 | **Anything about the funding carry being an edge** | Nothing. §3.3 says it is not, §5.4 of the Charter says the firm does not pay for it, and **the only claim this document makes is about conditioning.** If a future artifact reports this family's raw carry Sharpe as though it were the result, that artifact is defective and this section is the pre-registered reason why. |
+
+---
+
+*Director of Research · Castellan Capital · 2026-07-28*
+*This document is complete and sealable. It is not sealed. Sealing fixes `C` (D-007) and is Pod B's act, after Validation's Gate 0 intake. Nothing may be added after.*

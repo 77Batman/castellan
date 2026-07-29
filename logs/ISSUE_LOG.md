@@ -895,3 +895,62 @@ Recorded so none is lost; full statements in `research/VALIDATION-GATE0-001-forw
    indistinguishable in the schema.
 
 **Resolution:** open. **Pattern tag:** `gate0-001-consolidated`
+
+---
+
+## I-034 · 2026-07-28 · The sanctioned cost path guarantees a false KILL on delta-neutral crypto carry · Severity: HIGH · Owner: quant-validation → head-of-data-infra
+
+**Description.** Found by the Director of Research while drafting PREREG-002.
+**CIO verified in source** [measured]. `CostModel.carry_per_bar`
+(`costs.py:49–60`) computes:
+
+```python
+(long_notional + short_notional) * fund
+```
+
+Funding is applied to **gross** notional and **only ever as a cost**.
+`CRYPTO_PERP_TAKER` carries `funding_bps_annual = 1095.0` (the 0.01%/8h baseline,
+Charter Seat 7).
+
+**On a delta-neutral long-spot / short-perp pair** — gross = 2.0 — the model charges
+`2 × 10.95% = ` **−21.9%/yr** where the position in fact **receives +10.95%/yr**.
+Sign inverted, base doubled: a **32.85-percentage-point error on a 10.95-point
+edge.** Any such strategy is killed by the cost model before the market gets a vote.
+
+**Four compounding defects, all measured:**
+1. `funding_bps_annual` is a **scalar**, so the **7,203 realized funding prints per
+   asset** now sitting in `pit.db` **cannot enter P&L through the sanctioned path at
+   all**.
+2. `run_backtest` accepts **one** `CostModel` for a **two-legged** strategy, and **no
+   `CRYPTO_SPOT_TAKER` preset exists.**
+3. No field can charge **liquidation or venue insolvency** — the same gap as
+   I-023(b), on the risk that actually ends carry strategies.
+4. `scaled(2.0)` doubles the phantom drag to **43.8%/yr**, so Charter §4.4's
+   cost-robustness criterion **stress-tests the sign error.**
+
+**Why it is the firm's most consequential open defect.** Charter Seat 9's standing
+rule is that researchers may not hand-roll costs — there is one cost library and every
+strategy uses it. That rule now **mandates a calculation that is wrong in sign** for
+the family the firm has just redirected to. PREREG-002 cannot be executed through the
+sanctioned path.
+
+**The Director of Research refused to authorize the fix**, correctly: the natural
+repair moves funding into a synthetic perp total-return leg, which skirts the
+no-hand-rolled-costs rule. **The specification is Validation's.** Validation has spent
+all four Sprint 1 units, so this requires the Principal's reallocation.
+
+**Resolution:** open — blocking execution of PREREG-002.
+**Pattern tag:** `mandated-calculation-wrong-in-sign`
+
+---
+
+## I-035 · 2026-07-28 · Perp price series absent — only funding was ingested · Severity: MEDIUM · Owner: head-of-data-infra
+
+**Description.** `DATA-INGEST-001` brought in `binanceusdm` **funding rates** but no
+**perp price series**. The basis leg of PREREG-002 therefore has no perp mark.
+
+Estimated one session with the existing loader. **The shortcut of assuming
+perp ≈ spot is declared inadmissible** by the Director of Research, because it zeroes
+the basis — which is the quantity under study.
+
+**Resolution:** open. **Pattern tag:** `partial-ingest-silently-incomplete`
