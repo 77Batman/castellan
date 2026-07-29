@@ -81,8 +81,9 @@
         "No": "21488413941361231515350825487183235825872483800433666164071586764221057373728"
       },
       "tier": "thin",
-      "status": "active",
-      "first_tracked_utc": 1785347127.168706
+      "status": "resolved",
+      "first_tracked_utc": 1785347127.168706,
+      "resolved_detected_utc": 1785351843.762599
     },
     "0x55def4d77b4f051b6a526f3fc12880ab075ff6766a80d0b88c609686fcaf23e0": {
       "condition_id": "0x55def4d77b4f051b6a526f3fc12880ab075ff6766a80d0b88c609686fcaf23e0",
@@ -123,8 +124,9 @@
         "London Spirit": "22319500554344734881881060268192803704716292319482505072220504497802489847957"
       },
       "tier": "thin",
-      "status": "active",
-      "first_tracked_utc": 1785347127.1687071
+      "status": "resolved",
+      "first_tracked_utc": 1785347127.1687071,
+      "resolved_detected_utc": 1785351843.762602
     },
     "0xf08cd93b8ccaa13bd6ee51558bf7c6525925bef3073478e480538f6359f12962": {
       "condition_id": "0xf08cd93b8ccaa13bd6ee51558bf7c6525925bef3073478e480538f6359f12962",
@@ -139,7 +141,35 @@
       "tier": "thin",
       "status": "active",
       "first_tracked_utc": 1785347127.1687071
+    },
+    "0xeb24a4ebd21a1351b50151b8213cea02ea0e822f5aee2c4d5d72c452235db1b0": {
+      "condition_id": "0xeb24a4ebd21a1351b50151b8213cea02ea0e822f5aee2c4d5d72c452235db1b0",
+      "question": "Milwaukee Brewers vs. San Francisco Giants",
+      "slug": "mlb-mil-sf-2026-07-29",
+      "volume24hr": 311977.060754,
+      "end_date": "2026-08-05",
+      "tokens": {
+        "Milwaukee Brewers": "96422939519289366880893962148221088840987521908015257760170039963058804584976",
+        "San Francisco Giants": "6852667973886724590910521015094796531541524268962926123463824579891345270383"
+      },
+      "tier": "thin",
+      "status": "active",
+      "first_tracked_utc": 1785351844.716584
+    },
+    "0xe889f33b91a2a3991332a44d89d2a268ae2d94cc576e9a49c5a09600e3690383": {
+      "condition_id": "0xe889f33b91a2a3991332a44d89d2a268ae2d94cc576e9a49c5a09600e3690383",
+      "question": "LoL: TLN Pirates vs ZYB Esport (BO1) - LFL Regular Season",
+      "slug": "lol-tlnpir-zybesp-2026-07-29",
+      "volume24hr": 286695.7669629999,
+      "end_date": "2026-07-29",
+      "tokens": {
+        "TLN Pirates": "115481513346514628376499679268721252813184995943567130666676862179697894326174",
+        "ZYB Esport": "11950315022184991618449167467401242511648474846744526366438611754084658573200"
+      },
+      "tier": "thin",
+      "status": "active",
+      "first_tracked_utc": 1785351844.716588
     }
   },
-  "last_refreshed_utc": 1785347506.857264
+  "last_refreshed_utc": 1785352747.21753
 }
