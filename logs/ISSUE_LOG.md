@@ -185,3 +185,36 @@ Ruling 001 sets the target explicitly at **59/59** to remove the ambiguity.
 
 **Resolution:** open — corrected alongside the vault change.
 **Pattern tag:** `stale-documentation`
+
+---
+
+## I-009 · 2026-07-28 · The firm does not know its own seats' training cutoffs · Severity: MEDIUM · Owner: fable-5-cio
+
+**Description.** The Principal proposed pinning holdout cutoff `C` at the seats'
+model training cutoffs, on the grounds that a wholly historical holdout is weak
+against an LLM researcher whose weights may already encode the period. Evaluating
+that option requires knowing the cutoffs. The firm does not.
+
+**What is established** [measured]: the CIO seat has a stated knowledge cutoff of
+**May 2026**. Today is 2026-07-28 — roughly two months of genuinely post-cutoff
+data exist for this seat.
+
+**What is not** [measured — absence confirmed]: the authoritative Anthropic model
+reference **does not publish training-cutoff dates**. The cutoffs for the Opus,
+Sonnet, and Haiku 4.5 seats are unknown to this firm and were **not** invented to
+make the ruling tractable.
+
+**Why a documentation gap is logged as a firm issue.** A control whose parameter
+the firm cannot source is not a control. If `C` is derived from a cutoff nobody can
+verify, the resulting holdout carries an appearance of rigour the firm cannot
+audit — and per Charter Appendix B, an unverifiable control is worse than a
+known-weak one because it stops people looking.
+
+**Second-order problem, raised with the ruling:** a training-cutoff pin addresses
+*memorization* only. Every research seat holds `WebSearch` and `WebFetch` and can
+retrieve post-cutoff information without touching `pit.db` or any vault — the same
+"knowledge with no fetch and no audit trail" the proposal aims at, through a
+different door. Routed to Validation as part of Ruling 002.
+
+**Resolution:** open — Validation ruling pending.
+**Pattern tag:** `unverifiable-control-parameter`
