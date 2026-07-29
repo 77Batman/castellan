@@ -732,3 +732,69 @@ succeed, and Validation rules.
 
 **Resolution:** open — Validation to rule with Gate 0 intake.
 **Pattern tag:** `criterion-unevaluable-on-free-data`
+
+---
+
+## I-027 · 2026-07-28 · The registry physically cannot seed `N_inherited` · Severity: HIGH · Owner: head-of-data-infra
+
+**Description.** Found by the Director of Research while drafting PREREG-001;
+**CIO verified in source and against the live schema** [measured].
+
+D-009 declared `N_inherited = 31,250` and directed that "the registry opens seeded at
+that floor, not zero." **It cannot.** `TrialRegistry.family_stats`
+(`registry.py:428–451`) computes:
+
+```sql
+SELECT COUNT(*) FROM trials WHERE family IN (...)
+```
+
+There is **no `n_inherited` column, no parameter, and no path.** Live schema confirms
+it — `hypotheses` carries `trial_budget`, `predecessor_family`, and the new R1–R4
+fields; neither table has any inheritance column.
+
+**Consequence, and it is the exact failure the declaration was written to prevent.**
+Seal today and DSR, PBO and MinBTL all compute against a denominator **in the tens**
+while the pre-registration declares 31,250 — **I-011 recurring, now with a paper
+trail asserting it was fixed.** A declared-but-unenforced control is worse than an
+absent one, which is the same shape as I-019.
+
+**Specified fix (DoR, H1–H4):** an `n_inherited` column; transitive summation across
+the predecessor chain; a negative test **authored by Validation before
+implementation** per I-021; and **σ_SR still computed from real trials only** —
+phantom trials have no returns and **none may be synthesised**.
+
+**Escalated, not resolved:** if H1–H4 cannot land before sealing, the DoR's
+recommendation is to seal anyway and record **"declared but unenforced"** on the
+Validation Report's face. The CIO carries that to the Principal rather than deciding
+it.
+
+**Resolution:** open — condition precedent C1 on PREREG-001.
+**Pattern tag:** `binding-control-declared-not-enforced`
+
+---
+
+## I-028 · 2026-07-28 · CIO mis-specified the I-024 remediation — the family is intra-venue · Severity: MEDIUM · Owner: fable-5-cio
+
+**Description.** Raised by the Director of Research against the CIO's own dispatch.
+
+The CIO directed that PREREG-001 address I-024 by aligning bars across venues and
+**"dropping out-of-session reference bars, not forward-filling."** That directive
+presumes a cross-venue reference leg — Polymarket against an ETF, future or perp.
+
+**The inherited family is intra-venue**: Polymarket spike contract → later-resolving
+Polymarket contract on the same event (per `agents/pm-digital-markets.md` and I-002's
+parameter list). **There is no session calendar to refer to.** The CIO imported the
+Devil's Advocate's steel-man as though it were the design.
+
+**Why the correction makes things worse, not better.** The confound does not
+disappear — it **transposes, and is harder**: a session calendar is public, fixed and
+knowable in advance, whereas a thin contract's **quote-death is irregular and
+observable only from the data itself**. The DoR made **quote-liveness gating** the
+operative rule and wrote both forms as binding.
+
+**Wider consequence:** several other REDTEAM-001 findings were framed against the
+cross-venue steel-man and need the same transposition before they can be applied.
+
+**Resolution:** corrected in PREREG-001. Logged because a CIO directive that
+mis-describes the strategy propagates into every downstream document that trusts it.
+**Pattern tag:** `directive-mis-specifies-the-strategy`
