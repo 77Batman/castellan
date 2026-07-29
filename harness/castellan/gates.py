@@ -39,6 +39,7 @@ PARAM_SURFACE_MIN_PROFITABLE = 0.60
 CAPACITY_MULTIPLE_MIN = 10.0
 CORR_MAX_TO_LIVE_BOOK = 0.30
 CSCV_PARTITIONS_S = 16
+HOLDOUT_MIN_MONTHS = 12.0  # Charter 4.4; mirrored in holdout.py's default
 
 PASS, FAIL, INSUFF = "PASS", "FAIL", "INSUFFICIENT-DATA"
 
@@ -64,6 +65,8 @@ class ValidationReport:
     overall: str
     returns_sha256: str
     breakeven_cost_multiplier: float | None
+    holdout_spec_sha256: str | None = None
+    holdout_payload_sha256: str | None = None
 
     def to_json(self) -> str:
         d = asdict(self)
@@ -78,6 +81,8 @@ class ValidationReport:
             f"cross-sectional trial SR std (per-period): "
             f"{self.sr_std_period_trials if self.sr_std_period_trials is not None else 'UNAVAILABLE'}",
             f"Evaluated return series sha256: `{self.returns_sha256[:16]}…`",
+            f"Holdout spec sha256: `{self.holdout_spec_sha256[:16] + '…' if self.holdout_spec_sha256 else 'UNAVAILABLE'}` · "
+            f"Holdout payload sha256: `{self.holdout_payload_sha256[:16] + '…' if self.holdout_payload_sha256 else 'UNAVAILABLE'}`",
             "",
             "| Criterion | Value | Threshold | Verdict |",
             "|---|---|---|---|",
@@ -204,25 +209,59 @@ def evaluate_gate1(
         criteria.append(_crit("Backtest length (years)", years,
                               f">= {MIN_YEARS:g}", years >= MIN_YEARS))
 
-    # -- holdout single-use --------------------------------------------
+    # -- holdout single-use (Ruling 001 E1-E3; fixes I-007) --------------
+    # Family-scoped: `registry.events(kind=..., family=family)` — the
+    # I-007 defect was that this was queried globally, so family A's
+    # holdout events could satisfy or fail family B's criterion.
     if holdout_opened_once is None:
-        opened = [e for e in registry.events(kind="holdout_opened")]
-        second = [e for e in registry.events(kind="holdout_second_open_attempt")]
+        acquired = registry.events(kind="holdout_acquired", family=family)
+        second = registry.events(kind="holdout_second_acquisition_attempt", family=family)
+        leaked = registry.events(kind="holdout_pre_acquisition_leak", family=family)
+        bad_pw = registry.events(kind="holdout_bad_passphrase_attempt", family=family)
+        retries = registry.events(kind="holdout_retry_authorized", family=family)
+        notes = []
+        if bad_pw:
+            notes.append(f"{len(bad_pw)} bad-passphrase attempt(s)")
+        if retries:
+            notes.append(f"{len(retries)} retry authorization(s)")
+        note_suffix = ("; " + "; ".join(notes)) if notes else ""
+
         if second:
-            criteria.append(_crit("Holdout single-use", "violated",
-                                  "opened exactly once", False,
-                                  "Second-open attempt logged — dataset retired"))
-        elif opened:
-            criteria.append(_crit("Holdout single-use", "opened once",
-                                  "opened exactly once", True))
+            criteria.append(_crit(
+                "Holdout single-use", "violated", "acquired exactly once",
+                False,
+                "Second-acquisition attempt logged — vault retired" + note_suffix))
+        elif leaked:
+            criteria.append(_crit(
+                "Holdout single-use", "pre-acquisition leak", "acquired exactly once",
+                False,
+                "Rows in (C, G] were knowable before acquisition — holdout "
+                "compromised (D1 leak-detection control)" + note_suffix))
+        elif acquired:
+            detail = acquired[-1]["detail"]
+            window = detail.get("window_months")
+            min_months = detail.get("holdout_min_months", HOLDOUT_MIN_MONTHS)
+            if window is not None and window < min_months:
+                criteria.append(_crit(
+                    "Holdout single-use",
+                    f"acquired, window {window:.1f}mo", f">= {min_months:g} months",
+                    False,
+                    "Holdout window below the Charter 4.4 minimum; the "
+                    "fact is known, so this is FAIL, not INSUFFICIENT-DATA"
+                    + note_suffix))
+            else:
+                criteria.append(_crit(
+                    "Holdout single-use", "acquired once", "acquired exactly once",
+                    True, note_suffix.lstrip("; ")))
         else:
-            criteria.append(Criterion("Holdout single-use", "not opened",
-                                      "opened exactly once", INSUFF,
-                                      "OOS evaluation requires the holdout"))
+            criteria.append(Criterion(
+                "Holdout single-use", "not acquired", "acquired exactly once",
+                INSUFF, "OOS evaluation requires the holdout to be acquired"
+                + note_suffix))
     else:
         criteria.append(_crit("Holdout single-use",
-                              "opened once" if holdout_opened_once else "not/over-opened",
-                              "opened exactly once", holdout_opened_once))
+                              "acquired once" if holdout_opened_once else "not/over-acquired",
+                              "acquired exactly once", holdout_opened_once))
 
     # -- walk-forward ---------------------------------------------------
     if wfe_sr_pairs is not None and len(wfe_sr_pairs) >= WFE_MIN_WINDOWS:
@@ -305,6 +344,15 @@ def evaluate_gate1(
     overall = PASS if all(c.verdict == PASS for c in criteria) else (
         FAIL if any(c.verdict == FAIL for c in criteria) else INSUFF)
 
+    # E3: embed the spec hash and acquired-payload hash, family-scoped,
+    # alongside the returns sha256 — so a report can be audited against
+    # exactly what Validation evaluated even though the holdout plaintext
+    # itself is never in the repo.
+    sealed_events = registry.events(kind="holdout_spec_sealed", family=family)
+    acquired_events = registry.events(kind="holdout_acquired", family=family)
+    holdout_spec_sha256 = sealed_events[-1]["detail"].get("spec_sha256") if sealed_events else None
+    holdout_payload_sha256 = acquired_events[-1]["detail"].get("payload_sha256") if acquired_events else None
+
     report = ValidationReport(
         strategy=strategy,
         family=family,
@@ -316,6 +364,8 @@ def evaluate_gate1(
         overall=overall,
         returns_sha256=sha,
         breakeven_cost_multiplier=breakeven,
+        holdout_spec_sha256=holdout_spec_sha256,
+        holdout_payload_sha256=holdout_payload_sha256,
     )
     registry.log_event("gate1_verdict", family, {
         "strategy": strategy, "overall": overall,

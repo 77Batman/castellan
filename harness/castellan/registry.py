@@ -34,7 +34,8 @@ CREATE TABLE IF NOT EXISTS hypotheses (
     horizon       TEXT NOT NULL,
     success_criteria TEXT NOT NULL,
     trial_budget  INTEGER NOT NULL,
-    created_utc   REAL NOT NULL
+    created_utc   REAL NOT NULL,
+    predecessor_family TEXT
 );
 CREATE TABLE IF NOT EXISTS trials (
     trial_id      INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -84,6 +85,20 @@ class TrialRegistry:
         self.conn = sqlite3.connect(path)
         self.conn.executescript(SCHEMA)
         self.conn.commit()
+        self._migrate()
+
+    def _migrate(self) -> None:
+        """Add columns introduced after a DB may already have been created.
+        SQLite's ``CREATE TABLE IF NOT EXISTS`` does not retrofit an
+        existing table, so pre-existing registry.db files (this firm has
+        one at book/registry.db, currently with zero families per D-001)
+        need this to pick up F4's predecessor_family support."""
+        cols = [r[1] for r in self.conn.execute("PRAGMA table_info(hypotheses)")]
+        if "predecessor_family" not in cols:
+            self.conn.execute(
+                "ALTER TABLE hypotheses ADD COLUMN predecessor_family TEXT"
+            )
+            self.conn.commit()
 
     # -- hypotheses ----------------------------------------------------
 
@@ -97,9 +112,18 @@ class TrialRegistry:
         horizon: str,
         success_criteria: str,
         trial_budget: int,
+        predecessor_family: str | None = None,
     ) -> None:
         """Gate 0 pre-registration. Idempotent on family; fields are
-        immutable after creation (history is not rewritten)."""
+        immutable after creation (history is not rewritten).
+
+        ``predecessor_family`` (Ruling 001 §3.3, F4): closes the "abandon
+        and re-pre-register with a later C" loophole in the pinned-cutoff
+        rule. If set, the researcher has seen the predecessor's results;
+        those trials happened and stay in the denominator — see
+        :meth:`family_stats` and :meth:`returns_matrix`, both of which sum
+        transitively across the chain.
+        """
         for name, val in [
             ("statement", statement),
             ("mechanism", mechanism),
@@ -107,13 +131,20 @@ class TrialRegistry:
         ]:
             if not val or not val.strip():
                 raise ValueError(f"Pre-registration requires a non-empty {name}")
+        if predecessor_family is not None and self.hypothesis(predecessor_family) is None:
+            raise ValueError(
+                f"predecessor_family '{predecessor_family}' is not itself "
+                "a registered hypothesis"
+            )
         cur = self.conn.execute(
             "SELECT family FROM hypotheses WHERE family=?", (family,)
         )
         if cur.fetchone() is not None:
             return
         self.conn.execute(
-            "INSERT INTO hypotheses VALUES (?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO hypotheses (family, statement, mechanism, "
+            "falsifier, universe, horizon, success_criteria, trial_budget, "
+            "created_utc, predecessor_family) VALUES (?,?,?,?,?,?,?,?,?,?)",
             (
                 family,
                 statement,
@@ -124,12 +155,30 @@ class TrialRegistry:
                 success_criteria,
                 int(trial_budget),
                 time.time(),
+                predecessor_family,
             ),
         )
         self.log_event(
-            "hypothesis_registered", family, {"statement": statement}
+            "hypothesis_registered", family,
+            {"statement": statement, "predecessor_family": predecessor_family},
         )
         self.conn.commit()
+
+    def predecessor_chain(self, family: str) -> list[str]:
+        """All ancestor families, nearest first, following
+        ``predecessor_family`` transitively. Cycle-safe."""
+        chain: list[str] = []
+        seen = {family}
+        cur_fam = family
+        while True:
+            hyp = self.hypothesis(cur_fam)
+            pred = hyp.get("predecessor_family") if hyp else None
+            if not pred or pred in seen:
+                break
+            chain.append(pred)
+            seen.add(pred)
+            cur_fam = pred
+        return chain
 
     def hypothesis(self, family: str) -> dict | None:
         cur = self.conn.execute(
@@ -181,12 +230,16 @@ class TrialRegistry:
     def family_stats(self, family: str) -> FamilyStats:
         hyp = self.hypothesis(family)
         budget = int(hyp["trial_budget"]) if hyp else 0
+        families = [family] + self.predecessor_chain(family)
+        placeholders = ",".join("?" * len(families))
         cur = self.conn.execute(
-            "SELECT sr_period FROM trials WHERE family=?", (family,)
+            f"SELECT sr_period FROM trials WHERE family IN ({placeholders})",
+            families,
         )
         srs = [row[0] for row in cur.fetchall() if row[0] is not None]
         n = self.conn.execute(
-            "SELECT COUNT(*) FROM trials WHERE family=?", (family,)
+            f"SELECT COUNT(*) FROM trials WHERE family IN ({placeholders})",
+            families,
         ).fetchone()[0]
         if len(srs) >= 2:
             arr = np.array(srs)
@@ -201,11 +254,18 @@ class TrialRegistry:
 
     def returns_matrix(self, family: str) -> np.ndarray:
         """(T, N) matrix of all logged trial return series, truncated to
-        the shortest common length from the end (most recent bars)."""
+        the shortest common length from the end (most recent bars).
+
+        Pools transitively across ``predecessor_family`` (F4): DSR's N
+        comes from :meth:`family_stats`, which is already transitive: this
+        keeps PBO/CSCV's return matrix consistent with the same N rather
+        than silently drawing on a different trial set."""
+        families = [family] + self.predecessor_chain(family)
+        placeholders = ",".join("?" * len(families))
         cur = self.conn.execute(
-            "SELECT returns_blob, n_bars FROM trials WHERE family=? "
-            "ORDER BY trial_id",
-            (family,),
+            f"SELECT returns_blob, n_bars FROM trials WHERE family IN "
+            f"({placeholders}) ORDER BY trial_id",
+            families,
         )
         rows = cur.fetchall()
         if not rows:

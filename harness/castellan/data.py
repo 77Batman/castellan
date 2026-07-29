@@ -29,6 +29,7 @@ import time
 import numpy as np
 import pandas as pd
 
+from .errors import HoldoutCeilingError
 from .registry import TrialRegistry
 
 SCHEMA = """
@@ -56,6 +57,19 @@ CREATE TABLE IF NOT EXISTS documents (
 );
 CREATE INDEX IF NOT EXISTS idx_docs
     ON documents (source, symbol, doc_type, event_time);
+
+CREATE TABLE IF NOT EXISTS ingest_ceiling (
+    ceiling_id     INTEGER PRIMARY KEY AUTOINCREMENT,
+    source         TEXT NOT NULL,
+    dataset_id     TEXT NOT NULL,     -- Ruling 001 D2; maps to `symbol` above
+    family         TEXT NOT NULL,
+    cutoff         TEXT NOT NULL,     -- ISO-8601, UTC, inclusive lower bound of holdout
+    spec_sha256    TEXT NOT NULL,     -- the sealed spec hash that authorizes a lift
+    active         INTEGER NOT NULL DEFAULT 1,
+    created_utc    REAL NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_ceiling
+    ON ingest_ceiling (source, dataset_id, active);
 """
 
 
@@ -93,8 +107,15 @@ class PITStore:
         ``knowledge_time`` defaults to now. Passing a historical value is
         for reconstructing vendor vintages (e.g. ALFRED) and is the
         caller's assertion about when the data was truly observable.
+
+        Ruling 001 D2: if ``(source, symbol)`` carries an active holdout
+        ingest ceiling, any observation with ``event_time`` strictly after
+        the sealed cutoff is refused — the WHOLE batch, atomically. Nothing
+        is written; this is the compensating control for the fact that,
+        under P-1, over-ingesting is the natural way to leak the holdout.
         """
         kt = time.time() if knowledge_time is None else float(knowledge_time)
+        self._enforce_holdout_ceiling(source, symbol, df)
         latest = self._latest_map(source, symbol)
         new = unchanged = restated = 0
         rows = []
@@ -135,6 +156,134 @@ class PITStore:
                  "sample": restatements[:10]},
             )
         return {"new": new, "unchanged": unchanged, "restated": restated}
+
+    # ------------------------------------------------------------------
+    # Holdout ingest ceiling (Ruling 001 D2) — the compensating control
+    # for the fact that under Amendment P-1, over-ingesting is the
+    # natural way to leak a holdout.
+    # ------------------------------------------------------------------
+
+    def _active_ceilings(self, source: str, dataset_id: str) -> list[dict]:
+        cur = self.conn.execute(
+            "SELECT family, cutoff, spec_sha256 FROM ingest_ceiling "
+            "WHERE source=? AND dataset_id=? AND active=1",
+            (source, dataset_id),
+        )
+        return [
+            {"family": r[0], "cutoff": r[1], "spec_sha256": r[2]}
+            for r in cur.fetchall()
+        ]
+
+    def _enforce_holdout_ceiling(self, source: str, symbol: str, df: pd.DataFrame) -> None:
+        ceilings = self._active_ceilings(source, symbol)
+        if not ceilings or df.empty:
+            return
+        idx = pd.to_datetime(df.index)
+        idx = idx.tz_localize("UTC") if idx.tz is None else idx.tz_convert("UTC")
+        for c in ceilings:
+            cutoff_ts = pd.Timestamp(c["cutoff"])
+            violating = idx > cutoff_ts  # event_time == C is in-sample (B6)
+            if violating.any():
+                n = int(violating.sum())
+                if self.registry is not None:
+                    self.registry.log_event(
+                        "holdout_ceiling_violation",
+                        c["family"],
+                        {
+                            "source": source,
+                            "dataset_id": symbol,
+                            "cutoff": c["cutoff"],
+                            "n_violating": n,
+                            "first_violating_event_time": str(idx[violating].min()),
+                        },
+                    )
+                raise HoldoutCeilingError(
+                    f"Ingest for (source={source!r}, dataset_id={symbol!r}) "
+                    f"contains {n} observation(s) with event_time after the "
+                    f"sealed holdout cutoff {c['cutoff']} (family "
+                    f"{c['family']!r}). Refused; nothing was ingested."
+                )
+
+    def set_holdout_ceiling(
+        self, source: str, dataset_id: str, family: str, cutoff, spec_sha256: str
+    ) -> None:
+        """Written once, at seal time, from the sealed spec's cutoff `C`.
+        Public — this is the only sanctioned way to *create* a ceiling.
+        Raising, lowering, or removing one afterwards goes only through
+        :meth:`_lift_ceiling`, called from ``HoldoutVault.acquire_once``
+        (Ruling 001 B5)."""
+        cutoff_iso = _iso(cutoff)
+        existing = self.conn.execute(
+            "SELECT 1 FROM ingest_ceiling WHERE source=? AND dataset_id=? "
+            "AND family=?",
+            (source, dataset_id, family),
+        ).fetchone()
+        if existing is not None:
+            raise HoldoutCeilingError(
+                f"A ceiling for (source={source!r}, dataset_id={dataset_id!r}, "
+                f"family={family!r}) already exists; a vault seals a "
+                "dataset's ceiling exactly once."
+            )
+        self.conn.execute(
+            "INSERT INTO ingest_ceiling (source, dataset_id, family, "
+            "cutoff, spec_sha256, active, created_utc) VALUES (?,?,?,?,?,1,?)",
+            (source, dataset_id, family, cutoff_iso, spec_sha256, time.time()),
+        )
+        self.conn.commit()
+
+    def _lift_ceiling(
+        self, source: str, dataset_id: str, family: str, spec_sha256: str
+    ) -> None:
+        """Internal. The *only* way a ceiling becomes inactive. Requires the
+        spec hash sealed at creation time — the same hash D4's tamper check
+        verifies — so a caller without it (i.e. anyone other than
+        ``HoldoutVault.acquire_once`` after it has independently verified
+        the sealed spec) cannot lift a ceiling. This is what makes B5 hold:
+        "cannot be raised, lowered, or removed through any API other than
+        the D3 acquisition path; a direct mutation attempt raises."
+        """
+        row = self.conn.execute(
+            "SELECT spec_sha256 FROM ingest_ceiling WHERE source=? AND "
+            "dataset_id=? AND family=? AND active=1",
+            (source, dataset_id, family),
+        ).fetchone()
+        if row is None:
+            raise HoldoutCeilingError(
+                f"No active ceiling for (source={source!r}, "
+                f"dataset_id={dataset_id!r}, family={family!r})."
+            )
+        if row[0] != spec_sha256:
+            raise HoldoutCeilingError(
+                "Ceiling lift refused: the supplied spec hash does not "
+                "match the hash recorded at seal time. Direct mutation is "
+                "not a sanctioned path."
+            )
+        self.conn.execute(
+            "UPDATE ingest_ceiling SET active=0 WHERE source=? AND "
+            "dataset_id=? AND family=?",
+            (source, dataset_id, family),
+        )
+        self.conn.commit()
+
+    def rows_in_window(
+        self, source: str, symbol: str, after, upto, knowledge_time_before: float
+    ) -> list[dict]:
+        """Ruling 001 D1 leak-detection control: rows for (source, symbol)
+        with ``event_time`` in ``(after, upto]`` whose ``knowledge_time`` is
+        strictly before ``knowledge_time_before``. Any such row was
+        knowable before a legitimate acquisition would have made it
+        knowable — i.e. a leak, however it got there."""
+        after_iso, upto_iso = _iso(after), _iso(upto)
+        cur = self.conn.execute(
+            "SELECT field, event_time, knowledge_time, value FROM "
+            "observations WHERE source=? AND symbol=? AND event_time>? "
+            "AND event_time<=? AND knowledge_time<?",
+            (source, symbol, after_iso, upto_iso, knowledge_time_before),
+        )
+        return [
+            {"field": r[0], "event_time": r[1], "knowledge_time": r[2], "value": r[3]}
+            for r in cur.fetchall()
+        ]
 
     def _latest_map(self, source: str, symbol: str) -> dict:
         cur = self.conn.execute(

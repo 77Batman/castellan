@@ -266,3 +266,64 @@ harness-correctness issue, not a to-do. Validation should decide whether
 
 **Resolution:** open — routed to Validation with Ruling 002.
 **Pattern tag:** `harness-correctness-latent`
+
+---
+
+## I-011 · 2026-07-28 · N-deflation by model priors — the registry's denominator omits the search inside the researcher · Severity: HIGH · Owner: quant-validation
+
+**Description.** Filed by Validation in Ruling 002 §2.3, as the honest consequence
+of following the Principal's own premise one step further than the proposal did.
+
+Charter §4.1's entire apparatus takes `N` — the number of variants searched — as
+the denominator [cited — Bailey, Borwein, López de Prado & Zhu 2014]. `TrialRegistry`
+counts the trials the **harness ran**. An LLM researcher does not begin its search
+at zero: its priors already encode which lead-lag relationships have been found,
+which parameter neighbourhoods are conventional, which regimes are worth excluding.
+A model that effectively already knows the answer converges in three logged trials
+where an uninformed searcher would have taken three hundred — **and logs `N = 3`.**
+
+DSR and PBO are then computed against a denominator that omits the search which did
+the actual selecting, and are optimistic to that extent.
+
+**Why this is HIGH and larger than the question it came out of.** Unlike the
+holdout problem it contaminates the **in-sample** period, not just `[C, G]`; it is
+**invariant to where `C` is placed**, so no cutoff pin touches it; and it **cannot
+be fixed by waiting**, because it is a property of the researcher rather than of
+the calendar. It is Charter Appendix B #2 — "trial counts are lost" — in a form the
+Charter never contemplated.
+
+**Partial mitigation, not a solution:** Ruling 002 R4(b) applies the existing §4.6
+50% published-signal haircut presumptively to LLM-generated hypotheses. Validation
+states plainly that this mitigates and does not solve.
+
+**Resolution:** open.
+**Pattern tag:** `denominator-understated-structurally`
+
+---
+
+## I-012 · 2026-07-28 · Uncontrolled retrieval channel — eight of nine seats can fetch post-cutoff data · Severity: MEDIUM · Owner: fable-5-cio
+
+**Description.** Filed by Validation in Ruling 002; the CIO is the owner because the
+tool grants are the CIO's to set.
+
+**Measured by Validation, independently re-verified by the CIO** [measured]: of the
+nine seat definitions, **eight hold `WebSearch` and `WebFetch`** — every seat except
+`execution-ops` — and **all nine hold `Bash`**.
+
+**Why it matters here.** Ruling 002 was convened on the Principal's concern about
+*memorized* history leaking into hypothesis generation with no fetch and no audit
+trail. The retrieval channel produces the identical failure — post-cutoff
+information entering research without touching `pit.db`, any vault, or any event
+log — and unlike the model-prior channel it is **open, uncontrolled, and larger.**
+
+**The asymmetry that makes this worth logging rather than noting.** The firm was
+being asked to build an unenforceable control against the smaller channel while an
+enforceable control against the larger one sat unbuilt. Because the grants are
+per-seat frontmatter, a reduction is a **default-path** control, not a barrier
+someone must choose to respect.
+
+**Companion control specified in Ruling 002 §3.5, with its limits stated** — the CIO
+notes it does not close `Bash`, which all nine seats hold.
+
+**Resolution:** open — CIO to act on §3.5.
+**Pattern tag:** `uncontrolled-information-channel`

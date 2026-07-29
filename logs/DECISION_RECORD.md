@@ -141,3 +141,53 @@ Gate 1 at any Sharpe (§4.4 length requirement) and Sprint 1's Pod B allocation 
 redirected the same day. See I-004.
 
 **Review date:** 2026-08-11, sprint close.
+
+---
+
+## D-005 · 2026-07-28 · Validation Ruling 002 — `C` placement under the model-prior threat model
+
+**Decision (Validation, binding on Seats 1, 2, 6–10; appealable only to the
+Principal in writing):** **REJECT** the Principal's derivation rule — `C` will not
+be pinned at any training cutoff — while **ADOPTING the threat model in full**, with
+four binding replacements (R1–R4).
+
+**Three independently sufficient reasons for the rejection**, per Ruling 002 §3.3:
+
+1. **Arithmetic, and decisive.** A cutoff is in the past by construction. With the
+   only sourceable cutoff (CIO seat, May 2026) the proposal yields a **two-month**
+   holdout today. It is therefore *not* a middle option between "holdout now" and
+   "wait twelve months" — it is `C` = today, minus two months of in-sample, plus an
+   unverifiable parameter, buying roughly two months of schedule. **Weakly dominated
+   by the forward-holdout option on every axis.**
+2. A training cutoff is not a real knowledge boundary — non-monotone in both
+   directions.
+3. It targets *price memorization*, while the thing that actually leaks into
+   hypothesis generation is *regime knowledge*. The firm already holds a **measured**
+   instance of exactly that in I-002's "1 regime exclusion," arriving through the
+   human channel the proposal omitted.
+
+**What the retrieval hole actually established.** Not the rejection — three other
+reasons carried that. It established that the firm was being asked to build an
+unenforceable control against the smaller channel while an enforceable one against
+the larger channel sat unbuilt. Filed as I-012.
+
+**Consequences filed:** I-011 (HIGH, `N`-deflation by model priors), I-012 (MEDIUM,
+retrieval channel), I-009 severity retained. Ruling 001 §2.4 amended by Validation
+**against its own prior text** — "procedurally protected only" retracted as too
+generous.
+
+**Named dissent:** Validation dissents from the Principal on the operative question.
+Recorded per Charter §6.4; the dissent is the ruling.
+
+**Principal-position record after two rulings — 2 agreed / 2 rejected.** `n = 4`,
+statistically uninformative, recorded so the base rate is built as it happens rather
+than reconstructed later. I-003 stands.
+
+**Open decision, still the Principal's:** the `C`-placement / sprint-schedule call.
+Validation's recommendation is that the live choice is **A** (early `C`, holdout now)
+versus **B/D** (`C` = today, forward holdout), and that Option **D** — family runs
+immediately as ADMITTED-AS-EXPLORATORY with trials accruing honestly, Gate 1 claimed
+when the forward window matures — gives A's schedule with B's guarantee. Its stated
+cost is the ability to say "validated" in 2026.
+
+**Review date:** first Monthly Letter, 2026-08-01.
