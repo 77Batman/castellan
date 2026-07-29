@@ -20,12 +20,17 @@ from .registry import (
     InheritedCountDoubleCountError,
 )
 from .holdout import HoldoutVault
-from .engine import run_backtest, SameBarFillError, BacktestResult
+from .engine import run_backtest, SameBarFillError, BacktestResult, FundingCoverageError
 from .costs import (
-    CostModel, US_EQUITY_LARGE, US_EQUITY_SHORT, CRYPTO_PERP_TAKER, POLYMARKET,
+    CostModel, US_EQUITY_LARGE, US_EQUITY_SHORT, CRYPTO_PERP_TAKER,
+    CRYPTO_SPOT_TAKER, POLYMARKET,
 )
 from .gates import evaluate_gate1, ValidationReport
-from .data import PITStore, pit_adjusted_close, pit_price_panel
+from .data import PITStore, pit_adjusted_close, pit_price_panel, pit_funding_panel
+from .carry import (
+    CarryScenario, apply_carry_scenario, shift_carry_panel,
+    carry_breakeven_bps_annual, tail_bootstrap_carry,
+)
 from .grid import grid_from_center, run_parameter_grid, GridResult
 from .book import PaperBook, BookError, SameBarBookFillError
 from . import loaders
@@ -41,10 +46,13 @@ __all__ = [
     "HoldoutAcquisitionFailedError", "HoldoutAcquisitionOverlapError",
     "HoldoutSchemaMismatchError",
     "HoldoutCeilingError",
-    "run_backtest", "SameBarFillError",
+    "run_backtest", "SameBarFillError", "FundingCoverageError",
     "BacktestResult", "CostModel", "US_EQUITY_LARGE", "US_EQUITY_SHORT",
-    "CRYPTO_PERP_TAKER", "POLYMARKET", "evaluate_gate1", "ValidationReport",
-    "PITStore", "pit_adjusted_close", "pit_price_panel",
+    "CRYPTO_PERP_TAKER", "CRYPTO_SPOT_TAKER", "POLYMARKET",
+    "evaluate_gate1", "ValidationReport",
+    "PITStore", "pit_adjusted_close", "pit_price_panel", "pit_funding_panel",
+    "CarryScenario", "apply_carry_scenario", "shift_carry_panel",
+    "carry_breakeven_bps_annual", "tail_bootstrap_carry",
     "grid_from_center", "run_parameter_grid", "GridResult",
     "PaperBook", "BookError", "SameBarBookFillError",
     "stats", "cv", "loaders",

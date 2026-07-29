@@ -21,6 +21,7 @@ moment: the latest version of each (event_time, field) with
 
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 import sqlite3
@@ -385,7 +386,18 @@ class PITStore:
             return pd.DataFrame()
         df = pd.DataFrame(rows, columns=["field", "event_time", "value"])
         wide = df.pivot(index="event_time", columns="field", values="value")
-        idx = pd.to_datetime(wide.index)
+        # `_iso()` serializes via `Timestamp.isoformat()`, whose string
+        # width varies with whether the instant carries a sub-second
+        # component (e.g. SOL funding prints during the Nov-2022 stress
+        # window do, most others don't) — a real property of the stored
+        # data, not a fixture artifact. Unqualified `pd.to_datetime` on a
+        # mixed-precision string index infers a format from the first
+        # rows and then applies it rigidly, raising on the rest. This is
+        # a latent defect, unrelated to Ruling 003, that Ruling 003's own
+        # realistic fixtures happen to be the first thing to exercise —
+        # `format="ISO8601"` parses every valid ISO-8601 variant without
+        # that rigidity.
+        idx = pd.to_datetime(wide.index, format="ISO8601")
         # C-5 normalizes storage to UTC (fixing the D1 leak-detection false
         # negative), but that is a storage/comparison-correctness fix, not
         # a promise to change what tz-awareness callers get back. Strip
@@ -536,3 +548,90 @@ def pit_price_panel(
         for s in symbols
     ]
     return pd.concat(cols, axis=1).sort_index()
+
+
+# ----------------------------------------------------------------------
+# Point-in-time funding accessor — Validation Ruling 003 section 3.2
+# ----------------------------------------------------------------------
+
+def pit_funding_panel(
+    store: PITStore,
+    source: str,
+    symbols: list[str],
+    decision_time,
+    bar_index,
+) -> pd.DataFrame:
+    """Realized funding, summed per bar on a LEFT-OPEN, RIGHT-CLOSED
+    window ``(t-1, t]`` (Ruling 003 section 3.2). This is the ONE
+    sanctioned way a researcher's panel ever touches a raw funding
+    print — the boundary the Director of Research correctly refused to
+    cross with a synthetic total-return leg is moved here, into code
+    the researcher does not write.
+
+    No annualization. No cadence constant. No mean. A bar's value is
+    the exact arithmetic sum of whatever realized prints fell in its
+    window, however many there were — SOL settles at 2h/4h intervals
+    during stress (up to 12 prints in a single day), so assuming any
+    fixed prints-per-bar count is measured false precisely on the days
+    that matter (Ruling 003 T-9 / N-2).
+
+    Consumes ``PITStore.asof(..., fields=["funding_rate"])``, which
+    already enforces ``knowledge_time <= decision_time`` — Amendment
+    A4's PIT discipline therefore covers funding through the identical
+    mechanism that covers prices, with nothing new to trust.
+
+    Column semantics (Ruling 003 T-7 / T-12), and the distinction
+    between them is the whole point:
+
+    - A symbol with NO funding_rate observation at all, at any
+      knowledge_time <= decision_time, is DROPPED from the returned
+      columns entirely. It contributes nothing to any accrual — never
+      a silent zero, which would read as "free to hold."
+    - A symbol WITH coverage: a bar before its first known print is
+      ``NaN`` (not yet listed; ``run_backtest`` refuses to accrue
+      against this). A bar within its coverage span with no matching
+      print is ``0.0`` — a genuine, legitimate absence of a funding
+      event that bar, not a gap.
+
+    ``df.attrs`` carries ``decision_time``, the per-symbol realized
+    print count consumed, and the sha256 of the returned values — so
+    ``run_backtest`` can copy all three into the trial config (A2).
+    """
+    bar_index = pd.DatetimeIndex(bar_index).sort_values()
+    cols: dict[str, pd.Series] = {}
+    print_counts: dict[str, int] = {}
+
+    for sym in symbols:
+        df = store.asof(source, sym, decision_time, fields=["funding_rate"])
+        if df.empty or "funding_rate" not in df.columns:
+            continue  # T-7: no coverage at all -> column absent from the panel
+        prints = df["funding_rate"].dropna().sort_index()
+        if prints.empty:
+            continue
+        idx = pd.DatetimeIndex(prints.index)
+        values = prints.to_numpy(dtype=float)
+        coverage_start = idx.min()
+
+        bar_values = np.empty(len(bar_index), dtype=float)
+        prev = None
+        for i, t in enumerate(bar_index):
+            mask = (idx <= t) if prev is None else ((idx > prev) & (idx <= t))
+            if mask.any():
+                bar_values[i] = values[mask].sum()
+            elif t >= coverage_start:
+                bar_values[i] = 0.0  # T-12: within coverage, no print that bar
+            else:
+                bar_values[i] = np.nan  # T-12: not yet listed
+            prev = t
+
+        cols[sym] = pd.Series(bar_values, index=bar_index)
+        print_counts[sym] = int(len(prints))
+
+    panel = pd.DataFrame(cols, index=bar_index)
+    sha = hashlib.sha256(panel.to_numpy(dtype=float).tobytes()).hexdigest()
+    panel.attrs["decision_time"] = (
+        decision_time if isinstance(decision_time, (int, float)) else str(decision_time)
+    )
+    panel.attrs["print_counts"] = print_counts
+    panel.attrs["sha256"] = sha
+    return panel
