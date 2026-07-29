@@ -1004,3 +1004,83 @@ discarded.
 **Resolution:** open — awaiting the live dispatch, then the Principal's call on
 budget accounting.
 **Pattern tag:** `agent-failure-leaves-untested-partial-state`
+
+---
+
+## I-037 · 2026-07-29 · §4.4 cost-robustness manufactures "survives 32× costs" on a receipt · Severity: HIGH · Owner: quant-validation
+
+**Description.** Validation Ruling 003. **CIO verified** [measured]: `gates.py:464`
+bisects the breakeven multiplier over `lo, hi = 1.0, 32.0`, **assuming `t(m)` is
+non-increasing in `m`.**
+
+If `m` scales a **receipt** rather than a cost — which is what the naive sign-only
+repair of I-034 would produce — then `t(m)` **increases** with `m`, the bisection
+never finds a crossing, and it **returns 32.0**. The Validation Report then prints
+*"survives 32× modelled costs"* under a Charter §4.4 heading.
+
+**The naive repair does not merely fail to stress the family — it manufactures a
+robustness claim.** This is why Ruling 003 splits stress semantics: `scaled(m)`
+applies to frictions only; carry is **scenario-shifted, including sign inversion**.
+
+**Resolution:** open — closed by Ruling 003's specification, pending implementation.
+**Pattern tag:** `stress-test-inverted-by-sign`
+
+---
+
+## I-038 · 2026-07-29 · `PaperBook` accrues no carry at all · Severity: HIGH · Owner: head-of-data-infra
+
+**Description.** Validation Ruling 003, finding N-4. **CIO verified** [measured]:
+`book.py` references `per_side_cost` **and nothing else** — no `carry_per_bar`, no
+funding, no borrow, anywhere in the file.
+
+**Consequences.** Charter Seat 10's mandated **fill-quality line (modelled slippage,
+commissions, borrow, funding)** is **uncomputable**. And for a delta-neutral
+long-spot/short-perp position, funding *is* the strategy — so the paper book **omits
+the entire economic content** of the position it is supposed to mark.
+
+The firm's $10M paper book, opened at D-001 and reconciling clean ever since, would
+have reported a carry strategy's P&L with the carry missing.
+
+**Resolution:** open. **Pattern tag:** `paper-book-omits-the-strategy`
+
+---
+
+## I-039 · 2026-07-29 · The harness's worst arithmetic error sits in its only untested function · Severity: MEDIUM · Owner: head-of-data-infra
+
+**Description.** Validation Ruling 003, finding N-3. **CIO verified by grep**
+[measured]: across the entire 96-test suite, **zero tests** reference
+`carry_per_bar`, `funding_bps_annual`, `borrow_bps_annual`, or `CRYPTO_PERP_TAKER`.
+
+I-034 — sign inverted, base doubled, 32.85 points of error — survived thirteen
+Validation-authored acceptance batches because **nothing ever executed the function**.
+Coverage counted in tests passed says nothing about coverage of the surface that
+matters.
+
+**Resolution:** open — Ruling 003 sets a suite floor of 115 with 19 tests on this
+surface. **Pattern tag:** `defect-in-the-untested-function`
+
+---
+
+## I-040 · 2026-07-29 · Four further Ruling 003 findings, consolidated · Severity: MEDIUM · Owner: head-of-data-infra
+
+Full statements in `research/VALIDATION-RULING-003-carry-accounting.md`.
+
+1. **N-1 — two silently disagreeing calendars.** `carry_per_bar` annualizes on
+   `cost_model.periods_per_year` while `run_backtest` uses its own.
+2. **N-2 — a measured-false cadence claim.** `DATA-INGEST-001` records funding as
+   "every 8h". Measured false for SOL, which settles at 2h/4h intervals during
+   stress — **up to 12 prints in a day, on 11 of 2,145 days** — i.e. it fails
+   precisely in the window that matters.
+3. **N-5** — PREREG-002's C11 is unexecutable as drafted: §20 places it before the
+   seal, §15 step 1b runs it as in-family trials, which requires `open_hypothesis`,
+   **which is the seal.** Resolved by a separate calibration family consuming
+   `R_bench` only, whose `N` does not accrue to the research family.
+4. **N-6** — Charter Seat 7's 11%/yr is **correct arithmetic on an assumed input**
+   and is now **inadmissible as a P&L input**. Realized: BTC **+11.86%**, ETH
+   **+14.07%**, SOL **+0.10%** [measured by the CIO from `pit.db`].
+
+**The SOL number forecloses the cheap fix.** A sign-corrected scalar at 1095 bps
+would credit SOL with a **107× overstatement, erring optimistically** — crediting a
+receipt that is not there. A scalar's error is whatever the asset makes it.
+
+**Resolution:** open. **Pattern tag:** `ruling-003-consolidated`
