@@ -12,14 +12,14 @@ The backtest harness for Castellan Capital. This package is the answer to the Ch
 
 **One cost library.** `castellan.costs.CostModel` implements the Charter stack (commission + half-spread + square-root impact + borrow/funding carry) with presets for US equities, equity shorts (4%/yr specials assumed), crypto perps (taker + funding), and Polymarket. `.scaled(2.0)` produces the stress copy for the cost-robustness criterion. Researchers may not hand-roll costs; the engine only accepts a `CostModel`.
 
-**The holdout is physically locked.** `HoldoutVault.lock(df, passphrase)` splits off the most recent 25%, encrypts it (PBKDF2 → Fernet) with a passphrase held by the Principal, and returns only the in-sample portion — the research path never touches holdout plaintext. `open_once()` logs the opening in the registry *before* returning data; a second call raises `HoldoutRetiredError` and permanently logs the violation. Gate 1 reads these events.
+**The holdout is never fetched before Gate 1 (Amendment P-1).** `HoldoutVault.seal(...)` writes a hash-committed `spec.json` at pre-registration — cutoff `C`, dataset identity, schema fingerprint — and (paired with a `PITStore`) writes a physical ingest ceiling: `PITStore.ingest` raises `HoldoutCeilingError` and ingests nothing if a batch contains any observation after `C`, so a seat that calls a loader with the "wrong" end date cannot leak the holdout by accident. `HoldoutVault.acquire_once(passphrase, fetch, ...)` runs at Gate 1, exactly once: it logs the attempt before any network call, verifies the sealed spec hasn't been tampered with, refuses if `C` hasn't been reached yet, and — on success — encrypts and permanently retains the fetched series (PBKDF2 → Fernet) and lifts the ceiling. A second acquisition raises `HoldoutRetiredError` and is logged; a failed fetch moves the vault to `ACQUISITION_FAILED` without retiring it, and a further attempt requires an explicit, logged retry authorization. A leak-detection check flags any row in the holdout window that was knowable in `pit.db` before the acquisition happened. Gate 1 reads all of this, per family. The legacy fetch-then-lock API (`lock()` / `open_once()`) is retired and hard-raises `HoldoutRegimeError`. See `research/VALIDATION-RULING-001-holdout-regime.md` for the full design and `research/DATA-IMPL-001-p1-vault.md` for the implementation.
 
 **Gate 1 is computed.** `evaluate_gate1` produces a `ValidationReport` with every computable Charter 4.4 criterion (net Sharpe, t ≥ 3, DSR ≥ 0.95 from registry N and dispersion, PBO ≤ 0.10 via CSCV S=16 on the registry return matrix, length ≥ max(4y, MinBTL(N)), holdout single-use from the event log, WFE, subperiod positivity, P&L concentration, 2× cost robustness, breakeven cost multiplier via bisection). Criteria the harness cannot verify — parameter surface, capacity, correlation to book, Red-Team Memo — are INSUFFICIENT-DATA unless supplied, **and INSUFFICIENT-DATA is not PASS**. The report embeds a sha256 of the evaluated return series and logs its verdict to the registry.
 
 ## The workflow
 
 ```python
-from castellan import (TrialRegistry, HoldoutVault, run_backtest,
+from castellan import (TrialRegistry, PITStore, HoldoutVault, run_backtest,
                        US_EQUITY_LARGE, evaluate_gate1)
 
 reg = TrialRegistry("book/registry.db")
@@ -27,20 +27,30 @@ reg.open_hypothesis(family="etf-tsmom", statement=..., mechanism=...,
                     falsifier=..., universe=..., horizon=...,
                     success_criteria=..., trial_budget=20)
 
-vault = HoldoutVault("book/vaults/etf-daily", reg, "etf-daily")
-insample = vault.lock(prices, passphrase=PRINCIPAL_ONLY, fraction=0.25)
+store = PITStore("book/pit.db", reg)
 
-# develop freely — every variant is logged
+# Gate 0: seal the spec — cutoff C, dataset identity, schema — before any
+# research begins. This writes the D2 ingest ceiling into `store` too.
+vault = HoldoutVault("book/vaults/etf-daily", reg, "etf-daily", family="etf-tsmom",
+                     store=store)
+vault.seal(source="yfinance", dataset_id="etf-universe-1",
+          instrument_identity="...", query_semantics={...},
+          cutoff="2025-01-01", schema_fingerprint={...})
+
+# develop freely against pit_adjusted_close()/pit_price_panel() — the
+# store refuses any ingest that would cross C, so the safe path is the
+# default path. Every variant run through the engine is logged.
 res = run_backtest(insample, weights, US_EQUITY_LARGE, reg,
                    "etf-tsmom", {"lookback": 90})
 
-# Gate 1: holdout opens exactly once, ever
-holdout = vault.open_once(PRINCIPAL_ONLY, opened_by="quant-validation")
+# Gate 1: fetch and seal the holdout — exactly once, ever, and only now.
+holdout = vault.acquire_once(PRINCIPAL_ONLY, fetch_from_vendor,
+                             acquired_by="quant-validation")
 report = evaluate_gate1("ETF TSMOM", "etf-tsmom", reg, oos_net, 252, ...)
 print(report.to_markdown())
 ```
 
-`examples/demo_workflow.py` runs this end to end on synthetic data and shows a noise strategy failing the Gate on eight criteria. `pytest tests/` (16 tests) proves: registry enforcement, look-ahead neutralization, the Charter's noise-Sharpe table, DSR rejecting the best of 200 noise trials while accepting a genuine edge, PBO ≈ 0.5 on noise vs ≤ 0.10 with a real signal, purge/embargo correctness, and single-use holdout.
+`examples/demo_workflow.py` runs this end to end on synthetic data and shows a noise strategy failing the Gate on eight criteria. `pytest tests/` (64 tests) proves: registry enforcement, look-ahead neutralization, the Charter's noise-Sharpe table, DSR rejecting the best of 200 noise trials while accepting a genuine edge, PBO ≈ 0.5 on noise vs ≤ 0.10 with a real signal, purge/embargo correctness, the P-1 holdout regime (spec sealing, the ingest ceiling, acquire-once with its retry/tamper/leak-detection controls, and family-scoped Gate 1 evaluation — `test_holdout_p1.py`, 34 tests), and predecessor-family trial-count chaining. One pre-existing test (`test_holdout_locks_splits_and_opens_once`, the legacy `lock()`/`open_once()` API) fails by design under Amendment P-1 and is not yet rewritten — see the escalation in `research/DATA-IMPL-001-p1-vault.md`.
 
 ## Charter amendments this implies (for the Principal to ratify)
 

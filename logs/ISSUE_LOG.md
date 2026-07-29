@@ -327,3 +327,42 @@ notes it does not close `Bash`, which all nine seats hold.
 
 **Resolution:** open — CIO to act on §3.5.
 **Pattern tag:** `uncontrolled-information-channel`
+
+---
+
+## I-013 · 2026-07-28 · CIO committed a seat's in-progress work under an unrelated message · Severity: MEDIUM · Owner: fable-5-cio
+
+**Description.** Commit `ce41866`, whose message describes Validation Ruling 002,
+also contains **six `harness/castellan/*.py` source files** — `__init__.py`,
+`data.py`, `errors.py`, `gates.py`, `holdout.py`, `registry.py`, 1,557 insertions —
+which are Data & Infrastructure's P-1 vault implementation for I-005. The message
+does not mention that work at all.
+
+**Detected by Data & Infrastructure**, not by the CIO, mid-task: it noticed its own
+finished files already at HEAD under someone else's commit message and reported it
+rather than assuming a duplicate implementation existed. **CIO independently
+verified via `git show --stat ce41866`** [measured].
+
+**Cause.** The CIO ran `git add -A` while background seats were writing to the
+shared working tree. `-A` stages whatever is present, so an unrelated seat's
+in-flight files were swept into a commit about something else. There is no
+substantive conflict — Ruling 002 rules on where `C` is sourced from and explicitly
+does not reopen Ruling 001 §2.3 — so the code is correct and uncontaminated. The
+damage is to the record, not the software.
+
+**Why this is logged at MEDIUM rather than shrugged off.** Amendment A3 makes the
+git repository the firm's **book of record**. A commit whose message does not
+describe its contents degrades exactly the property A3 exists to guarantee: that a
+future reader can reconstruct what happened and why from the repo alone. Attribution
+now rests on file-content matching rather than on the record saying so.
+
+**Correction applied.** History is **not** rewritten — rewriting a book of record to
+hide an error is a worse failure than the error. The remaining artifacts are
+committed under a message naming I-005 explicitly and cross-referencing `ce41866`,
+and this entry stands as the durable pointer.
+
+**Process fix, binding on the CIO from now:** stage explicit paths when background
+seats are running. `git add -A` is prohibited while any seat is live.
+
+**Resolution:** corrected; process fix adopted.
+**Pattern tag:** `book-of-record-integrity`

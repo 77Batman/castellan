@@ -1,7 +1,14 @@
-"""End-to-end Castellan workflow on synthetic data.
+"""End-to-end Castellan workflow on synthetic data, under Amendment P-1.
 
-    pre-register -> lock holdout -> develop in-sample (every run logged)
-    -> open holdout ONCE -> evaluate Gate 1 -> render Validation Report
+    pre-register -> seal the holdout spec (Gate 0, before any research)
+    -> develop in-sample (every run logged) -> acquire holdout ONCE at
+    Gate 1 -> evaluate Gate 1 -> render Validation Report
+
+The holdout series itself is not generated until acquire_once() runs —
+that is the entire point of P-1 (research/VALIDATION-RULING-001-holdout-
+regime.md). Here the Gate-1 "vendor fetch" is a stub that deterministically
+extends the same synthetic process from the sealed cutoff forward, standing
+in for a real venue call.
 
 Run:  python examples/demo_workflow.py
 """
@@ -10,21 +17,28 @@ import numpy as np
 import pandas as pd
 
 from castellan import (
-    TrialRegistry, HoldoutVault, run_backtest, US_EQUITY_LARGE,
+    TrialRegistry, PITStore, HoldoutVault, run_backtest, US_EQUITY_LARGE,
     evaluate_gate1, stats,
 )
 from castellan.cv import walk_forward_windows
 
 rng = np.random.default_rng(7)
+ASSETS = ["ETF_A", "ETF_B", "ETF_C"]
 
-# --- synthetic market: 6y daily, 3 ETFs, weak momentum planted ---------
-T, A = 1550, 3
-noise = rng.normal(0.0002, 0.010, size=(T, A))
-prices = pd.DataFrame(
-    100 * np.exp(np.cumsum(noise, axis=0)),
-    index=pd.bdate_range("2020-01-01", periods=T),
-    columns=["ETF_A", "ETF_B", "ETF_C"],
-)
+
+def synthetic_prices(start: str, n: int, seed: int) -> pd.DataFrame:
+    r = np.random.default_rng(seed)
+    noise = r.normal(0.0002, 0.010, size=(n, len(ASSETS)))
+    return pd.DataFrame(
+        100 * np.exp(np.cumsum(noise, axis=0)),
+        index=pd.bdate_range(start, periods=n),
+        columns=ASSETS,
+    )
+
+
+# --- in-sample data: this is all that exists before Gate 1 -------------
+IN_SAMPLE_N = 1200
+insample = synthetic_prices("2020-01-01", IN_SAMPLE_N, seed=7)
 
 reg = TrialRegistry("demo_registry.db")
 reg.open_hypothesis(
@@ -39,12 +53,21 @@ reg.open_hypothesis(
     trial_budget=20,
 )
 
-# --- lock the holdout BEFORE any research ------------------------------
-vault = HoldoutVault("demo_vault", reg, "etf-daily")
-PASSPHRASE = "principal-only-passphrase"       # held by the Principal
-insample = vault.lock(prices, PASSPHRASE, fraction=0.25)
-print(f"In-sample: {insample.index[0].date()} .. {insample.index[-1].date()} "
-      f"({len(insample)} bars); holdout locked & encrypted.")
+# --- seal the holdout spec BEFORE any research (Gate 0) -----------------
+store = PITStore("demo_pit.db", reg)
+vault = HoldoutVault("demo_vault", reg, "etf-daily", family="etf-tsmom", store=store)
+PASSPHRASE = "principal-only-passphrase"       # held by the Principal; never stored
+CUTOFF = insample.index[-1]
+vault.seal(
+    source="synthetic-demo",
+    dataset_id="etf-universe-1",
+    instrument_identity="ETF_A,ETF_B,ETF_C",
+    query_semantics={"fields": ["close"], "freq": "1bd"},
+    cutoff=CUTOFF,
+    schema_fingerprint={"columns": ASSETS, "dtypes": {c: "float64" for c in ASSETS}},
+)
+print(f"Holdout spec sealed: cutoff C={CUTOFF.date()}. Holdout plaintext does "
+      f"not exist yet and will not until Gate 1.")
 
 # --- develop: every variant is a logged trial --------------------------
 def tsmom_weights(px: pd.DataFrame, lookback: int, cap: float) -> pd.DataFrame:
@@ -61,10 +84,20 @@ for lookback in (40, 60, 90, 120, 180, 250):
 fs = reg.family_stats("etf-tsmom")
 print(f"Registry: N={fs.n_trials} trials, per-period SR std={fs.sr_period_std:.4f}")
 
-# --- choose plateau centroid (not argmax) and go to the holdout --------
+# --- choose plateau centroid (not argmax) and go to Gate 1 -------------
 CHOSEN_LOOKBACK = 90
-holdout = vault.open_once(PASSPHRASE, opened_by="quant-validation")
-print(f"Holdout opened ONCE: {holdout.index[0].date()} .. {holdout.index[-1].date()}")
+
+def fetch_holdout_from_vendor(spec: dict) -> pd.DataFrame:
+    """Stands in for a real venue call: this is the ONLY place the holdout
+    series is generated, and it only runs inside acquire_once(), at Gate 1."""
+    cutoff = pd.Timestamp(spec["cutoff"])
+    return synthetic_prices((cutoff + pd.Timedelta(days=1)).date().isoformat(),
+                            400, seed=8)
+
+holdout = vault.acquire_once(PASSPHRASE, fetch_holdout_from_vendor,
+                             acquired_by="quant-validation")
+print(f"Holdout acquired ONCE: {holdout.index[0].date()} .. {holdout.index[-1].date()}")
+prices = pd.concat([insample, holdout])
 
 def evaluate(cost_multiplier: float) -> np.ndarray:
     w = tsmom_weights(holdout, CHOSEN_LOOKBACK, cap=0.9)
