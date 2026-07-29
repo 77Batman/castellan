@@ -9,18 +9,26 @@ four states:
 - ``spec.json`` (+ its sha256 logged as ``holdout_spec_sealed``) is written
   at pre-registration (Gate 0), via :meth:`HoldoutVault.seal`. It is
   hash-committed, not encrypted — there is no secret in a specification.
-  Sealing also writes a D2 ingest ceiling into the paired ``PITStore`` (if
-  one is supplied), so a seat that calls a loader with any end date cannot
-  accidentally ingest past the cutoff: the store refuses.
+  Sealing also writes a D2 ingest ceiling into the required ``PITStore``
+  (Acceptance 001 C-3: the store is a mandatory constructor argument, not
+  opt-in), so a seat that calls a loader with any end date cannot
+  accidentally ingest past the cutoff: the store refuses. ``seal()`` also
+  requires the Gate-1 passphrase and writes only a salted one-way
+  ``verifier.json`` derived from it — never the passphrase itself
+  (Acceptance 001 C-2) — so a wrong passphrase at acquisition can be
+  refused *cryptographically*, before any fetch, instead of merely
+  failing a presence check (the I-015 fix: a typo no longer bricks a
+  family).
 
 - ``payload.enc`` is written at Gate 1, from the series actually fetched at
   that time, via :meth:`HoldoutVault.acquire_once`. It is encrypted under
-  the Principal's passphrase (PBKDF2 -> Fernet, same construction as
-  before) and retained permanently, with its sha256 logged as
-  ``holdout_acquired``. A second acquisition raises and is logged; a
-  failed acquisition moves the vault to ACQUISITION_FAILED without
-  retiring it, and a further attempt requires a logged
-  ``holdout_retry_authorized`` event (Principal passphrase + a stated
+  the same passphrase (PBKDF2 -> Fernet, same construction as before) and
+  retained permanently, with its sha256 logged as ``holdout_acquired``. A
+  second acquisition raises and is logged; a failed acquisition — network
+  error, schema mismatch, **or a fetched frame that overlaps the in-sample
+  period (C-7)** — moves the vault to ACQUISITION_FAILED without retiring
+  it, and a further attempt requires a logged ``holdout_retry_authorized``
+  event (the correct passphrase, checked cryptographically, + a stated
   cause) or it raises.
 
 The legacy ``lock()`` / ``open_once()`` API (the old fetch-then-encrypt
@@ -56,6 +64,7 @@ from .errors import (
     HoldoutNotYetReachedError,
     HoldoutRetryUnauthorizedError,
     HoldoutAcquisitionFailedError,
+    HoldoutAcquisitionOverlapError,
     HoldoutSchemaMismatchError,
 )
 from .registry import TrialRegistry
@@ -73,6 +82,7 @@ __all__ = [
     "HoldoutNotYetReachedError",
     "HoldoutRetryUnauthorizedError",
     "HoldoutAcquisitionFailedError",
+    "HoldoutAcquisitionOverlapError",
     "HoldoutSchemaMismatchError",
     "VaultState",
 ]
@@ -94,6 +104,18 @@ def _derive_key(passphrase: str, salt: bytes) -> bytes:
         algorithm=hashes.SHA256(), length=32, salt=salt, iterations=200_000
     )
     return base64.urlsafe_b64encode(kdf.derive(passphrase.encode()))
+
+
+def _verifier_hash(passphrase: str, salt: bytes) -> str:
+    """A one-way check value derived from the passphrase — NOT the
+    passphrase, and not the Fernet key itself (a second sha256 sits
+    between them), so a leaked ``verifier.json`` cannot be used to decrypt
+    ``payload.enc`` and is not "something the Principal would recognise as
+    the passphrase" (Acceptance 001 §8's own bar for this control). Same
+    construction family as ``_derive_key``; kept as a distinct function so
+    the two purposes (encryption key vs. authentication check) can never
+    be confused at a call site."""
+    return hashlib.sha256(_derive_key(passphrase, salt)).hexdigest()
 
 
 def _to_utc(ts) -> pd.Timestamp:
@@ -139,7 +161,7 @@ class HoldoutVault:
         registry: TrialRegistry,
         name: str,
         family: str,
-        store=None,
+        store,
     ):
         """
         Parameters
@@ -149,16 +171,23 @@ class HoldoutVault:
             per-family (Ruling 001 D1 / E1; fixes I-007). This is a
             constructor-level, immutable property of the vault by Principal
             direct instruction — not inferred from ``name``.
-        store : an optional ``PITStore``. If given, ``seal()`` writes the D2
-            ingest ceiling into it and ``acquire_once()`` lifts it on
-            success and runs the D1 leak-detection check against it. A
-            vault constructed without a store still works (spec sealing,
-            acquisition, tamper/retry logic) but forgoes the ceiling
-            enforcement and leak detection — callers that skip this are
-            choosing to forgo the compensating control the ruling
-            considers "the ruling's most important element" and that
-            choice should not be made silently in production use.
+        store : a ``PITStore``. **Required** (Acceptance 001 C-3 — the D2
+            ceiling must not be opt-in). ``seal()`` writes the D2 ingest
+            ceiling into it and ``acquire_once()`` lifts it on success and
+            runs the D1 leak-detection check against it. There is no
+            supported way to construct a vault that forgoes this; a caller
+            that genuinely has a dataset which never transits ``pit.db``
+            must escalate to Validation rather than pass ``store=None``
+            (Ruling 001 §8's own stated fallback for this case).
         """
+        if store is None:
+            raise HoldoutSpecInvalidError(
+                "HoldoutVault requires a PITStore (Acceptance 001 C-3): the "
+                "D2 ingest ceiling and D1 leak detection must not be "
+                "optional. If this dataset genuinely never transits "
+                "pit.db, escalate to Validation rather than passing "
+                "store=None."
+            )
         self.dir = vault_dir
         self.registry = registry
         self.name = name
@@ -177,6 +206,10 @@ class HoldoutVault:
     @property
     def _acq_meta_path(self) -> str:
         return os.path.join(self.dir, "acquisition_meta.json")
+
+    @property
+    def _verifier_path(self) -> str:
+        return os.path.join(self.dir, "verifier.json")
 
     def is_sealed(self) -> bool:
         return os.path.exists(self._spec_path)
@@ -220,6 +253,7 @@ class HoldoutVault:
         query_semantics: dict,
         cutoff,
         schema_fingerprint: dict,
+        passphrase: str,
         holdout_end_rule: str = "open-ended, forward from C",
         resolution_source: str = "",
         sealed_by: str = "",
@@ -227,7 +261,22 @@ class HoldoutVault:
         """D1 + A1-A4. Writes ``spec.json`` and the ``holdout_spec_sealed``
         event. Binding fields (everything above) are immutable thereafter:
         a byte-level edit to ``spec.json`` is caught at acquisition (D4).
+
+        ``passphrase`` (Acceptance 001 C-2): the Principal commits to the
+        Gate-1 passphrase here, at seal time, and only a salted one-way
+        verifier (``verifier.json``) is written to disk — never the
+        passphrase itself, never anything that round-trips to it. This is
+        what lets ``acquire_once()`` refuse a wrong-but-non-empty
+        passphrase *before any fetch*, closing I-015 (a typo bricking a
+        family): a bad passphrase now fails a cryptographic comparison
+        against the verifier instead of merely failing a presence check
+        and sealing the payload under the typo.
         """
+        if self.store is None:
+            raise HoldoutSpecInvalidError(
+                "seal() requires a PITStore (Acceptance 001 C-3); this "
+                "vault's store was removed after construction."
+            )
         if self.is_sealed():
             raise HoldoutAlreadySealedError(
                 f"Vault '{self.name}' is already sealed; re-sealing would "
@@ -245,10 +294,26 @@ class HoldoutVault:
                 raise HoldoutSpecInvalidError(
                     f"seal() requires a non-empty '{fname}'"
                 )
+        if not passphrase or not passphrase.strip():
+            raise HoldoutPassphraseError(
+                "seal() requires a non-empty passphrase to commit the "
+                "Gate-1 acquisition verifier."
+            )
         try:
             cutoff_ts = _to_utc(cutoff)
         except Exception as exc:
             raise HoldoutSpecInvalidError(f"malformed cutoff: {exc}") from exc
+
+        # Write the passphrase verifier BEFORE the spec, so a crash between
+        # the two never leaves a sealed spec with no verifier to check
+        # acquisition against.
+        verifier_salt = os.urandom(16)
+        verifier = {
+            "salt_b64": base64.b64encode(verifier_salt).decode(),
+            "verifier_sha256": _verifier_hash(passphrase, verifier_salt),
+        }
+        with open(self._verifier_path, "w") as fh:
+            json.dump(verifier, fh, indent=2)
 
         spec = {
             "vault": self.name,
@@ -303,6 +368,36 @@ class HoldoutVault:
         with open(self._spec_path) as fh:
             return json.load(fh)
 
+    def _verify_passphrase(self, passphrase: str, *, stage: str, acquired_by: str) -> None:
+        """C-2/C4/C9: cryptographic check against the verifier written at
+        seal() time. Used by both ``acquire_once`` (stage='acquire') and
+        ``authorize_retry`` (stage='retry') — the retry gate had the same
+        presence-only defect shape as C4 originally did (found in the
+        re-audit; see the deliverable note) and is fixed the same way.
+        Raises before any side effect; logs the bad attempt either way.
+        """
+        ok = False
+        if passphrase and passphrase.strip():
+            try:
+                with open(self._verifier_path) as fh:
+                    verifier = json.load(fh)
+                salt = base64.b64decode(verifier["salt_b64"])
+                ok = _verifier_hash(passphrase, salt) == verifier["verifier_sha256"]
+            except FileNotFoundError:
+                # Vault sealed before C-2 (or verifier.json lost). Fail
+                # closed: no verifier means no basis to accept anything.
+                ok = False
+        if not ok:
+            self.registry.log_event(
+                "holdout_bad_passphrase_attempt",
+                self.family,
+                {"vault": self.name, "by": acquired_by, "stage": stage},
+            )
+            raise HoldoutPassphraseError(
+                f"Wrong passphrase at {stage}. Refused before any fetch; "
+                "the vault is not retired and is not modified."
+            )
+
     # -- D3 / C: acquire (Gate 1, exactly once) ---------------------------
 
     def acquire_once(
@@ -320,10 +415,11 @@ class HoldoutVault:
 
         Ordering (each gate below is checked, and refuses, before any
         network call — D3's first bullet):
-        C2 retired -> C4 passphrase presence -> C3 spec tamper ->
-        C5 not-yet-reached -> C6/C7 retry authorization -> log attempt ->
-        fetch -> C10 schema check -> seal payload -> log acquired ->
-        D1 leak check -> lift D2 ceiling.
+        C2 retired -> C4 passphrase (cryptographic, against the seal-time
+        verifier) -> C3 spec tamper -> C5 not-yet-reached -> C6/C7 retry
+        authorization -> log attempt -> fetch -> C-7 acquisition-side
+        non-overlap check -> C10 schema check -> seal payload ->
+        log acquired -> D1 leak check -> lift D2 ceiling.
         """
         if not self.is_sealed():
             raise HoldoutError(f"Vault '{self.name}' has no sealed spec")
@@ -340,19 +436,14 @@ class HoldoutVault:
                 "results derived from it after this point are invalid."
             )
 
-        # C4 — wrong/missing passphrase (rider-named negative). There is no
-        # ciphertext yet to test correctness against at first acquisition
-        # (see the implementation note): this is a presence gate, not a
-        # cryptographic check. The cryptographic check is read_acquired().
-        if not passphrase or not passphrase.strip():
-            self.registry.log_event(
-                "holdout_bad_passphrase_attempt",
-                self.family,
-                {"vault": self.name, "by": acquired_by, "stage": "acquire"},
-            )
-            raise HoldoutPassphraseError(
-                "A non-empty Principal passphrase is required to acquire."
-            )
+        # C4 — wrong/missing passphrase (rider-named negative), checked
+        # CRYPTOGRAPHICALLY against the verifier written at seal() time
+        # (Acceptance 001 C-2). This is what closes I-015: a wrong-but-
+        # non-empty passphrase ("hunter3-TYPO" against "hunter2") now
+        # fails this comparison and is refused before any fetch, rather
+        # than passing a mere presence check and sealing the payload
+        # under the typo.
+        self._verify_passphrase(passphrase, stage="acquire", acquired_by=acquired_by)
 
         # C3 — spec-hash mismatch (rider-named negative). No network call.
         sealed = self._sealed_event()
@@ -428,6 +519,40 @@ class HoldoutVault:
             )
             raise HoldoutAcquisitionFailedError(str(exc)) from exc
 
+        # C-7 — acquisition-side enforcement of the load-bearing property
+        # the legacy test protected (Acceptance 001 §4, R-F1/F2-3(2)):
+        # `acquired.index.min() > C`. B2/B3/B6 already guarantee no row
+        # after C ever enters pit.db via ingest(); this is the fetch-side
+        # twin — a fetch callable that returns rows AT OR BEFORE C (i.e.
+        # returns the in-sample history instead of, or in addition to, the
+        # holdout) must not be allowed to seal as "the holdout". Treated as
+        # a C6-class acquisition failure: ACQUISITION_FAILED, not retired,
+        # retry-gated.
+        fetched_idx = pd.to_datetime(df.index)
+        fetched_idx = (
+            fetched_idx.tz_localize("UTC") if fetched_idx.tz is None
+            else fetched_idx.tz_convert("UTC")
+        )
+        overlap = fetched_idx <= cutoff
+        if len(fetched_idx) and overlap.any():
+            n = int(overlap.sum())
+            self.registry.log_event(
+                "holdout_acquisition_failed",
+                self.family,
+                {
+                    "vault": self.name,
+                    "error": f"fetched frame contains {n} row(s) at or "
+                             f"before cutoff C={cutoff.isoformat()}",
+                },
+            )
+            raise HoldoutAcquisitionOverlapError(
+                f"Vault '{self.name}': fetch() returned {n} row(s) with "
+                f"event_time <= C ({cutoff.isoformat()}). The acquired "
+                "series must be strictly after the in-sample cutoff — a "
+                "fetch that returns in-sample history cannot be sealed as "
+                "the holdout. Refused; not retired."
+            )
+
         # C10 — schema-fingerprint mismatch: refuse to seal, treat as a
         # failed acquisition (same ACQUISITION_FAILED / retry-gate path).
         ok, why = _schema_matches(df, spec["schema_fingerprint"])
@@ -464,7 +589,7 @@ class HoldoutVault:
         with open(self._acq_meta_path, "w") as fh:
             json.dump(acq_meta, fh, indent=2)
 
-        self.registry.log_event(
+        acquired_event_id = self.registry.log_event(
             "holdout_acquired",
             self.family,
             {
@@ -497,21 +622,28 @@ class HoldoutVault:
             # D2 — lift the ceiling, scoped to this single sealed
             # acquisition (the spec-hash argument is what makes B5 hold:
             # only a caller who has independently verified the sealed
-            # spec, as this method just did, can lift it).
+            # spec, as this method just did, can lift it). C-9: record
+            # which acquisition did it.
             self.store._lift_ceiling(
-                spec["source"], spec["dataset_id"], self.family, sealed_hash
+                spec["source"], spec["dataset_id"], self.family, sealed_hash,
+                lifted_by_event_id=acquired_event_id,
             )
 
         return df
 
     def authorize_retry(self, passphrase: str, reason: str, authorized_by: str = "") -> None:
         """Principal-only: authorize one further acquisition attempt after
-        a failure. Requires a passphrase (presence, per the C4 rationale
-        above) and a stated cause naming the Issue Log entry — an
+        a failure. Requires the *correct* passphrase, checked cryptographically
+        against the same seal-time verifier acquire_once uses (re-audit
+        finding: this method previously did only a presence check — the
+        identical defect shape C4 had before C-2, just with a smaller
+        blast radius since a bad retry-authorization doesn't seal or
+        retire anything. Fixed the same way, for the same reason: a typo
+        here should not count as "the Principal authorized a retry").
+        Also requires a stated cause naming the Issue Log entry — an
         unreasoned retry is exactly the loophole Ruling 001 D3 rejects.
         """
-        if not passphrase or not passphrase.strip():
-            raise HoldoutPassphraseError("Retry authorization requires a passphrase.")
+        self._verify_passphrase(passphrase, stage="retry", acquired_by=authorized_by)
         if not reason or not reason.strip():
             raise ValueError("Retry authorization requires a stated cause.")
         self.registry.log_event(

@@ -66,7 +66,9 @@ CREATE TABLE IF NOT EXISTS ingest_ceiling (
     cutoff         TEXT NOT NULL,     -- ISO-8601, UTC, inclusive lower bound of holdout
     spec_sha256    TEXT NOT NULL,     -- the sealed spec hash that authorizes a lift
     active         INTEGER NOT NULL DEFAULT 1,
-    created_utc    REAL NOT NULL
+    created_utc    REAL NOT NULL,
+    lifted_utc     REAL,              -- Acceptance 001 C-9: when the lift happened
+    lifted_by_event_id INTEGER        -- and the holdout_acquired event id that did it
 );
 CREATE INDEX IF NOT EXISTS idx_ceiling
     ON ingest_ceiling (source, dataset_id, active);
@@ -74,7 +76,22 @@ CREATE INDEX IF NOT EXISTS idx_ceiling
 
 
 def _iso(ts) -> str:
-    return pd.Timestamp(ts).isoformat()
+    """Normalize to a UTC-anchored ISO-8601 string (Acceptance 001 C-5).
+
+    Previously this kept the caller's own UTC offset
+    (``pd.Timestamp(ts).isoformat()``), so two observations at the same
+    instant but different offsets sorted and compared as different
+    strings — the measured false negative in I-016: a bar stamped
+    ``America/New_York 2024-06-30 21:00`` (= ``2024-07-01T01:00Z``, inside
+    a holdout window opening at ``C = 2024-07-01T00:00Z``) was stored as
+    ``2024-06-30T21:00:00-04:00`` and every string-comparison query
+    (``rows_in_window``, ``asof``, ``_latest_map``) missed it. Normalizing
+    to UTC here makes every stored ``event_time`` string comparison an
+    instant comparison, not a string comparison with a hidden offset.
+    """
+    t = pd.Timestamp(ts)
+    t = t.tz_localize("UTC") if t.tzinfo is None else t.tz_convert("UTC")
+    return t.isoformat()
 
 
 class PITStore:
@@ -84,6 +101,19 @@ class PITStore:
         self.conn = sqlite3.connect(path)
         self.conn.executescript(SCHEMA)
         self.conn.commit()
+        self._migrate()
+
+    def _migrate(self) -> None:
+        """Retrofit columns added after a pit.db may already exist, same
+        pattern as TrialRegistry._migrate (Acceptance 001 C-9)."""
+        cols = [r[1] for r in self.conn.execute("PRAGMA table_info(ingest_ceiling)")]
+        changed = False
+        for name, sqltype in [("lifted_utc", "REAL"), ("lifted_by_event_id", "INTEGER")]:
+            if name not in cols:
+                self.conn.execute(f"ALTER TABLE ingest_ceiling ADD COLUMN {name} {sqltype}")
+                changed = True
+        if changed:
+            self.conn.commit()
 
     # ------------------------------------------------------------------
     # Ingest (append-only, restatement-aware)
@@ -175,11 +205,25 @@ class PITStore:
         ]
 
     def _enforce_holdout_ceiling(self, source: str, symbol: str, df: pd.DataFrame) -> None:
-        ceilings = self._active_ceilings(source, symbol)
-        if not ceilings or df.empty:
+        if df.empty:
             return
         idx = pd.to_datetime(df.index)
         idx = idx.tz_localize("UTC") if idx.tz is None else idx.tz_convert("UTC")
+        self._enforce_holdout_ceiling_on_index(source, symbol, idx, kind="ingest")
+
+    def _enforce_holdout_ceiling_on_index(
+        self, source: str, symbol: str, idx, kind: str = "ingest"
+    ) -> None:
+        """Shared enforcement, so every entry point into the store goes
+        through the same check (Acceptance 001 C-4). ``ingest()`` calls
+        this via :meth:`_enforce_holdout_ceiling` with the frame's
+        DatetimeIndex; ``ingest_documents()`` (previously unguarded — a
+        second, fully open ingest path, I-017) calls it directly with the
+        documents' event_times. ``kind`` only affects the log/error text.
+        """
+        ceilings = self._active_ceilings(source, symbol)
+        if not ceilings or len(idx) == 0:
+            return
         for c in ceilings:
             cutoff_ts = pd.Timestamp(c["cutoff"])
             violating = idx > cutoff_ts  # event_time == C is in-sample (B6)
@@ -195,13 +239,15 @@ class PITStore:
                             "cutoff": c["cutoff"],
                             "n_violating": n,
                             "first_violating_event_time": str(idx[violating].min()),
+                            "kind": kind,
                         },
                     )
                 raise HoldoutCeilingError(
-                    f"Ingest for (source={source!r}, dataset_id={symbol!r}) "
-                    f"contains {n} observation(s) with event_time after the "
-                    f"sealed holdout cutoff {c['cutoff']} (family "
-                    f"{c['family']!r}). Refused; nothing was ingested."
+                    f"{kind.capitalize()} for (source={source!r}, "
+                    f"dataset_id={symbol!r}) contains {n} observation(s) "
+                    f"with event_time after the sealed holdout cutoff "
+                    f"{c['cutoff']} (family {c['family']!r}). Refused; "
+                    "nothing was ingested."
                 )
 
     def set_holdout_ceiling(
@@ -232,7 +278,8 @@ class PITStore:
         self.conn.commit()
 
     def _lift_ceiling(
-        self, source: str, dataset_id: str, family: str, spec_sha256: str
+        self, source: str, dataset_id: str, family: str, spec_sha256: str,
+        lifted_by_event_id: int | None = None,
     ) -> None:
         """Internal. The *only* way a ceiling becomes inactive. Requires the
         spec hash sealed at creation time — the same hash D4's tamper check
@@ -241,6 +288,12 @@ class PITStore:
         the sealed spec) cannot lift a ceiling. This is what makes B5 hold:
         "cannot be raised, lowered, or removed through any API other than
         the D3 acquisition path; a direct mutation attempt raises."
+
+        Acceptance 001 C-9: records WHICH acquisition lifted the ceiling
+        (``lifted_utc`` + the ``holdout_acquired`` event id), not just
+        ``active=0``. Ruling 001 B5/D2's intent is that a lift is scoped to
+        a single sealed acquisition; recording the event id is what makes
+        that auditable after the fact rather than merely true in code.
         """
         row = self.conn.execute(
             "SELECT spec_sha256 FROM ingest_ceiling WHERE source=? AND "
@@ -259,9 +312,9 @@ class PITStore:
                 "not a sanctioned path."
             )
         self.conn.execute(
-            "UPDATE ingest_ceiling SET active=0 WHERE source=? AND "
-            "dataset_id=? AND family=?",
-            (source, dataset_id, family),
+            "UPDATE ingest_ceiling SET active=0, lifted_utc=?, "
+            "lifted_by_event_id=? WHERE source=? AND dataset_id=? AND family=?",
+            (time.time(), lifted_by_event_id, source, dataset_id, family),
         )
         self.conn.commit()
 
@@ -332,7 +385,16 @@ class PITStore:
             return pd.DataFrame()
         df = pd.DataFrame(rows, columns=["field", "event_time", "value"])
         wide = df.pivot(index="event_time", columns="field", values="value")
-        wide.index = pd.to_datetime(wide.index)
+        idx = pd.to_datetime(wide.index)
+        # C-5 normalizes storage to UTC (fixing the D1 leak-detection false
+        # negative), but that is a storage/comparison-correctness fix, not
+        # a promise to change what tz-awareness callers get back. Strip
+        # the tz label here: since storage is now uniformly UTC, this is a
+        # no-op for the previously-common naive-input case (numerically
+        # identical to the pre-C-5 output) and, for genuinely tz-aware
+        # non-UTC input, now correctly represents the true UTC instant
+        # rather than the caller's local wall-clock string.
+        wide.index = idx.tz_convert(None) if idx.tz is not None else idx
         wide.columns.name = None
         return wide.sort_index()
 
@@ -360,7 +422,19 @@ class PITStore:
     def ingest_documents(self, source: str, symbol: str,
                          docs: list[dict]) -> int:
         """Each doc: {doc_type, event_time, ref, meta(dict),
-        knowledge_time(optional)}. De-duplicated on (source, ref)."""
+        knowledge_time(optional)}. De-duplicated on (source, ref).
+
+        Ruling 001 D2 / Acceptance 001 C-4: this path previously enforced
+        no holdout ceiling at all (I-017) — a second, fully open ingest
+        entry point beside ``ingest()``'s guarded one. Checked atomically
+        against every doc's ``event_time`` before any row is inserted, on
+        the same "the safe path must be the default path" principle: a
+        batch containing any post-cutoff document is refused whole,
+        nothing is written."""
+        if docs:
+            idx = pd.to_datetime([d["event_time"] for d in docs])
+            idx = idx.tz_localize("UTC") if idx.tz is None else idx.tz_convert("UTC")
+            self._enforce_holdout_ceiling_on_index(source, symbol, idx, kind="ingest_documents")
         inserted = 0
         for d in docs:
             exists = self.conn.execute(

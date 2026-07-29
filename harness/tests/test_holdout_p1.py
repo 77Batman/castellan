@@ -7,12 +7,16 @@ Ruling 001 §5 it covers; the mapping is also recorded in
 
 from __future__ import annotations
 
+import io
+import time
+
 import numpy as np
 import pandas as pd
 import pytest
 
 from castellan import (
     TrialRegistry,
+    PreRegistrationAmendedError,
     PITStore,
     HoldoutVault,
     HoldoutError,
@@ -25,6 +29,7 @@ from castellan import (
     HoldoutNotYetReachedError,
     HoldoutRetryUnauthorizedError,
     HoldoutAcquisitionFailedError,
+    HoldoutAcquisitionOverlapError,
     HoldoutSchemaMismatchError,
     HoldoutCeilingError,
     evaluate_gate1,
@@ -107,13 +112,14 @@ def make_vault(tmp_path, registry, store, name="v1", family="famA"):
 
 
 def sealed_vault(tmp_path, registry, store, cutoff, name="v1", family="famA",
-                  dataset_id="DATASET1", source="test-src"):
+                  dataset_id="DATASET1", source="test-src", passphrase="hunter2"):
     v = make_vault(tmp_path, registry, store, name, family)
     v.seal(
         source=source, dataset_id=dataset_id,
         instrument_identity="cond-id-0001",
         query_semantics={"fields": ["close"], "freq": "1d"},
         cutoff=cutoff, schema_fingerprint=SCHEMA_FP,
+        passphrase=passphrase,
     )
     return v
 
@@ -144,7 +150,8 @@ def test_A2_reseal_raises(tmp_path, registry, store):
         v.seal(source="test-src", dataset_id="DATASET1",
                instrument_identity="cond-id-0001",
                query_semantics={"fields": ["close"]},
-               cutoff=PAST_CUTOFF, schema_fingerprint=SCHEMA_FP)
+               cutoff=PAST_CUTOFF, schema_fingerprint=SCHEMA_FP,
+               passphrase="hunter2")
 
 
 def test_A3_future_cutoff_permitted(tmp_path, registry, store):
@@ -152,17 +159,35 @@ def test_A3_future_cutoff_permitted(tmp_path, registry, store):
     assert v.is_sealed()
 
 
-@pytest.mark.parametrize("bad_field", ["dataset_id", "instrument_identity",
+@pytest.mark.parametrize("bad_field", ["source", "dataset_id", "instrument_identity",
                                         "schema_fingerprint", "query_semantics"])
 def test_A3_malformed_spec_raises(tmp_path, registry, store, bad_field):
+    """C-10 (Acceptance 001 §3): 'source' was enforced in code (it's in
+    seal()'s own `required` dict) but never exercised by this
+    parametrization — added here, alongside the pre-existing four."""
     v = make_vault(tmp_path, registry, store)
     kwargs = dict(source="test-src", dataset_id="DATASET1",
                   instrument_identity="cond-id-0001",
                   query_semantics={"fields": ["close"]},
-                  cutoff=PAST_CUTOFF, schema_fingerprint=SCHEMA_FP)
+                  cutoff=PAST_CUTOFF, schema_fingerprint=SCHEMA_FP,
+                  passphrase="hunter2")
     kwargs[bad_field] = {} if isinstance(kwargs[bad_field], dict) else ""
     with pytest.raises(HoldoutSpecInvalidError):
         v.seal(**kwargs)
+
+
+def test_A3_malformed_cutoff_raises(tmp_path, registry, store):
+    """C-10: the malformed-cutoff branch (``except Exception`` around
+    ``_to_utc(cutoff)`` in ``seal()``) was dead code — never exercised by
+    any test — until now."""
+    v = make_vault(tmp_path, registry, store, name="badcutoff")
+    with pytest.raises(HoldoutSpecInvalidError):
+        v.seal(source="test-src", dataset_id="DATASET1",
+               instrument_identity="cond-id-0001",
+               query_semantics={"fields": ["close"]},
+               cutoff="not-a-timestamp-at-all",
+               schema_fingerprint=SCHEMA_FP, passphrase="hunter2")
+    assert not v.is_sealed()
 
 
 def test_A4_registry_hash_matches_disk(tmp_path, registry, store):
@@ -292,7 +317,7 @@ def test_C5_fetch_before_cutoff_raises(tmp_path, registry, store):
 def test_C5_short_window_flagged_fail_not_insufficient(tmp_path, registry, store):
     v = sealed_vault(tmp_path, registry, store, PAST_CUTOFF, dataset_id="DS-C5b")
     v.acquire_once("hunter2", good_fetch(days=60), acquired_by="validation")
-    rep = evaluate_gate1("s", "famA", registry, np.random.default_rng(1).normal(0.001, 0.01, 300), 252)
+    rep = evaluate_gate1("s", "famA", registry, np.random.default_rng(1).normal(0.001, 0.01, 300), 252, backtest_years=1.1905)
     holdout = next(c for c in rep.criteria if c.name == "Holdout single-use")
     assert holdout.verdict == "FAIL"
     assert holdout.verdict != "INSUFFICIENT-DATA"
@@ -321,25 +346,63 @@ def test_C7_authorized_retry_succeeds_and_counted(tmp_path, registry, store):
     df = v.acquire_once("hunter2", fetch, acquired_by="validation")
     assert len(df) == 400
     assert v.state == VaultState.RETIRED
-    rep = evaluate_gate1("s", "famA", registry, np.random.default_rng(1).normal(0.001, 0.01, 1300), 252)
+    rep = evaluate_gate1("s", "famA", registry, np.random.default_rng(1).normal(0.001, 0.01, 1300), 252, backtest_years=5.1587)
     holdout = next(c for c in rep.criteria if c.name == "Holdout single-use")
     assert "1 retry authorization" in holdout.note
 
 
 def test_C8_payload_encrypted_at_rest(tmp_path, registry, store):
+    """C-8 (Acceptance 001 §3): the original assertions could not fail —
+    they checked that two specific numeric strings were absent from
+    ``payload.enc``, but an UNENCRYPTED parquet of the same frame also
+    lacks those strings (parquet stores doubles as binary, not ASCII), so
+    the test passed identically against plaintext. Strengthened to a
+    property that is actually falsifiable: capture what the genuine
+    plaintext parquet bytes ARE, then assert the on-disk payload differs
+    from them structurally (not just "doesn't contain one string") and
+    cannot itself be parsed as parquet — i.e. it is not, and does not
+    start with, plaintext parquet. If encryption were silently removed,
+    every one of these assertions would fail."""
     v = sealed_vault(tmp_path, registry, store, PAST_CUTOFF, dataset_id="DS-C8")
-    marker = 918273.0
+    captured = {}
 
     def fetch(spec):
         df = good_fetch()(spec)
-        df.iloc[0, 0] = marker
+        buf = io.BytesIO()
+        df.to_parquet(buf)
+        captured["plaintext_parquet"] = buf.getvalue()
+        captured["df"] = df
         return df
 
     v.acquire_once("hunter2", fetch, acquired_by="validation")
     with open(v._payload_path, "rb") as fh:
         raw = fh.read()
-    assert str(marker).encode() not in raw
-    assert b"918273" not in raw
+    plaintext_parquet = captured["plaintext_parquet"]
+
+    assert raw != plaintext_parquet
+    # Parquet files begin (and end) with the magic bytes "PAR1"; genuine
+    # ciphertext must not.
+    assert not raw.startswith(b"PAR1")
+    assert plaintext_parquet.startswith(b"PAR1")  # sanity: the fixture itself IS parquet
+    with pytest.raises(Exception):
+        pd.read_parquet(io.BytesIO(raw))  # ciphertext does not parse as parquet
+    # and the correct passphrase recovers exactly the original frame
+    recovered = v.read_acquired("hunter2")
+    pd.testing.assert_frame_equal(recovered, captured["df"], check_freq=False)
+
+
+def test_ACC_C9_ceiling_records_which_acquisition_lifted_it(tmp_path, registry, store):
+    v = sealed_vault(tmp_path, registry, store, PAST_CUTOFF, dataset_id="DS-ACCC9")
+    v.acquire_once("hunter2", good_fetch(), acquired_by="validation")
+    row = store.conn.execute(
+        "SELECT active, lifted_utc, lifted_by_event_id FROM ingest_ceiling "
+        "WHERE source=? AND dataset_id=? AND family=?",
+        ("test-src", "DS-ACCC9", "famA"),
+    ).fetchone()
+    assert row[0] == 0  # inactive
+    assert row[1] is not None and row[1] > 0  # lifted_utc recorded
+    acquired_event = registry.events(kind="holdout_acquired", family="famA")[-1]
+    assert row[2] == acquired_event["event_id"]  # WHICH acquisition, not just active=0
 
 
 def test_C9_read_acquired_wrong_passphrase_raises(tmp_path, registry, store):
@@ -368,6 +431,196 @@ def test_C10_schema_mismatch_treated_as_failure(tmp_path, registry, store):
 
 
 # ----------------------------------------------------------------------
+# Group ACC — Validation Acceptance 001 blocking conditions C-2..C-7.
+# Numbered ``ACC_C-n`` (not ``Cn``) to avoid colliding with Ruling 001's
+# own C1-C10 test names above, several of which are DIFFERENT criteria
+# that happen to share a digit (Ruling 001's C7 is "authorized retry
+# succeeds"; Acceptance 001's C-7 is the acquisition-side non-overlap
+# enforcement below — unrelated properties, same numeral, different
+# documents).
+# ----------------------------------------------------------------------
+
+def test_ACC_C2_wrong_nonempty_passphrase_refused_not_retired(tmp_path, registry, store):
+    """I-015 regression, verbatim: a TYPO (non-empty, wrong) passphrase
+    must be refused before any fetch, must NOT seal a payload, must NOT
+    retire the vault, and the vault must remain acquirable with the
+    correct passphrase afterwards. This is the exact scenario the
+    presence-only check let through — the test that claimed to cover C4
+    before only tried the empty string."""
+    v = sealed_vault(tmp_path, registry, store, PAST_CUTOFF, dataset_id="DS-ACCC2a",
+                      passphrase="hunter2")
+    fetch = CountingFetch(good_fetch())
+    with pytest.raises(HoldoutPassphraseError):
+        v.acquire_once("hunter2-TYPO", fetch, acquired_by="validation")
+    assert fetch.calls == 0
+    assert not v.is_retired()
+    assert v.state == VaultState.SEALED
+    kinds = [e["kind"] for e in registry.events(family="famA")]
+    assert "holdout_bad_passphrase_attempt" in kinds
+
+
+def test_ACC_C2_correct_passphrase_recovers_after_wrong_attempt(tmp_path, registry, store):
+    v = sealed_vault(tmp_path, registry, store, PAST_CUTOFF, dataset_id="DS-ACCC2b",
+                      passphrase="hunter2")
+    with pytest.raises(HoldoutPassphraseError):
+        v.acquire_once("wrong-guess", good_fetch(), acquired_by="validation")
+    df = v.acquire_once("hunter2", good_fetch(), acquired_by="validation")
+    assert len(df) == 400
+    assert v.state == VaultState.RETIRED
+    # and the payload decrypts with the real passphrase, unharmed
+    assert len(v.read_acquired("hunter2")) == 400
+
+
+def test_ACC_C2_seal_requires_nonempty_passphrase(tmp_path, registry, store):
+    v = make_vault(tmp_path, registry, store, name="noseal")
+    with pytest.raises(HoldoutPassphraseError):
+        v.seal(source="test-src", dataset_id="DATASET1",
+               instrument_identity="cond-id-0001",
+               query_semantics={"fields": ["close"]},
+               cutoff=PAST_CUTOFF, schema_fingerprint=SCHEMA_FP,
+               passphrase="")
+    assert not v.is_sealed()
+
+
+def test_ACC_C2_authorize_retry_requires_correct_passphrase(tmp_path, registry, store):
+    """Re-audit finding (see the deliverable note): `authorize_retry` had
+    the identical presence-only defect shape C4 had before this sprint —
+    just with a smaller blast radius, since a bad retry-authorization
+    doesn't seal or retire anything. Fixed the same way (cryptographic
+    check against the seal-time verifier); asserted here directly, since
+    nothing previously exercised the wrong-passphrase branch of this
+    specific method."""
+    v = sealed_vault(tmp_path, registry, store, PAST_CUTOFF, dataset_id="DS-ACCC2c",
+                      passphrase="hunter2")
+    fetch = FlakyFetch(1, good_fetch())
+    with pytest.raises(HoldoutAcquisitionFailedError):
+        v.acquire_once("hunter2", fetch, acquired_by="validation")
+    assert v.state == VaultState.ACQUISITION_FAILED
+    with pytest.raises(HoldoutPassphraseError):
+        v.authorize_retry("wrong-guess", reason="I-999 vendor 503", authorized_by="cro")
+    # the bad attempt did NOT authorize anything: still blocked
+    with pytest.raises(HoldoutRetryUnauthorizedError):
+        v.acquire_once("hunter2", fetch, acquired_by="validation")
+    kinds = [e["kind"] for e in registry.events(family="famA")]
+    assert "holdout_retry_authorized" not in kinds
+    # the correct passphrase does authorize it
+    v.authorize_retry("hunter2", reason="I-999 vendor 503, retried per Issue Log",
+                      authorized_by="cro")
+    df = v.acquire_once("hunter2", fetch, acquired_by="validation")
+    assert len(df) == 400
+
+
+def test_ACC_C3_store_required_at_construction(tmp_path, registry):
+    with pytest.raises(HoldoutSpecInvalidError):
+        HoldoutVault(str(tmp_path / "vault-nostore"), registry, "nostore", "famA", None)
+
+
+def test_ACC_C3_store_required_at_seal(tmp_path, registry, store):
+    v = make_vault(tmp_path, registry, store, name="storeremoved")
+    v.store = None  # simulate a caller that bypassed the constructor guard
+    with pytest.raises(HoldoutSpecInvalidError):
+        v.seal(source="test-src", dataset_id="DATASET1",
+               instrument_identity="cond-id-0001",
+               query_semantics={"fields": ["close"]},
+               cutoff=PAST_CUTOFF, schema_fingerprint=SCHEMA_FP,
+               passphrase="hunter2")
+    assert not v.is_sealed()
+
+
+def test_ACC_C4_ingest_documents_accepts_at_or_before_cutoff(tmp_path, registry, store):
+    cutoff = pd.Timestamp("2024-06-30", tz="UTC")
+    sealed_vault(tmp_path, registry, store, cutoff, dataset_id="DS-ACCC4a")
+    docs = [{"doc_type": "8-K", "event_time": "2024-06-30", "ref": "doc-1", "meta": {}}]
+    n = store.ingest_documents("test-src", "DS-ACCC4a", docs)
+    assert n == 1
+
+
+def test_ACC_C4_ingest_documents_enforces_ceiling(tmp_path, registry, store):
+    cutoff = pd.Timestamp("2024-06-30", tz="UTC")
+    sealed_vault(tmp_path, registry, store, cutoff, dataset_id="DS-ACCC4b")
+    before = store.conn.execute("SELECT COUNT(*) FROM documents").fetchone()[0]
+    docs = [
+        {"doc_type": "8-K", "event_time": "2024-06-25", "ref": "doc-ok", "meta": {}},
+        {"doc_type": "8-K", "event_time": "2024-07-04", "ref": "doc-over", "meta": {}},
+    ]
+    with pytest.raises(HoldoutCeilingError):
+        store.ingest_documents("test-src", "DS-ACCC4b", docs)
+    after = store.conn.execute("SELECT COUNT(*) FROM documents").fetchone()[0]
+    assert before == after  # atomic: neither doc was inserted, including the compliant one
+    kinds = [e["kind"] for e in registry.events(family="famA")]
+    assert "holdout_ceiling_violation" in kinds
+
+
+def test_ACC_C5_event_time_normalized_to_utc_at_ingest(tmp_path, registry, store):
+    df = pd.DataFrame(
+        {"close": [101.0]},
+        index=pd.DatetimeIndex([pd.Timestamp("2024-06-30T21:00:00", tz="America/New_York")]),
+    )
+    store.ingest("test-src", "DS-ACCC5", df)
+    row = store.conn.execute(
+        "SELECT event_time FROM observations WHERE source=? AND symbol=?",
+        ("test-src", "DS-ACCC5"),
+    ).fetchone()
+    assert row[0] == "2024-07-01T01:00:00+00:00"  # UTC, not the caller's -04:00 offset
+
+
+def test_ACC_C5_leak_detector_catches_nonutc_timezone_leak(tmp_path, registry, store):
+    """The measured false negative from Acceptance 001 §3 (D1/I-016):
+    a bar at America/New_York 21:00 (= 2024-07-01T01:00Z) falling inside a
+    holdout opening at C=2024-07-01T00:00Z must now be caught by
+    rows_in_window, not missed by a string comparison against a
+    caller-offset timestamp."""
+    leaky = pd.DataFrame(
+        {"close": [101.0]},
+        index=pd.DatetimeIndex([pd.Timestamp("2024-06-30T21:00:00", tz="America/New_York")]),
+    )
+    store.ingest("test-src", "DS-ACCC5b", leaky, knowledge_time=1_000.0)
+    cutoff = pd.Timestamp("2024-07-01T00:00:00", tz="UTC")
+    leaked = store.rows_in_window(
+        "test-src", "DS-ACCC5b", cutoff, cutoff + pd.Timedelta(days=1),
+        knowledge_time_before=2_000.0,
+    )
+    assert len(leaked) == 1  # previously 0 — the measured false negative
+
+
+def test_ACC_C7_acquisition_refuses_row_at_or_before_cutoff(tmp_path, registry, store):
+    """R-F1/F2-4: the acquisition-side half of the legacy test's
+    load-bearing property (`held.index[0] > insample.index[-1]`),
+    enforced in CODE, not merely asserted. A fetch() that returns rows at
+    or before C — e.g. a buggy venue client that hands back the in-sample
+    history instead of the holdout — must be refused, not sealed as "the
+    holdout"."""
+    cutoff = pd.Timestamp("2024-06-30", tz="UTC")
+    v = sealed_vault(tmp_path, registry, store, cutoff, dataset_id="DS-ACCC7a")
+
+    def overlapping_fetch(spec):
+        # Returns the tail of the IN-SAMPLE period (ends exactly at C),
+        # not the holdout — exactly Acceptance 001's measured probe.
+        return make_frame("2018-01-01", 2000)  # runs through ~2023-05, all <= C
+
+    with pytest.raises(HoldoutAcquisitionOverlapError):
+        v.acquire_once("hunter2", overlapping_fetch, acquired_by="validation")
+    assert v.state == VaultState.ACQUISITION_FAILED
+    assert not v.is_retired()
+    kinds = [e["kind"] for e in registry.events(family="famA")]
+    assert "holdout_acquisition_failed" in kinds
+    assert "holdout_acquired" not in kinds
+    # not bricked: a further attempt after authorization succeeds normally
+    v.authorize_retry("hunter2", reason="I-999 bad fetch, corrected", authorized_by="cro")
+    df = v.acquire_once("hunter2", good_fetch(), acquired_by="validation")
+    assert df.index.min() > cutoff.tz_convert(None)
+
+
+def test_ACC_C7_acquired_index_min_strictly_after_cutoff(tmp_path, registry, store):
+    cutoff = pd.Timestamp("2024-06-30", tz="UTC")
+    v = sealed_vault(tmp_path, registry, store, cutoff, dataset_id="DS-ACCC7b")
+    df = v.acquire_once("hunter2", good_fetch(), acquired_by="validation")
+    # the successor of the legacy test's property 3; df.index is tz-naive
+    # (as fetch() returns it), so compare in the same convention.
+    assert df.index.min() > cutoff.tz_convert(None)
+
+
+# ----------------------------------------------------------------------
 # Group D — leak detection (D1-D2)
 # ----------------------------------------------------------------------
 
@@ -382,7 +635,7 @@ def test_D1_pre_acquisition_leak_fails_gate(tmp_path, registry, store):
     v.acquire_once("hunter2", good_fetch(days=400), acquired_by="validation")
     kinds = [e["kind"] for e in registry.events(family="famA")]
     assert "holdout_pre_acquisition_leak" in kinds
-    rep = evaluate_gate1("s", "famA", registry, np.random.default_rng(1).normal(0.001, 0.01, 1300), 252)
+    rep = evaluate_gate1("s", "famA", registry, np.random.default_rng(1).normal(0.001, 0.01, 1300), 252, backtest_years=5.1587)
     holdout = next(c for c in rep.criteria if c.name == "Holdout single-use")
     assert holdout.verdict == "FAIL"
 
@@ -392,7 +645,7 @@ def test_D2_clean_case_no_leak(tmp_path, registry, store):
     v.acquire_once("hunter2", good_fetch(), acquired_by="validation")
     kinds = [e["kind"] for e in registry.events(family="famA")]
     assert "holdout_pre_acquisition_leak" not in kinds
-    rep = evaluate_gate1("s", "famA", registry, np.random.default_rng(1).normal(0.001, 0.01, 1300), 252)
+    rep = evaluate_gate1("s", "famA", registry, np.random.default_rng(1).normal(0.001, 0.01, 1300), 252, backtest_years=5.1587)
     holdout = next(c for c in rep.criteria if c.name == "Holdout single-use")
     assert holdout.verdict != "FAIL"
 
@@ -410,8 +663,8 @@ def test_E1_second_acquisition_violation_does_not_fail_other_family(tmp_path, re
 
     vb.acquire_once("hunter2", good_fetch(), acquired_by="validation")  # family B clean
 
-    rep_a = evaluate_gate1("a", "famA", registry, np.random.default_rng(1).normal(0.001, 0.01, 1300), 252)
-    rep_b = evaluate_gate1("b", "famB", registry, np.random.default_rng(2).normal(0.001, 0.01, 1300), 252)
+    rep_a = evaluate_gate1("a", "famA", registry, np.random.default_rng(1).normal(0.001, 0.01, 1300), 252, backtest_years=5.1587)
+    rep_b = evaluate_gate1("b", "famB", registry, np.random.default_rng(2).normal(0.001, 0.01, 1300), 252, backtest_years=5.1587)
     holdout_a = next(c for c in rep_a.criteria if c.name == "Holdout single-use")
     holdout_b = next(c for c in rep_b.criteria if c.name == "Holdout single-use")
     assert holdout_a.verdict == "FAIL"          # A's own violation fails A
@@ -423,14 +676,14 @@ def test_E1_acquisition_on_one_family_does_not_satisfy_another(tmp_path, registr
     sealed_vault(tmp_path, registry, store, PAST_CUTOFF, name="vb2", family="famB", dataset_id="DS-E1D")
     va.acquire_once("hunter2", good_fetch(), acquired_by="validation")  # only family A acquires
 
-    rep_b = evaluate_gate1("b", "famB", registry, np.random.default_rng(3).normal(0.001, 0.01, 1300), 252)
+    rep_b = evaluate_gate1("b", "famB", registry, np.random.default_rng(3).normal(0.001, 0.01, 1300), 252, backtest_years=5.1587)
     holdout_b = next(c for c in rep_b.criteria if c.name == "Holdout single-use")
     assert holdout_b.verdict == "INSUFFICIENT-DATA"  # not satisfied by family A's acquisition
 
 
 def test_E2_no_acquisition_is_insufficient_never_pass(tmp_path, registry):
     reg = registry
-    rep = evaluate_gate1("s", "famA", reg, np.random.default_rng(1).normal(0.001, 0.01, 1300), 252)
+    rep = evaluate_gate1("s", "famA", reg, np.random.default_rng(1).normal(0.001, 0.01, 1300), 252, backtest_years=5.1587)
     holdout = next(c for c in rep.criteria if c.name == "Holdout single-use")
     assert holdout.verdict == "INSUFFICIENT-DATA"
     assert rep.overall != "PASS"
@@ -439,7 +692,7 @@ def test_E2_no_acquisition_is_insufficient_never_pass(tmp_path, registry):
 def test_E3_report_embeds_holdout_hashes(tmp_path, registry, store):
     v = sealed_vault(tmp_path, registry, store, PAST_CUTOFF, dataset_id="DS-E3")
     v.acquire_once("hunter2", good_fetch(), acquired_by="validation")
-    rep = evaluate_gate1("s", "famA", registry, np.random.default_rng(1).normal(0.001, 0.01, 1300), 252)
+    rep = evaluate_gate1("s", "famA", registry, np.random.default_rng(1).normal(0.001, 0.01, 1300), 252, backtest_years=5.1587)
     assert rep.holdout_spec_sha256 == v._sealed_event()["detail"]["spec_sha256"]
     assert rep.holdout_payload_sha256 is not None and len(rep.holdout_payload_sha256) == 64
     assert rep.holdout_spec_sha256[:16] in rep.to_markdown()
@@ -482,3 +735,234 @@ def test_F4_predecessor_family_n_starts_at_predecessor_total(tmp_path):
     assert reg.family_stats("gen2").n_trials == 5
     assert reg.family_stats("gen1").n_trials == 4  # predecessor's own count is untouched
     assert reg.predecessor_chain("gen2") == ["gen1"]
+
+
+# ----------------------------------------------------------------------
+# Group G — I-010: backtest_years / oos_index (Ruling Acceptance 001 §6)
+# ----------------------------------------------------------------------
+
+def test_G1_backtest_years_is_required(tmp_path, registry):
+    with pytest.raises(TypeError):
+        evaluate_gate1("s", "famA", registry,
+                       np.random.default_rng(1).normal(0.001, 0.01, 300), 252)
+
+
+def test_G2_oos_index_calendar_span_used_and_reported(tmp_path, registry):
+    idx = pd.bdate_range("2018-01-01", periods=1300)
+    years_calendar = (idx.max() - idx.min()).days / 365.25
+    r = np.random.default_rng(1).normal(0.001, 0.01, 1300)
+    rep = evaluate_gate1("s", "famA", registry, r, 252,
+                         backtest_years=years_calendar, oos_index=idx)
+    crit = next(c for c in rep.criteria if c.name == "Backtest length (years)")
+    assert crit.verdict != "INSUFFICIENT-DATA"
+    assert "DISAGREEMENT" not in (crit.note or "")
+    assert abs(crit.value - years_calendar) < 1e-6
+
+
+def test_G3_disagreement_over_5pct_fails_with_both_numbers(tmp_path, registry):
+    idx = pd.bdate_range("2018-01-01", periods=1300)
+    years_calendar = (idx.max() - idx.min()).days / 365.25
+    r = np.random.default_rng(1).normal(0.001, 0.01, 1300)
+    misleading_years = years_calendar * 2.0  # far more than 5% off
+    rep = evaluate_gate1("s", "famA", registry, r, 252,
+                         backtest_years=misleading_years, oos_index=idx)
+    crit = next(c for c in rep.criteria if c.name == "Backtest length (years)")
+    assert crit.verdict == "FAIL"
+    assert "DISAGREEMENT" in crit.note
+    assert f"{misleading_years:.3f}" in crit.note
+    assert f"{years_calendar:.3f}" in crit.note
+
+
+def test_G4_no_oos_index_is_insufficient_never_pass(tmp_path, registry):
+    r = np.random.default_rng(1).normal(0.001, 0.01, 1300)
+    # backtest_years claims an ample 100 years — must not matter.
+    rep = evaluate_gate1("s", "famA", registry, r, 252, backtest_years=100.0)
+    crit = next(c for c in rep.criteria if c.name == "Backtest length (years)")
+    assert crit.verdict == "INSUFFICIENT-DATA"
+    assert rep.overall != "PASS"
+
+
+def test_G5_pooled_panel_apparent_length_overstated_fails(tmp_path, registry):
+    """The I-010 case exactly: 1500 rows at periods_per_year=252 looks like
+    ~5.95 apparent years by observation count, but the rows are stacked
+    contract-days spanning only ~18 calendar months. Under the deleted
+    fallback this read as clearing the Charter 4.4 4-year floor; now it
+    must FAIL on disagreement."""
+    n = 1500
+    apparent_years = n / 252  # what the deleted fallback would have computed
+    months = pd.date_range("2024-01-01", periods=18, freq="MS")
+    idx = pd.DatetimeIndex(np.tile(months.values, n // len(months) + 1)[:n])
+    r = np.random.default_rng(1).normal(0.001, 0.01, n)
+    rep = evaluate_gate1("s", "famA", registry, r, 252,
+                         backtest_years=apparent_years, oos_index=idx)
+    crit = next(c for c in rep.criteria if c.name == "Backtest length (years)")
+    assert crit.verdict == "FAIL"
+    assert "DISAGREEMENT" in crit.note
+
+
+# ----------------------------------------------------------------------
+# Group P — pre-registration sealing (Acceptance 001 §5 P1-P8; I-018)
+# ----------------------------------------------------------------------
+
+def test_P1_seal_writes_hash_and_full_field_copy(tmp_path):
+    reg = TrialRegistry(str(tmp_path / "r.db"))
+    reg.open_hypothesis("famP1", "stmt", "mech", "fals", "uni", "1d", "sc", 10)
+    events = reg.events(kind="hypothesis_sealed", family="famP1")
+    assert len(events) == 1
+    detail = events[0]["detail"]
+    assert detail["prereg_sha256"]
+    assert detail["statement"] == "stmt"
+    assert detail["falsifier"] == "fals"
+    v = reg.verify_prereg("famP1")
+    assert v["sealed"] and v["match"]
+
+
+def test_P3_amendment_refused_and_named(tmp_path):
+    reg = TrialRegistry(str(tmp_path / "r.db"))
+    reg.open_hypothesis("famP3", "stmt", "mech", "fals", "uni", "1d", "sc", 10)
+    with pytest.raises(PreRegistrationAmendedError):
+        reg.open_hypothesis("famP3", "DIFFERENT STATEMENT", "mech", "fals",
+                            "uni", "1d", "sc", 10)
+    events = reg.events(kind="hypothesis_amendment_refused", family="famP3")
+    assert len(events) == 1
+    assert "statement" in events[0]["detail"]["differing_fields"]
+    # the row itself was NOT changed
+    assert reg.hypothesis("famP3")["statement"] == "stmt"
+
+
+def test_P3_byte_identical_reregistration_is_idempotent_no_event(tmp_path):
+    reg = TrialRegistry(str(tmp_path / "r.db"))
+    reg.open_hypothesis("famP3b", "stmt", "mech", "fals", "uni", "1d", "sc", 10)
+    reg.open_hypothesis("famP3b", "stmt", "mech", "fals", "uni", "1d", "sc", 10)  # identical
+    assert reg.events(kind="hypothesis_amendment_refused", family="famP3b") == []
+    sealed_events = reg.events(kind="hypothesis_sealed", family="famP3b")
+    assert len(sealed_events) == 1  # not re-sealed
+
+
+def test_P4_raw_sql_update_detected_and_fails_gate(tmp_path):
+    reg = TrialRegistry(str(tmp_path / "r.db"))
+    reg.open_hypothesis("famP4", "stmt", "mech", "original falsifier",
+                        "uni", "1d", "sc", 10)
+    reg.conn.execute("UPDATE hypotheses SET falsifier=? WHERE family=?",
+                     ("TAMPERED", "famP4"))
+    reg.conn.commit()
+    v = reg.verify_prereg("famP4")
+    assert v["match"] is False
+    assert "falsifier" in v["differing_fields"]
+    rep = evaluate_gate1("s", "famP4", reg,
+                         np.random.default_rng(1).normal(0.001, 0.01, 1300), 252,
+                         backtest_years=1300 / 252)
+    crit = next(c for c in rep.criteria if c.name == "Pre-registration integrity")
+    assert crit.verdict == "FAIL"
+    assert rep.overall == "FAIL"
+
+
+def test_P5_report_embeds_prereg_hash(tmp_path):
+    reg = TrialRegistry(str(tmp_path / "r.db"))
+    reg.open_hypothesis("famP5", "stmt", "mech", "fals", "uni", "1d", "sc", 10)
+    rep = evaluate_gate1("s", "famP5", reg,
+                         np.random.default_rng(1).normal(0.001, 0.01, 1300), 252,
+                         backtest_years=1300 / 252)
+    assert rep.prereg_sha256 == reg.verify_prereg("famP5")["sealed_sha256"]
+    assert rep.prereg_sha256[:16] in rep.to_markdown()
+
+
+def test_P6_unsealed_family_is_insufficient_never_pass(tmp_path):
+    reg = TrialRegistry(str(tmp_path / "r.db"))
+    # Bypass open_hypothesis entirely — models a family that predates the
+    # P-series schema (a raw row with no hypothesis_sealed event).
+    reg.conn.execute(
+        "INSERT INTO hypotheses (family, statement, mechanism, falsifier, "
+        "universe, horizon, success_criteria, trial_budget, created_utc) "
+        "VALUES (?,?,?,?,?,?,?,?,?)",
+        ("famP6", "s", "m", "f", "u", "1d", "sc", 10, time.time()),
+    )
+    reg.conn.commit()
+    v = reg.verify_prereg("famP6")
+    assert v["sealed"] is False
+    rep = evaluate_gate1("s", "famP6", reg,
+                         np.random.default_rng(1).normal(0.001, 0.01, 1300), 252,
+                         backtest_years=1300 / 252)
+    crit = next(c for c in rep.criteria if c.name == "Pre-registration integrity")
+    assert crit.verdict == "INSUFFICIENT-DATA"
+    assert rep.overall != "PASS"
+
+
+def test_P7_prereg_sealed_after_cutoff_fails_gate(tmp_path, registry, store):
+    # `registry` fixture seals famA "now"; a vault cutoff pinned in the
+    # past (PAST_CUTOFF = 2020-01-01) means the prereg was sealed AFTER C.
+    sealed_vault(tmp_path, registry, store, PAST_CUTOFF, dataset_id="DS-P7a")
+    rep = evaluate_gate1("s", "famA", registry,
+                         np.random.default_rng(1).normal(0.001, 0.01, 1300), 252,
+                         backtest_years=1300 / 252)
+    crit = next(c for c in rep.criteria if c.name == "Pre-registration integrity")
+    assert crit.verdict == "FAIL"
+    assert "postdates" in crit.note
+
+
+def test_P7_prereg_sealed_on_or_before_cutoff_passes(tmp_path):
+    reg = TrialRegistry(str(tmp_path / "r.db"))
+    reg.open_hypothesis("famP7", "stmt", "mech", "fals", "uni", "1d", "sc", 10)  # sealed "now"
+    st = PITStore(str(tmp_path / "pit.db"), reg)
+    future_cutoff = pd.Timestamp.now(tz="UTC") + pd.Timedelta(days=365)
+    v = HoldoutVault(str(tmp_path / "vault-p7"), reg, "v-p7", "famP7", st)
+    v.seal(source="test-src", dataset_id="DS-P7b",
+           instrument_identity="cond-id-0001",
+           query_semantics={"fields": ["close"]}, cutoff=future_cutoff,
+           schema_fingerprint=SCHEMA_FP, passphrase="hunter2")
+    rep = evaluate_gate1("s", "famP7", reg,
+                         np.random.default_rng(1).normal(0.001, 0.01, 1300), 252,
+                         backtest_years=1300 / 252)
+    crit = next(c for c in rep.criteria if c.name == "Pre-registration integrity")
+    assert crit.verdict == "PASS"
+
+
+def test_P8_report_lists_predecessor_chain_prereg_hashes(tmp_path):
+    reg = TrialRegistry(str(tmp_path / "r.db"))
+    reg.open_hypothesis("genP1", "s", "m", "f", "u", "1d", "sc", 10)
+    reg.open_hypothesis("genP2", "s2", "m", "f", "u", "1d", "sc", 10,
+                        predecessor_family="genP1")
+    rep = evaluate_gate1("s", "genP2", reg,
+                         np.random.default_rng(1).normal(0.001, 0.01, 1300), 252,
+                         backtest_years=1300 / 252)
+    assert rep.predecessor_prereg_sha256 == {"genP1": reg.verify_prereg("genP1")["sealed_sha256"]}
+    assert "genP1" in rep.to_markdown()
+
+
+# -- R1/R3 schema (I-018), spot-checked alongside the P-series ----------
+
+def test_R3_historical_classification_requires_forward_window_fields(tmp_path):
+    reg = TrialRegistry(str(tmp_path / "r.db"))
+    with pytest.raises(ValueError):
+        reg.open_hypothesis("famR3", "s", "m", "f", "u", "1d", "sc", 10,
+                            holdout_classification="HISTORICAL")
+    reg.open_hypothesis("famR3b", "s", "m", "f", "u", "1d", "sc", 10,
+                        holdout_classification="HISTORICAL",
+                        forward_window_start="2026-08-01",
+                        forward_window_min_length=6.0,
+                        forward_kill_condition="net Sharpe < 0 for 2 consecutive months")
+    assert reg.hypothesis("famR3b")["holdout_classification"] == "HISTORICAL"
+
+
+def test_R1_report_carries_holdout_classification(tmp_path):
+    reg = TrialRegistry(str(tmp_path / "r.db"))
+    reg.open_hypothesis("famR1", "s", "m", "f", "u", "1d", "sc", 10,
+                        holdout_classification="FORWARD")
+    rep = evaluate_gate1("s", "famR1", reg,
+                         np.random.default_rng(1).normal(0.001, 0.01, 1300), 252,
+                         backtest_years=1300 / 252)
+    assert rep.holdout_classification == "FORWARD"
+    assert "FORWARD" in rep.to_markdown()
+
+
+def test_R1_historical_classification_renders_required_sentence(tmp_path):
+    reg = TrialRegistry(str(tmp_path / "r.db"))
+    reg.open_hypothesis("famR1b", "s", "m", "f", "u", "1d", "sc", 10,
+                        holdout_classification="HISTORICAL",
+                        forward_window_start="2026-08-01",
+                        forward_window_min_length=6.0,
+                        forward_kill_condition="net Sharpe < 0 for 2 consecutive months")
+    rep = evaluate_gate1("s", "famR1b", reg,
+                         np.random.default_rng(1).normal(0.001, 0.01, 1300), 252,
+                         backtest_years=1300 / 252)
+    assert "This holdout is historical" in rep.to_markdown()

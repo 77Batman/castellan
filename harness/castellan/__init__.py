@@ -12,9 +12,10 @@ from .errors import (
     HoldoutSpecInvalidError, HoldoutSpecTamperedError, HoldoutRetiredError,
     HoldoutPassphraseError, HoldoutNotYetReachedError,
     HoldoutRetryUnauthorizedError, HoldoutAcquisitionFailedError,
+    HoldoutAcquisitionOverlapError,
     HoldoutSchemaMismatchError, HoldoutCeilingError,
 )
-from .registry import TrialRegistry, PreRegistrationError
+from .registry import TrialRegistry, PreRegistrationError, PreRegistrationAmendedError
 from .holdout import HoldoutVault
 from .engine import run_backtest, SameBarFillError, BacktestResult
 from .costs import (
@@ -28,12 +29,13 @@ from . import loaders
 from . import stats, cv
 
 __all__ = [
-    "TrialRegistry", "PreRegistrationError", "HoldoutVault",
+    "TrialRegistry", "PreRegistrationError", "PreRegistrationAmendedError", "HoldoutVault",
     "HoldoutError", "HoldoutRegimeError", "HoldoutAlreadySealedError",
     "HoldoutSpecInvalidError", "HoldoutSpecTamperedError",
     "HoldoutRetiredError", "HoldoutPassphraseError",
     "HoldoutNotYetReachedError", "HoldoutRetryUnauthorizedError",
-    "HoldoutAcquisitionFailedError", "HoldoutSchemaMismatchError",
+    "HoldoutAcquisitionFailedError", "HoldoutAcquisitionOverlapError",
+    "HoldoutSchemaMismatchError",
     "HoldoutCeilingError",
     "run_backtest", "SameBarFillError",
     "BacktestResult", "CostModel", "US_EQUITY_LARGE", "US_EQUITY_SHORT",

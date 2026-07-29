@@ -65,6 +65,11 @@ vault.seal(
     query_semantics={"fields": ["close"], "freq": "1bd"},
     cutoff=CUTOFF,
     schema_fingerprint={"columns": ASSETS, "dtypes": {c: "float64" for c in ASSETS}},
+    # Acceptance 001 C-2: the passphrase is committed here, at seal time,
+    # as a salted one-way verifier — never stored in recoverable form.
+    # This is what lets acquire_once() refuse a wrong-but-non-empty
+    # passphrase cryptographically, before any fetch (the I-015 fix).
+    passphrase=PASSPHRASE,
 )
 print(f"Holdout spec sealed: cutoff C={CUTOFF.date()}. Holdout plaintext does "
       f"not exist yet and will not until Gate 1.")
@@ -129,7 +134,14 @@ report = evaluate_gate1(
     wfe_sr_pairs=wfe_pairs,
     param_grid_net_pnls=None,          # left absent on purpose -> INSUFFICIENT-DATA
     red_team_memo_present=False,       # ditto
-    backtest_years=len(prices) / 252,
+    # I-010 (Acceptance 001 G1/G5): backtest_years is the OOS holdout's
+    # own apparent length (previously this passed len(prices)/252 — the
+    # combined in-sample+holdout length — which is exactly the "sole
+    # existing caller already passes the offending value" case the ruling
+    # named). oos_index is what lets the harness VERIFY it against the
+    # holdout's real calendar span rather than trusting it.
+    backtest_years=len(holdout) / 252,
+    oos_index=holdout.index,
 )
 
 print("\n" + report.to_markdown())

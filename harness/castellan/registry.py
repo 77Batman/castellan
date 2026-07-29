@@ -35,7 +35,13 @@ CREATE TABLE IF NOT EXISTS hypotheses (
     success_criteria TEXT NOT NULL,
     trial_budget  INTEGER NOT NULL,
     created_utc   REAL NOT NULL,
-    predecessor_family TEXT
+    predecessor_family TEXT,
+    holdout_classification TEXT,
+    forward_window_start TEXT,
+    forward_window_min_length REAL,
+    forward_kill_condition TEXT,
+    model_prior_provenance TEXT,
+    published_signal_haircut_applied REAL
 );
 CREATE TABLE IF NOT EXISTS trials (
     trial_id      INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -65,6 +71,37 @@ def _hash_config(config: dict) -> str:
     ).hexdigest()[:16]
 
 
+# Ruling 001 §5 P2 (Acceptance 001 P-series) — the pre-registration's
+# binding field set, named exhaustively. Everything in this list is hashed
+# into `prereg_sha256`; anything NOT in this list (created_utc, etc.) is
+# provenance-only and outside the hash. The last six require the R1/R3/R4
+# columns added in the SCHEMA migration below (I-018).
+_BINDING_FIELDS = [
+    "family", "statement", "mechanism", "falsifier", "universe", "horizon",
+    "success_criteria", "trial_budget", "predecessor_family",
+    "holdout_classification", "forward_window_start",
+    "forward_window_min_length", "forward_kill_condition",
+    "model_prior_provenance", "published_signal_haircut_applied",
+]
+
+_HOLDOUT_CLASSIFICATIONS = {"FORWARD", "HISTORICAL"}
+
+
+def _binding_dict(fields: dict) -> dict:
+    """Project an arbitrary field dict down to exactly the binding set,
+    in a stable key order, so two dicts built from different call sites
+    (a live DB row vs. a proposed registration) hash identically iff
+    every binding field agrees."""
+    return {k: fields.get(k) for k in _BINDING_FIELDS}
+
+
+def _binding_hash(fields: dict) -> str:
+    """P1: sha256 over canonical (sort_keys=True, UTF-8) JSON of the
+    binding field set."""
+    blob = json.dumps(_binding_dict(fields), sort_keys=True, ensure_ascii=False, default=str)
+    return hashlib.sha256(blob.encode("utf-8")).hexdigest()
+
+
 @dataclass
 class FamilyStats:
     family: str
@@ -77,6 +114,15 @@ class FamilyStats:
 
 class PreRegistrationError(RuntimeError):
     """Raised when a trial is logged against an unregistered hypothesis."""
+
+
+class PreRegistrationAmendedError(RuntimeError):
+    """P3: re-calling ``open_hypothesis`` for an existing family with any
+    differing binding field. Under D-006's pre-registration freeze the
+    binding fields are immutable after sealing; amend by opening a
+    successor family via ``predecessor_family``, not by re-registering the
+    same family. Byte-identical re-registration remains idempotent and
+    does not raise (see P3's second branch)."""
 
 
 class TrialRegistry:
@@ -92,12 +138,26 @@ class TrialRegistry:
         SQLite's ``CREATE TABLE IF NOT EXISTS`` does not retrofit an
         existing table, so pre-existing registry.db files (this firm has
         one at book/registry.db, currently with zero families per D-001)
-        need this to pick up F4's predecessor_family support."""
+        need this to pick up new columns."""
         cols = [r[1] for r in self.conn.execute("PRAGMA table_info(hypotheses)")]
-        if "predecessor_family" not in cols:
-            self.conn.execute(
-                "ALTER TABLE hypotheses ADD COLUMN predecessor_family TEXT"
-            )
+        additions = [
+            ("predecessor_family", "TEXT"),
+            # R1/R3/R4 (Ruling 002; binding per D-006) — I-018: without
+            # these columns no family can be pre-registered with its
+            # binding fields at all.
+            ("holdout_classification", "TEXT"),
+            ("forward_window_start", "TEXT"),
+            ("forward_window_min_length", "REAL"),
+            ("forward_kill_condition", "TEXT"),
+            ("model_prior_provenance", "TEXT"),
+            ("published_signal_haircut_applied", "REAL"),
+        ]
+        changed = False
+        for name, sqltype in additions:
+            if name not in cols:
+                self.conn.execute(f"ALTER TABLE hypotheses ADD COLUMN {name} {sqltype}")
+                changed = True
+        if changed:
             self.conn.commit()
 
     # -- hypotheses ----------------------------------------------------
@@ -113,9 +173,17 @@ class TrialRegistry:
         success_criteria: str,
         trial_budget: int,
         predecessor_family: str | None = None,
+        holdout_classification: str | None = None,
+        forward_window_start: str | None = None,
+        forward_window_min_length: float | None = None,
+        forward_kill_condition: str | None = None,
+        model_prior_provenance: str | None = None,
+        published_signal_haircut_applied: float | None = None,
     ) -> None:
-        """Gate 0 pre-registration. Idempotent on family; fields are
-        immutable after creation (history is not rewritten).
+        """Gate 0 pre-registration, with sealed integrity (Acceptance 001
+        P-series, closing the D-006 rider's gap: "the pre-registration is
+        currently a tamper-evident *promise*, not a tamper-evident
+        *payload*").
 
         ``predecessor_family`` (Ruling 001 §3.3, F4): closes the "abandon
         and re-pre-register with a later C" loophole in the pinned-cutoff
@@ -123,6 +191,26 @@ class TrialRegistry:
         those trials happened and stay in the denominator — see
         :meth:`family_stats` and :meth:`returns_matrix`, both of which sum
         transitively across the chain.
+
+        ``holdout_classification`` / ``forward_window_*`` / R4 fields
+        (Ruling 002 R1/R3/R4, made binding by D-006; I-018): a
+        ``HISTORICAL`` classification requires the forward-window
+        falsifier fields (R3) — a historical holdout cannot deliver the
+        "unseen data" property on its own, and R3 is the substitute the
+        firm accepted for that.
+
+        P1: on first registration, computes ``prereg_sha256`` over the
+        canonical JSON of the binding field set (P2) and logs it, with a
+        full shadow copy of every binding field, as a ``hypothesis_sealed``
+        event in the append-only ``events`` table — a full copy, not a
+        pointer to the mutable row.
+
+        P3: re-calling with an existing family and ANY differing binding
+        field raises :class:`PreRegistrationAmendedError` and logs
+        ``hypothesis_amendment_refused`` naming the differing fields.
+        Byte-identical re-registration remains idempotent and logs
+        nothing — this is what keeps the method safe to call unconditionally
+        at the top of a research script.
         """
         for name, val in [
             ("statement", statement),
@@ -136,33 +224,143 @@ class TrialRegistry:
                 f"predecessor_family '{predecessor_family}' is not itself "
                 "a registered hypothesis"
             )
-        cur = self.conn.execute(
-            "SELECT family FROM hypotheses WHERE family=?", (family,)
-        )
-        if cur.fetchone() is not None:
-            return
+        if holdout_classification is not None and holdout_classification not in _HOLDOUT_CLASSIFICATIONS:
+            raise ValueError(
+                f"holdout_classification must be one of {_HOLDOUT_CLASSIFICATIONS} "
+                f"or None, got {holdout_classification!r}"
+            )
+        if holdout_classification == "HISTORICAL":
+            # R3: a HISTORICAL holdout requires a pre-registered forward-
+            # window falsifier — the substitute for the property a
+            # historical holdout cannot deliver on its own.
+            for name, val in [
+                ("forward_window_start", forward_window_start),
+                ("forward_window_min_length", forward_window_min_length),
+                ("forward_kill_condition", forward_kill_condition),
+            ]:
+                if not val:
+                    raise ValueError(
+                        "A HISTORICAL holdout_classification requires "
+                        f"'{name}' (Ruling 002 R3): a historical holdout "
+                        "cannot deliver 'unseen data' on its own, and R3's "
+                        "forward-window falsifier is the firm's substitute."
+                    )
+
+        proposed = {
+            "family": family, "statement": statement, "mechanism": mechanism,
+            "falsifier": falsifier, "universe": universe, "horizon": horizon,
+            "success_criteria": success_criteria, "trial_budget": int(trial_budget),
+            "predecessor_family": predecessor_family,
+            "holdout_classification": holdout_classification,
+            "forward_window_start": forward_window_start,
+            "forward_window_min_length": (
+                None if forward_window_min_length is None else float(forward_window_min_length)
+            ),
+            "forward_kill_condition": forward_kill_condition,
+            "model_prior_provenance": model_prior_provenance,
+            "published_signal_haircut_applied": (
+                None if published_signal_haircut_applied is None
+                else float(published_signal_haircut_applied)
+            ),
+        }
+
+        existing = self.hypothesis(family)
+        if existing is not None:
+            # P3: any differing binding field is an amendment attempt, not
+            # an update — the freeze has no "edit" verb.
+            existing_binding = _binding_dict(existing)
+            proposed_binding = _binding_dict(proposed)
+            differing = [k for k in _BINDING_FIELDS if existing_binding.get(k) != proposed_binding.get(k)]
+            if differing:
+                self.log_event(
+                    "hypothesis_amendment_refused", family,
+                    {"differing_fields": differing},
+                )
+                raise PreRegistrationAmendedError(
+                    f"Family '{family}' is already pre-registered; binding "
+                    f"field(s) {differing} differ from the sealed "
+                    "pre-registration. The pre-registration is frozen "
+                    "(D-006) — open a successor family via "
+                    "predecessor_family to change these, do not re-register "
+                    "the same family."
+                )
+            return  # byte-identical: idempotent, no event
+
         self.conn.execute(
             "INSERT INTO hypotheses (family, statement, mechanism, "
             "falsifier, universe, horizon, success_criteria, trial_budget, "
-            "created_utc, predecessor_family) VALUES (?,?,?,?,?,?,?,?,?,?)",
+            "created_utc, predecessor_family, holdout_classification, "
+            "forward_window_start, forward_window_min_length, "
+            "forward_kill_condition, model_prior_provenance, "
+            "published_signal_haircut_applied) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (
-                family,
-                statement,
-                mechanism,
-                falsifier,
-                universe,
-                horizon,
-                success_criteria,
-                int(trial_budget),
-                time.time(),
-                predecessor_family,
+                family, statement, mechanism, falsifier, universe, horizon,
+                success_criteria, int(trial_budget), time.time(),
+                predecessor_family, holdout_classification,
+                forward_window_start, proposed["forward_window_min_length"],
+                forward_kill_condition, model_prior_provenance,
+                proposed["published_signal_haircut_applied"],
             ),
         )
         self.log_event(
             "hypothesis_registered", family,
             {"statement": statement, "predecessor_family": predecessor_family},
         )
+        # P1: seal — full shadow copy of the binding fields + their hash,
+        # in the append-only events table.
+        prereg_sha256 = _binding_hash(proposed)
+        self.log_event(
+            "hypothesis_sealed", family,
+            {**_binding_dict(proposed), "prereg_sha256": prereg_sha256},
+        )
         self.conn.commit()
+
+    def verify_prereg(self, family: str) -> dict:
+        """P4/P6: compare the LIVE ``hypotheses`` row's binding fields
+        against the hash sealed at pre-registration time. This is the A4
+        analogue for the pre-registration: a raw ``UPDATE hypotheses SET
+        ...`` is detected here, because the sealed event carries a full
+        shadow copy of the binding fields, not a pointer to the row that
+        was just mutated.
+
+        Returns a dict with keys ``sealed`` (bool — False means P6: no
+        ``hypothesis_sealed`` event exists, e.g. a family that predates
+        this schema), ``match`` (bool | None), ``differing_fields``
+        (list[str]), ``sealed_sha256``, ``live_sha256``, and
+        ``sealed_created_utc`` (for P7's day-granularity comparison against
+        the holdout cutoff C).
+        """
+        sealed_events = self.events(kind="hypothesis_sealed", family=family)
+        if not sealed_events:
+            return {
+                "sealed": False, "match": None, "differing_fields": [],
+                "sealed_sha256": None, "live_sha256": None,
+                "sealed_created_utc": None,
+            }
+        sealed = sealed_events[-1]
+        sealed_detail = sealed["detail"]
+        sealed_hash = sealed_detail.get("prereg_sha256")
+        live = self.hypothesis(family)
+        if live is None:
+            return {
+                "sealed": True, "match": False,
+                "differing_fields": ["<family row no longer exists>"],
+                "sealed_sha256": sealed_hash, "live_sha256": None,
+                "sealed_created_utc": sealed["created_utc"],
+            }
+        live_binding = _binding_dict(live)
+        live_hash = _binding_hash(live_binding)
+        sealed_binding = _binding_dict(sealed_detail)
+        differing = [k for k in _BINDING_FIELDS if live_binding.get(k) != sealed_binding.get(k)]
+        return {
+            "sealed": True,
+            "match": live_hash == sealed_hash,
+            "differing_fields": differing,
+            "sealed_sha256": sealed_hash,
+            "live_sha256": live_hash,
+            "sealed_created_utc": sealed["created_utc"],
+        }
 
     def predecessor_chain(self, family: str) -> list[str]:
         """All ancestor families, nearest first, following

@@ -20,6 +20,7 @@ import time
 from dataclasses import dataclass, asdict
 
 import numpy as np
+import pandas as pd
 
 from . import stats
 from .registry import TrialRegistry
@@ -40,6 +41,7 @@ CAPACITY_MULTIPLE_MIN = 10.0
 CORR_MAX_TO_LIVE_BOOK = 0.30
 CSCV_PARTITIONS_S = 16
 HOLDOUT_MIN_MONTHS = 12.0  # Charter 4.4; mirrored in holdout.py's default
+LENGTH_DISAGREEMENT_MAX = 0.05  # I-010 G3: fraction of the calendar figure
 
 PASS, FAIL, INSUFF = "PASS", "FAIL", "INSUFFICIENT-DATA"
 
@@ -51,6 +53,14 @@ class Criterion:
     threshold: str
     verdict: str
     note: str = ""
+
+
+_HISTORICAL_HOLDOUT_SENTENCE = (
+    "This holdout is historical. It establishes that the window was not "
+    "searched over through the harness. It does not establish that the "
+    "window was unknown to the researchers, and no control in this firm "
+    "can establish that."
+)
 
 
 @dataclass
@@ -67,6 +77,15 @@ class ValidationReport:
     breakeven_cost_multiplier: float | None
     holdout_spec_sha256: str | None = None
     holdout_payload_sha256: str | None = None
+    # R1 (Ruling 002 / Ruling 001 §2.4): the report must state on its face
+    # whether the holdout is FORWARD or HISTORICAL. Every report the
+    # harness could previously produce lacked this field (I-018).
+    holdout_classification: str | None = None
+    # P5: the pre-registration's own sealed hash, so a report can be
+    # audited against the exact claim it was evaluated against.
+    prereg_sha256: str | None = None
+    # P8: predecessor chain's sealed prereg hashes, family -> sha256.
+    predecessor_prereg_sha256: dict[str, str] | None = None
 
     def to_json(self) -> str:
         d = asdict(self)
@@ -83,6 +102,18 @@ class ValidationReport:
             f"Evaluated return series sha256: `{self.returns_sha256[:16]}…`",
             f"Holdout spec sha256: `{self.holdout_spec_sha256[:16] + '…' if self.holdout_spec_sha256 else 'UNAVAILABLE'}` · "
             f"Holdout payload sha256: `{self.holdout_payload_sha256[:16] + '…' if self.holdout_payload_sha256 else 'UNAVAILABLE'}`",
+            f"Holdout classification: **{self.holdout_classification or 'UNCLASSIFIED'}** · "
+            f"Pre-registration sha256: `{self.prereg_sha256[:16] + '…' if self.prereg_sha256 else 'UNAVAILABLE'}`",
+        ]
+        if self.holdout_classification == "HISTORICAL":
+            lines.append("")
+            lines.append(f"> {_HISTORICAL_HOLDOUT_SENTENCE}")
+        if self.predecessor_prereg_sha256:
+            lines.append("")
+            lines.append("Predecessor chain pre-registration hashes: " + "; ".join(
+                f"`{fam}`={sha[:16]}…" for fam, sha in self.predecessor_prereg_sha256.items()
+            ))
+        lines += [
             "",
             "| Criterion | Value | Threshold | Verdict |",
             "|---|---|---|---|",
@@ -118,6 +149,9 @@ def evaluate_gate1(
     registry: TrialRegistry,
     oos_net_returns: np.ndarray,
     periods_per_year: int,
+    *,
+    backtest_years: float,
+    oos_index: "pd.DatetimeIndex | None" = None,
     net_returns_at_cost_multiplier=None,
     wfe_sr_pairs: list[tuple[float, float]] | None = None,
     param_grid_net_pnls: list[float] | None = None,
@@ -125,14 +159,27 @@ def evaluate_gate1(
     corr_to_live_book: float | None = None,
     red_team_memo_present: bool = False,
     kill_condition: str | None = None,
-    backtest_years: float | None = None,
-    holdout_opened_once: bool | None = None,
 ) -> ValidationReport:
     """Evaluate Gate 1. One non-PASS criterion fails the Gate.
 
     Parameters
     ----------
     oos_net_returns : out-of-sample net returns (post-cost), per bar.
+    backtest_years : REQUIRED (I-010 G1). No fallback to
+        ``r.size / periods_per_year`` exists any more — that fallback
+        silently equated observation count with calendar span, which
+        overstates length for any stacked/pooled panel (rows = contract-
+        days, not dates) and fails permissively toward PASS. The caller
+        must state the length; :paramref:`oos_index` is what lets the
+        harness check the caller's claim instead of trusting it.
+    oos_index : the OOS return series' DatetimeIndex, if available (G2).
+        Where supplied, ``years_calendar = (max - min).days / 365.25`` is
+        computed and is what the length criterion is actually evaluated
+        against; ``backtest_years`` is reported alongside it and checked
+        for disagreement (G3). Where NOT supplied, the length criterion is
+        INSUFFICIENT-DATA — never PASS — regardless of what
+        ``backtest_years`` claims (G4): a number the harness cannot verify
+        does not clear a Charter §4.4 floor.
     net_returns_at_cost_multiplier : callable m -> net returns with all
         costs scaled by m (rerun through the engine). Used for the 2x
         robustness test and the breakeven cost search. If None, both are
@@ -196,72 +243,178 @@ def evaluate_gate1(
             "PBO (CSCV)", None, f"<= {PBO_MAX_PAPER}", INSUFF,
             "Registry return matrix too small for S=16 CSCV"))
 
-    # -- length ---------------------------------------------------------
-    years = backtest_years if backtest_years is not None else r.size / periods_per_year
-    if fam.n_trials >= 1 and sr_ann > 0:
-        minbtl = stats.min_backtest_length_years(
-            max(fam.n_trials, 2), sr_ann, periods_per_year)
-        need = max(MIN_YEARS, minbtl)
-        criteria.append(_crit(
-            "Backtest length (years)", years,
-            f">= max({MIN_YEARS:g}, MinBTL={minbtl:.2f})", years >= need))
+    # -- length (I-010 G1-G5) --------------------------------------------
+    # G1: backtest_years is required, no fallback. G2/G3/G4: oos_index is
+    # the only thing that lets the harness VERIFY the caller's claim
+    # instead of trusting it — the permissive fallback this replaced
+    # (r.size / periods_per_year) silently equated observation count with
+    # calendar span, which overstates length for a stacked/pooled panel.
+    length_threshold = f">= max({MIN_YEARS:g}, MinBTL(N))"
+    if oos_index is None or len(oos_index) < 2:
+        # G4: no calendar evidence -> INSUFFICIENT-DATA, never PASS,
+        # regardless of what backtest_years claims.
+        criteria.append(Criterion(
+            "Backtest length (years)", backtest_years, length_threshold, INSUFF,
+            "No oos_index supplied; calendar span unavailable, so "
+            f"backtest_years={backtest_years:g} cannot be verified and "
+            "cannot clear a Charter 4.4 floor on trust alone."))
     else:
-        criteria.append(_crit("Backtest length (years)", years,
-                              f">= {MIN_YEARS:g}", years >= MIN_YEARS))
+        idx = pd.to_datetime(oos_index)
+        span_days = (idx.max() - idx.min()).days
+        years_calendar = span_days / 365.25
+        disagreement = (
+            abs(backtest_years - years_calendar) / years_calendar
+            if years_calendar > 0 else float("inf")
+        )
+        if disagreement > LENGTH_DISAGREEMENT_MAX:
+            # G3: the pooled-panel signature — apparent length (usually
+            # observation count / periods_per_year) materially overstates
+            # or understates the calendar span. FAIL, not a note buried
+            # in a PASS: a materially mis-stated length is a failure on a
+            # Charter 4.4 criterion.
+            criteria.append(_crit(
+                "Backtest length (years)", years_calendar, length_threshold, False,
+                f"DISAGREEMENT: backtest_years={backtest_years:.3f} vs "
+                f"calendar-verified={years_calendar:.3f} "
+                f"({disagreement:.1%} apart, > {LENGTH_DISAGREEMENT_MAX:.0%} "
+                "tolerance) — reported length does not match the oos_index "
+                "calendar span (I-010)."))
+        elif fam.n_trials >= 1 and sr_ann > 0:
+            minbtl = stats.min_backtest_length_years(
+                max(fam.n_trials, 2), sr_ann, periods_per_year)
+            need = max(MIN_YEARS, minbtl)
+            criteria.append(_crit(
+                "Backtest length (years)", years_calendar,
+                f">= max({MIN_YEARS:g}, MinBTL={minbtl:.2f})",
+                years_calendar >= need,
+                f"backtest_years (caller-reported): {backtest_years:.3f}"))
+        else:
+            criteria.append(_crit(
+                "Backtest length (years)", years_calendar,
+                f">= {MIN_YEARS:g}", years_calendar >= MIN_YEARS,
+                f"backtest_years (caller-reported): {backtest_years:.3f}"))
 
     # -- holdout single-use (Ruling 001 E1-E3; fixes I-007) --------------
     # Family-scoped: `registry.events(kind=..., family=family)` — the
     # I-007 defect was that this was queried globally, so family A's
     # holdout events could satisfy or fail family B's criterion.
-    if holdout_opened_once is None:
-        acquired = registry.events(kind="holdout_acquired", family=family)
-        second = registry.events(kind="holdout_second_acquisition_attempt", family=family)
-        leaked = registry.events(kind="holdout_pre_acquisition_leak", family=family)
-        bad_pw = registry.events(kind="holdout_bad_passphrase_attempt", family=family)
-        retries = registry.events(kind="holdout_retry_authorized", family=family)
-        notes = []
-        if bad_pw:
-            notes.append(f"{len(bad_pw)} bad-passphrase attempt(s)")
-        if retries:
-            notes.append(f"{len(retries)} retry authorization(s)")
-        note_suffix = ("; " + "; ".join(notes)) if notes else ""
+    #
+    # Acceptance 001 C-6 (I-014): the caller-asserted `holdout_opened_once`
+    # boolean is REMOVED, not deprecated. It measured PASS on a family with
+    # zero holdout events in the registry — a narrated number inside the
+    # firm's most-protected criterion. There is now exactly one way this
+    # criterion can be evaluated: from the registry's own event log.
+    acquired = registry.events(kind="holdout_acquired", family=family)
+    second = registry.events(kind="holdout_second_acquisition_attempt", family=family)
+    leaked = registry.events(kind="holdout_pre_acquisition_leak", family=family)
+    bad_pw = registry.events(kind="holdout_bad_passphrase_attempt", family=family)
+    retries = registry.events(kind="holdout_retry_authorized", family=family)
+    notes = []
+    if bad_pw:
+        notes.append(f"{len(bad_pw)} bad-passphrase attempt(s)")
+    if retries:
+        notes.append(f"{len(retries)} retry authorization(s)")
+    note_suffix = ("; " + "; ".join(notes)) if notes else ""
 
-        if second:
+    if second:
+        criteria.append(_crit(
+            "Holdout single-use", "violated", "acquired exactly once",
+            False,
+            "Second-acquisition attempt logged — vault retired" + note_suffix))
+    elif leaked:
+        criteria.append(_crit(
+            "Holdout single-use", "pre-acquisition leak", "acquired exactly once",
+            False,
+            "Rows in (C, G] were knowable before acquisition — holdout "
+            "compromised (D1 leak-detection control)" + note_suffix))
+    elif acquired:
+        detail = acquired[-1]["detail"]
+        window = detail.get("window_months")
+        min_months = detail.get("holdout_min_months", HOLDOUT_MIN_MONTHS)
+        if window is not None and window < min_months:
             criteria.append(_crit(
-                "Holdout single-use", "violated", "acquired exactly once",
+                "Holdout single-use",
+                f"acquired, window {window:.1f}mo", f">= {min_months:g} months",
                 False,
-                "Second-acquisition attempt logged — vault retired" + note_suffix))
-        elif leaked:
-            criteria.append(_crit(
-                "Holdout single-use", "pre-acquisition leak", "acquired exactly once",
-                False,
-                "Rows in (C, G] were knowable before acquisition — holdout "
-                "compromised (D1 leak-detection control)" + note_suffix))
-        elif acquired:
-            detail = acquired[-1]["detail"]
-            window = detail.get("window_months")
-            min_months = detail.get("holdout_min_months", HOLDOUT_MIN_MONTHS)
-            if window is not None and window < min_months:
-                criteria.append(_crit(
-                    "Holdout single-use",
-                    f"acquired, window {window:.1f}mo", f">= {min_months:g} months",
-                    False,
-                    "Holdout window below the Charter 4.4 minimum; the "
-                    "fact is known, so this is FAIL, not INSUFFICIENT-DATA"
-                    + note_suffix))
-            else:
-                criteria.append(_crit(
-                    "Holdout single-use", "acquired once", "acquired exactly once",
-                    True, note_suffix.lstrip("; ")))
-        else:
-            criteria.append(Criterion(
-                "Holdout single-use", "not acquired", "acquired exactly once",
-                INSUFF, "OOS evaluation requires the holdout to be acquired"
+                "Holdout window below the Charter 4.4 minimum; the "
+                "fact is known, so this is FAIL, not INSUFFICIENT-DATA"
                 + note_suffix))
+        else:
+            criteria.append(_crit(
+                "Holdout single-use", "acquired once", "acquired exactly once",
+                True, note_suffix.lstrip("; ")))
     else:
-        criteria.append(_crit("Holdout single-use",
-                              "acquired once" if holdout_opened_once else "not/over-acquired",
-                              "acquired exactly once", holdout_opened_once))
+        criteria.append(Criterion(
+            "Holdout single-use", "not acquired", "acquired exactly once",
+            INSUFF, "OOS evaluation requires the holdout to be acquired"
+            + note_suffix))
+
+    # -- pre-registration integrity (Acceptance 001 P4-P7; D-006 rider) --
+    prereg = registry.verify_prereg(family)
+    prereg_sha256 = prereg["sealed_sha256"]
+    if not prereg["sealed"]:
+        # P6: no hypothesis_sealed event (predates the P-series schema, or
+        # a family inserted outside open_hypothesis) -> INSUFFICIENT-DATA,
+        # never PASS.
+        criteria.append(Criterion(
+            "Pre-registration integrity", None,
+            "sealed hash matches live row", INSUFF,
+            "No hypothesis_sealed event for this family — the "
+            "pre-registration was never sealed under the P-series, or "
+            "predates it."))
+    elif not prereg["match"]:
+        # P4: a raw SQLite UPDATE (or any other out-of-band mutation) is
+        # detected because the sealed event carries a full shadow copy,
+        # not a pointer to the row that was just changed.
+        criteria.append(_crit(
+            "Pre-registration integrity",
+            f"mismatch: {prereg['differing_fields']}",
+            "sealed hash matches live row", False,
+            "The live hypotheses row differs from the sealed "
+            f"pre-registration on {prereg['differing_fields']}. This can "
+            "only happen via a write outside open_hypothesis()."))
+    else:
+        # P7: the sealed timestamp must not postdate the holdout cutoff C,
+        # at UTC day granularity — the D-006 rider mechanised.
+        spec_events = registry.events(kind="holdout_spec_sealed", family=family)
+        p7_fail, p7_note = False, ""
+        if spec_events:
+            cutoff_raw = spec_events[-1]["detail"].get("cutoff")
+            if cutoff_raw:
+                cutoff_day = pd.Timestamp(cutoff_raw)
+                cutoff_day = (cutoff_day.tz_localize("UTC") if cutoff_day.tzinfo is None
+                             else cutoff_day.tz_convert("UTC")).normalize()
+                sealed_day = pd.Timestamp(
+                    prereg["sealed_created_utc"], unit="s", tz="UTC"
+                ).normalize()
+                if sealed_day > cutoff_day:
+                    p7_fail = True
+                    p7_note = (
+                        f"pre-registration sealed {sealed_day.date()} "
+                        f"postdates the holdout cutoff C={cutoff_day.date()} "
+                        "(D-006 rider: prereg must be sealed on or before "
+                        "C's calendar day)"
+                    )
+        if p7_fail:
+            criteria.append(_crit(
+                "Pre-registration integrity", "sealed after C",
+                "sealed on/before C's calendar day", False, p7_note))
+        else:
+            criteria.append(_crit(
+                "Pre-registration integrity", "sealed, hash matches",
+                "sealed hash matches live row", True))
+
+    # P8: predecessor chain's sealed prereg hashes, for the report.
+    predecessor_prereg_sha256: dict[str, str] = {}
+    for pred_fam in registry.predecessor_chain(family):
+        pv = registry.verify_prereg(pred_fam)
+        if pv["sealed"]:
+            predecessor_prereg_sha256[pred_fam] = pv["sealed_sha256"]
+
+    # R1: FORWARD / HISTORICAL classification, required on the report's
+    # face (Ruling 001 §2.4 / Ruling 002 R1).
+    hyp_row = registry.hypothesis(family)
+    holdout_classification = hyp_row.get("holdout_classification") if hyp_row else None
 
     # -- walk-forward ---------------------------------------------------
     if wfe_sr_pairs is not None and len(wfe_sr_pairs) >= WFE_MIN_WINDOWS:
@@ -366,6 +519,9 @@ def evaluate_gate1(
         breakeven_cost_multiplier=breakeven,
         holdout_spec_sha256=holdout_spec_sha256,
         holdout_payload_sha256=holdout_payload_sha256,
+        holdout_classification=holdout_classification,
+        prereg_sha256=prereg_sha256,
+        predecessor_prereg_sha256=predecessor_prereg_sha256 or None,
     )
     registry.log_event("gate1_verdict", family, {
         "strategy": strategy, "overall": overall,

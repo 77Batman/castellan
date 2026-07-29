@@ -63,6 +63,17 @@ class HoldoutAcquisitionFailedError(HoldoutError):
     is NOT retired (Ruling 001 C6)."""
 
 
+class HoldoutAcquisitionOverlapError(HoldoutAcquisitionFailedError):
+    """Acquisition-side enforcement of the load-bearing property the legacy
+    test protected: the fetched frame must contain nothing at or before the
+    sealed cutoff C (``acquired.index.min() > C``). A ``HoldoutCeilingError``
+    is *ingest*-side (rows already in ``pit.db``); this is the fetch-side
+    twin that Validation Acceptance 001 found "enforced nowhere and asserted
+    nowhere" (C-7 / R-F1/F2-4). Treated as a C6-class acquisition failure:
+    the vault moves to ACQUISITION_FAILED, is NOT retired, and a further
+    attempt requires ``holdout_retry_authorized``."""
+
+
 class HoldoutSchemaMismatchError(HoldoutError):
     """The fetched frame does not match the sealed schema_fingerprint
     (Ruling 001 C10)."""

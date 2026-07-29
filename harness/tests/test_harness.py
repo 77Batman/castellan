@@ -7,7 +7,8 @@ import pandas as pd
 import pytest
 
 from castellan import (
-    TrialRegistry, PreRegistrationError, HoldoutVault, HoldoutRetiredError,
+    TrialRegistry, PreRegistrationError, PITStore, HoldoutVault,
+    HoldoutRetiredError, HoldoutPassphraseError, HoldoutCeilingError,
     run_backtest, SameBarFillError, US_EQUITY_LARGE, evaluate_gate1, stats,
 )
 from castellan.cv import purged_kfold_splits, walk_forward_windows
@@ -167,24 +168,91 @@ def test_walk_forward_windows_cover_and_order():
 # ----------------------------------------------------------------------
 # Holdout vault
 # ----------------------------------------------------------------------
+#
+# `test_holdout_locks_splits_and_opens_once` (the fetch-then-lock/decrypt-
+# then-open regime) is REPLACED IN PLACE here, per Validation Ruling 001
+# §4 R-F1/F2-2/3/4 — this paragraph, plus the ruling itself, is the
+# written justification F2 requires. The legacy test asserted six
+# properties (Acceptance 001 §4 table); this replacement carries forward
+# every one that survives into the P-1 (seal/acquire) regime:
+#   1. ceiling accepts a batch ending exactly at C, refuses one crossing
+#      it, row count unchanged on refusal (successor of "splits 1000 into
+#      750/250") — assert_ceiling_boundary below.
+#   2. `acquired.index.min() > C` (successor of `held.index[0] >
+#      insample.index[-1]` — the load-bearing "no overlap" property
+#      Acceptance 001 found unenforced-and-unasserted; now C-7 enforces it
+#      in code and this test asserts it).
+#   3. a wrong, non-empty passphrase is refused with no network call, the
+#      vault is NOT retired, and the correct passphrase then acquires
+#      successfully (successor of "wrong passphrase refused" — under the
+#      old test this used the literal string "wrong", which is exactly
+#      the non-empty-typo case C-2 exists to cover).
+#   4. a second `acquire_once` raises `HoldoutRetiredError`.
+#   5. `holdout_acquisition_attempted` and
+#      `holdout_second_acquisition_attempt` both reach the registry,
+#      family-scoped.
 
-def test_holdout_locks_splits_and_opens_once(tmp_path, registry):
-    df = make_prices(n=1000)
-    vault = HoldoutVault(str(tmp_path / "vault"), registry, "demo-data")
-    insample = vault.lock(df, passphrase="hunter2", fraction=0.25)
-    assert len(insample) == 750
-    # wrong passphrase refused
-    with pytest.raises(Exception):
-        vault.open_once("wrong", opened_by="validation")
-    held = vault.open_once("hunter2", opened_by="validation")
-    assert len(held) == 250
-    assert held.index[0] > insample.index[-1]
-    # second open: permanently retired
+def test_holdout_ceilings_and_acquires_once_p1(tmp_path, registry):
+    store = PITStore(str(tmp_path / "pit.db"), registry)
+    cutoff = pd.Timestamp("2024-06-30", tz="UTC")
+    vault = HoldoutVault(str(tmp_path / "vault"), registry, "demo-data",
+                        family="demo", store=store)
+    vault.seal(
+        source="test-src", dataset_id="DS-DEMO",
+        instrument_identity="cond-id-0001",
+        query_semantics={"fields": ["close"], "freq": "1d"},
+        cutoff=cutoff,
+        schema_fingerprint={"columns": ["A0", "A1"], "dtypes": {"A0": "float64", "A1": "float64"}},
+        passphrase="hunter2",
+    )
+
+    # (1) ingest ceiling: accepts a batch ending exactly at C, refuses one
+    # crossing it, atomically (row count unchanged on refusal).
+    at_cutoff = make_prices(n=181, n_assets=2)
+    at_cutoff.index = pd.bdate_range(end=cutoff.tz_convert(None), periods=181)
+    r = store.ingest("test-src", "DS-DEMO", at_cutoff)
+    assert r["new"] == 181 * 2  # 2 fields (A0, A1) per row
+    crossing = make_prices(n=5, n_assets=2)
+    crossing.index = pd.bdate_range(start=cutoff.tz_convert(None), periods=5)
+    before = store.conn.execute("SELECT COUNT(*) FROM observations").fetchone()[0]
+    with pytest.raises(HoldoutCeilingError):
+        store.ingest("test-src", "DS-DEMO", crossing)
+    after = store.conn.execute("SELECT COUNT(*) FROM observations").fetchone()[0]
+    assert before == after  # refused atomically, nothing partially written
+
+    def fetch(spec):
+        c = pd.Timestamp(spec["cutoff"])
+        df = make_prices(n=1000, n_assets=2)
+        df.index = pd.bdate_range(start=(c + pd.Timedelta(days=1)).tz_convert(None), periods=1000)
+        return df
+
+    # (3) wrong, non-empty passphrase refused, no network call, NOT
+    # retired — the exact I-015 scenario, then the correct passphrase
+    # still works afterwards (a typo must not brick the family).
+    calls = {"n": 0}
+
+    def counting_fetch(spec):
+        calls["n"] += 1
+        return fetch(spec)
+
+    with pytest.raises(HoldoutPassphraseError):
+        vault.acquire_once("wrong-guess", counting_fetch, acquired_by="validation")
+    assert calls["n"] == 0
+    assert not vault.is_retired()
+
+    acquired = vault.acquire_once("hunter2", fetch, acquired_by="validation")
+
+    # (2) the load-bearing property itself: no overlap between the two
+    # samples, successor form. `acquired.index` is tz-naive (as fetch()
+    # returns it); compare against the cutoff in the same convention.
+    assert acquired.index.min() > cutoff.tz_convert(None)
+
+    # (4) + (5) second acquisition: permanently retired, both events land.
     with pytest.raises(HoldoutRetiredError):
-        vault.open_once("hunter2", opened_by="anyone")
-    kinds = [e["kind"] for e in registry.events()]
-    assert "holdout_opened" in kinds
-    assert "holdout_second_open_attempt" in kinds
+        vault.acquire_once("hunter2", fetch, acquired_by="anyone")
+    kinds = [e["kind"] for e in registry.events(family="demo")]
+    assert "holdout_acquisition_attempted" in kinds
+    assert "holdout_second_acquisition_attempt" in kinds
 
 
 # ----------------------------------------------------------------------
@@ -196,7 +264,8 @@ def test_gate1_insufficient_without_registry_trials(tmp_path):
     reg.open_hypothesis("empty", "s", "m", "f", "u", "1d", "sc", 10)
     rng = np.random.default_rng(1)
     rep = evaluate_gate1("s", "empty", reg,
-                         rng.normal(0.001, 0.01, 1200), 252)
+                         rng.normal(0.001, 0.01, 1200), 252,
+                         backtest_years=1200 / 252)
     assert rep.overall != "PASS"
 
 
@@ -208,7 +277,9 @@ def test_gate1_fails_noise_and_verdict_is_logged(registry):
                          index=prices.index, columns=prices.columns)
         run_backtest(prices, w, US_EQUITY_LARGE, registry, "demo", {"v": k})
     noise = rng.normal(0, 0.01, 1200)
+    noise_idx = pd.bdate_range("2020-01-01", periods=1200)
     rep = evaluate_gate1("noise-strat", "demo", registry, noise, 252,
+                         backtest_years=1200 / 252, oos_index=noise_idx,
                          red_team_memo_present=True, kill_condition="x")
     assert rep.overall == "FAIL"
     fails = {c.name for c in rep.criteria if c.verdict == "FAIL"}
@@ -223,7 +294,9 @@ def test_gate1_report_renders(registry):
     run_backtest(prices, w * 0.5, US_EQUITY_LARGE, registry, "demo", {"v": 2})
     rng = np.random.default_rng(3)
     r = rng.normal(0.0005, 0.01, 1100)
+    r_idx = pd.bdate_range("2020-01-01", periods=1100)
     rep = evaluate_gate1("render", "demo", registry, r, 252,
+                         backtest_years=1100 / 252, oos_index=r_idx,
                          net_returns_at_cost_multiplier=lambda m: r - (m - 1) * 0.0002)
     md = rep.to_markdown()
     assert "Validation Report" in md and "Trial count N" in md
