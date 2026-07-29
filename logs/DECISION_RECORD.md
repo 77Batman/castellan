@@ -396,3 +396,57 @@ Sealing early is therefore strictly better, provided nothing is added after — 
 P7 enforces.
 
 **Review date:** sprint close, 2026-08-11.
+
+---
+
+## D-010 · 2026-07-28 · Forward-lag shelved; firm redirects to a Director-originated family
+
+**1. Director of Research's verdict ACCEPTED (Principal).** Forward-lag is
+**ADMITTED-AS-EXPLORATORY**. The kill test (falsifier F-001) is funded at **2–3 of
+Pod B's four Sonnet units**. **The full DATA-SPEC 13-step programme and every ±50%
+grid are cancelled** — that apparatus exists to make a *positive* result trustworthy,
+and a positive result cannot clear Gate 1 for this family.
+
+**Principal's entry for the record, and it is a sharp one:** the DoR's MinBTL
+fatality argument (17.06 years at N = 31,250; net Sharpe ≥ 2.07 to satisfy MinBTL at
+the four-year floor) **presupposes that inherited `N` governs the length criterion —
+which is precisely the companion question still before Validation.** The verdict
+stands on the **independent** grounds (censored span of 3.66–3.82 years, contested
+capacity evaluability, ~0.5%-of-book materiality), and **Validation's ruling proceeds
+as scoped, because it governs all future inherited-`N` families** regardless of a
+family being shelved. Recorded so the argument is not later cited as having settled a
+question it assumed.
+
+**2. Sealing sequence (Principal).** Land the `n_inherited` fix **first** — one Sonnet
+unit, with **Validation's negative tests authored before implementation** (the I-021
+remedy: the implementing seat stops authoring the tests that judge its own work) —
+**then seal same-day.** **KC-001's 2026-10-31 deadline stands absolute**; a slipped
+seal shortens the forward window rather than moving the date.
+
+**3. Redirect APPROVED (Principal).** Crypto perpetual funding/basis pre-registers
+**this sprint, under the Director's sponsorship** — the firm's first
+Director-originated hypothesis. 6.5 years of BTC/ETH/SOL spot and 8h funding, zero
+gaps, already in `book/pit.db`; `N_inherited` honestly 0.
+
+**Principal's rider, which is the `N_inherited` lesson applied prospectively:**
+
+> **Regime-conditioning choices are declared at Gate 0 together with the menu they
+> were chosen from.**
+
+Forward-lag is crippled because one regime exclusion was made after the fact from an
+unrecorded menu, forcing the firm to reconstruct a factor of 10 by guesswork. Any
+conditioning in PREREG-002 must declare the choice, **enumerate the full candidate
+menu**, and yield a countable honest `N` contribution. Conditioning on nothing is a
+strong position and must be stated as such. **An undeclared menu is a defect.**
+
+**4. Origin ratio reports Saturday at its current value, unsoftened** — **4 of 4 =
+100% Principal-originated.** PREREG-002 changes the ratio prospectively; it does not
+retouch the number being reported.
+
+**CIO correction to the record.** The CIO reported Opus 6/10 and Sonnet 7/14 in the
+preceding update. Both were wrong. Recount from the dispatch ledger: **Opus 5 used**
+(Validation ×3, Devil's Advocate ×1, Director of Research ×1); **Sonnet 5 used**
+(Data & Infra ×5). Against a binding ceiling, an over-reported spend is not a
+harmless slip — it would have led the CIO to refuse work the firm could afford.
+
+**Review date:** sprint close, 2026-08-11.
