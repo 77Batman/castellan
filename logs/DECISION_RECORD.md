@@ -660,3 +660,60 @@ criterion from **actively wrong** (stress-testing a sign error) to **honestly in
 (24 bps of friction against 1,186 bps/yr of carry).
 
 **Review date:** sprint close, 2026-08-11.
+
+---
+
+## D-014 · 2026-07-31 · Principal directive — four dispositions
+
+**1 · Ruling 003 implementation RE-DISPATCHED.** The 529 overload **counts as spent**
+per D-012 — Principal: *"no exceptions carved on first inconvenience."* Sonnet now 13
+of 14. The re-dispatch is told to write its deliverable incrementally, since two
+failures in this firm have now landed at the compose-at-the-end moment.
+
+**2 · I-042 — technical input supplied, marked "verify before use."** The Principal's
+hypothesis: Binance perp funding = **premium index + clamp(0.01%/8h interest −
+premium, ±0.05%)**, with measured BTC funding ≈ the interest floor implying mean
+premium ≈ 0, reconciling positive funding against negative mean basis; and he flagged
+**index-vs-spot-close** and **TWAP-vs-snapshot** mismatches himself.
+
+**CIO tested it against the stored data before dispatching. The result is mixed and is
+now the specific thing the verification must explain** [measured]:
+
+| symbol | mean funding bp/8h | mean basis bp | basis σ bp | **% prints not at 1.00 bp** |
+|---|---:|---:|---:|---:|
+| BTC | 1.0831 | −1.58 | 5.48 | **64.6%** |
+| ETH | 1.2846 | −0.95 | 6.46 | **64.7%** |
+| SOL | 0.0093 | −3.18 | 38.67 | **64.3%** |
+
+Algebraically, if interest is 1 bp and the clamp band ±5 bp, then **funding equals
+interest exactly whenever premium sits inside the band** — so given BTC's 5.48 bp
+basis σ, most prints should sit *at* 1.00 bp. **Roughly 65% do not, on all three
+symbols.** Either the parameters differ per contract (Binance sets interest to 0% for
+many pairs), or the formula changed across the 2020–2026 span, or the CIO's
+daily-close proxy is too coarse a stand-in for a TWAP premium index — the mismatch the
+Principal named. **Seat 9 verifies against vendor documentation (Sonnet, dispatched),
+with `[cited]` defined as a named source actually read.**
+
+**CIO error disclosed in the same breath — see I-044.** The first run of that
+arithmetic was wrong by 100× **and** printed a hardcoded prose conclusion beside the
+computation. Both corrected before dispatch; logged because a CIO narrating a number
+rather than computing it is the artefact A2 forbids, produced by the one seat with no
+independent line above it.
+
+**3 · If verified, the Director restates PREREG-002's mechanism before sealing** —
+*"the carry's structural component and its premium component are distinct claims and
+the document freezes only once."*
+
+> **CIO note: this is unfunded.** Opus is **10 of 10 spent** and the Director's
+> allocation is exhausted. The only remaining Opus unit is the **Devil's Advocate's
+> Gate 1 reserve**, which the Principal has protected three times and which the CIO
+> will not propose spending. A mechanism restatement is Opus-tier judgment work, so
+> **it requires either a Sprint 1 ceiling decision or deferral into Sprint 2.** Raised
+> now rather than discovered when the verification lands.
+
+**4 · M1 runs after both. Seal next week.** **Saturday's letter reports the seal as
+pending, with the reason stated plainly** — not as a slipped milestone but as the
+firm declining to freeze a basis-and-carry mechanism under P7 while the basis-to-
+funding relationship is unexplained.
+
+**Review date:** sprint close, 2026-08-11.

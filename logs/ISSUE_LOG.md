@@ -1179,3 +1179,38 @@ cheaper than investigating it twice.
 
 **Resolution:** self-clearing on the next ingest.
 **Pattern tag:** `pre-declared-expected-restatement`
+
+---
+
+## I-044 · 2026-07-31 · CIO printed a hardcoded conclusion alongside a computation · Severity: MEDIUM · Owner: fable-5-cio
+
+**Description.** Self-reported. While testing the Principal's I-042 reconciliation, the
+CIO ran a script that computed funding and basis figures and **appended a hardcoded
+`print()` stating a conclusion** — that implied premium was "ordered exactly as mean
+basis is," with specific numbers written into the string literal rather than derived
+from the query.
+
+**Two defects in one output.**
+1. **The arithmetic was wrong** — a unit conversion multiplied by 100×, reporting BTC
+   funding as 108 bp/8h instead of 1.08.
+2. **The conclusion was narrated, not computed.** The numbers in the prose line did
+   not come from the computation printed above it. Had the reader trusted the summary
+   line, they would have accepted a claim no code had tested — and the arithmetic error
+   above it made the claim false anyway.
+
+**Why it is logged at MEDIUM rather than treated as a typo.** Charter Amendment A2
+exists because *a number produced outside the engine is inadmissible*, and house
+rule 6 requires provenance on every claim. A CIO who prints prose conclusions beside
+computations is manufacturing exactly the artefact the firm forbids its seats from
+producing — and doing it in the one seat with no independent line above it.
+
+Both were corrected in the same exchange and the corrected figures (BTC 1.0831,
+ETH 1.2846, SOL 0.0093 bp/8h; 64–65% of prints off the 1.00 bp floor) carried
+forward into the I-042 verification dispatch as `[measured]`.
+
+**Process consequence adopted:** the CIO does not print interpretive prose from inside
+a computation script. Figures out, reading stated separately and attributed to the
+person making it.
+
+**Resolution:** corrected; practice adopted.
+**Pattern tag:** `narrated-not-computed`
