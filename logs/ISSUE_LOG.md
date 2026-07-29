@@ -503,6 +503,56 @@ which remains the larger and unsolved problem.
 
 ---
 
+## I-020 · 2026-07-28 · `yfinance` loader discards exchange-local UTC offset instead of converting it · Severity: MEDIUM · Owner: head-of-data-infra
+
+**Description.** During DATA-INGEST-001, verifying that the I-016/C-5 UTC-normalization
+fix holds for both loaders as instructed. It holds for `ccxt` (millisecond epoch
+timestamps are absolute, so `pd.to_datetime(ms, unit="ms")` is correct by
+construction) but **not** for `yfinance`.
+
+`loaders.parse_yfinance_history` does `hist.index = pd.to_datetime(hist.index).tz_localize(None)`.
+`yfinance` returns timestamps **tz-aware in the instrument's exchange-local zone**
+(measured: `Ticker("SPY").history(...)` returns a `DatetimeIndex` tz = `America/New_York`,
+values at local midnight, e.g. `2024-06-25 00:00:00-04:00`). `tz_localize(None)` on a
+tz-aware index **strips the offset without converting** — it keeps the wall-clock
+reading and discards the `-04:00`, rather than calling `tz_convert("UTC")` first. The
+naive result is then handed to `PITStore._iso()`, which (correctly, per its own C-5
+contract) treats a naive input as *already UTC* and localizes it as such. Net effect,
+measured: a true instant of `2024-06-25T04:00:00Z` (SPY's local-midnight bar,
+converted) is stored as `2024-06-25T00:00:00+00:00` — wrong by the exchange's UTC
+offset, in the direction the offset points.
+
+**Why this did not corrupt DATA-INGEST-001.** All eight ETF symbols ingested are
+US-domiciled (`America/New_York`, UTC−4/−5). The error only shifts the stored
+instant earlier within the same UTC calendar day (local midnight west-of-UTC never
+crosses a UTC day boundary going backward) — it does not relabel any bar onto a
+different UTC date, so the cutoff-bound assertions in DATA-INGEST-001 all still
+report truthfully and no leak occurred in this ingest.
+
+**Why it is still a real defect, not a footnote.** The direction of the error is
+symbol-domicile-dependent. For an instrument on an exchange **east** of UTC by
+enough hours (e.g., a Tokyo- or Sydney-listed ETF, if ever added to the panel), the
+same `tz_localize(None)` bug would shift a bar's stored `event_time` **onto the
+wrong UTC calendar date** — potentially the wrong side of a sealed holdout cutoff
+`C` compared at day granularity (the exact comparison P7 and the D2 ingest ceiling
+both use). The two-timestamp rule this seat's whole mandate rests on requires
+`event_time` to be the true instant, not an instrument-dependent approximation of
+it. Not fixed in-session: this task's instructions were to ingest and verify, not
+to patch harness source outside the acceptance/remediation cycle Validation just
+ran; flagging for the same review path C-5 went through rather than editing
+`loaders.py` unilaterally mid-ingest.
+
+**Fix sketch, not applied:** `parse_yfinance_history` should call
+`hist.index.tz_convert("UTC").tz_localize(None)` (convert, then strip), not
+`tz_localize(None)` alone.
+
+**Resolution:** open.
+**Pattern tag:** `timezone-offset-discarded` (sibling to I-016's
+`timezone-string-comparison` — different failure, same family of hazard: local time
+handled as if it were already UTC).
+
+---
+
 ## I-006 — CLOSED 2026-07-28
 
 Superseded in practice: seats have been dispatched successfully all session through
@@ -523,3 +573,111 @@ pre-registration, with its memo attacking the forward-lag family while the desig
 is still malleable. **Principal noted and closed as corrected.** Recorded here
 rather than only in the decision record so the pattern is visible at quarterly
 review.
+
+---
+
+## I-021 · 2026-07-28 · The implementing seat authors the tests that judge its own implementation · Severity: MEDIUM · Owner: fable-5-cio
+
+**Description.** Raised by the Devil's Advocate. Data & Infrastructure writes both
+the implementation and the acceptance tests that certify it. **I-015 is the direct
+consequence** — a test claiming to cover C4 passed while C4's stated property
+("a typo must not brick a family") was inverted in the code.
+
+**Why structural rather than a one-off:** `DATA-IMPL-002` §13 records the *identical
+shape* recurring in `authorize_retry()` **after** the pattern had been named and the
+seat was explicitly tasked to hunt for it. A defect class that survives being named
+is a property of the arrangement, not of the effort.
+
+**Proposed fix, zero Opus cost:** acceptance tests authored by the criteria-setting
+seat (Validation), **before** implementation.
+
+**Resolution:** open. **Pattern tag:** `implementer-grades-own-work`
+
+---
+
+## I-022 · 2026-07-28 · Trial-count criterion passes a literal `True` — over-budget reads PASS · Severity: MEDIUM · Owner: head-of-data-infra
+
+**Description.** Raised by the Devil's Advocate; **CIO verified in source**
+[measured]. `harness/castellan/gates.py` builds the trial-count criterion with the
+verdict argument hard-coded:
+
+```python
+over = fam.trial_budget and fam.n_trials > fam.trial_budget
+criteria.append(_crit(
+    "Trial count N (registry)", fam.n_trials,
+    f"logged; budget {fam.trial_budget}", True,
+    "OVER BUDGET — flagged to Director of Research" if over else ""))
+```
+
+`over` is computed and then used **only to write a note**. A family that has blown
+its pre-registered trial budget — the precise condition Charter house rule 3 and
+§4.1 exist to catch — reports **PASS**.
+
+**Disclosed but never logged.** Seat 9 recorded this in `DATA-IMPL-002` §13 as a
+design question. It reached no Issue Log entry until now. **A disclosed defect that
+reaches no log is functionally undisclosed** — which is itself the finding.
+
+Fails permissively, same direction as I-010.
+
+**Resolution:** open. **Pattern tag:** `harness-correctness-latent`
+
+---
+
+## I-023 · 2026-07-28 · Cost model cannot express Polymarket's real costs · Severity: HIGH · Owner: head-of-data-infra → quant-validation
+
+**Description.** Raised by the Devil's Advocate; **CIO verified in source**
+[measured]. `costs.py` is the firm's **only admissible cost source** (Charter Seat 9
+standing rule: researchers may not hand-roll costs). Two defects:
+
+**(a) The Polymarket half-spread is a constant where the true cost is a ratio.**
+`POLYMARKET = CostModel(..., half_spread_bps=100.0, ...)`, with the inline comment
+"1c on a 50c contract ~ 2%". A 1¢ spread on a **10¢** contract is 10%, not 2% —
+roughly **5× understated** — and data-spec criterion T6 admits every contract above
+2¢. Cost is proportional to price; the model treats it as fixed.
+
+**(b) `CostModel` has no field capable of expressing oracle or resolution risk.**
+Fields are commission, half-spread, impact, borrow, funding, periods-per-year.
+Nothing charges for a contract resolving against its economic meaning. **That is the
+largest idiosyncratic risk in the entire Pod B mandate**, and the paper book will
+systematically over-report net P&L because it cannot be charged.
+
+**Resolution:** open — blocking on any Polymarket net-P&L claim.
+**Pattern tag:** `cost-model-cannot-express-the-risk`
+
+---
+
+## I-024 · 2026-07-28 · Cross-venue clock alignment is unaddressed everywhere · Severity: HIGH · Owner: quant-validation
+
+**Description.** Raised by the Devil's Advocate; **CIO confirmed the absence**
+[measured] — session/clock-alignment terms appear essentially nowhere across
+`FUND_CHARTER.md`, `reference/`, `research/` (pre-memo), `logs/`, or the harness.
+
+Charter §4.6's "never fill at the same bar that generated the signal" is satisfied by
+a fill **53 hours later across a weekend**. Polymarket trades 24/7; the equity or ETF
+reference leg does not. A measured "lag" between them is then **the overnight and
+weekend information gap relabelled as alpha** — large, robust, reproducible, and
+entirely uncapturable.
+
+**Compounding it:** the data spec screens Polymarket contract-days through T1–T7 and
+**never screens the reference leg at all.**
+
+**Resolution:** open — must be resolved before any forward-lag measurement is
+interpreted. **Pattern tag:** `cross-venue-clock-unmodelled`
+
+---
+
+## I-025 · 2026-07-28 · Bias is measured too late — pass rates postdate the selection · Severity: MEDIUM · Owner: devils-advocate
+
+**Description.** Appendix B #1 and I-003 track Gate 1 pass rates by hypothesis
+origin. The Devil's Advocate's objection: **by the time pass rates are measurable,
+the selection has already happened at attention allocation.** A firm can be perfectly
+unbiased in pass rates and wholly captured in what it chose to test.
+
+**Proposed replacement metric, computable today rather than after 8–10 verdicts:**
+**Opus units by hypothesis origin.** Today's value: **4 of 4 = 100%
+Principal-originated.**
+
+Recorded as a live number, not a caveat.
+
+**Resolution:** open — supersedes nothing; runs alongside I-003.
+**Pattern tag:** `bias-metric-lags-the-decision`
