@@ -249,3 +249,65 @@ firm's independent line and its Principal agree here, which is recorded as such
 rather than presented as vindication.
 
 **Review date:** sprint close, 2026-08-11.
+
+---
+
+## D-007 · 2026-07-28 · Principal clarifies the definition of `C` · escalated under house rule 7
+
+**Clarification (Principal, made explicitly under Charter house rule 7 — escalate
+uncertainty, do not resolve it silently):**
+
+> **`C` is defined as the pre-registration seal date, not the D-006 decision date.
+> The forward window is measured from the freeze, which is what P7 protects. Pod B
+> seals promptly after the red-team lands.**
+
+**Why this is a substantive clarification and not a formality.** D-006 said "`C` =
+today," which reads as the decision date, 2026-07-28. Under that reading a
+pre-registration sealed three days later would start its forward window three days
+*before* the hypothesis was frozen — three days of data the researcher could have
+seen while the hypothesis was still mutable. The Principal's definition removes
+that window entirely: the forward period begins exactly where the hypothesis stops
+moving. Acceptance item **P7** already enforces the pairing by failing Gate 1 if the
+seal postdates `C` at UTC day granularity, so under this definition seal date and
+`C` are the same calendar day by construction.
+
+**Immediate operational consequence, carried into the ingest dispatch.** `C` is
+therefore **not yet fixed** — Pod B has not sealed. Every `C` that can now be sealed
+is on or after today, so Data & Infrastructure was instructed to ingest **strictly
+no later than `2026-07-28T23:59:59Z`**, which is conservative against any future
+`C` and provably cannot leak.
+
+**Named hazard on that dispatch:** no ceiling is in force, because a ceiling is
+derived from a sealed spec and no spec is sealed. Over-ingesting past an unset `C`
+is the one irreversible mistake available in the task. Seat 9 was directed to make
+the store enforce the bound if it can carry a provisional ceiling without a sealed
+spec, and to report explicitly if it cannot — that absence would be a finding about
+the ceiling's design, not a footnote.
+
+---
+
+## D-008 · 2026-07-28 · Sprint 1 sequencing — Option C
+
+**Decision (Principal):** **Option C.** The Devil's Advocate red-teams the agenda
+and the forward-lag design **now, before any pre-registration**; Data &
+Infrastructure ingests crypto and ETF panels to cutoff in parallel.
+
+**What this corrects.** The approved agenda specified that the Devil's Advocate
+red-team the agenda *before* execution. The CIO ran four Validation and Data &
+Infrastructure dispatches first and left the seat idle — self-reported to the
+Principal as Charter Appendix B #5 arriving as neglect rather than as ceremony.
+Option C restores the intended order for the part that still matters: the
+forward-lag family is attacked while its design is still malleable, which is when a
+red-team memo is worth most.
+
+**Principal's disposition of two open items:**
+- The CIO's Devil's-Advocate-neglect self-report is **noted and closed as
+  corrected.**
+- The **R4(a)/(b) gap stays OPEN on the Issue Log until wired** — schema and fields
+  exist, no computation is attached, and it is **not counted as delivered.**
+
+**Allocation:** Devil's Advocate spends 1 of its 2 Opus units here; the second is
+reserved for the mandatory Red-Team Memo at Gate 1 (Charter Seat 5 — a packet
+without one is deferred, not heard).
+
+**Review date:** sprint close, 2026-08-11.

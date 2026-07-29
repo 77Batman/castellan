@@ -469,3 +469,57 @@ holdout classification field, which R1 requires on the report's face.
 
 **Resolution:** open — folded into the Acceptance 001 remediation dispatch.
 **Pattern tag:** `binding-ruling-not-expressible-in-schema`
+
+**UPDATE 2026-07-28:** schema and the FORWARD/HISTORICAL report field delivered;
+Gate 0 intake is no longer blocked by this. **Does not close** — see I-019.
+
+---
+
+## I-019 · 2026-07-28 · R4(a)/(b) have schema but no enforcement · Severity: MEDIUM · Owner: head-of-data-infra
+
+**Description.** Ruling 002's **R4 is binding** under D-006: R4(a) requires
+model-prior provenance to be recorded, R4(b) applies the Charter §4.6 50%
+published-signal haircut **presumptively to LLM-generated hypotheses**.
+
+Seat 9 delivered the **schema and fields** for both and disclosed, unprompted, that
+**no computation is wired to them.** Nothing records provenance automatically and
+nothing applies the haircut.
+
+**Why it is logged rather than tracked informally.** A binding requirement that
+exists as an empty column is the most dangerous shape a control can take: it reads
+as satisfied in every audit that checks for the field's existence. R4(b) is also the
+single measure that imposes a cost on the Principal's own flagship family, which
+Validation cited in Ruling 002 §5 as its evidence against deference — an unwired
+R4(b) quietly removes that cost.
+
+**Principal's disposition, 2026-07-28:** stays **open until wired**, explicitly
+**not counted as delivered**.
+
+**Partial mitigation only:** R4(b) was itself only a partial mitigation of I-011,
+which remains the larger and unsolved problem.
+
+**Resolution:** open.
+**Pattern tag:** `binding-control-declared-not-enforced`
+
+---
+
+## I-006 — CLOSED 2026-07-28
+
+Superseded in practice: seats have been dispatched successfully all session through
+the generic-slot workaround, with the seat definition adopted by instruction. The
+`tools:` restriction remains unenforced for those invocations — **the residual risk
+is now carried by I-012**, which measures the tool grants directly. No separate
+tracking needed.
+
+---
+
+## Devil's-Advocate neglect — CLOSED 2026-07-28
+
+The CIO self-reported to the Principal that the Devil's Advocate held 2 Opus units
+and had been dispatched zero times, despite the approved agenda specifying a
+red-team **before** execution — Charter Appendix B #5 arriving as neglect rather
+than as ceremony. Corrected by D-008 (Option C): the seat is convened before any
+pre-registration, with its memo attacking the forward-lag family while the design
+is still malleable. **Principal noted and closed as corrected.** Recorded here
+rather than only in the decision record so the pattern is visible at quarterly
+review.
