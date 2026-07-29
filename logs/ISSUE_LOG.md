@@ -1084,3 +1084,53 @@ would credit SOL with a **107× overstatement, erring optimistically** — credi
 receipt that is not there. A scalar's error is whatever the asset makes it.
 
 **Resolution:** open. **Pattern tag:** `ruling-003-consolidated`
+
+---
+
+## I-041 · 2026-07-29 · A source-only revert left a schema migration on disk, and the CIO committed it under an unrelated message · Severity: MEDIUM · Owner: fable-5-cio
+
+**Description.** Surfaced by Data & Infrastructure while implementing the H-series;
+**CIO verified** [measured].
+
+The dead I-036 agent ran `_migrate()`, which executed `ALTER TABLE hypotheses ADD
+COLUMN n_inherited` against the **live `book/registry.db`**. The CIO then stashed and
+dropped that agent's **source**, restoring the suite to green — **but a stash does not
+undo a database an agent has already written to.** The schema change persisted.
+
+Verified state at `HEAD` before the merge:
+
+| | |
+|---|---|
+| `book/registry.db` (committed) | `n_inherited` **present** |
+| `harness/castellan/registry.py` (committed) | `n_inherited` — **zero occurrences** |
+
+The migration was then committed in **`2c0d3e7`**, whose message reads *"Registry:
+capture-run events from DATA-INFRA-001"* — **attributing a dead agent's schema
+migration to the Polymarket book-capture task.**
+
+**Two CIO failures, and the second is the instructive one.**
+
+1. **Incomplete verification.** The CIO reported *"registry.db verified untouched (0
+   families, 1 event)"* in I-036. It checked **row counts, not schema.** The database
+   was not untouched and the assertion was wrong.
+2. **This is I-013 recurring — committed during the cleanup of I-013's own incident
+   class.** A change was staged without inspection and landed under a message that
+   misdescribes it. The explicit-path staging rule from I-013 was followed and did
+   not help, because the *path* was correct; what was wrong was committing a file
+   whose **contents** had not been examined.
+
+**Generalisation worth carrying, because it limits the fix adopted in D-012.**
+Worktree isolation separates **repository files**. It does **not** isolate external
+state — a database opened by absolute path is shared regardless. On this occasion the
+worktree agent did not touch `book/registry.db` (verified: working tree schema equals
+`HEAD`), but the isolation guarantee is **narrower than it appears** and should not be
+relied on for anything outside version control.
+
+**Disposition:** the column is benign — 0 hypotheses, no data at risk, and the
+H-series merge makes source and schema agree. **Not reverted.** Logged so the record
+shows the schema arrived from a dead agent rather than from the commit that carries
+it.
+
+**Resolution:** closed on merge; the divergence itself is resolved, the process
+lesson stands.
+**Pattern tag:** `revert-does-not-undo-side-effects`
