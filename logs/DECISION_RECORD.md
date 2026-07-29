@@ -538,3 +538,63 @@ scorecard:**
 > eventual verdict, whichever way it goes, will mean something. Maintain the ratio."*
 
 **Review date:** sprint close, 2026-08-11.
+
+---
+
+## D-012 · 2026-07-29 · Principal directive — four dispositions
+
+**1 · Failed invocations COUNT AS SPENT.** Principal: *"a ceiling where failures are
+free stops binding."* The I-034 re-dispatch is funded from the **Director of
+Research's final Opus unit**; **the Devil's Advocate's Gate 1 reserve remains
+sealed** — protected for the third time.
+
+Opus after this dispatch: **9 of 10 spent.** The remaining unit is the DA's Gate 1
+reserve and is not available for anything else.
+
+**2 · The I-036 stash is DISCARDED.** Principal: *"source written without its
+pre-authored tests is contaminated by construction, and examining it would anchor
+the re-dispatch."* Executed — `stash@{0}` dropped, unrecoverable by design.
+
+**Rider on the H-series re-dispatch, which strengthens I-021:**
+
+> **Tests written and run RED before any source. Ordering, not just authorship.**
+
+I-021 established that the implementer must not author its own tests. This goes
+further: Validation's authorship is insufficient — the seat must **transcribe the
+tests, run them, and observe them fail** before implementing. The CIO has made the
+**verbatim red output a required deliverable**, on the reasoning that without it
+there is no evidence the tests ever constrained anything and the arrangement reduces
+to paperwork. A case that **passes red** is to be reported as a defect in the test,
+not treated as convenience.
+
+**3 · Capture cadence AUTHORIZED and INSTALLED.** launchd agent
+`capital.castellan.polymarket-book`, 900-second interval, `RunAtLoad`, logs to
+`logs/capture/`.
+
+**CIO note on execution** [measured]: the first install **failed** — the plist
+pointed at `/usr/bin/python3`, which lacks numpy. Corrected to the framework
+interpreter that actually carries the harness. **Verified after correction:**
+`launchctl` exit code **0**, `captured 20/20 token books across 10 markets`, and the
+universe self-healing as designed (`2 resolved/retired, tracked not polled`). Had
+the CIO reported "installed" without checking the exit code, the firm would have
+accumulated **zero** depth history while believing otherwise — the same class of
+error as a green suite that tests nothing.
+
+**Machine-sleep caveat acknowledged by the Principal.** **Migration to an always-on
+VPS approved as a Sonnet task under the Principal's expenditure authority, ~$5/month**
+(Charter §4 reserves money-spending and account-creation to the Principal; this is
+that approval). Not yet dispatched — queued behind the two live dispatches to avoid
+repeating I-036's tree contention.
+
+**4 · Sprint 2 list — per-seat git worktree isolation.** Principal: **I-013 and I-036
+are the same incident class** — agents sharing one working tree — *"and it should be
+retired structurally, not procedurally."*
+
+**CIO action: applied immediately rather than deferred.** The H-series re-dispatch is
+running under `isolation: "worktree"` — its own checkout, merged by the CIO on
+completion. The procedural mitigations (explicit-path staging from I-013) remain in
+force as belt-and-braces, but the structural fix is live today. Retained on the
+Sprint 2 list only to decide whether it becomes the **default** for every
+code-modifying seat, which is a standing-policy question rather than a one-off.
+
+**Review date:** sprint close, 2026-08-11.
