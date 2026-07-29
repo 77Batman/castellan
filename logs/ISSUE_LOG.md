@@ -134,3 +134,54 @@ It is still a degradation and it is on the record.
 **Resolution:** self-clearing. A new session picks up the registered seats. Artifacts
 are written to disk, so nothing is lost by restarting at any point.
 **Pattern tag:** `session-startup-registry-lag`
+
+---
+
+## I-007 · 2026-07-28 · Live harness defect — Gate 1 holdout check is not family-scoped · Severity: HIGH · Owner: head-of-data-infra
+
+**Description.** Found by Validation during Ruling 001. `harness/castellan/gates.py`
+lines 209–210 query the holdout event log **globally, with no family filter**:
+
+```python
+opened = [e for e in registry.events(kind="holdout_opened")]
+second  = [e for e in registry.events(kind="holdout_second_open_attempt")]
+```
+
+`TrialRegistry.events()` accepts a `family` argument (`registry.py:230`). It is not
+passed. **CIO independently verified both facts in the source before this entry was
+written** [measured].
+
+**Consequence.** Family A opening its holdout would satisfy family B's Gate-1
+single-use criterion. Family A's *violation* would fail family B's Gate. The
+Charter's most-protected object — "the holdout is sacred," house rule 4 — is checked
+against the wrong scope.
+
+**Why it has never fired.** Zero families exist. It would have fired on the second
+family the firm ever registered, which under the Sprint 1 agenda is the perp funding
+carry family, roughly two weeks out. The 30/30 green suite did not catch it because
+no test registers two families with holdout events.
+
+**This is the first thing the harness has been caught getting wrong, and it was
+caught by the seat whose job is to assume guilt.** That is the independent line
+working as designed, and it is worth recording as such.
+
+**Action:** fixed in the same change as the P-1 vault work, under Ruling 001
+acceptance test E1. Not deferred.
+
+**Resolution:** open.
+**Pattern tag:** `scope-defect-silent-until-second-instance`
+
+---
+
+## I-008 · 2026-07-28 · Harness README understates its own test count · Severity: LOW · Owner: head-of-data-infra
+
+**Description.** `harness/README.md` line 43 states "`pytest tests/` (16 tests)".
+Actual suite is 30 [measured — CIO ran it]. Stale documentation.
+
+**Why a LOW-severity doc bug is logged at all.** The rider governing the P-1
+implementation is "the full harness suite passing." A README that misstates the
+suite size is a document against which "full" could be checked and wrongly cleared.
+Ruling 001 sets the target explicitly at **59/59** to remove the ambiguity.
+
+**Resolution:** open — corrected alongside the vault change.
+**Pattern tag:** `stale-documentation`

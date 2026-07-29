@@ -60,10 +60,42 @@ holdout cutoff. Holdout periods are fetched and locked at Gate 1, by Validation,
 with the Principal's passphrase supplied at that moment and never stored.
 
 **Effect.** Replaces the Charter's fetch-then-encrypt holdout with an air gap.
-Strictly stronger: holdout plaintext never enters the ingest path, and because the
+~~Strictly stronger: holdout plaintext never enters the ingest path, and because the
 fetch happens at Gate 1 date `G` rather than pre-registration date `C`, the window
 `[C, G]` contains data that did not exist when the hypothesis was written —
-unseeable rather than merely unseen.
+unseeable rather than merely unseen.~~
+
+> **CORRECTION, 2026-07-28, on Validation Ruling 001 §2.1. The original wording
+> above is struck rather than deleted; the record is not rewritten.**
+>
+> **"Strictly stronger" was wrong and was the CIO's characterization, not the
+> Principal's.** Validation ruled P-1 a *different* control with a different threat
+> model, not a dominating one:
+>
+> - **Stronger** on leak surface — holdout plaintext never enters the ingest path,
+>   and the ingest boundary becomes cheaply auditable via `max(event_time)` vs `C`.
+> - **Weaker** on (W1) *evidentiary permanence* — the old ciphertext sealed at `C`
+>   **was** the evidence; under P-1 no artifact exists between `C` and `G`, so a
+>   vendor restatement or re-resolution in the interim silently changes the Gate-1
+>   fetch and the discrepancy is undetectable. Tamper-evident payload → tamper-evident
+>   promise. (W2) *availability* — the holdout now depends on a live third party at
+>   the exact moment the family is judged. (W3) *split enforcement* — the split moves
+>   from code into a query parameter, so over-ingest goes from **impossible** to
+>   **silent and plausible**.
+> - **Conditional, not general,** on the headline "unseeable" property: it holds only
+>   for the sub-window of `[C, G]` postdating pre-registration. If `C` is pinned in
+>   the past the holdout is entirely historical and freely fetchable, and the property
+>   is simply false for it. Per Ruling 3, thin Polymarket history pushes toward pinning
+>   `C` early — so **the firm's first hypothesis will very likely run under a holdout
+>   to which P-1's headline protection does not apply at all.**
+>
+> The CIO's further claim that "under the old regime encryption was the barrier" was
+> also rejected. Encryption never protected the information, only the vault's copy of
+> it; the underlying series is free and public in both regimes. What P-1 actually
+> removes is the property that **the safe path is the default path** — which is why
+> Validation moved enforcement into `PITStore` rather than the fetch call.
+>
+> P-1 is **not** reversed. S1 and W3 are both obtainable; Ruling 001 §2.3 specifies how.
 
 **Consequence requiring action — blocking.** `HoldoutVault.lock(df, passphrase)`
 requires the full series in hand and `open_once()` decrypts a stored payload.
