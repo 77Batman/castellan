@@ -717,3 +717,62 @@ firm declining to freeze a basis-and-carry mechanism under P7 while the basis-to
 funding relationship is unexplained.
 
 **Review date:** sprint close, 2026-08-11.
+
+---
+
+## D-015 · 2026-07-31 · Sprint 1 closes · Sprint 2 opens under Standing Order 001
+
+**1 · I-045 DEFERRED to Sprint 2. No ceiling increase.** Principal's reasoning,
+recorded because it is the correct reading of the whole sprint:
+
+> *"The ceiling binding at the seal is the control functioning; the seal that didn't
+> happen this week is a seal that would have frozen two defects permanently."*
+
+The two defects: **I-045**, SOL's documented formula change inside the sample, and the
+mechanism conflation it implies. Both would have been frozen by P7 at the seal.
+
+**2 · Saturday's letter SHIPS AS SCOPED**, plus one line for **I-044** — the
+orchestrator's self-reported fabricated narration. Principal: *"the orchestrator
+self-reporting fabricated narration is a governance exhibit, not a footnote."*
+Delivered: `research/LETTER-2026-08-01.md`.
+
+**3 · SPRINT 2 OPENS MONDAY under STANDING ORDER 001**, which stands as this firm's
+D-001 for the new sprint: **30 invocations / 12 Opus.**
+
+**First Director unit: the PREREG-002 mechanism restatement, with I-045 in hand.**
+
+**Principal input on homogeneity remedies — NON-BINDING**, three candidates:
+- **(a)** per-contract **time-varying documented parameters**;
+- **(b)** a **declared break control**;
+- **(c)** **dropping SOL** under the existing universe menu (menu size 5, already
+  declared — so this costs no new `N`).
+
+**Explicitly ruled OUT: a disclosure-only footnote.** The Principal: it *"is out of
+scope for the operative state variable, which also rules out Sonnet-scope handling."*
+That closes the third option the CIO had floated and settles the question the CIO
+raised twice — the restatement is Opus-tier Director work, and Sprint 2's allocation
+is where it is funded.
+
+**4 · Sequence thereafter:** **M1 → seal → forward clock starts.** The
+**two-terminal-verdicts goal carries into Sprint 2 unchanged, honest either way.**
+
+---
+
+### Sprint 1 closing state — for the record
+
+| | |
+|---|---|
+| Paper book | $10,000,000.00 · 0 positions · reconcile clean · 0 orders / 0 executions / 0 trades |
+| Registry | 0 families · 0 trials · 0 gate verdicts |
+| Harness suite | **30 → 139**, 0 failed / 0 skipped / 0 xfail |
+| Decisions recorded | 15 |
+| Issue Log | 46 entries — 19 HIGH, 23 MEDIUM, 3 LOW, 0 CRITICAL |
+| Research artifacts | 20 |
+| Commits | 37 |
+| Compute | Opus **9 spent of 10** (tenth = DA Gate 1 reserve, unspent by design) · Sonnet **14 of 14** |
+| Terminal verdicts | **0 against a target of 2** |
+| Origin ratio | **67% Principal / 33% Director** (was 100/0) |
+| Forward-test ledger | NIL · **Σα = 0.000** |
+| Polymarket book capture | live, 900s cadence, accumulating the only depth history the firm will ever have |
+
+**Review date:** Sprint 2 close.
