@@ -366,3 +366,106 @@ seats are running. `git add -A` is prohibited while any seat is live.
 
 **Resolution:** corrected; process fix adopted.
 **Pattern tag:** `book-of-record-integrity`
+
+---
+
+## I-014 · 2026-07-28 · A caller assertion overrides the holdout criterion · Severity: HIGH · Owner: head-of-data-infra
+
+**Description.** Found by Validation in Acceptance 001; **independently reproduced
+by the CIO against the shipped code** [measured].
+
+`evaluate_gate1(..., holdout_opened_once=True)` returns **PASS** on the
+"Holdout single-use" criterion for a family with **zero holdout events in the
+registry**:
+
+```
+holdout_opened events: 0 | holdout_acquired: 0
+'Holdout single-use': value='acquired once' verdict='PASS'
+```
+
+**Why HIGH.** House rule 4 — "the holdout is sacred" — and the entire P-1 regime
+exist to make the holdout's status a property of the record. This parameter makes it
+a property of *whatever the caller says*. Every control the firm has built this
+sprint — spec sealing, the ingest ceiling, single-use acquisition, family scoping —
+sits behind a boolean that bypasses all of it. Validation requires **removal, not
+deprecation**.
+
+**Resolution:** open — Acceptance 001 blocking condition.
+**Pattern tag:** `caller-asserted-status`
+
+---
+
+## I-015 · 2026-07-28 · A wrong-but-non-empty passphrase permanently bricks a family · Severity: HIGH · Owner: head-of-data-infra
+
+**Description.** Found by Validation; **independently reproduced by the CIO**
+[measured]. Acquiring with a typo'd passphrase **succeeds**, seals the payload under
+the typo, and retires the vault:
+
+```
+acquire_once with WRONG passphrase SUCCEEDED (834 rows)
+vault state: RETIRED
+read_acquired(REAL)  -> HoldoutPassphraseError   <-- BRICKED
+re-acquire(REAL)     -> HoldoutRetiredError      <-- NO RECOVERY
+```
+
+The passphrase is checked for **presence**, not correctness, before the fetch — so
+there is nothing to compare a typo against until the payload is already sealed.
+
+**Why HIGH, and why it is worse than a bug.** Ruling 001 acceptance item **C4 says
+in terms: "a typo must not brick a family."** The implementation inverts its own
+acceptance criterion, and the test that claims to cover C4 passes anyway. A single
+mistyped character at Gate 1 destroys a family's holdout with no recovery path —
+against the Principal's own passphrase, on the one action he personally authorizes.
+
+Seat 9 disclosed the presence-versus-cryptographic ambiguity in its note but **not
+this consequence**.
+
+**Resolution:** open — Acceptance 001 blocking condition.
+**Pattern tag:** `acceptance-criterion-inverted`
+
+---
+
+## I-016 · 2026-07-28 · D1 leak detector has a measured timezone false negative · Severity: MEDIUM · Owner: head-of-data-infra
+
+**Description.** `PITStore` persists `event_time` with the caller's UTC offset and
+compares as **strings**. A bar stamped `America/New_York 2024-06-30 21:00`
+(= `2024-07-01T01:00Z`) falling inside a holdout window opening at
+`C = 2024-07-01T00:00Z` returns **0 rows** from the leak query — the leak is real
+and undetected. The D2 ingest ceiling is unaffected (it converts to UTC); `asof` is
+not. Found by Validation [measured].
+
+**Resolution:** open — Acceptance 001 blocking condition.
+**Pattern tag:** `timezone-string-comparison`
+
+---
+
+## I-017 · 2026-07-28 · `ingest_documents()` has no ceiling enforcement · Severity: MEDIUM · Owner: head-of-data-infra
+
+**Description.** The D2 ingest ceiling was implemented on `ingest()`. A second
+ingest path, `ingest_documents()`, enforces nothing — an open door beside the locked
+one. Ruling 001's governing principle was that *the safe path must be the default
+path and enforcement belongs in the store*; a second unguarded entry point defeats
+it. Found by Validation.
+
+**Resolution:** open — Acceptance 001 blocking condition.
+**Pattern tag:** `incomplete-chokepoint`
+
+---
+
+## I-018 · 2026-07-28 · The registry cannot express R1–R4, so no family can be pre-registered · Severity: HIGH · Owner: head-of-data-infra
+
+**Description.** Raised by Validation unprompted, as a sequencing consequence.
+D-006 made Ruling 002's **R1–R4 binding**. The registry has **no columns for them**.
+
+**Consequence, which reorders the sprint:** the forward-lag family **cannot be
+pre-registered today** with its binding fields — freeze or no freeze. Pod B is
+therefore blocked on a harness change, not on Validation's intake. The P-series
+(pre-registration sealing) and the R1–R4 columns now gate **Validation's fourth
+unit**, not ingest.
+
+Related and equally structural: **every `ValidationReport` the harness can currently
+produce is defective under Ruling 001 §2.4 / R1** — there is no FORWARD/HISTORICAL
+holdout classification field, which R1 requires on the report's face.
+
+**Resolution:** open — folded into the Acceptance 001 remediation dispatch.
+**Pattern tag:** `binding-ruling-not-expressible-in-schema`
