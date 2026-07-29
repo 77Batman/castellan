@@ -41,7 +41,8 @@ CREATE TABLE IF NOT EXISTS hypotheses (
     forward_window_min_length REAL,
     forward_kill_condition TEXT,
     model_prior_provenance TEXT,
-    published_signal_haircut_applied REAL
+    published_signal_haircut_applied REAL,
+    n_inherited   INTEGER NOT NULL DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS trials (
     trial_id      INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -82,6 +83,11 @@ _BINDING_FIELDS = [
     "holdout_classification", "forward_window_start",
     "forward_window_min_length", "forward_kill_condition",
     "model_prior_provenance", "published_signal_haircut_applied",
+    # C-001 §3.0 / H-3a: a declared denominator that is not sealed is not
+    # a denominator (PREREG-001 H1). Binding means it is hashed into
+    # `prereg_sha256`, shadow-copied into `hypothesis_sealed`, and a
+    # change to it after seal is an amendment, not an update.
+    "n_inherited",
 ]
 
 _HOLDOUT_CLASSIFICATIONS = {"FORWARD", "HISTORICAL"}
@@ -104,8 +110,16 @@ def _binding_hash(fields: dict) -> str:
 
 @dataclass
 class FamilyStats:
+    """The registry contract fixed by Validation, Gate 0 001 §3.0.
+
+    ``n_trials`` is THE denominator every Part IV statistic consumes.
+    ``n_inherited`` and ``n_logged`` are its two components, reported
+    separately so a report can never launder an [inferred] declaration
+    into a bare, [measured]-looking integer (H-12)."""
     family: str
-    n_trials: int
+    n_trials: int       # = n_inherited + n_logged
+    n_inherited: int    # = Sum n_inherited(chain) — declared, phantom, no returns
+    n_logged: int        # = Sum COUNT(*) trials(chain) — real, with returns
     trial_budget: int
     sr_period_std: float | None
     sr_period_mean: float | None
@@ -123,6 +137,20 @@ class PreRegistrationAmendedError(RuntimeError):
     successor family via ``predecessor_family``, not by re-registering the
     same family. Byte-identical re-registration remains idempotent and
     does not raise (see P3's second branch)."""
+
+
+class InheritedCountDoubleCountError(ValueError):
+    """H-5b / D-011 §3 (I-031): a successor's declared ``n_inherited`` is
+    >= its predecessor chain's already-summed ``n_trials``.
+
+    ``family_stats`` sums the predecessor chain transitively (F4 / H-5a).
+    A successor that declares ``n_inherited`` at or above that running
+    total is re-declaring trials the chain summation already counts —
+    the exact double-count the naive reading of KC-001 clause 3 produces
+    (F-5 / I-031), which the Principal's D-011 restatement assigns to
+    "the registry's transitive summation" alone. A genuine new search
+    larger than the entire predecessor chain is a Validation escalation,
+    not a silent registration — this exception IS that escalation path."""
 
 
 class TrialRegistry:
@@ -151,6 +179,11 @@ class TrialRegistry:
             ("forward_kill_condition", "TEXT"),
             ("model_prior_provenance", "TEXT"),
             ("published_signal_haircut_applied", "REAL"),
+            # I-027 / C-001 §3.0 / H1: the declared-but-unenforced
+            # denominator. `book/registry.db` predates this column too
+            # (H-1) — CREATE TABLE IF NOT EXISTS will not add it to an
+            # existing table, only ALTER TABLE does.
+            ("n_inherited", "INTEGER NOT NULL DEFAULT 0"),
         ]
         changed = False
         for name, sqltype in additions:
@@ -179,6 +212,7 @@ class TrialRegistry:
         forward_kill_condition: str | None = None,
         model_prior_provenance: str | None = None,
         published_signal_haircut_applied: float | None = None,
+        n_inherited: int = 0,
     ) -> None:
         """Gate 0 pre-registration, with sealed integrity (Acceptance 001
         P-series, closing the D-006 rider's gap: "the pre-registration is
@@ -211,6 +245,19 @@ class TrialRegistry:
         Byte-identical re-registration remains idempotent and logs
         nothing — this is what keeps the method safe to call unconditionally
         at the top of a research script.
+
+        ``n_inherited`` (I-027 / C-001 §3.0; H1-H14): the prior search
+        attributable to THIS family and not already carried by its
+        predecessor chain — declared, phantom, no return series (H-6b:
+        none may be synthesised to compensate). Must be a non-negative
+        int (H2). Binding (H-3a): sealed, hashed, and an amendment
+        attempt if changed post-seal (H-3b). ``family_stats`` sums it
+        transitively across ``predecessor_family`` (H-5a); a successor
+        declaring ``n_inherited`` at or above its predecessor chain's own
+        running total double-counts under that summation and is refused
+        with :class:`InheritedCountDoubleCountError` (H-5b) — the
+        Principal's D-011 non-overlap restatement of KC-001 clause 3
+        (I-031), mechanised.
         """
         for name, val in [
             ("statement", statement),
@@ -224,6 +271,41 @@ class TrialRegistry:
                 f"predecessor_family '{predecessor_family}' is not itself "
                 "a registered hypothesis"
             )
+        # H2: n_inherited must be a non-negative int. `isinstance(x, int)`
+        # already excludes float (3.7 is refused) but not bool (a bool IS
+        # an int in Python), so bool is excluded explicitly.
+        if not isinstance(n_inherited, int) or isinstance(n_inherited, bool):
+            raise ValueError(
+                f"n_inherited must be a non-negative int, got {n_inherited!r}"
+            )
+        if n_inherited < 0:
+            raise ValueError(
+                f"n_inherited must be >= 0, got {n_inherited}"
+            )
+        # H-5b / D-011 §3 (I-031): the non-overlap rule. `family_stats`
+        # sums the predecessor chain transitively, so a successor's own
+        # `n_inherited` must be strictly less than the predecessor
+        # chain's already-summed `n_trials` — otherwise the chain is
+        # counted once by summation and again by the successor's own
+        # declaration. Guarded on chain_total > 0 so an ordinary
+        # successor of a predecessor that has itself run/declared
+        # nothing (chain_total == 0) is not blocked from declaring its
+        # own honest n_inherited (including 0, the common case).
+        if predecessor_family is not None:
+            chain_total = self.family_stats(predecessor_family).n_trials
+            if chain_total > 0 and n_inherited >= chain_total:
+                raise InheritedCountDoubleCountError(
+                    f"n_inherited={n_inherited} declared for family "
+                    f"'{family}' is >= predecessor chain total "
+                    f"n_trials={chain_total} for '{predecessor_family}'. "
+                    "family_stats sums the predecessor chain "
+                    "transitively; declaring n_inherited at or above the "
+                    "chain's own total double-counts it (D-011 §3 / "
+                    "I-031, the non-overlap reading of KC-001 clause 3). "
+                    "A genuine new search larger than the entire chain "
+                    "is a Validation escalation, not a silent "
+                    "registration."
+                )
         if holdout_classification is not None and holdout_classification not in _HOLDOUT_CLASSIFICATIONS:
             raise ValueError(
                 f"holdout_classification must be one of {_HOLDOUT_CLASSIFICATIONS} "
@@ -262,6 +344,7 @@ class TrialRegistry:
                 None if published_signal_haircut_applied is None
                 else float(published_signal_haircut_applied)
             ),
+            "n_inherited": int(n_inherited),
         }
 
         existing = self.hypothesis(family)
@@ -292,8 +375,8 @@ class TrialRegistry:
             "created_utc, predecessor_family, holdout_classification, "
             "forward_window_start, forward_window_min_length, "
             "forward_kill_condition, model_prior_provenance, "
-            "published_signal_haircut_applied) "
-            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            "published_signal_haircut_applied, n_inherited) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (
                 family, statement, mechanism, falsifier, universe, horizon,
                 success_criteria, int(trial_budget), time.time(),
@@ -301,6 +384,7 @@ class TrialRegistry:
                 forward_window_start, proposed["forward_window_min_length"],
                 forward_kill_condition, model_prior_provenance,
                 proposed["published_signal_haircut_applied"],
+                proposed["n_inherited"],
             ),
         )
         self.log_event(
@@ -426,6 +510,16 @@ class TrialRegistry:
         return int(cur.lastrowid)
 
     def family_stats(self, family: str) -> FamilyStats:
+        """C-001 §3.0: n_trials = Sum n_inherited(chain) + Sum logged(chain).
+
+        n_inherited sums each family's OWN declared seed transitively
+        across the predecessor chain (H-5a) — never re-declared by a
+        successor (H-5b enforces this at registration time). n_logged is
+        the real, run-trial count with a return series; sigma_SR/mean/
+        best are computed from those real trials ONLY (H-6a/H-6b/H-6c) —
+        no phantom row is ever synthesised for a seeded family, so DSR's
+        cross-sectional dispersion input is never corrupted by a
+        fabricated series."""
         hyp = self.hypothesis(family)
         budget = int(hyp["trial_budget"]) if hyp else 0
         families = [family] + self.predecessor_chain(family)
@@ -435,10 +529,15 @@ class TrialRegistry:
             families,
         )
         srs = [row[0] for row in cur.fetchall() if row[0] is not None]
-        n = self.conn.execute(
+        n_logged = self.conn.execute(
             f"SELECT COUNT(*) FROM trials WHERE family IN ({placeholders})",
             families,
         ).fetchone()[0]
+        n_inherited = 0
+        for fam_name in families:
+            fam_hyp = self.hypothesis(fam_name)
+            if fam_hyp is not None:
+                n_inherited += int(fam_hyp["n_inherited"] or 0)
         if len(srs) >= 2:
             arr = np.array(srs)
             std, mean, best = (
@@ -448,7 +547,10 @@ class TrialRegistry:
             )
         else:
             std = mean = best = None
-        return FamilyStats(family, int(n), budget, std, mean, best)
+        n_logged = int(n_logged)
+        n_trials = n_inherited + n_logged
+        return FamilyStats(family, n_trials, n_inherited, n_logged, budget,
+                           std, mean, best)
 
     def returns_matrix(self, family: str) -> np.ndarray:
         """(T, N) matrix of all logged trial return series, truncated to

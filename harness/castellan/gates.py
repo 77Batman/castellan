@@ -86,17 +86,37 @@ class ValidationReport:
     prereg_sha256: str | None = None
     # P8: predecessor chain's sealed prereg hashes, family -> sha256.
     predecessor_prereg_sha256: dict[str, str] | None = None
+    # C-001 §3.0 / H-12: the declared/logged decomposition of n_trials,
+    # so the report can never render a bare N that launders an
+    # [inferred] declaration (n_inherited) into a [measured]-looking
+    # integer. 0 / None means "this family has no seeding" and the
+    # original bare rendering is used unchanged (H-13).
+    n_inherited: int = 0
+    n_logged: int | None = None
 
     def to_json(self) -> str:
         d = asdict(self)
         return json.dumps(d, indent=2, default=str)
 
     def to_markdown(self) -> str:
+        # H-12: a seeded family renders the full decomposition on the
+        # report's face — total, declared-inherited, and logged, all
+        # three visible — rather than a bare N that reads as N observed
+        # trials when most of it is an [inferred] declaration (house
+        # rule 6). An unseeded family (n_inherited == 0) keeps the
+        # original bare rendering, unchanged (H-13).
+        if self.n_inherited:
+            n_display = (
+                f"**{self.n_trials:,}** ({self.n_inherited:,} declared "
+                f"inherited [inferred, D-009] + {self.n_logged:,} logged)"
+            )
+        else:
+            n_display = f"**{self.n_trials}**"
         lines = [
             f"# Validation Report — {self.strategy}",
             "",
             f"Family: `{self.family}` · Evaluated (UTC): {time.strftime('%Y-%m-%d %H:%M', time.gmtime(self.date_utc))}",
-            f"Trial count N (registry): **{self.n_trials}** / budget {self.trial_budget} · "
+            f"Trial count N (registry): {n_display} / budget {self.trial_budget} · "
             f"cross-sectional trial SR std (per-period): "
             f"{self.sr_std_period_trials if self.sr_std_period_trials is not None else 'UNAVAILABLE'}",
             f"Evaluated return series sha256: `{self.returns_sha256[:16]}…`",
@@ -199,14 +219,34 @@ def evaluate_gate1(
     criteria: list[Criterion] = []
 
     # -- multiple-testing inputs from the registry --------------------
-    n_ok = fam.n_trials >= 1 and fam.sr_period_std is not None
-    if fam.n_trials == 0:
+    # H-10 / H-11 (Gate 0 001 §3, F-3/F-4): both guards below key on
+    # `n_logged` — the real, run-trial count — not `n_trials`, which
+    # after seeding (H1-H2) includes the declared `n_inherited` and no
+    # longer means "trials this family has actually run." Keying on
+    # n_trials here would make (a) every seeded family read OVER BUDGET
+    # on seeding alone (the budget governs the firm's post-seal search;
+    # inherited trials are not post-seal search), and (b) a seeded
+    # family with zero logged trials never reach the "run nothing"
+    # guard, silently converting "this family has never run anything"
+    # into a fully populated denominator (I-014's shape).
+    n_ok = fam.n_logged >= 1 and fam.sr_period_std is not None
+    if fam.n_logged == 0:
+        if fam.n_inherited:
+            note = (
+                f"No trials logged for this family (logged=0); "
+                f"n_inherited={fam.n_inherited} is a declared seed, not "
+                "a substitute for a real, run trial — seeding must not "
+                "paper over a family that has run nothing (H-11)."
+            )
+        else:
+            note = ("No trials logged for this family. If N is "
+                    "unreconstructable, the verdict is "
+                    "INSUFFICIENT-DATA, never PASS.")
         criteria.append(Criterion(
-            "Trial count N (registry)", 0, ">= 1 logged trial", INSUFF,
-            "No trials logged for this family. If N is unreconstructable, "
-            "the verdict is INSUFFICIENT-DATA, never PASS."))
+            "Trial count N (registry)", fam.n_trials, ">= 1 logged trial",
+            INSUFF, note))
     else:
-        over = fam.trial_budget and fam.n_trials > fam.trial_budget
+        over = fam.trial_budget and fam.n_logged > fam.trial_budget
         criteria.append(_crit(
             "Trial count N (registry)", fam.n_trials,
             f"logged; budget {fam.trial_budget}", True,
@@ -235,9 +275,23 @@ def evaluate_gate1(
     M = registry.returns_matrix(family)
     if M.size and M.shape[1] >= 2 and M.shape[0] >= CSCV_PARTITIONS_S * 2:
         pbo = stats.probability_backtest_overfitting(M, CSCV_PARTITIONS_S)
+        # H-9: CSCV requires a return series; phantom (seeded) trials
+        # have none, so PBO is structurally undeflated by n_inherited —
+        # a permanent limit of the seeding fix, not a bug. Stated on the
+        # criterion's face whenever this family is seeded, so an N in
+        # the tens of thousands next to a PBO computed on a handful of
+        # real columns cannot mislead by omission.
+        pbo_note = ""
+        if fam.n_inherited:
+            pbo_note = (
+                f"Computed on {M.shape[1]} logged trial(s) with real "
+                f"return series; the {fam.n_inherited:,} declared "
+                "inherited trial(s) have no return series and "
+                "contribute none to this criterion."
+            )
         criteria.append(_crit(
             f"PBO (CSCV, S={CSCV_PARTITIONS_S}, {pbo.n_combinations} splits)",
-            pbo.pbo, f"<= {PBO_MAX_PAPER}", pbo.pbo <= PBO_MAX_PAPER))
+            pbo.pbo, f"<= {PBO_MAX_PAPER}", pbo.pbo <= PBO_MAX_PAPER, pbo_note))
     else:
         criteria.append(Criterion(
             "PBO (CSCV)", None, f"<= {PBO_MAX_PAPER}", INSUFF,
@@ -522,6 +576,8 @@ def evaluate_gate1(
         holdout_classification=holdout_classification,
         prereg_sha256=prereg_sha256,
         predecessor_prereg_sha256=predecessor_prereg_sha256 or None,
+        n_inherited=fam.n_inherited,
+        n_logged=fam.n_logged,
     )
     registry.log_event("gate1_verdict", family, {
         "strategy": strategy, "overall": overall,
