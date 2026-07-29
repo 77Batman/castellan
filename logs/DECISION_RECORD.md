@@ -450,3 +450,91 @@ preceding update. Both were wrong. Recount from the dispatch ledger: **Opus 5 us
 harmless slip — it would have led the CIO to refuse work the firm could afford.
 
 **Review date:** sprint close, 2026-08-11.
+
+---
+
+## D-011 · 2026-07-29 · Principal directive — nine dispositions
+
+**1 · Reallocation APPROVED.** The **CRO's Sprint 1 Opus unit moves to Validation**
+to specify the I-034 cost repair. Principal's rationale, recorded: zero positions,
+zero risk content, second Risk meeting already cut. **The Devil's Advocate's Gate 1
+reserve is deliberately untouched.** Opus allocation stands at 10: Validation 5,
+Director of Research 3, Devil's Advocate 2, CRO 0.
+
+**2 · I-034 — design input submitted to Validation as NON-BINDING, with its conflict
+declared by its author.** The Principal notes he wrote the harness and is therefore
+proposing the fix to his own defect. His direction:
+
+> Funding is a **signed asset cash flow, not a cost.** Move it out of `CostModel`
+> into **engine P&L accrual** — per bar, from the realized funding series in
+> `pit.db`, **signed by position**, so a short perp *receives* when funding is
+> positive. The cost library keeps genuine frictions only. **Stress semantics split:**
+> `scaled(m)` applies to frictions; **carry is scenario-shifted, explicitly including
+> sign inversion, because doubling a receipt is not a stress.**
+
+**"If Validation finds a better construction, its ruling governs."** The Director of
+Research's refusal of the synthetic-leg workaround is **endorsed**.
+
+**3 · KC-001 clause 3 RESTATED AND SIGNED** (I-031). The Principal, as the signing
+sponsor, replaces the clause with:
+
+> *"Any restatement of this hypothesis after the kill must register as a new family
+> declaring this family as `predecessor_family`. Inherited `N` is computed solely by
+> the registry's transitive summation; this clause adds no separate count."*
+
+**One counting path, owned by the code.** All other clauses — **including the
+silence-kill** — unchanged.
+
+**4 · F-001 redesign DEFERRED, not funded.** *"The family cannot reach a gate; a
+repaired falsifier for it is a well-made key to a bricked door."* The defect is to be
+recorded so the debt stays visible, and **redesign is a precondition of revival** if
+the span matures into admissibility.
+
+> **CIO note on executing this:** the registry **cannot** carry the record — Gate 0
+> 001 refused the seal, so no family exists in `book/registry.db` (0 hypotheses). The
+> debt is therefore carried by **I-029** and by this entry, and it must be attached to
+> the family at registration if forward-lag is ever revived. Recorded rather than
+> silently substituted.
+
+**Companion FUNDED (Sonnet):** recurring capture of **live Polymarket `/book`
+snapshots** into the PIT store. *"Historical depth cannot be reconstructed, but it can
+be accumulated prospectively — this is the only path by which T4 and quote-liveness
+ever become measurable, and it should be running before, not after, the span bar
+clears in October."* **Scoped as firm data infrastructure, not family research.**
+
+**5 · H-series IMPLEMENTED NOW.** One Sonnet unit, **Validation's pre-authored
+negative tests binding.** Principal's rationale: the seeded-`N` mechanism is **firm
+infrastructure under C-001, not forward-lag's property** — *"shelving it because its
+first customer died is the I-019 shape recurring."*
+
+**6 · I-032 ADOPTED, with a mechanism.** C-001's conditions already force every
+forward test to be logged, so **the registry maintains a firm-wide forward-test
+ledger**, and the Monthly Letter carries a standing line: **cumulative Σα across all
+forward tests ever run, reported as expected false positives to date.** When it
+approaches 1, **the firm says so in those words.** A formal firm-level α budget is
+**deferred to the Quarterly Review** as a possible Charter amendment — *"do not
+improvise one."*
+
+**7 · PREREG-002 — seal only once the I-034 repair lands green.** Sequence:
+Validation specifies → Seat 9 implements against the pre-authored tests → suite green
+→ M1 runs → seal. **Ruling 003's lesson stands: a delayed seal is cheaper than a
+defective one.** The declared-menu construction (**`N` = 86, budget 80, 2-parameter
+grid**) is **approved as drafted**. C-001's five conditions attach to its forward test
+at sealing, with **statistic and α named now**.
+
+**8 · Saturday's Monthly Letter — contents confirmed.** Throughput **0/2** with the
+Devil's Advocate's honest framing; **origin ratio at its measured value**; the
+**`N`=86 versus `N`=27,000 counterfactual as the sprint's central exhibit**; **I-034
+reported as the harness's most consequential defect, caught before it killed a viable
+family**; the forward-test ledger's first entry (**Σα = 0**); and **C-001 recorded as
+founding precedent on I-011** — *the cure for unreconstructable search history is the
+freeze plus forward data, not heroic `N` estimates.*
+
+**9 · Principal's standing note, recorded verbatim because it is the firm's own
+scorecard:**
+
+> *"This sprint the firm rejected my proposal, killed the CIO's narrative, and
+> defunded my flagship family — each correctly. That record is why PREREG-002's
+> eventual verdict, whichever way it goes, will mean something. Maintain the ratio."*
+
+**Review date:** sprint close, 2026-08-11.
