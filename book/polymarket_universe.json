@@ -100,8 +100,9 @@
         "Detroit Tigers": "16593177791186182517651607371136063394987904637251073476080399235980342419714"
       },
       "tier": "thin",
-      "status": "active",
-      "first_tracked_utc": 1785347127.168706
+      "status": "resolved",
+      "first_tracked_utc": 1785347127.168706,
+      "resolved_detected_utc": 1785362051.476594
     },
     "0x6342585b31e31de313465d61c218a2ecfaaa996f6e8e9a75575a44081f286914": {
       "condition_id": "0x6342585b31e31de313465d61c218a2ecfaaa996f6e8e9a75575a44081f286914",
@@ -114,8 +115,9 @@
         "Under": "80781824236731068245945141482867273087207626704675002823851515418099977350682"
       },
       "tier": "thin",
-      "status": "active",
-      "first_tracked_utc": 1785347127.1687071
+      "status": "resolved",
+      "first_tracked_utc": 1785347127.1687071,
+      "resolved_detected_utc": 1785362051.476597
     },
     "0x0863c067f34ecf43459e12dadea0fd706e5305ffd6574f05e8f827073dcfa841": {
       "condition_id": "0x0863c067f34ecf43459e12dadea0fd706e5305ffd6574f05e8f827073dcfa841",
@@ -143,8 +145,9 @@
         "Washington Nationals": "21302144491760263582933548980696009133364587615014470941673524511560503953646"
       },
       "tier": "thin",
-      "status": "active",
-      "first_tracked_utc": 1785347127.1687071
+      "status": "resolved",
+      "first_tracked_utc": 1785347127.1687071,
+      "resolved_detected_utc": 1785362051.476598
     },
     "0xeb24a4ebd21a1351b50151b8213cea02ea0e822f5aee2c4d5d72c452235db1b0": {
       "condition_id": "0xeb24a4ebd21a1351b50151b8213cea02ea0e822f5aee2c4d5d72c452235db1b0",
@@ -214,8 +217,9 @@
         "Stefanos Tsitsipas": "24166291454386213594141597280566368504655685572084781413118314853946110344571"
       },
       "tier": "liquid",
-      "status": "active",
-      "first_tracked_utc": 1785355457.5442822
+      "status": "resolved",
+      "first_tracked_utc": 1785355457.5442822,
+      "resolved_detected_utc": 1785362051.4766002
     },
     "0x7d9928e23aefb2209696048829b614f49e387d5a77327aa887d0724952fd1156": {
       "condition_id": "0x7d9928e23aefb2209696048829b614f49e387d5a77327aa887d0724952fd1156",
@@ -244,7 +248,49 @@
       "tier": "liquid",
       "status": "active",
       "first_tracked_utc": 1785361150.0556722
+    },
+    "0x876506d8b2bd7a0d3fa4fe18c024eee6e1dd81ee24c26795dadd6cfe4a7b5d0d": {
+      "condition_id": "0x876506d8b2bd7a0d3fa4fe18c024eee6e1dd81ee24c26795dadd6cfe4a7b5d0d",
+      "question": "Will the Fed increase interest rates by 25 bps after the September 2026 meeting?",
+      "slug": "will-the-fed-increase-interest-rates-by-25-bps-after-the-september-2026-meeting-649",
+      "volume24hr": 281305.69583499996,
+      "end_date": "2026-09-16",
+      "tokens": {
+        "Yes": "63842529068710005716169325380315470359047749786610778647370693404952498013178",
+        "No": "2881957189963819690709899387312951271986076905757701114514025622922000576600"
+      },
+      "tier": "thin",
+      "status": "active",
+      "first_tracked_utc": 1785362051.739297
+    },
+    "0x19760fc3a538628e1597c7181c2578e9acd99933aa61694c74432eee534939ef": {
+      "condition_id": "0x19760fc3a538628e1597c7181c2578e9acd99933aa61694c74432eee534939ef",
+      "question": "Will the price of Bitcoin be above $64,000 on July 29?",
+      "slug": "bitcoin-above-64k-on-july-29-2026",
+      "volume24hr": 271348.66581800004,
+      "end_date": "2026-07-29",
+      "tokens": {
+        "Yes": "38917802013591517547220715000590166211044417763855316497240740673043655073469",
+        "No": "51267062251560817207098332467530677863898622748963484735709679405829292177649"
+      },
+      "tier": "thin",
+      "status": "active",
+      "first_tracked_utc": 1785362051.7393012
+    },
+    "0xc6c36759422e7f0d17b8ce3ee1503561f48584e9428651f143474afea6a09d5b": {
+      "condition_id": "0xc6c36759422e7f0d17b8ce3ee1503561f48584e9428651f143474afea6a09d5b",
+      "question": "Mubadala Citi DC Open: Taylor Fritz vs Kamil Majchrzak",
+      "slug": "atp-fritz-majchrz-2026-07-29",
+      "volume24hr": 257553.62986100014,
+      "end_date": "2026-08-05",
+      "tokens": {
+        "Taylor Fritz": "24122396035041156906445140936423901400487918795020810845346893987094311992945",
+        "Kamil Majchrzak": "84259120390220475027346321082258717544635474503217272238380373766565514937805"
+      },
+      "tier": "thin",
+      "status": "active",
+      "first_tracked_utc": 1785362051.739302
     }
   },
-  "last_refreshed_utc": 1785361150.055677
+  "last_refreshed_utc": 1785362051.7393038
 }
