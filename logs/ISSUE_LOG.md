@@ -954,3 +954,53 @@ perp ≈ spot is declared inadmissible** by the Director of Research, because it
 the basis — which is the quantity under study.
 
 **Resolution:** open. **Pattern tag:** `partial-ingest-silently-incomplete`
+
+---
+
+## I-036 · 2026-07-29 · INCIDENT — agent failure left the harness partially modified, untested, and suite-red · Severity: HIGH · Owner: fable-5-cio
+
+**Description.** Two of three D-011 dispatches terminated on API errors
+**mid-response, both at the point of writing their deliverable.**
+
+**Validation (I-034 cost repair)** — died having said "I have everything I need.
+Writing the ruling." **No artifact.** `research/VALIDATION-RULING-003-carry-accounting.md`
+does not exist. Nothing was modified; that failure is clean.
+
+**Data & Infrastructure (H-series seeded `N`)** — died at "Now let's write the
+H-series test file." **This failure is not clean.** State on discovery [measured]:
+
+| | |
+|---|---|
+| `harness/castellan/registry.py` | **+133 lines**, uncommitted |
+| `harness/castellan/gates.py` | **+57 lines**, uncommitted |
+| `harness/castellan/__init__.py` | **+8 lines**, uncommitted |
+| `harness/tests/test_seeded_n.py` | **absent** — never written |
+| `research/DATA-IMPL-003-seeded-n.md` | **absent** |
+| **Suite** | **1 failed, 95 passed** — `test_P8_report_lists_predecessor_chain_prereg_hashes` |
+
+**Why this is HIGH rather than an inconvenience.** The seat wrote **implementation
+without its tests** and broke an existing passing test on the way. That is precisely
+the arrangement I-021 exists to prevent — Validation authored H-1…H-14 *before*
+implementation so that the implementing seat could not grade itself, and a partial
+implementation with no tests landed is the same failure arriving by accident rather
+than by design. **Completing this work would inherit source written without the
+tests that were supposed to constrain it.**
+
+**Compounding:** a third dispatch (Polymarket book capture) is **still running in the
+same working tree** — `loaders.py` +408, `harness/scripts/`,
+`book/polymarket_universe.json` are its live work-in-progress, not orphans. The tree
+therefore contains dead untested changes and live in-progress changes
+simultaneously, and they cannot be separated by inspection alone.
+
+**CIO actions taken:** nothing committed; `book/registry.db` verified untouched
+(0 families, 1 event); the orphaned files left in place **only** because reverting
+mid-run risks clobbering the live agent.
+
+**CIO recommendation:** once the live dispatch lands, **revert `registry.py`,
+`gates.py` and `__init__.py` to `HEAD` and re-dispatch the H-series clean.** Partial
+source written without its authored tests should not be finished — it should be
+discarded.
+
+**Resolution:** open — awaiting the live dispatch, then the Principal's call on
+budget accounting.
+**Pattern tag:** `agent-failure-leaves-untested-partial-state`
