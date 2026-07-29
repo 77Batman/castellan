@@ -1134,3 +1134,48 @@ it.
 **Resolution:** closed on merge; the divergence itself is resolved, the process
 lesson stands.
 **Pattern tag:** `revert-does-not-undo-side-effects`
+
+---
+
+## I-042 · 2026-07-30 · Mean basis negative while mean funding strongly positive — unexplained · Severity: MEDIUM · Owner: quant-validation → director-of-research
+
+**Description.** Surfaced by Data & Infrastructure in `DATA-INGEST-002`, **flagged not
+resolved**, which is the correct handling.
+
+Measured perp-minus-spot basis is slightly **negative** on average (BTC −1.58 bps,
+ETH −0.95, SOL −3.18) while realized funding over the same span is strongly
+**positive** (BTC +11.86%/yr, ETH +14.07%, SOL +0.10%). Naively these should agree in
+sign: a perp trading above spot is the usual accompaniment to longs paying funding.
+
+Seat 9's hypothesis — **the fixed interest-rate component in Binance's funding
+formula**, which decouples the premium from the funding rate — is `[assumed]`, **not
+verified against vendor documentation.**
+
+**Why it is logged rather than left in the deliverable.** PREREG-002's strategy is a
+**basis-and-carry** family. If the relationship between the basis and the funding rate
+is mis-specified, the core quantity under study is mis-specified, and the error would
+be invisible in a backtest that simply consumed both series. This must be resolved
+**before the basis leg is interpreted**, not after a number is produced from it.
+
+**Resolution:** open — blocks interpretation of the basis leg, not the ingest.
+**Pattern tag:** `two-series-disagree-in-sign-unexplained`
+
+---
+
+## I-043 · 2026-07-30 · Pre-declared restatement — today's open candle · Severity: LOW · Owner: head-of-data-infra
+
+**Description.** `DATA-INGEST-002` ran at 19:38Z against a cutoff bound of
+`2026-07-29T23:59:59Z`, so the bound did no truncation and **every symbol's last
+ingested bar is today's still-open daily candle.**
+
+It is inside the cutoff and **not a leak**. It *is* a provisional value that will
+legitimately restate itself through `PITStore`'s normal versioning the first time
+anyone re-ingests after `2026-07-30T00:00Z`.
+
+**Recorded so that the future restatement reads as expected housekeeping rather than
+as an incident.** Charter Seat 9 requires restatement incidents to be escalated to
+Validation; this one is pre-declared, and pre-declaring an expected anomaly is
+cheaper than investigating it twice.
+
+**Resolution:** self-clearing on the next ingest.
+**Pattern tag:** `pre-declared-expected-restatement`

@@ -167,9 +167,24 @@
         "ZYB Esport": "11950315022184991618449167467401242511648474846744526366438611754084658573200"
       },
       "tier": "thin",
+      "status": "resolved",
+      "first_tracked_utc": 1785351844.716588,
+      "resolved_detected_utc": 1785353651.616232
+    },
+    "0x7162118722a6abe965c964e8c694ff0f232221d9bb2263bd92e5902633381893": {
+      "condition_id": "0x7162118722a6abe965c964e8c694ff0f232221d9bb2263bd92e5902633381893",
+      "question": "Kharg Island no longer under Iranian control by July 31?",
+      "slug": "kharg-island-no-longer-under-iranian-control-by-july-31",
+      "volume24hr": 262670.146331,
+      "end_date": "2026-06-30",
+      "tokens": {
+        "Yes": "61122849617506817837555062824416940793332636909568241444602408963781913414334",
+        "No": "46234664383113214034787313853742859435218314985155582830237659971348787896010"
+      },
+      "tier": "thin",
       "status": "active",
-      "first_tracked_utc": 1785351844.716588
+      "first_tracked_utc": 1785353652.827052
     }
   },
-  "last_refreshed_utc": 1785352747.21753
+  "last_refreshed_utc": 1785353652.8270552
 }
