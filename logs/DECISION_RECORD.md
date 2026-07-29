@@ -311,3 +311,88 @@ reserved for the mandatory Red-Team Memo at Gate 1 (Charter Seat 5 — a packet
 without one is deferred, not heard).
 
 **Review date:** sprint close, 2026-08-11.
+
+---
+
+## D-009 · 2026-07-28 · Principal's disposition of Red-Team 001
+
+**A — Order-book availability probe: APPROVED, run this week.** Dispatched to Data &
+Infrastructure. Step 1 of Seat 9's own accepted procedure, promoted to a standalone
+task because the Devil's Advocate identified it as strictly prior and nearly free and
+nobody had recognised it as a decision point. A negative result makes Charter §4.4's
+capacity criterion **unevaluable** — INSUFFICIENT-DATA, never PASS — and Gate 1
+unreachable before a row is ingested, potentially mooting I-004.
+
+**B — `N_inherited` DECLARED at the grid upper bound.**
+
+> `5⁵ = 3,125` (five tuned parameters × five values, per I-002) **× regime-candidate
+> factor 10** = **`N_inherited` = 31,250.** The registry opens **seeded at that
+> floor**, not zero.
+
+The Principal fixed the grid term and delegated the regime-candidate factor to the
+CIO with the single instruction that it be honest. **CIO's factor: 10** [inferred] —
+the menu of conventional crypto and event-market regime boundaries from which the
+prior work's single exclusion was plausibly selected: COVID, the 2021 bull,
+May-2021, LUNA/UST, FTX, the 2022 bear, election cycles, funding-sign regimes,
+post-ETF-approval, early-venue illiquidity.
+
+**Readings considered and why 10 was chosen.** Choosing one of K candidates gives a
+factor of K. The any-subset reading gives 2^K — at K=10 that is ≈3.2M, **rejected as
+overstating realistic human search**. The CIO notes explicitly that erring *low* here
+is the sycophantic direction and erring *high* is the conservative one, and that the
+factor was not selected to make the family viable.
+
+**Calibration** [measured]: √(2·ln 31,250) ≈ **4.55·σ_SR** loose bound, against
+Charter §4.1's table value of 3.86·σ_SR at N = 10,000. This is a punishing floor and
+is meant to be.
+
+**Revision rule:** downward revision requires **reconstructed evidence of the actual
+candidates considered** — not argument — and every revision is logged.
+
+**Companion question routed to Validation with the same independence instrumentation
+as Rulings 001 and 002** (the Principal's direction): *does `N_inherited` deflate the
+forward window, given a sealed pre-registration — or does the forward test count from
+`C` as pre-registered trials only?* The Principal's own assessment, which the CIO
+shares: **the family's admissibility likely turns on this.** The standard argument is
+that a single pre-specified confirmatory test on genuinely unseen data is `N = 1` for
+that test, and that multiple-testing correction attaches to the in-sample selection
+rather than to the confirmatory test that follows. Validation rules; it is folded
+into the fourth unit alongside Gate 0 intake, so no additional Opus is required.
+
+**C — KC-001 SIGNED AS WRITTEN, silence-kill included.** The sponsor is the
+Principal. Reproduced verbatim into the pre-registration. The Devil's Advocate
+predicted the silence clause would be the one someone tried to soften; it has not
+been softened and will not be.
+
+**Principal's additions:**
+
+1. **Pod B's pre-registration states intended initial allocation honestly — order
+   tens of thousands, not $2M.** This **dissolves the persistence dilemma**: §4.4
+   requires capacity ≥ 10× *intended initial allocation*, so the Devil's Advocate's
+   $20M figure assumed the full pod. At ~$50k the requirement is ~$500k, and a venue
+   can be simultaneously too small for a serious firm and large enough to clear that.
+   **The cost, which the pre-registration must state rather than discover later:** a
+   $50k strategy in a $10M book is ~0.5% of capital, so **even an excellent Sharpe
+   there is close to immaterial to firm P&L.** The family survives on admissibility
+   and loses on materiality. That trade is now explicit.
+2. **I-024 named as a binding confound** in the pre-registration — bar alignment
+   specified, out-of-session reference bars **dropped not forward-filled**, and a
+   stated method for distinguishing a session-gap artifact from a genuine lag. A
+   design that cannot distinguish them is not admissible.
+3. **I-023's fix goes on the Sprint 2 harness list, Validation owning the spec:**
+   price-dependent binary-contract costs, plus a resolution-risk field on
+   `CostModel`. Until then no Polymarket net-P&L claim stands.
+4. **I-025 acknowledged and acted on:** the Sprint 2 agenda **must contain
+   Director-originated hypotheses**, and the **origin-ratio metric reports in every
+   Monthly Letter starting Saturday 2026-08-01.** Today's value: **4 of 4 = 100%
+   Principal-originated.**
+
+**Sequencing decision (CIO, operational).** The pre-registration is drafted **now**,
+in parallel with the probe, and sealed after Validation's Gate 0 intake. Rationale:
+`C` is the seal date (D-007), so every day of delay is a day the forward window does
+not accrue and KC-001's clock does not start. The probe and the companion ruling
+determine whether Gate 1 is *reachable*; neither changes what the hypothesis *is*.
+Sealing early is therefore strictly better, provided nothing is added after — which
+P7 enforces.
+
+**Review date:** sprint close, 2026-08-11.
