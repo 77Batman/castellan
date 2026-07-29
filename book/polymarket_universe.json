@@ -1,0 +1,145 @@
+{
+  "markets": {
+    "0x4ede078cae84a5877ac32d7fb48811e5c23549a1904b7df06ff7935c6d79d831": {
+      "condition_id": "0x4ede078cae84a5877ac32d7fb48811e5c23549a1904b7df06ff7935c6d79d831",
+      "question": "Will the Fed decrease interest rates by 25 bps after the July 2026 meeting?",
+      "slug": "will-the-fed-decrease-interest-rates-by-25-bps-after-the-july-2026-meeting",
+      "volume24hr": 8257718.406435999,
+      "end_date": "2026-07-29",
+      "tokens": {
+        "Yes": "107111506004559425167535337910569809007100298896139468418632748246491535011700",
+        "No": "90713175285238837229141362456380660699457701142142655731293716395090014512187"
+      },
+      "tier": "liquid",
+      "status": "active",
+      "first_tracked_utc": 1785347127.168702
+    },
+    "0x72af7d77091bd2209f78a45a13876beefc734768177dbc0c8171f515ba1a52a7": {
+      "condition_id": "0x72af7d77091bd2209f78a45a13876beefc734768177dbc0c8171f515ba1a52a7",
+      "question": "Will Berhanu Nega be the next Prime Minister of Ethiopia?",
+      "slug": "will-berhanu-nega-be-the-next-prime-minister-of-ethiopia",
+      "volume24hr": 6098222.23,
+      "end_date": "2026-06-01",
+      "tokens": {
+        "Yes": "9700525976462326306802795530553376348116310383328382626789994562350229436531",
+        "No": "9684129004308889646536044141330168144866101175836994432446145127310478131443"
+      },
+      "tier": "liquid",
+      "status": "active",
+      "first_tracked_utc": 1785347127.168704
+    },
+    "0x8bf1c1536ecb1c08fe13c6b71e8ab1f58bf3461c4cb79f5f1679f869a06aef86": {
+      "condition_id": "0x8bf1c1536ecb1c08fe13c6b71e8ab1f58bf3461c4cb79f5f1679f869a06aef86",
+      "question": "Will there be no change in Fed interest rates after the July 2026 meeting?",
+      "slug": "will-there-be-no-change-in-fed-interest-rates-after-the-july-2026-meeting",
+      "volume24hr": 5038825.090492004,
+      "end_date": "2026-07-29",
+      "tokens": {
+        "Yes": "111604417349377875799825956621596386269673370070912696668140891647145772186047",
+        "No": "36015050921127306245266044699797268780268172446856063291868548314968920497494"
+      },
+      "tier": "liquid",
+      "status": "active",
+      "first_tracked_utc": 1785347127.168705
+    },
+    "0x2a28cc33492516116690a20d290f9922acbe0ed367ff52a6082154474c7f2971": {
+      "condition_id": "0x2a28cc33492516116690a20d290f9922acbe0ed367ff52a6082154474c7f2971",
+      "question": "Will the Fed increase interest rates by 50+ bps after the July 2026 meeting?",
+      "slug": "will-the-fed-increase-interest-rates-by-50-bps-after-the-july-2026-meeting",
+      "volume24hr": 4907732.274808999,
+      "end_date": "2026-07-29",
+      "tokens": {
+        "Yes": "55547507942649396203839937021705347989082320770224485499197798791654376614809",
+        "No": "82752177927542167404038816431416174971863195141383694610771473564093425601859"
+      },
+      "tier": "liquid",
+      "status": "active",
+      "first_tracked_utc": 1785347127.168705
+    },
+    "0x3d675f1c88099a57c12abca632cf926be1bf430125168321de06234e9930fe1a": {
+      "condition_id": "0x3d675f1c88099a57c12abca632cf926be1bf430125168321de06234e9930fe1a",
+      "question": "Will the Fed decrease interest rates by 50+ bps after the July 2026 meeting?",
+      "slug": "will-the-fed-decrease-interest-rates-by-50-bps-after-the-july-2026-meeting",
+      "volume24hr": 3779741.7980000004,
+      "end_date": "2026-07-29",
+      "tokens": {
+        "Yes": "34352156398446436078106018571351437965469399998092625112032289774684767742814",
+        "No": "81718924566344342339932153243056822500865643754622838691875214933560980686588"
+      },
+      "tier": "liquid",
+      "status": "active",
+      "first_tracked_utc": 1785347127.168705
+    },
+    "0x94bbe26c72498bf4fcf36eaed4be2da73bed6716f2521e1502c69497655fda20": {
+      "condition_id": "0x94bbe26c72498bf4fcf36eaed4be2da73bed6716f2521e1502c69497655fda20",
+      "question": "Will the price of Bitcoin be above $62,000 on July 29?",
+      "slug": "bitcoin-above-62k-on-july-29-2026",
+      "volume24hr": 300443.631889,
+      "end_date": "2026-07-29",
+      "tokens": {
+        "Yes": "76059396827326859432864822362505568225100328173658895178198582904997928691302",
+        "No": "21488413941361231515350825487183235825872483800433666164071586764221057373728"
+      },
+      "tier": "thin",
+      "status": "active",
+      "first_tracked_utc": 1785347127.168706
+    },
+    "0x55def4d77b4f051b6a526f3fc12880ab075ff6766a80d0b88c609686fcaf23e0": {
+      "condition_id": "0x55def4d77b4f051b6a526f3fc12880ab075ff6766a80d0b88c609686fcaf23e0",
+      "question": "Baltimore Orioles vs. Detroit Tigers",
+      "slug": "mlb-bal-det-2026-07-29",
+      "volume24hr": 298327.61984899984,
+      "end_date": "2026-08-05",
+      "tokens": {
+        "Baltimore Orioles": "46917890429413561878074938049622091744334169944528154681870286406054653488300",
+        "Detroit Tigers": "16593177791186182517651607371136063394987904637251073476080399235980342419714"
+      },
+      "tier": "thin",
+      "status": "active",
+      "first_tracked_utc": 1785347127.168706
+    },
+    "0x6342585b31e31de313465d61c218a2ecfaaa996f6e8e9a75575a44081f286914": {
+      "condition_id": "0x6342585b31e31de313465d61c218a2ecfaaa996f6e8e9a75575a44081f286914",
+      "question": "Toronto Blue Jays vs. Washington Nationals: O/U 9.5",
+      "slug": "mlb-tor-wsh-2026-07-29-total-9pt5",
+      "volume24hr": 296685.80849900004,
+      "end_date": "2026-07-29",
+      "tokens": {
+        "Over": "32824064073202353029575270789037379322076230700352531564181693759425316214366",
+        "Under": "80781824236731068245945141482867273087207626704675002823851515418099977350682"
+      },
+      "tier": "thin",
+      "status": "active",
+      "first_tracked_utc": 1785347127.1687071
+    },
+    "0x0863c067f34ecf43459e12dadea0fd706e5305ffd6574f05e8f827073dcfa841": {
+      "condition_id": "0x0863c067f34ecf43459e12dadea0fd706e5305ffd6574f05e8f827073dcfa841",
+      "question": "The Hundred, Women: MI London vs London Spirit",
+      "slug": "crichundredw-mi-lon-2026-07-29",
+      "volume24hr": 290784.8623409999,
+      "end_date": "2026-08-05",
+      "tokens": {
+        "MI London": "91268479484732410338182498238332183080074520535801258986714100448325317671509",
+        "London Spirit": "22319500554344734881881060268192803704716292319482505072220504497802489847957"
+      },
+      "tier": "thin",
+      "status": "active",
+      "first_tracked_utc": 1785347127.1687071
+    },
+    "0xf08cd93b8ccaa13bd6ee51558bf7c6525925bef3073478e480538f6359f12962": {
+      "condition_id": "0xf08cd93b8ccaa13bd6ee51558bf7c6525925bef3073478e480538f6359f12962",
+      "question": "Toronto Blue Jays vs. Washington Nationals",
+      "slug": "mlb-tor-wsh-2026-07-29",
+      "volume24hr": 288624.655169,
+      "end_date": "2026-08-05",
+      "tokens": {
+        "Toronto Blue Jays": "74871162136914371982124296607687148393234733176060608982598087762782431333706",
+        "Washington Nationals": "21302144491760263582933548980696009133364587615014470941673524511560503953646"
+      },
+      "tier": "thin",
+      "status": "active",
+      "first_tracked_utc": 1785347127.1687071
+    }
+  },
+  "last_refreshed_utc": 1785347506.857264
+}
