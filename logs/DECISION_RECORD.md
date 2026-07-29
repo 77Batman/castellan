@@ -598,3 +598,65 @@ Sprint 2 list only to decide whether it becomes the **default** for every
 code-modifying seat, which is a standing-policy question rather than a one-off.
 
 **Review date:** sprint close, 2026-08-11.
+
+---
+
+## D-013 · 2026-07-30 · Principal directive — four dispositions
+
+**1 · `CRYPTO_SPOT_TAKER` AUTHORIZED** under Charter §4.6 (a new cost-model preset is
+a Principal reservation):
+
+```
+commission_bps = 10.0 · half_spread_bps = 2.5 · impact_y = 1.0 · periods_per_year = 365
+```
+
+**No carry fields**, per Ruling 003's deletion principle — the ruling's argument is
+that a field whose correct value is always zero and whose wrong value double-counts
+with the sign inverted is a lapse waiting to happen, so it should not exist.
+
+Recorded as **conservative-pending-calibration**, with the **Devil's Advocate
+explicitly free to contest it at Gate 1** — the seat's remaining sealed Opus unit is
+the mechanism by which that contest can actually happen.
+
+**Binding scope limit:** the preset covers **long** spot. **Shorting spot requires a
+new preset and a new Principal decision.** Recorded because generalising a preset by
+implication is exactly how a cost library stops being a control.
+
+**2 · Ruling 003's 19 tests FUNDED** — Sonnet, **red-first**, worktree-isolated,
+**suite floor 134**. **PREREG-002 seals on green + M1, before Saturday if achievable
+without haste.**
+
+> **CIO note on the schedule, entered because "if achievable" deserves an honest
+> answer rather than an attempt.** The seal has **three** predecessors, not one:
+> (i) Ruling 003's 19 tests green at 134; (ii) **I-035** — the perp price series,
+> which is PREREG-002 §15 step 1 and without which the basis leg has no mark;
+> (iii) M1. Two are dispatched today and run in parallel. **The CIO's honest estimate
+> is that Saturday is unlikely**, and the Principal's "without haste" governs over
+> the date. A seal is the one action in this firm that P7 makes permanent, and
+> Ruling 001 §2.4 already establishes that a delayed seal is strictly cheaper than a
+> defective one.
+
+**3 · Sprint 2 standing policy — ONE item, Validation owns the spec.** Four
+components:
+- **read-only registry connections by default** for dispatched seats;
+- **write access granted per-dispatch**, explicitly;
+- **schema changes only via sanctioned, Validation-authored migrations**;
+- **a defined worktree merge protocol.**
+
+**The Principal names I-041 as the template failure to test the spec against:** a
+"verified untouched" claim that checked **rows but not schema**. A policy that would
+not have caught I-041 is not the policy.
+
+**CIO observation carried into the spec:** the merge protocol is not cosmetic. On the
+H-series the worktree **branch was empty** — the seat correctly did not commit — so
+the work existed only as uncommitted files in the worktree directory. Isolation
+without a defined merge step leaves the deliverable in a place no git operation
+finds.
+
+**4 · §4.4 cost-robustness amendment HELD for the Quarterly Review**, as scoped. It
+is not on PREREG-002's critical path: Gate 1 is unreachable for that family before
+2027-07-28 on its own §11.3 arithmetic, and Ruling 003's construction moves the
+criterion from **actively wrong** (stress-testing a sign error) to **honestly inert**
+(24 bps of friction against 1,186 bps/yr of carry).
+
+**Review date:** sprint close, 2026-08-11.
