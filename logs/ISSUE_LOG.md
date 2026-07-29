@@ -681,3 +681,54 @@ Recorded as a live number, not a caveat.
 
 **Resolution:** open — supersedes nothing; runs alongside I-003.
 **Pattern tag:** `bias-metric-lags-the-decision`
+
+---
+
+## I-026 · 2026-07-28 · Polymarket depth history does not exist and is structurally unreconstructible · Severity: HIGH · Owner: quant-validation
+
+**Description.** Answered by Data & Infrastructure in `DATA-PROBE-001`, promoted to a
+standalone task by the Principal on the Devil's Advocate's argument that it was
+strictly prior and nearly free.
+
+**Measured** [measured]: historical Polymarket **order-book depth** is unavailable
+from any confirmed public source and is **structurally unreconstructible on-chain** —
+resting orders never touch the chain, only matched fills do. Verified against the
+official `orderbook-subgraph` schema and the order-lifecycle documentation. `/book`
+is live-only with no time parameter in the spec; `/prices-history` is price, not
+depth. One undocumented endpoint was correctly **not** probed per instruction and is
+recorded as an open unknown rather than folded into the answer.
+
+**This converts data-spec criterion T4 from `[assumed]` unmeasurable to `[measured]`
+unmeasurable.**
+
+**Second, independent finding — the usable history is shorter than platform age.**
+The trade-print proxy is **left-censored at the CLOB launch (late 2022, cited)**; a
+2020-era market returns zero trades. Pre-CLOB AMM-era history is invisible regardless
+of how old the platform is. **CIO calculation** [measured]: that gives **3.66–3.82
+years** of calendar span to today — **under the Charter §4.4 four-year bar, before
+any T1–T7 tradability screening has removed a single day.** This is I-004 resolving,
+and resolving negative, by a route nobody anticipated: not thin history, but a
+censored *start date*.
+
+**Contested inference, routed to Validation, not accepted as settled.** Seat 9
+concluded that unmeasurable depth makes the §4.4 **capacity** criterion unevaluable,
+therefore INSUFFICIENT-DATA, therefore never PASS. The Devil's Advocate made the same
+inference in REDTEAM-001 §B.4. **The CIO does not accept it as final, for a stated
+reason:** `CostModel.per_side_cost` already accepts `adv_notional` and applies the
+square-root impact law, and the trade-print endpoint yields **realized volume**, which
+is a measured fact rather than an upper bound on depth. Capacity estimated from ADV
+plus an impact model — without book depth — is the ordinary approach in equities,
+where full book history is likewise unavailable.
+
+**Whether that route satisfies §4.4 is Validation's determination, not Seat 9's**
+(Charter Seat 9 cannot decide alone what counts as satisfying a Gate criterion, in
+either direction).
+
+**The CIO's own conflict, stated rather than left implicit.** The CIO is the seat
+whose Principal sponsors this hypothesis, and "the CIO found a route that keeps the
+Principal's family alive" is precisely the shape of Appendix B #1. The route is
+therefore **raised, not adopted**; the CIO takes no view on whether it should
+succeed, and Validation rules.
+
+**Resolution:** open — Validation to rule with Gate 0 intake.
+**Pattern tag:** `criterion-unevaluable-on-free-data`
