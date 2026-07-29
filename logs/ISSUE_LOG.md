@@ -798,3 +798,100 @@ cross-venue steel-man and need the same transposition before they can be applied
 **Resolution:** corrected in PREREG-001. Logged because a CIO directive that
 mis-describes the strategy propagates into every downstream document that trusts it.
 **Pattern tag:** `directive-mis-specifies-the-strategy`
+
+---
+
+## I-029 · 2026-07-28 · Falsifier F-001 passes pure noise ~31% of the time · Severity: HIGH · Owner: director-of-research
+
+**Description.** Validation, Gate 0 001. **CIO verified the arithmetic** [measured]:
+F-001 takes `argmax` over `k ∈ [−36,+36]h` — a **73-lag grid** — and kills only on
+`k* ≤ 0` or `k* ≥ 24h`. Under pure noise `argmax` is approximately uniform over the
+grid, so **23 of 73 lags survive = 31.5%.**
+
+An `argmax` over 73 candidates **is a selection, not `N = 1`.** Leg (iii) compounds
+it by measuring capture **at the argmax of its own sample**, biasing the falsifier
+toward survival. There is no null, no stated α, and no minimum bar count.
+
+**Why this matters beyond one document.** A falsifier is the Charter's second Gate 0
+item and house rule 2's entire point — *write the falsifier before the test*. A
+falsifier that a coin-flip passes one time in three is not a falsifier; it is a
+formality that would have produced a "surviving" result on noise and been reported as
+one.
+
+**Resolution:** open — F-001 requires redesign before any seal.
+**Pattern tag:** `falsifier-not-decisive`
+
+---
+
+## I-030 · 2026-07-28 · "Seal same-day" is not executable · Severity: MEDIUM · Owner: fable-5-cio
+
+**Description.** Validation, Gate 0 001. D-010 directed: land the `n_inherited` fix,
+**then seal same-day**. Validation finds the vault **cannot be sealed before the M1
+measurement runs**, so the instruction is not executable **regardless of the
+H-series**. The Principal's directive rested on a CIO sequencing assumption that was
+wrong.
+
+**The CIO's sequencing rationale is also overturned.** The CIO told the Principal
+that sealing early is "strictly better" because `C` is the seal date and delay costs
+forward window. Validation rules the opposite: **delay is strictly cheaper than
+sealing defective**, because P7 freezes the document permanently and the only remedy
+for a bad seal is a **successor family whose window starts later anyway** — so a bad
+seal buys nothing and forfeits the correction. Six identified defects would have been
+frozen.
+
+**Resolution:** open — sequencing to be re-decided by the Principal.
+**Pattern tag:** `cio-sequencing-assumption-wrong`
+
+---
+
+## I-031 · 2026-07-28 · KC-001 clause 3 double-counts under transitive summation · Severity: MEDIUM · Owner: PRINCIPAL
+
+**Description.** Validation, Gate 0 001. KC-001 clause 3 provides that a restatement
+after a kill is "a new family inheriting the killed `N`." Under the registry's
+**transitive summation across the predecessor chain** (F4, and the H-series seeding),
+that inheritance is applied **twice** — once through `predecessor_family` and again
+through the clause's own text.
+
+**Escalated to the Principal specifically, not resolved by any seat.** KC-001 is
+signed by the Principal as sponsor; Validation states the fix **requires the
+Principal's restatement, not a seat's interpretation**, because reinterpreting a
+signed kill condition is exactly the erosion Charter Appendix B #4 describes.
+
+**Resolution:** open — awaiting the Principal's restatement.
+**Pattern tag:** `signed-instrument-needs-author-not-interpreter`
+
+---
+
+## I-032 · 2026-07-28 · No firm-level register of confirmatory tests · Severity: HIGH · Owner: quant-validation
+
+**Description.** Validation, Gate 0 001, as the direct consequence of its own C-001
+ruling. The `N = 1` confirmatory exemption is earned **per test**. Nothing in the
+firm counts how many such exemptions are outstanding **across families**.
+
+**Measured consequence** [cited — Validation]: at 20 families each holding one
+exemption, the **firm-level false-positive rate is ≈2.7%.** Per-family honesty
+composes into firm-level dishonesty with no seat positioned to notice.
+
+`evaluate_gate1` additionally has **no concept of a confirmation window**.
+
+**Resolution:** open — register required before the exemption is relied upon.
+**Pattern tag:** `per-family-control-no-firm-level-aggregate`
+
+---
+
+## I-033 · 2026-07-28 · Five further defects from Gate 0 001, consolidated · Severity: MEDIUM · Owner: head-of-data-infra
+
+Recorded so none is lost; full statements in `research/VALIDATION-GATE0-001-forward-lag.md`.
+
+1. **H2 makes every seeded family read OVER BUDGET** — seeded `N` is compared against
+   a trial budget that counts only real runs.
+2. **H2 lets seeding paper over a family that has run nothing** — a large seeded `N`
+   with zero logged trials looks substantial.
+3. **The quote-liveness gate is unexecutable on measured data** — it requires
+   historical quote state that `DATA-PROBE-001` established does not exist. This is
+   why Gate 0(4) fails.
+4. **Diagnostic D2 is unrunnable** under the single-cluster ingest that §13 permits.
+5. **`forward_window_min_length` is a unitless `REAL`** — days, months and years are
+   indistinguishable in the schema.
+
+**Resolution:** open. **Pattern tag:** `gate0-001-consolidated`
