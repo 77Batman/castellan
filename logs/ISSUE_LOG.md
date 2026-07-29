@@ -218,3 +218,51 @@ different door. Routed to Validation as part of Ruling 002.
 
 **Resolution:** open — Validation ruling pending.
 **Pattern tag:** `unverifiable-control-parameter`
+
+---
+
+## I-010 · 2026-07-28 · Gate 1 length criterion silently equates observation count with calendar span · Severity: MEDIUM · Owner: head-of-data-infra
+
+**Description.** Surfaced by Data & Infrastructure while drafting the Polymarket
+data spec. `harness/castellan/gates.py:195`:
+
+```python
+years = backtest_years if backtest_years is not None else r.size / periods_per_year
+```
+
+`evaluate_gate1` declares `backtest_years: float | None = None` (`gates.py:123`),
+so when a caller omits it the Charter §4.4 length criterion — and the MinBTL(N)
+comparison built on it — is computed from **observation count**, not calendar span.
+
+**CIO verification** [measured]: **no test in `harness/tests/` passes
+`backtest_years` at all.** The only caller that does is
+`harness/examples/demo_workflow.py:99`, which passes `len(prices) / 252` — the same
+quantity the fallback would compute. **The calendar-span path is therefore never
+exercised anywhere in the repo**, and the fallback is the de facto behaviour.
+
+**Direction of failure, which is what makes this MEDIUM rather than LOW.** For a
+dense, regular, one-row-per-date series the fallback is approximately correct. For
+a **stacked or pooled panel where rows are contract-days rather than dates** — the
+natural construction for a thin event-contract venue with many concurrent
+contracts — observation count exceeds calendar span, sometimes by a large multiple.
+In that case the fallback **overstates** backtest length and the criterion **fails
+toward PASS**: a family with eighteen months of calendar history can report as
+clearing the four-year floor.
+
+This is the platform-age-versus-tradable-history confusion the Principal's rider
+was written to prevent, reappearing inside the harness rather than in the
+measurement. It is also the mirror image of I-007: that defect could fail either
+way; this one only ever fails permissively.
+
+**Whether it has fired:** no. Zero families exist. It would fire on the first
+pooled family evaluated — under the Sprint 1 agenda, plausibly the forward-lag
+family itself.
+
+**Action.** Data & Infra flagged this as an implementation obligation for the
+measurement run rather than a defect. The CIO is overriding that classification and
+logging it: an untested permissive fallback on a Charter §4.4 criterion is a
+harness-correctness issue, not a to-do. Validation should decide whether
+`backtest_years` becomes required rather than optional.
+
+**Resolution:** open — routed to Validation with Ruling 002.
+**Pattern tag:** `harness-correctness-latent`
