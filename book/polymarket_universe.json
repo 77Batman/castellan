@@ -11,8 +11,9 @@
         "No": "90713175285238837229141362456380660699457701142142655731293716395090014512187"
       },
       "tier": "liquid",
-      "status": "active",
-      "first_tracked_utc": 1785347127.168702
+      "status": "resolved",
+      "first_tracked_utc": 1785347127.168702,
+      "resolved_detected_utc": 1785355457.020402
     },
     "0x72af7d77091bd2209f78a45a13876beefc734768177dbc0c8171f515ba1a52a7": {
       "condition_id": "0x72af7d77091bd2209f78a45a13876beefc734768177dbc0c8171f515ba1a52a7",
@@ -39,8 +40,9 @@
         "No": "36015050921127306245266044699797268780268172446856063291868548314968920497494"
       },
       "tier": "liquid",
-      "status": "active",
-      "first_tracked_utc": 1785347127.168705
+      "status": "resolved",
+      "first_tracked_utc": 1785347127.168705,
+      "resolved_detected_utc": 1785361149.8190742
     },
     "0x2a28cc33492516116690a20d290f9922acbe0ed367ff52a6082154474c7f2971": {
       "condition_id": "0x2a28cc33492516116690a20d290f9922acbe0ed367ff52a6082154474c7f2971",
@@ -53,8 +55,9 @@
         "No": "82752177927542167404038816431416174971863195141383694610771473564093425601859"
       },
       "tier": "liquid",
-      "status": "active",
-      "first_tracked_utc": 1785347127.168705
+      "status": "resolved",
+      "first_tracked_utc": 1785347127.168705,
+      "resolved_detected_utc": 1785355457.0204082
     },
     "0x3d675f1c88099a57c12abca632cf926be1bf430125168321de06234e9930fe1a": {
       "condition_id": "0x3d675f1c88099a57c12abca632cf926be1bf430125168321de06234e9930fe1a",
@@ -67,8 +70,9 @@
         "No": "81718924566344342339932153243056822500865643754622838691875214933560980686588"
       },
       "tier": "liquid",
-      "status": "active",
-      "first_tracked_utc": 1785347127.168705
+      "status": "resolved",
+      "first_tracked_utc": 1785347127.168705,
+      "resolved_detected_utc": 1785355457.0204082
     },
     "0x94bbe26c72498bf4fcf36eaed4be2da73bed6716f2521e1502c69497655fda20": {
       "condition_id": "0x94bbe26c72498bf4fcf36eaed4be2da73bed6716f2521e1502c69497655fda20",
@@ -184,7 +188,63 @@
       "tier": "thin",
       "status": "active",
       "first_tracked_utc": 1785353652.827052
+    },
+    "0x7d0aaf81bbd3fd73b6a1651cce08a452c0cbf9c0cbb4520ce0f981065b639d88": {
+      "condition_id": "0x7d0aaf81bbd3fd73b6a1651cce08a452c0cbf9c0cbb4520ce0f981065b639d88",
+      "question": "Will Adanech Abiebie be the next Prime Minister of Ethiopia?",
+      "slug": "will-adanech-abiebie-be-the-next-prime-minister-of-ethiopia",
+      "volume24hr": 3552472.29,
+      "end_date": "2026-06-01",
+      "tokens": {
+        "Yes": "27146956652877944551877724690365745048289675287536243265951843487691050802191",
+        "No": "33216695217861742195941369663873573949679634432452142092545486849801915283392"
+      },
+      "tier": "liquid",
+      "status": "active",
+      "first_tracked_utc": 1785355457.544279
+    },
+    "0xc47def8dcf6d67008bcc17893a428b9c34ea2cf8e9df6dc391d9e40a7ca6a13f": {
+      "condition_id": "0xc47def8dcf6d67008bcc17893a428b9c34ea2cf8e9df6dc391d9e40a7ca6a13f",
+      "question": "Mubadala Citi DC Open: Alex de Minaur vs Stefanos Tsitsipas",
+      "slug": "atp-minaur-tsitsip-2026-07-27",
+      "volume24hr": 1826339.426660001,
+      "end_date": "2026-08-03",
+      "tokens": {
+        "Alex de Minaur": "82443778416843030453571859342048142587941527047728194305282820830331727732422",
+        "Stefanos Tsitsipas": "24166291454386213594141597280566368504655685572084781413118314853946110344571"
+      },
+      "tier": "liquid",
+      "status": "active",
+      "first_tracked_utc": 1785355457.5442822
+    },
+    "0x7d9928e23aefb2209696048829b614f49e387d5a77327aa887d0724952fd1156": {
+      "condition_id": "0x7d9928e23aefb2209696048829b614f49e387d5a77327aa887d0724952fd1156",
+      "question": "Will Hassan Shariatmadari be head of state in Iran end of 2026?",
+      "slug": "will-hassan-shariatmadari-be-head-of-state-in-iran-end-of-2026",
+      "volume24hr": 1364310.495000001,
+      "end_date": "2026-12-31",
+      "tokens": {
+        "Yes": "98467866849121962679941492304871725691205424493767395840761628615935723998068",
+        "No": "76796244538717411397354017595608496218394079027645301350237657764151267034507"
+      },
+      "tier": "liquid",
+      "status": "active",
+      "first_tracked_utc": 1785355457.544283
+    },
+    "0x58180f4a69651f67c23ac92845721b2320cc0c76effeb5e79db5288d8d8e6b28": {
+      "condition_id": "0x58180f4a69651f67c23ac92845721b2320cc0c76effeb5e79db5288d8d8e6b28",
+      "question": "US x Iran Effective Ceasefire by July 24?",
+      "slug": "us-x-iran-effective-ceasfire-by-july-24-20260715194822044",
+      "volume24hr": 1222383.8897789998,
+      "end_date": "2026-07-24",
+      "tokens": {
+        "Yes": "113410960838036610177054042201506207817797370827970598802492258356512540837137",
+        "No": "86061825988167227130786985582830419834226509797189675226118388137342919202672"
+      },
+      "tier": "liquid",
+      "status": "active",
+      "first_tracked_utc": 1785361150.0556722
     }
   },
-  "last_refreshed_utc": 1785353652.8270552
+  "last_refreshed_utc": 1785361150.055677
 }
