@@ -160,8 +160,9 @@
         "San Francisco Giants": "6852667973886724590910521015094796531541524268962926123463824579891345270383"
       },
       "tier": "thin",
-      "status": "active",
-      "first_tracked_utc": 1785351844.716584
+      "status": "resolved",
+      "first_tracked_utc": 1785351844.716584,
+      "resolved_detected_utc": 1785376708.198119
     },
     "0xe889f33b91a2a3991332a44d89d2a268ae2d94cc576e9a49c5a09600e3690383": {
       "condition_id": "0xe889f33b91a2a3991332a44d89d2a268ae2d94cc576e9a49c5a09600e3690383",
@@ -189,8 +190,9 @@
         "No": "46234664383113214034787313853742859435218314985155582830237659971348787896010"
       },
       "tier": "thin",
-      "status": "active",
-      "first_tracked_utc": 1785353652.827052
+      "status": "resolved",
+      "first_tracked_utc": 1785353652.827052,
+      "resolved_detected_utc": 1785572192.597709
     },
     "0x7d0aaf81bbd3fd73b6a1651cce08a452c0cbf9c0cbb4520ce0f981065b639d88": {
       "condition_id": "0x7d0aaf81bbd3fd73b6a1651cce08a452c0cbf9c0cbb4520ce0f981065b639d88",
@@ -246,8 +248,9 @@
         "No": "86061825988167227130786985582830419834226509797189675226118388137342919202672"
       },
       "tier": "liquid",
-      "status": "active",
-      "first_tracked_utc": 1785361150.0556722
+      "status": "resolved",
+      "first_tracked_utc": 1785361150.0556722,
+      "resolved_detected_utc": 1785390951.559723
     },
     "0x876506d8b2bd7a0d3fa4fe18c024eee6e1dd81ee24c26795dadd6cfe4a7b5d0d": {
       "condition_id": "0x876506d8b2bd7a0d3fa4fe18c024eee6e1dd81ee24c26795dadd6cfe4a7b5d0d",
@@ -274,8 +277,9 @@
         "No": "51267062251560817207098332467530677863898622748963484735709679405829292177649"
       },
       "tier": "thin",
-      "status": "active",
-      "first_tracked_utc": 1785362051.7393012
+      "status": "resolved",
+      "first_tracked_utc": 1785362051.7393012,
+      "resolved_detected_utc": 1785376708.198122
     },
     "0xc6c36759422e7f0d17b8ce3ee1503561f48584e9428651f143474afea6a09d5b": {
       "condition_id": "0xc6c36759422e7f0d17b8ce3ee1503561f48584e9428651f143474afea6a09d5b",
@@ -288,9 +292,154 @@
         "Kamil Majchrzak": "84259120390220475027346321082258717544635474503217272238380373766565514937805"
       },
       "tier": "thin",
+      "status": "resolved",
+      "first_tracked_utc": 1785362051.739302,
+      "resolved_detected_utc": 1785364760.604897
+    },
+    "0xa3b36b2d6104d34af4e6c6215fc818e43352e78a748fbfb0b85e3a35f71dec9a": {
+      "condition_id": "0xa3b36b2d6104d34af4e6c6215fc818e43352e78a748fbfb0b85e3a35f71dec9a",
+      "question": "Will there be no change in Fed interest rates after the September 2026 meeting?",
+      "slug": "will-there-be-no-change-in-fed-interest-rates-after-the-september-2026-meeting-615",
+      "volume24hr": 256736.593526,
+      "end_date": "2026-09-16",
+      "tokens": {
+        "Yes": "5615282760875985231868508008056959876238536896643315063916840237042205273721",
+        "No": "97050921740416192996389806693742575608111328819185493163189880975611314813724"
+      },
+      "tier": "thin",
       "status": "active",
-      "first_tracked_utc": 1785362051.739302
+      "first_tracked_utc": 1785364760.820891
+    },
+    "0x8fc141205ebce5adf437bfdf4d0c5ff58ff24293b79c9431991346c208bb48ed": {
+      "condition_id": "0x8fc141205ebce5adf437bfdf4d0c5ff58ff24293b79c9431991346c208bb48ed",
+      "question": "Will Tulsi Gabbard win the 2028 US Presidential Election?",
+      "slug": "will-tulsi-gabbard-win-the-2028-us-presidential-election",
+      "volume24hr": 1114871.533325,
+      "end_date": "2028-11-07",
+      "tokens": {
+        "Yes": "97633418272282627828834872960145259034624388719803091466146359304286851612172",
+        "No": "17854429586516792397214557963923647011517685971868312042416963526864862523185"
+      },
+      "tier": "liquid",
+      "status": "active",
+      "first_tracked_utc": 1785376708.534942
+    },
+    "0x22944c6278d1f5d790d79de82a28aeb2cd675b9e7b5701ea362b30ee8bbbe82d": {
+      "condition_id": "0x22944c6278d1f5d790d79de82a28aeb2cd675b9e7b5701ea362b30ee8bbbe82d",
+      "question": "Mubadala Citi DC Open: Alex Michelsen vs Adrian Mannarino",
+      "slug": "atp-michels-mannari-2026-07-29",
+      "volume24hr": 296048.8743269998,
+      "end_date": "2026-08-05",
+      "tokens": {
+        "Alex Michelsen": "10494451084335906719907514677119278919776524400458630884641025779761276669219",
+        "Adrian Mannarino": "102809225887740555876547320409319272961026608420211811336992348430287772491052"
+      },
+      "tier": "thin",
+      "status": "resolved",
+      "first_tracked_utc": 1785376708.534945,
+      "resolved_detected_utc": 1785377610.927617
+    },
+    "0x9acc543deb6148979bcf1433326d3c87058183b444e9dc39bab7bced0252c52a": {
+      "condition_id": "0x9acc543deb6148979bcf1433326d3c87058183b444e9dc39bab7bced0252c52a",
+      "question": "Will Bitcoin dip to $60,000 in July?",
+      "slug": "will-bitcoin-dip-to-60000-in-july-20260706151220612-754",
+      "volume24hr": 294269.25379899994,
+      "end_date": "2026-08-01",
+      "tokens": {
+        "Yes": "76775375296033651317898012041289573382116059705683933691523480898942221844797",
+        "No": "18003564518755876597430706411417865441386293166027128009342507707247056749212"
+      },
+      "tier": "thin",
+      "status": "resolved",
+      "first_tracked_utc": 1785376708.534946,
+      "resolved_detected_utc": 1785572192.597715
+    },
+    "0xa3e66712008b25709703e67369aedccb3d69180b12996cb632068f6c7caa7321": {
+      "condition_id": "0xa3e66712008b25709703e67369aedccb3d69180b12996cb632068f6c7caa7321",
+      "question": "Will the price of Bitcoin be above $56,000 on July 30?",
+      "slug": "bitcoin-above-56k-on-july-30-2026",
+      "volume24hr": 277932.751174,
+      "end_date": "2026-07-30",
+      "tokens": {
+        "Yes": "113650454342477787012107823166581637166684719367435712724597205914976584456354",
+        "No": "4752138577402792959986685392550599947268874888095009786585755127051279758882"
+      },
+      "tier": "thin",
+      "status": "resolved",
+      "first_tracked_utc": 1785377611.221971,
+      "resolved_detected_utc": 1785439110.771883
+    },
+    "0x5db999fad322cea2914535aae5517060c3f80ad6d8c0231cde2124a434d16846": {
+      "condition_id": "0x5db999fad322cea2914535aae5517060c3f80ad6d8c0231cde2124a434d16846",
+      "question": "Will the U.S. invade Iran before 2027?",
+      "slug": "will-the-us-invade-iran-before-2027",
+      "volume24hr": 1063345.8010900002,
+      "end_date": "2026-12-31",
+      "tokens": {
+        "Yes": "55115078421062885512539156303747803058407616201213034911037320915726138659123",
+        "No": "1910830010387565971650098373488592514702818137344973088263643820608151819241"
+      },
+      "tier": "liquid",
+      "status": "active",
+      "first_tracked_utc": 1785390952.327254
+    },
+    "0x5e464d85eb49f22d876f3ed6168a7db5e2288e9ae1eb91effd2758e994676f86": {
+      "condition_id": "0x5e464d85eb49f22d876f3ed6168a7db5e2288e9ae1eb91effd2758e994676f86",
+      "question": "Will the Fed decrease interest rates by 50+ bps after the September 2026 meeting?",
+      "slug": "will-the-fed-decrease-interest-rates-by-50-bps-after-the-september-2026-meeting-863",
+      "volume24hr": 262248.950614,
+      "end_date": "2026-09-16",
+      "tokens": {
+        "Yes": "97186030785608128217926542396950266594898339988989015155120280107165449433603",
+        "No": "81470465080656150088482886298356783621062802919110096763062861781139262816347"
+      },
+      "tier": "thin",
+      "status": "active",
+      "first_tracked_utc": 1785439110.992129
+    },
+    "0x1cf14d0add6dfc90f2e3de1250cce7775cb5f5c909e9c81111f47c9ba5ce49a5": {
+      "condition_id": "0x1cf14d0add6dfc90f2e3de1250cce7775cb5f5c909e9c81111f47c9ba5ce49a5",
+      "question": "LoL: Anyone's Legend vs ThunderTalk Gaming (BO3) - LPL Group Ascend",
+      "slug": "lol-al-tt-2026-08-01",
+      "volume24hr": 173951.637623,
+      "end_date": "2026-08-01",
+      "tokens": {
+        "Anyone's Legend": "19016909301591382782023331383379402362507176802321039779826279806709374446615",
+        "ThunderTalk Gaming": "107290195353362669468710417253996142202065926080438884880859726733433473853713"
+      },
+      "tier": "thin",
+      "status": "resolved",
+      "first_tracked_utc": 1785572192.818354,
+      "resolved_detected_utc": 1785787899.025402
+    },
+    "0x2e4b58fc18dbffd74d5275d89fb076943f21992763c45dcadd81391b83bde13c": {
+      "condition_id": "0x2e4b58fc18dbffd74d5275d89fb076943f21992763c45dcadd81391b83bde13c",
+      "question": "Will the Fed increase interest rates by 50+ bps after the September 2026 meeting?",
+      "slug": "will-the-fed-increase-interest-rates-by-50-bps-after-the-september-2026-meeting-664",
+      "volume24hr": 173128.37078700005,
+      "end_date": "2026-09-16",
+      "tokens": {
+        "Yes": "88912926533493988427719291698947688154042720958310632316541141466409683822293",
+        "No": "74195220586129237349258803179082634542284503538320000637909015632982564961602"
+      },
+      "tier": "thin",
+      "status": "active",
+      "first_tracked_utc": 1785572192.818357
+    },
+    "0x68818a54ca4c49406bb28ada26ecf9ce732dba21505454ce874e7066da6d788c": {
+      "condition_id": "0x68818a54ca4c49406bb28ada26ecf9ce732dba21505454ce874e7066da6d788c",
+      "question": "Israel x Iran ceasefire continues through August 9?",
+      "slug": "israel-x-iran-ceasefire-continues-through-august-9-20260727170733638",
+      "volume24hr": 240207.04938900002,
+      "end_date": "2026-08-09",
+      "tokens": {
+        "Yes": "51783880760599120440014289525159847949469877325479084384177696513850906603472",
+        "No": "54486775799097073350117703852347837482875366875903455982474565064932741563538"
+      },
+      "tier": "thin",
+      "status": "active",
+      "first_tracked_utc": 1785787899.38918
     }
   },
-  "last_refreshed_utc": 1785362956.4258199
+  "last_refreshed_utc": 1785792113.752404
 }
