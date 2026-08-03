@@ -5,3 +5,4 @@ __pycache__/
 
 # agent worktrees — transient, not book of record
 .claude/worktrees/
+book/pit.db
