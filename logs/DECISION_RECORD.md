@@ -1135,3 +1135,59 @@ Opus and is the last thing before any Gate 1 submission, not the first.
 **6 · Budget.** **5 of 30 · 3 of 12 Opus.** DA reserve holds 1. Freely allocable Opus: **8.**
 
 **Review date:** on the return of C12 and the ML ruling.
+
+---
+
+## S2-D-007 · 2026-08-04 · C12 returns clean · discharged on the cadence dimension only
+
+**1 · Verdict: BTC and ETH are cadence-homogeneous across PREREG-002's sample.** Zero
+deviating days on either symbol, in either direction, across **4,802 symbol-days**.
+Delivered at `research/DATA-VERIFY-002-cadence-homogeneity.md`. K7's premise moves from
+**asserted** to **measured**, which is what C12 existed to force.
+
+**2 · Independently reproduced by the CIO from `book/pit.db`** [measured], on the I-045
+precedent that a row-count diagnostic may be CIO-confirmed:
+
+| Symbol | Days | Prints | Distribution | Deviating |
+|---|---|---|---|---|
+| BTC/USDT:USDT | 2,401 | 7,203 | `{3: 2401}` | **0** |
+| ETH/USDT:USDT | 2,401 | 7,203 | `{3: 2401}` | **0** |
+| SOL/USDT:USDT *(control)* | 2,145 | 6,508 | `{1:1, 3:2134, 4:1, 6:1, 11:1, 12:7}` | **11** |
+
+**The SOL control is what makes the zero admissible.** A clean result on both primary
+symbols could have meant the store is incapable of representing a cadence other than 3 —
+in which case the measurement would be tautological and worthless. SOL's 11 deviating days,
+landing on 2022-11-09 (4 prints) then 11–12 prints through 11-15, reproduce I-045's table
+exactly and prove the store represents ≠3 faithfully. **A verification that cannot fail is
+not a verification**; this one could have and did not.
+
+**3 · The limitation, stated so C12's closure is not over-read. C12 measured *cadence*
+homogeneity, not *parameter* homogeneity, and the two are not the same claim.** The seat
+reports that the firm's own documented **2025-09-18 firm-wide funding-formula change** shows
+**3 prints on both BTC and ETH that day** — that is, a real documented parameter change that
+a cadence sweep is structurally blind to. 2025-09-18 is precisely the in-sample trigger the
+Director named when declaring **K7**, so it is handled **by declaration, not by
+measurement**, and that is the design working. But the residual is real and belongs to
+Validation at C2, not to the CIO: **Binance states it does not announce adjustments, so an
+undocumented clamp-width change on BTC or ETH inside the sample would be invisible to both
+the cadence sweep and the documentary record.** The CIO does not rule on whether that
+residual is tolerable — flagged into the C2 intake, where it belongs.
+
+**4 · No issue filed, correctly.** The dispatch's escalation rule was conditional on finding
+a genuine deviation; none was found, so it did not trigger. The seat did not manufacture an
+entry to show work, and did not touch `PREREG-002`, `DIR-RESTATE-001`, `registry.db`, or
+`book.db`. Suite **160 passed**, unchanged.
+
+**5 · I-045 remains open, and the CIO still does not close it.** C12 verifies the remedy's
+premise, which was the blocker the CIO named at S2-D-004 §2 for declining to close it. The
+remaining reason stands unchanged: **closure is `quant-validation`'s, per the issue's own
+owner line.** It is routed into the C2 dispatch rather than resolved here.
+
+**6 · C2 is now unblocked but NOT dispatched.** Validation is mid-dispatch on the ML
+trial-accounting ruling. Two concurrent dispatches into one seat and one tree has been ruled
+against three times this sprint (S2-D-002 §4, S2-D-004 §6) and the reasoning has not
+changed. C2 goes on Validation's return. `[would-have-asked]`.
+
+**7 · Budget.** 5 of 30 · 3 of 12 Opus, unchanged — C12 was the Sonnet unit already counted.
+
+**Review date:** on the ML ruling's return, when C2 dispatches.
