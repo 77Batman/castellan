@@ -910,3 +910,71 @@ PREREG-002 restatement lands, so the ruling can bind the very family approaching
 rather than arrive after it. **Not actioned pending the interrupt queue.**
 
 **Review date:** sprint close, 2026-08-11, at the §7 calibration audit.
+
+---
+
+## D-004 · 2026-08-04 · Director's PREREG-002 restatement lands · §4 HARD INTERRUPT — KC-002 restated
+
+**1 · §4 HARD INTERRUPT FILED. Trigger: *"any kill-condition signature or restatement."***
+
+Revision `R-001` of `research/PREREG-002-crypto-funding-basis.md` includes **R7**, whose
+own revision-block text reads: *"**KC-002 clause (b) gains a named mechanism.**"* The edit
+lands in **§14.2**, inside the binding kill-condition section, and raises the seat's stated
+probability that clause (b) is the family's killer from *"most likely"* to *"the expected
+outcome, and the reason is the clamp rather than the market."*
+
+**The CIO does not assess whether this "really" qualifies.** §4 makes these triggers, not
+thresholds, and states that no seat including the CIO decides qualification; §8 forbids
+introducing an adjective by interpretation. The document's own revision block calls it a
+change to KC-002. **It is therefore a kill-condition restatement and it queues.**
+
+For the Principal's ruling, stated without softening and without recommendation: KC-002's
+operative clauses (a)/(b)/(c) and its thresholds, window, and observation date
+(**2027-01-31, absolute**) are **not** edited by R7. What changed is §14.2's commentary —
+a pre-seal statement of expectation, marked `[inferred — not measured]`, arguing the clamp
+censors the state variable on ~35% of prints. **That description is the CIO reporting the
+scope of the change, not the CIO arguing it is minor.**
+
+**This interrupt blocks the PREREG-002 revision's adoption and any move toward seal. It
+does not block unrelated work** (§4), and the seal was independently unreachable anyway —
+see §3.
+
+**2 · The Director's return overstated one thing, and the CIO checked rather than relayed
+it.** The return states *"I-045 is closed."* **On disk it is not.** `logs/ISSUE_LOG.md`
+I-045 still reads **"Resolution: open — blocks the seal."** The Director's remedy addresses
+I-045 but the entry was never edited. **The CIO is not closing it**, for two reasons: the
+seat that owns closure is `quant-validation`, not the CIO; and the remedy's own premise is
+unverified — see C12. I-045 stands **open**.
+
+**3 · Verified independently of the seat's report** [measured]: `book/registry.db` holds
+0 hypotheses and 0 trials; `book/book.db` holds 0 orders / 0 executions / 0 trades. **No
+number was produced by this dispatch and A2 is intact.** `PREREG-002` 1,492 → 1,858 lines
+with R1–R7 struck-and-replaced inline; `DIR-RESTATE-001-prereg002-mechanism.md` new at 477
+lines. Nothing committed by the seat, as instructed.
+
+**4 · NOT SEAL-READY, and the Director says so.** Open blockers per the memo: **C12**
+(new, created by this revision — K7 cannot seal while the primary universe's cadence
+homogeneity is asserted rather than measured; I-045's control covered **BTC only** and only
+the `>3 prints` direction, so a cadence *lengthening* was never tested and **ETH was never
+measured at all**), **C2** (no Gate 0 intake verdict), **C11** (leg-(ii) null), **C3** (no
+Devil's Advocate memo on this family), **C7/C8** (executional). The seat naming a blocker
+it created itself, one turn after being funded to clear a blocker, is the control working.
+
+**5 · Resumption honesty, relayed verbatim in substance.** The Director reports nothing
+analytical was lost to the API termination and that its conclusion did not move between
+runs — **and flags that the only evidence for this is its own account, because nothing had
+reached disk, so the claim is `[assumed]` not `[measured]`.** Recorded because a seat
+volunteering the weakness of its own evidence is the behaviour this firm is built to
+reward.
+
+**6 · `[would-have-asked]` — C12's measurement dispatch.** C12 is a row-count query on
+already-ingested data, not a trial. Under §3 dispatching it is delegated. **No decision was
+required**: its owner is Seat 9, which is mid-dispatch on Rider A, and two concurrent
+dispatches into one seat and one tree was already ruled against in D-003 §4. C12 is queued
+behind Rider A's return, not held for the Principal.
+
+**7 · Budget.** 3 of 30 · 2 of 12 Opus. DA reserve holds 1 Opus for this family under §2 —
+and **C3 confirms the reserve is needed**: no Red-Team Memo exists on PREREG-002. Freely
+allocable Opus: **9**.
+
+**Review date:** on the Principal's ruling on the §4 interrupt.

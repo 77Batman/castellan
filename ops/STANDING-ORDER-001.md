@@ -1,3 +1,22 @@
+## TRANSMITTAL — D-002, 2026-08-04
+
+*Principal's cover paragraph, supplied with the canonical text and included at his
+instruction. Set off from the order body only because it is dated 2026-08-04 while the
+order below is the verbatim original authored 2026-07-31 — the two are not merged, so the
+file does not assert that a 2026-08-04 instruction was part of the 2026-07-31 order. Not
+one word of either is altered. See I-046 for why this firm now demarcates authorship dates
+rather than trusting a label.*
+
+> D-002 · Canonical Standing Order text, Principal-supplied by paste per your specified
+> path. This is the verbatim original, authored 2026-07-31, source of the D-015 excerpts.
+> It governs on receipt. Write it to `ops/STANDING-ORDER-001.md` replacing the
+> reconstruction, verify with `git show HEAD:ops/STANDING-ORDER-001.md` after committing,
+> diff your reconstruction against it, and log what the reconstruction lacked — as
+> measured fact now, not assumption. Commit `2d9ef4f`'s false label stands recorded,
+> unrewritten. I-046's uncertainty clears only when the verified commit exists.
+
+---
+
 # STANDING ORDER 001 — PRINCIPAL DELEGATION PROTOCOL
 
 *Issued by the Principal · Effective at Sprint 2 open · Calibration mode · Supplements Charter Part IX; amends nothing*
