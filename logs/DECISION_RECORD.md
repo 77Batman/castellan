@@ -1074,3 +1074,64 @@ restarts the sequence per D-015 §3. The keys are no longer unique, which will b
 Principal's scheme unilaterally.** Awaiting direction.
 
 **Review date:** on the Principal's ruling on the two open §4 interrupts.
+
+---
+
+## S2-D-006 · 2026-08-04 · Principal rules both §4 interrupts · C12 and the ML ruling dispatched
+
+**1 · Interrupt 1 — APPROVED AND COUNTERSIGNED** as a kill-condition commentary
+restatement. The Principal confirms on the record that KC-002's operative clauses
+(a)/(b)/(c), thresholds, window, and the **absolute observation date 2027-01-31** are
+unedited, and that the addition is pre-seal expectation-setting marked `[inferred]`,
+recorded *"precisely so it cannot later be claimed as foresight."*
+
+**Principal's note for the file, recorded verbatim in substance because it changes how a
+future verdict must be read:** under the restated §3 mechanism, **clause (b) firing because
+of the clamp is the hypothesis being answered, not the test being interrupted — a kill on
+those grounds is a full terminal verdict.**
+
+The CIO flags the consequence, since it bears on the Standing Order §1 goal: this ruling
+means the family's **most likely** outcome, as the Director itself predicts at §14.2, now
+counts toward the **two-terminal-verdicts** objective rather than reading as a failure to
+reach one. That is the §1 clause *"a correct kill counts identically to a pass"* operating
+exactly as written, and it is worth stating plainly that the firm is not thereby made more
+likely to succeed — only more likely to **resolve**.
+
+**2 · Interrupt 2 — APPROVED.** DigitalOcean at **$6.00/month exact.** The Principal rules
+the flag correct under §4 and the ambiguity his own: *"'~' is retired from spend approvals
+— this line item's ceiling is $6.00/month exact, and all future approvals will state exact
+ceilings."* Recorded as a standing change to how spend authority is expressed. Seat 9's
+refusal to round $6 into "~$5" is the behaviour that produced the clarification.
+
+**3 · `S2-` prefix adopted.** Sprint 2 decision entries renumbered `S2-D-001` … `S2-D-005`;
+**zero duplicate keys remain** in the record; five internal cross-references updated to
+match. Sprint 1's `D-001`…`D-015` are untouched.
+
+**4 · Two dispatches, parallel and independent.**
+
+- **C12 — Seat 9, Sonnet.** BTC and ETH funding-print cadence sweep across PREREG-002's
+  full sample, **both directions**, since I-045's control was BTC-only and `>3`-only and
+  ETH was never measured. Brief requires the low-count days be separated into **genuine
+  cadence change / missing ingest data / undetermined** rather than assigned by assumption
+  — conflating them would reproduce the defect this measurement exists to prevent. Escalation
+  rule stated in advance so the seat does not have to judge it: a genuine deviation on the
+  primary universe means escalation to Validation for an admissibility ruling on the whole
+  family, **not** further trimming of the universe.
+- **ML trial-accounting ruling — Validation, Opus.** The Standing Order §1 objective that
+  S2-D-002 §5 found had no owner. Brief adds the question the Standing Order does not name
+  but the firm cannot do without: **how `N` is defined for a model class where the effective
+  number of trials is not the number of fits** — because DSR/PBO/MinBTL all take an `N`, and
+  a gate with an undefined `N` is unenforceable while still looking like a control.
+  Validation reports to the Principal; the dispatch allocates compute and scope, not
+  conclusions.
+
+**5 · Sequencing, and why C2 was not dispatched with them.** The Gate 0 intake verdict on
+PREREG-002 (**C2**) is deliberately held until C12 returns. If C12 finds a genuine cadence
+deviation on BTC or ETH, the family's admissibility question changes shape, and an intake
+verdict issued now would have ruled on a premise C12 could invalidate. **C3** — the
+Devil's Advocate memo, which no PREREG-002 packet may omit — is held for the §2 reserve
+Opus and is the last thing before any Gate 1 submission, not the first.
+
+**6 · Budget.** **5 of 30 · 3 of 12 Opus.** DA reserve holds 1. Freely allocable Opus: **8.**
+
+**Review date:** on the return of C12 and the ML ruling.
