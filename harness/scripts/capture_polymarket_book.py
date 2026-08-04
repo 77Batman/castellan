@@ -37,6 +37,8 @@ import sys
 import time
 from pathlib import Path
 
+import pandas as pd
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 _HARNESS_SRC = REPO_ROOT / "harness"
 if str(_HARNESS_SRC) not in sys.path:
@@ -46,7 +48,9 @@ if str(_HARNESS_SRC) not in sys.path:
     sys.path.insert(0, str(_HARNESS_SRC))
 
 from castellan import PITStore, TrialRegistry  # noqa: E402
-from castellan.loaders import ingest_polymarket_books, refresh_universe  # noqa: E402
+from castellan.loaders import (  # noqa: E402
+    ingest_polymarket_books, refresh_universe, record_capture_heartbeat,
+)
 
 
 def _utc_now_str() -> str:
@@ -72,6 +76,35 @@ def main(argv: list[str] | None = None) -> int:
                      help="refresh and print the universe; do not fetch books or write to the store")
     args = ap.parse_args(argv)
 
+    try:
+        return _run(args)
+    except Exception as e:  # noqa: BLE001 -- last-resort safety net, see docstring below
+        poll_start_iso = pd.Timestamp.now(tz="UTC").isoformat()
+        print(f"[{_utc_now_str()}] CAPTURE CRASHED: {e!r}", file=sys.stderr)
+        # I-047: before this net existed, an uncaught exception ANYWHERE in
+        # a round (historically: `refresh_universe`'s un-retried Gamma
+        # call failing on DNS right after the host woke from sleep) left
+        # NO trace in the store at all -- not even a heartbeat -- making
+        # that round indistinguishable from "did not run". This is the
+        # backstop: whatever failed, however early, record that a poll was
+        # attempted and record why it did not complete, unless even
+        # opening the store fails (logged separately, not swallowed).
+        try:
+            registry = TrialRegistry(args.registry_db)
+            store = PITStore(args.pit_db, registry)
+            record_capture_heartbeat(
+                store, poll_start_iso, None, ok=False,
+                n_requested=0, n_captured=0, n_failed=0,
+                error=repr(e),
+            )
+            store.close()
+        except Exception as heartbeat_err:  # noqa: BLE001
+            print(f"[{_utc_now_str()}] ALSO FAILED to record crash heartbeat: "
+                  f"{heartbeat_err!r}", file=sys.stderr)
+        return 4
+
+
+def _run(args: argparse.Namespace) -> int:
     state = refresh_universe(
         args.state, n_liquid=args.n_liquid, n_thin=args.n_thin,
         thin_band=(args.thin_lo, args.thin_hi),
@@ -101,6 +134,16 @@ def main(argv: list[str] | None = None) -> int:
 
     if not token_meta:
         print(f"[{_utc_now_str()}] no active tokens to capture -- exiting")
+        # Still a heartbeat-worthy event: the poller ran and found an
+        # empty universe, distinct from not having run at all
+        # (DATA-INFRA-002 §2).
+        registry = TrialRegistry(args.registry_db)
+        store = PITStore(args.pit_db, registry)
+        record_capture_heartbeat(
+            store, pd.Timestamp.now(tz="UTC").isoformat(), None, ok=True,
+            n_requested=0, n_captured=0, n_failed=0,
+        )
+        store.close()
         return 0
 
     registry = TrialRegistry(args.registry_db)

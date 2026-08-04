@@ -279,7 +279,9 @@ def _ssl_context():
         return ssl.create_default_context()
 
 
-def _gamma_get(params: dict, timeout: float = 10.0) -> list:
+def _gamma_get(
+    params: dict, timeout: float = 10.0, max_retries: int = 3, backoff_s: float = 2.0,
+) -> list:
     """GET against the documented, public Gamma markets endpoint.
 
     ``doseq=True``: measured [measured] that Gamma's list-valued filters
@@ -290,6 +292,19 @@ def _gamma_get(params: dict, timeout: float = 10.0) -> list:
     hit before in the harness, here in a third-party API instead).
     ``doseq=True`` makes any list-valued entry in ``params`` repeat
     correctly; scalar entries are unaffected.
+
+    Retries transient failures (DNS/connection/timeout/5xx) with
+    exponential backoff, matching ``fetch_polymarket_books``'s existing
+    behaviour. Added after DATA-INFRA-002 found this call's *lack* of
+    retry logic was the actual, measured, repeated cause of several
+    capture gaps: every uncaught traceback in the laptop's
+    `polymarket-book.err` up to and including 2026-08-04 traces to this
+    function raising un-retried out of `refresh_universe` -- typically
+    DNS resolution failing in the few seconds after the host wakes from
+    sleep, before its network interface is fully back up, which the
+    single `fetch_polymarket_books` retry loop already tolerated but
+    this one, called first in every round, did not. Filed as I-047
+    (`logs/ISSUE_LOG.md`).
     """
     import urllib.parse
     import urllib.request
@@ -298,8 +313,16 @@ def _gamma_get(params: dict, timeout: float = 10.0) -> list:
     req = urllib.request.Request(
         url, headers={"User-Agent": "Castellan-Data-Infra/1.0 (research infrastructure)"}
     )
-    with urllib.request.urlopen(req, timeout=timeout, context=_ssl_context()) as resp:
-        return json.loads(resp.read().decode())
+    last_err: Exception | None = None
+    for attempt in range(max_retries):
+        try:
+            with urllib.request.urlopen(req, timeout=timeout, context=_ssl_context()) as resp:
+                return json.loads(resp.read().decode())
+        except Exception as e:  # noqa: BLE001 -- deliberately broad: any network/HTTP failure retries
+            last_err = e
+            if attempt < max_retries - 1:
+                time.sleep(backoff_s * (2 ** attempt))
+    raise last_err  # noqa: RSE102 -- re-raising the last transient failure after exhausting retries
 
 
 def select_polymarket_universe(
@@ -554,6 +577,66 @@ def fetch_polymarket_books(token_ids: list[str], timeout: float = 10.0) -> tuple
     return raw, knowledge_time
 
 
+def record_capture_heartbeat(
+    store: PITStore,
+    poll_start_iso: str,
+    knowledge_time: float | None,
+    ok: bool,
+    n_requested: int,
+    n_captured: int,
+    n_failed: int,
+    failed_tokens: list[str] | None = None,
+    error: str | None = None,
+) -> None:
+    """Record that a capture round was ATTEMPTED, independent of whether it
+    succeeded (DATA-INFRA-002 §2). This is the deliberate, single exception
+    to ``ingest_polymarket_books``'s own all-or-nothing-per-round rule
+    (see its docstring): the heartbeat's whole purpose is to make "we
+    polled" detectable on exactly the path (a total whole-batch fetch
+    failure) where nothing else is written to the store.
+
+    Without this, "we did not poll this round" and "we polled and the
+    entire batch failed" are indistinguishable from the store alone --
+    both leave zero rows in ``observations``/``documents`` for that round,
+    and only a "polled successfully with an empty/one-sided book" leaves a
+    row (``two_sided=0.0``). Verified against the actual schema, not
+    assumed: see DATA-INFRA-002 §2 for the check.
+
+    Stored as a document under a source distinct from the scalar/document
+    capture data (``polymarket-capture-meta``) so it never pollutes a
+    per-token query, and under a fixed sentinel symbol (``__heartbeat__``)
+    so the whole heartbeat stream is trivially filterable with one WHERE
+    clause. ``ref`` is ``f"heartbeat:{poll_start_iso}"`` -- one row per
+    poll attempt, deduplicated the same way every other document is
+    (``ingest_documents`` dedupes on ``ref``), so a caller that retries or
+    replays a round never double-counts it.
+
+    This closes the gap going forward, from the moment this function
+    exists in a running capture. It does not, and cannot, retroactively
+    resolve the ambiguity for capture history recorded before it existed
+    -- exactly the same one-way-only property every other prospective-only
+    fix in this file has (DATA-PROBE-001, DATA-INFRA-001 §6).
+    """
+    kt = knowledge_time if knowledge_time is not None else time.time()
+    store.ingest_documents(
+        "polymarket-capture-meta", "__heartbeat__",
+        [{
+            "doc_type": "poll_attempt",
+            "event_time": poll_start_iso,
+            "knowledge_time": kt,
+            "ref": f"heartbeat:{poll_start_iso}",
+            "meta": {
+                "ok": ok,
+                "n_requested": n_requested,
+                "n_captured": n_captured,
+                "n_failed": n_failed,
+                "failed_tokens": failed_tokens or [],
+                "error": error,
+            },
+        }],
+    )
+
+
 def ingest_polymarket_books(
     store: PITStore,
     token_meta: dict[str, dict],
@@ -579,16 +662,23 @@ def ingest_polymarket_books(
          so re-running against an unchanged snapshot is a no-op, not a
          duplicate row.
 
+    Plus one heartbeat document per round, written regardless of outcome
+    -- see ``record_capture_heartbeat``. This is what makes "not polled"
+    distinguishable from "polled, nothing to show for it" from this point
+    forward (DATA-INFRA-002 §2).
+
     Failure handling: the whole batch fetch retries transient HTTP-level
     failures (timeout, connection error, 5xx) up to `max_retries` with
-    exponential backoff; if every attempt fails, NOTHING is written and
-    the failure is reported for every requested token (the store's own
-    ingest() is already all-or-nothing per call; this keeps the same
-    property at the poll level for a wholesale outage). A token that is
-    present in the request but missing or malformed in a partially-
-    successful response is recorded as an individual failure and skipped
-    -- it does not block ingestion of the tokens that did come back clean.
+    exponential backoff; if every attempt fails, NOTHING else is written
+    beyond the heartbeat, and the failure is reported for every requested
+    token (the store's own ingest() is already all-or-nothing per call;
+    this keeps the same property at the poll level for a wholesale
+    outage). A token that is present in the request but missing or
+    malformed in a partially-successful response is recorded as an
+    individual failure and skipped -- it does not block ingestion of the
+    tokens that did come back clean.
     """
+    poll_start_iso = pd.Timestamp.now(tz="UTC").isoformat()
     token_ids = list(token_meta.keys())
     raw = None
     knowledge_time = None
@@ -602,6 +692,11 @@ def ingest_polymarket_books(
             if attempt < max_retries - 1:
                 time.sleep(backoff_s * (2 ** attempt))
     if raw is None:
+        record_capture_heartbeat(
+            store, poll_start_iso, None, ok=False,
+            n_requested=len(token_ids), n_captured=0, n_failed=len(token_ids),
+            failed_tokens=token_ids, error=repr(last_err),
+        )
         return {
             "ok": False, "error": repr(last_err), "captured": [],
             "failed": token_ids, "n_requested": len(token_ids),
@@ -637,6 +732,11 @@ def ingest_polymarket_books(
         except Exception:  # noqa: BLE001 -- one bad token must not sink the batch
             failed.append(tid)
 
+    record_capture_heartbeat(
+        store, poll_start_iso, knowledge_time, ok=True,
+        n_requested=len(token_ids), n_captured=len(captured), n_failed=len(failed),
+        failed_tokens=failed, error=None,
+    )
     return {
         "ok": True, "captured": captured, "failed": failed,
         "n_requested": len(token_ids), "knowledge_time": knowledge_time,

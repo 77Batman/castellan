@@ -1009,3 +1009,68 @@ and **C3 confirms the reserve is needed**: no Red-Team Memo exists on PREREG-002
 allocable Opus: **9**.
 
 **Review date:** on the Principal's ruling on the §4 interrupt.
+
+---
+
+## D-005 · 2026-08-04 · Rider A returns · §4 HARD INTERRUPT — spend exceeds the stated budget
+
+**1 · §4 HARD INTERRUPT FILED. Trigger: *"anything that spends money outside the stated
+budget."*** The Principal approved **~$5/month**. Seat 9's provider selection is a
+**DigitalOcean Basic Droplet at $6/month** (1 vCPU / 1 GiB / 25 GB SSD, Ubuntu 24.04 LTS).
+**$1/month over.** The seat flagged it rather than rounding, with arithmetic: measured
+capture growth is **339,968 bytes/round ≈ 32.6 MB/day ≈ 0.98 GB/month ≈ 11.9 GB/year** at
+the current 20-token universe, so the $4/month tier's 10 GB disk **fills in ~7 months**
+against **~21 months** for the $6 tier. **The CIO makes no recommendation and does not
+round; §4 reserves this and §8 forbids softening it.**
+
+**2 · Verified independently of the seat's report** [measured]: harness suite **160
+passed**, up from 139, 0 failed — the seat's claim holds. `book/pit.db` now at 710
+documents / 365,465 observations, **no new tables** — the heartbeat rides existing schema,
+so A4's restatement path is unchanged. Laptop capture **live throughout and now polling on
+cadence** (16:53:17Z, 17:08:18Z — 15 minutes apart, first clean interval this session).
+
+**3 · The capture's own code changed under a running process.** `loaders.py` and
+`capture_polymarket_book.py` were modified mid-session and **the live laptop capture picked
+the change up on its next firing without restart**. That is the correct outcome and it was
+not a controlled deployment — the firm changed production data-collection code while it was
+collecting. Recorded because it worked this time. `[would-have-asked]` — the CIO allowed it
+by instructing the seat not to stop the capture, judging a coverage gap worse than an
+in-flight code change; that trade is the Principal's to review at §7.
+
+**4 · Two issues filed, both MEDIUM, neither an interrupt.** **I-047** — an un-retried
+Gamma call crashing on DNS failure after host wake was the measured, repeated, uncaught
+cause of real capture gaps; **four occurrences found in `polymarket-book.err`**, fixed with
+retry/backoff. This means the 5.5% coverage figure is **not** wholly host-sleep as D-001 §3
+recorded; part of it is a defect the firm shipped. **I-048** — "not polled" vs "polled,
+whole batch failed" were **provably indistinguishable** in `book/pit.db` before today.
+Closed going forward at **2026-08-04T16:53:16Z** via a heartbeat wired into every exit path;
+**permanently open for all prior history**. The seat checked the schema rather than
+accepting the assertion carried in D-001, and the assertion was wrong.
+
+**5 · Dual-writer decision, accepted under §3.** The VPS owns a capture-only store
+(`pit_capture.db`) born empty, never touching `book/pit.db`; data reaches the real store
+only through `merge_polymarket_capture.py`, replayed via `PITStore.ingest()` against the
+real store and real `TrialRegistry`, **so A4 restatement auto-logging fires exactly as for
+any other source.** The CIO accepts this as operational architecture within delegation.
+`[would-have-asked]`.
+
+**6 · Secrets: none.** Both endpoints (`clob.polymarket.com/books`,
+`gamma-api.polymarket.com/markets`) verified public and unauthenticated against the code —
+`User-Agent` only, no key or token anywhere. This materially simplifies cutover.
+
+**7 · Runbook: 14 steps, 7 marked `[PRINCIPAL]`** — account and droplet creation, SSH key,
+two file transfers, install execution, the VPS→local pull, and the laptop-decommission
+decision. **Nothing was provisioned, no account created, no money spent, no data
+transmitted off this host.** Under D-003's policy, `crontab`/`launchctl` are denied and the
+spend is §4-reserved, so the cutover cannot proceed without the Principal regardless.
+
+**8 · Budget.** 3 of 30 · 2 of 12 Opus, unchanged — Rider A was the Sonnet unit already
+counted. DA reserve holds 1 Opus. Freely allocable Opus: **9**.
+
+**9 · Record-integrity note, flagged not fixed.** `logs/DECISION_RECORD.md` now contains
+**two each** of D-001…D-004 — Sprint 1's and Sprint 2's — because Standing Order 001
+restarts the sequence per D-015 §3. The keys are no longer unique, which will bite at the
+§7 audit. The CIO proposes a sprint prefix (`S2-D-001`) but **has not renumbered the
+Principal's scheme unilaterally.** Awaiting direction.
+
+**Review date:** on the Principal's ruling on the two open §4 interrupts.

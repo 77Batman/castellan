@@ -1,0 +1,43 @@
+# Castellan Capital -- Polymarket order-book capture, one poll per firing.
+# DATA-INFRA-002. Install to /etc/systemd/system/ via install.sh; do not
+# edit the installed copy directly -- edit this file and re-run install.sh.
+#
+# Mirrors the laptop's capital.castellan.polymarket-book.plist (same
+# script, same 900s cadence, same argument shape) so behaviour is
+# identical across both hosts during the parallel-run verification window
+# in the cutover runbook (DATA-INFRA-002 §7).
+#
+# This unit never touches the firm's real book/pit.db or book/registry.db
+# -- it writes only to its own capture-only store under
+# /opt/castellan/book/ (DATA-INFRA-002 §1, the dual-writer decision). No
+# credential of any kind is required (DATA-INFRA-002 §4): the Polymarket
+# Gamma and CLOB endpoints this script calls are public and unauthenticated.
+
+[Unit]
+Description=Castellan Capital Polymarket order-book capture (single poll)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=castellan
+Group=castellan
+WorkingDirectory=/opt/castellan/repo
+ExecStart=/opt/castellan/venv/bin/python3 /opt/castellan/repo/harness/scripts/capture_polymarket_book.py --pit-db /opt/castellan/book/pit_capture.db --registry-db /opt/castellan/book/registry_capture.db --state /opt/castellan/book/polymarket_universe.json
+StandardOutput=append:/opt/castellan/book/logs/polymarket-book.out
+StandardError=append:/opt/castellan/book/logs/polymarket-book.err
+
+# Defense in depth. This process needs outbound HTTPS to Polymarket's
+# public API and read/write access to /opt/castellan/book only -- nothing
+# else on the box, and nothing of the firm's data is ever sent out.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/castellan/book
+
+# A single poll that hangs is a bigger problem than a single poll that is
+# late -- the script's own HTTP timeout (10s) plus its 3-attempt backoff
+# (2s/4s/8s) tops out well under this; this is a hard outer bound so a
+# genuinely stuck process cannot block the next timer firing indefinitely.
+TimeoutStartSec=120

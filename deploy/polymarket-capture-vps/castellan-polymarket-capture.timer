@@ -1,0 +1,26 @@
+# Castellan Capital -- fires castellan-polymarket-capture.service every
+# 900s (15 min), matching the documented cadence rationale in
+# DATA-INFRA-001 §3.2 and the laptop launchd job's StartInterval.
+#
+# Persistent=true is a genuine reliability improvement over the laptop's
+# launchd StartInterval: if the VPS is rebooted (unattended-upgrades,
+# provider maintenance) while the timer would otherwise have fired, the
+# service runs once immediately on the next boot instead of silently
+# waiting up to 900s -- catching up rather than adding to the gap.
+#
+# RandomizedDelaySec=30 is courtesy to a public venue: staggers this
+# firm's polls by up to 30s so they do not land on the same wall-clock
+# second every single interval.
+
+[Unit]
+Description=Run Castellan Polymarket capture every 15 minutes
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=900
+RandomizedDelaySec=30
+AccuracySec=10s
+Persistent=true
+
+[Install]
+WantedBy=timers.target

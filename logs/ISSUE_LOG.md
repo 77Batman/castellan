@@ -1415,3 +1415,95 @@ decision record entry prior to today. It is now an open sprint commitment with n
 The four breaches above are recorded as fact and carried into the §7 calibration audit at
 sprint close.
 **Pattern tag:** `asserted-on-disk-absent-in-fact` · `silently-narrowed-order`
+
+---
+
+## I-047 · 2026-08-04 · Un-retried Gamma call was the measured, repeated, uncaught cause of several laptop capture gaps · Severity: MEDIUM · Owner: head-of-data-infra
+
+**Description.** Found while investigating D-001/Sprint-2 Rider A (VPS capture migration,
+`DATA-INFRA-002`). `logs/capture/polymarket-book.err` carries 4 identical uncaught
+tracebacks, all with the same shape: `capture_polymarket_book.main()` →
+`refresh_universe()` → `_check_market_status()` → `_gamma_get()` → `socket.gaierror` /
+`urllib.error.URLError` ("nodename nor servname provided, or not known") — a DNS
+resolution failure, consistent with the host having just woken from sleep before its
+network interface was fully back up.
+
+**Why this matters beyond the 4 occurrences.** `fetch_polymarket_books` (the CLOB `/books`
+call inside `ingest_polymarket_books`) already had retry/backoff (3 attempts,
+2s/4s/8s) — deliberately, per its own docstring. `_gamma_get` — called first in
+*every* round, for universe refresh — had **none**. A transient failure here crashed the
+whole script before `ingest_polymarket_books` was ever reached, which (before this
+session's heartbeat mechanism, `DATA-INFRA-002` §2) left **zero trace anywhere in
+`book/pit.db`** — not even the ordinary stdout log line, since the crash happened before
+the first `print()` of the round. Every one of these events is indistinguishable, after
+the fact, from the host simply being asleep — which measurably inflated the "not polled"
+share of the coverage gaps the CIO's morning figure was built from, by an amount this
+entry cannot retroactively quantify (the trace shows the failure occurred; it does not
+show how many *additional* silent instances left no trace of any kind, by construction).
+
+**Fix, same session, same seat.**
+1. `_gamma_get` (`harness/castellan/loaders.py`) now retries transient failures with the
+   identical 3-attempt exponential backoff `fetch_polymarket_books` already used — parity
+   between the two network calls a single round makes.
+2. `capture_polymarket_book.py`'s `main()` now wraps the entire round in a top-level
+   `try/except`: any uncaught exception, from anywhere in the round, now still writes a
+   heartbeat document (`ok=False`, the exception repr as `error`) before the process
+   exits, unless opening the store itself fails (logged separately to stderr, not
+   swallowed). This closes the blind spot the heartbeat mechanism (`DATA-INFRA-002` §2)
+   would otherwise have had for exactly this failure class.
+
+Both changes are covered by new tests (`harness/tests/test_polymarket_capture.py`:
+`test_gamma_get_retries_and_recovers`, `test_gamma_get_raises_after_exhausting_retries`)
+and verified manually against the running laptop capture, which picked up the edited
+script on its next scheduled firing (no restart needed — `capture_polymarket_book.py` is
+re-exec'd fresh per launchd firing) and wrote its first heartbeat row without incident.
+
+**Resolution:** fixed this session; 139/139 → 160/160 harness tests pass (21 new, 0
+broken). The 4 historical occurrences remain permanently unattributable to a specific
+missed round — see I-048 for the general limit this illustrates.
+**Pattern tag:** `missing-retry-on-network-call` · `silent-uncaught-failure`
+
+---
+
+## I-048 · 2026-08-04 · Before today, "not polled" and "polled, whole batch failed" were provably indistinguishable in `book/pit.db` — closed going forward, not retroactively · Severity: MEDIUM · Owner: head-of-data-infra
+
+**Description.** Directed to verify, not assume, whether the schema could tell "we did
+not poll this round" apart from "we polled and there was no quote" (`DATA-INFRA-002` task
+item 2). **Checked against the actual schema, not asserted:**
+
+- A round that polls successfully and finds a genuinely empty book **does** write a row
+  (`parse_polymarket_book` sets `two_sided=0.0` unconditionally; confirmed by new test
+  `test_parse_empty_book_still_writes_a_row`) — "polled, no quote" was already
+  distinguishable from a missing row, correctly.
+- A round where the whole-batch fetch fails after retries writes **nothing** — by
+  design (`ingest_polymarket_books`'s own docstring: "if every attempt fails, NOTHING is
+  written"). A round the scheduler simply never fired also writes **nothing**. These two
+  cases were, before this session, **provably identical** in `book/pit.db`: same absence
+  of rows, no way to tell them apart from the store alone. I-047's 4 traces are direct
+  evidence this case occurred, not merely a theoretical gap.
+
+**What was required to make it explicit rather than inferred, and what was built.**
+`record_capture_heartbeat` (`harness/castellan/loaders.py`) — one document per poll
+*attempt*, regardless of outcome, under `source='polymarket-capture-meta'`,
+`symbol='__heartbeat__'`, recording `ok`/`n_requested`/`n_captured`/`n_failed`/`error`.
+Wired into every exit path of `ingest_polymarket_books` and `capture_polymarket_book.py`
+(success, total-fetch-failure, empty-universe, and — after I-047's fix — any uncaught
+exception). `harness/scripts/report_polymarket_coverage.py` reports both the
+heartbeat-covered window and the pre-heartbeat window separately, rather than blending
+them.
+
+**The honest limit, stated per house rule 6, and it does not go away.** This closes the
+gap **from 2026-08-04T16:53:16Z forward** (the first heartbeat row the running laptop
+capture actually wrote, unprompted, on its next scheduled firing after the code changed).
+**It is structurally incapable of resolving the ambiguity for any capture history before
+that instant** — the entire span the CIO's morning coverage figure was computed over.
+Every gap in that window remains, permanently, only interpretable as "either the scheduler
+did not fire, or it fired and failed outright" — both consistent with the observed
+absence, neither provable from the store. This is the same one-way-only property every
+other prospective-only fix in this data source has had (`DATA-PROBE-001`,
+`DATA-INFRA-001` §6, and now this).
+
+**Resolution:** closed going forward as of 2026-08-04T16:53:16Z; open permanently, by
+construction, for all prior capture history. No further action closes the historical
+gap — there is none available.
+**Pattern tag:** `not-polled-vs-failed-indistinguishable` · `prospective-only-fix`
