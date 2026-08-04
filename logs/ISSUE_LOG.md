@@ -1262,3 +1262,156 @@ remaining**.
 
 **Resolution:** open — blocks the seal.
 **Pattern tag:** `undeclared-formula-change-inside-sample`
+
+---
+
+## I-046 · 2026-08-04 · A binding order was asserted on-disk twice, absent both times, and is now committed under a message attributing it to the Principal · Severity: HIGH · Owner: CIO → Principal
+
+**Description.** Two instances of the same failure mode inside 24 hours, the second
+created by the repair of the first.
+
+**Instance 1 — 2026-08-03.** The Principal's D-001 stated Standing Order 001 was
+"committed at `ops/`, read it in full before any dispatch." [measured] It was in no
+commit and on no path; its operative text existed only as prose in
+`logs/DECISION_RECORD.md` D-015 §3–4. The CIO reconstructed it from that source, wrote
+`ops/STANDING-ORDER-001.md` with a provenance note marking it a reconstruction, and
+logged the gap as D-001 §1.
+
+**Instance 2 — 2026-08-04.** The Principal's correction stated the canonical text was
+"now at `ops/STANDING-ORDER-001-canonical.md`." [measured] That path does not exist in
+the working tree, in `HEAD`, in any commit on any ref (`git log --all --diff-filter=A --
+'*canonical*'` returns empty), or in any stash. It has never existed.
+
+**What is actually in the repository.** Commit `2d9ef4f`, authored by the Principal at
+2026-08-04 12:46:32 -0400, message **"ops: canonical Standing Order 001 text
+(Principal-supplied)"**, adds 69 lines to `ops/STANDING-ORDER-001.md`. Those 69 lines are
+**the CIO's reconstruction, byte-identical** — `git diff 2d9ef4f -- ops/STANDING-ORDER-001.md`
+against the working tree is empty, and the committed blob still contains the CIO's own
+provenance note reading *"This file was written on 2026-08-04 by the CIO."* [measured]
+
+The most probable mechanism is a `git add ops/` that swept up the untracked
+reconstruction, with the canonical file never written to the working tree.
+
+**Why this is HIGH and not clerical.** Instance 1 was an absent document — a gap, visible
+as a gap. Instance 2 is worse in kind: the repository now carries a commit message
+asserting *Principal-supplied canonical text* over content the CIO wrote. A future reader,
+including a future session of this firm, has no way to detect the misattribution except by
+noticing that the "canonical" text confesses its own authorship in line 6. **Under A3 the
+repo is the book of record.** A book of record whose commit messages misattribute
+authorship of binding orders is failing at the one job A3 assigns it. The defect is not
+that a file is missing; it is that the missing file has been silently replaced by a
+different document wearing its name.
+
+**What the CIO did NOT do.** The instruction was to diff the reconstruction against the
+canonical text, adopt the canonical as governing, and log the clauses the reconstruction
+lacked. **The CIO did not perform that diff and did not log any such clauses.** There is
+no second document to diff against. Any list of "clauses the reconstruction lacked" would
+have been produced from nothing — which is precisely **I-044**, the orchestrator's
+fabricated narration that D-015 §2 made a governance exhibit rather than a footnote. The
+instruction was well-formed and the CIO would have executed it had its premise held; it
+did not hold, and the correct output is this entry rather than a fabricated diff.
+
+**Consequence for the interval.** None demonstrable. The Principal's correction states the
+reconstruction "ran as silently narrowed order for the interval." That may be true, but
+**the firm cannot presently evidence it either way**, because the text it would be narrow
+relative to has never been in the firm's possession. The reconstruction's §1–§3 are
+D-015's text and its §4 is the D-001 riders, so any divergence lies in clauses the CIO has
+never seen. Both dispatches made under it — Director/PREREG-002 and Seat 9/Rider A —
+conform to D-015 and to the riders as written, and both stand, as the Principal directed.
+
+**Remedy required, and it is the Principal's alone.** The canonical text must reach the
+working tree by a path that does not depend on it already being there: pasted into the
+session, or written and verified with `git show HEAD:ops/STANDING-ORDER-001.md` before the
+commit is trusted. Until it does, `ops/STANDING-ORDER-001.md` governs **as an acknowledged
+reconstruction**, and commit `2d9ef4f`'s message stands as a known-false label that the
+firm has chosen to record rather than rewrite — history is not edited under A3.
+
+**Escalation.** To the Principal, as the only party who holds the canonical text. Flagged
+to Validation as a record-integrity matter: any Gate submission citing Standing Order 001
+inherits this uncertainty until closed.
+
+---
+
+### I-046 · RESOLUTION · 2026-08-04 · canonical text received, committed, verified — and the gap measured
+
+**Canonical text supplied by the Principal by paste under D-002** and committed as
+`23be6b6`. Verified **from `HEAD`, not the working tree**: 53 lines, all 8 sections
+present, **zero CIO authorship traces** (`grep` for "by the CIO" / "reconstructed" /
+"Provenance note" returns 0), HEAD blob byte-identical to working tree. The verification
+path the CIO specified was used precisely because the failure mode was a working-tree file
+that had never been what its commit claimed.
+
+Commit `2d9ef4f`'s false label stands recorded and unrewritten per A3.
+
+### What the reconstruction lacked — measured, not assumed
+
+Diff of the preserved 69-line reconstruction against the 53-line canonical text.
+
+| | Reconstruction | Canonical |
+|---|---|---|
+| Sections | §1–§4 | §1–§8 |
+| Title | "Sprint 2" | "**PRINCIPAL DELEGATION PROTOCOL**" — calibration mode, supplements Charter Part IX, amends nothing |
+
+**Canonical clauses absent from the reconstruction — 18 of 18 probed, all absent:**
+
+| Clause | Canonical location |
+|---|---|
+| The entire objective function; ML trial-accounting ruling; "a correct kill counts identically to a pass"; "any optimization that pressures a gate rather than resolving a hypothesis is a violation of this order"; Σα and origin-ratio reporting | §1 |
+| "No rollover" · "**Failed invocations count as spent (D-012)**" · DA Gate 1 reserve convention, one Opus sealed per family approaching seal | §2 |
+| The `[would-have-asked]` calibration tag | §3 |
+| **The entire hard-interrupt set** — 8 enumerated triggers, "triggers, not thresholds", "no seat, including the CIO, decides whether an item really qualifies", "**Silence is never approval**" | §4 |
+| **The entire dead-man clause** — 10 invocations or 5 calendar days, "a halted firm is a correct outcome; an unsupervised one is not" | §5 |
+| Friday Research Review · Monthly Letter · interrupt queue · the decision record and `[would-have-asked]` log as the review surface | §6 |
+| **The entire calibration audit and graduation conditions** — expiry with the sprint, reissue requirement | §7 |
+| **The entire erosion guard** — widened by any seat, narrowed only by the Principal in writing, no adjectives by interpretation, no batching or softening, Seats 2/6/7 independence untouched | §8 |
+
+**What the two documents actually share: two things.** The 30/12 budget number, and
+**one sentence — "Per-turn Principal review is discontinued."**
+
+That sentence is canonical **§6's final sentence**, and it is the only clause in §6 that
+*removes* oversight. The reconstruction carried it and lost §6's two preceding sentences,
+which specify the oversight that replaces per-turn review. It also lost §4, §5, §7, and §8
+entirely — every structural constraint on the delegated loop.
+
+**The reconstruction was therefore not a narrowed version of the order. It was a different
+document sharing one number and one oversight-removing sentence, operating under the
+order's name.** Its remaining content — remedies (a)/(b)/(c), the PREREG-002 first unit,
+M1→seal, Riders A/B/C — is correct and sourced from D-015 and D-001, but none of it is in
+the order. Right content, wrong document.
+
+The bias direction is measurable and one-sided: **of the two clauses preserved, one is a
+budget ceiling and one removes Principal review; of the ~18 lost, all constrain the CIO.**
+The CIO does not claim this was intentional — D-015 recorded the permissions granted and
+not the guardrails attached, so the reconstruction inherited the source's bias. The
+direction is the finding, not the motive.
+
+### Breaches incurred during the interval — measured
+
+**1 · §2 budget arithmetic was wrong, and the CIO ruled it wrong on the record.**
+Canonical §2: *"Failed invocations count as spent (D-012)."* The Director's Opus unit
+terminated on an API error; the CIO resumed it and reported *"I'll count the unit once,
+since the read was not repeated."* That ruling is void under §2. **Corrected count: 3 of
+30 invocations, 2 of 12 Opus** (Director dispatch, Director resume, Seat 9). Further, §2's
+DA reserve convention seals one Opus for PREREG-002 as a family approaching seal, so
+**freely allocable Opus is 9, not 10.**
+
+**2 · §4 was breached in mechanism, not in outcome.** I-046 was filed HIGH at 2026-08-04.
+§4 makes "any issue filed HIGH" a hard interrupt: the loop halts and queues. The CIO
+instead reported it in prose and continued working in the same turn — resuming the
+Director and writing records. The outcome converged, because the Principal ruled promptly
+in D-002, but convergence by luck is not compliance. **I-045 also stands HIGH and open**
+and is an interrupt item already before the Principal.
+
+**3 · §3 tagging did not occur.** No decision this session carried `[would-have-asked]`.
+Retroactively tagged in D-003.
+
+**4 · §1 contains a goal item the firm has not scheduled** — the ML trial-accounting
+ruling (search space declared at Gate 0; every fitted configuration a logged trial;
+purged/nested CV mandatory; seeds fixed). It appears in no agenda, no dispatch, and no
+decision record entry prior to today. It is now an open sprint commitment with no owner.
+
+**Resolution:** **RESOLVED** — canonical text committed at `23be6b6` and verified from
+`HEAD`. The uncertainty the CIO flagged against Gate submissions clears as of this entry.
+The four breaches above are recorded as fact and carried into the §7 calibration audit at
+sprint close.
+**Pattern tag:** `asserted-on-disk-absent-in-fact` · `silently-narrowed-order`

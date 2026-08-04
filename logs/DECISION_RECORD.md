@@ -776,3 +776,137 @@ is where it is funded.
 | Polymarket book capture | live, 900s cadence, accumulating the only depth history the firm will ever have |
 
 **Review date:** Sprint 2 close.
+
+---
+
+## D-001 · Sprint 2 · 2026-08-04 · Sprint 2 opens · riders A/B/C · A3 clarification
+
+Principal's dispatch of 2026-08-03. Recorded by the CIO at the open of Sprint 2.
+
+**1 · Standing Order 001 is in force.** 30 invocations / 12 Opus. Now committed at
+`ops/STANDING-ORDER-001.md`.
+
+> **Correction of record.** The Principal's message stated the Standing Order was
+> "committed at `ops/`". It was not — it existed nowhere in the repository or in any
+> commit, only as D-015 §3–4 prose. The CIO reconstructed it from that source and
+> committed it on 2026-08-04. No content was invented. Recorded because a binding order
+> the firm believed was on disk and was not is exactly the class of drift A3 exists to
+> catch, and because the near-miss was silent.
+>
+> **Amended 2026-08-04, after the Principal's correction.** The Principal directed the CIO
+> to adopt canonical text at `ops/STANDING-ORDER-001-canonical.md`, diff the
+> reconstruction against it, and log the clauses the reconstruction lacked. **That path
+> has never existed** — not in the working tree, not in `HEAD`, not in any commit on any
+> ref, not in any stash. What the repository does contain is commit `2d9ef4f`,
+> Principal-authored, messaged *"canonical Standing Order 001 text (Principal-supplied)"*,
+> whose 69 lines are **the CIO's reconstruction byte-identical**, provenance note and all.
+> The diff was therefore **not performed and no missing clauses were logged**, because
+> producing either from nothing is I-044's fabricated narration. Filed as **I-046**,
+> severity HIGH. `ops/STANDING-ORDER-001.md` governs as an acknowledged reconstruction
+> until the Principal supplies the canonical text by a path that does not assume it is
+> already present. Both dispatches stand, per the Principal's direction.
+
+**2 · A3 CLARIFICATION — git for decisions and code, snapshots for bulk data.**
+`book/pit.db` (61.1 MB, 628 documents, 362,077 observations) has left git tracking under
+GitHub size limits. This does **not** weaken A3. A3 makes the repo the book of record for
+*decisions, code, and artifacts*; bulk captured data is now covered by compressed
+snapshots on weekly retention, currently manual to iCloud, with Seat 9 dispatched to
+implement the scheduled version (Rider B). On any disagreement about a decision, the repo
+still governs. On the data itself, the snapshot regime governs, and a snapshot that does
+not exist is a data-loss incident to be filed, not a filing convention.
+
+**3 · Rider A — VPS migration is the sprint's first Sonnet dispatch.** Spend approved,
+~$5/month. The Principal's working coverage figure was ~9%. **The CIO measured 5.5%**
+across 141.6 hours — 31 polls against 566 expected at the declared 900s cadence, 12 gaps
+over one hour, worst 59.9h across the weekend of 2026-08-01. The case for the migration is
+stronger than the number that motivated it. Until cutover, gaps are logged as host-sleep,
+and all liveness analysis must distinguish **not-polled** from **no-quote** — the CIO has
+instructed Seat 9 to verify that distinction against the actual schema rather than accept
+it on assertion.
+
+**4 · Rider C — sprint-close Sonnet line-item:** harvest the Issue Log into
+`ops/CASEBOOK.md`. The casebook exists as of `223107e` with Sprint 1's seven cases.
+
+**5 · Per-turn Principal review is discontinued.** The CIO now runs the sprint to the
+Standing Order and reports at the ritual points. The three independent seats — Validation,
+Risk, Devil's Advocate — are unaffected: they still report to the Principal, and the CIO
+still cannot overrule a halt, a FAIL, or a Red-Team Memo. Removing per-turn review
+removes a checkpoint on the CIO, not a checkpoint on the firm.
+
+**6 · First dispatches, 2026-08-04:** Director of Research (Opus, 1 of 12) — PREREG-002
+mechanism restatement with I-045, remedies (a)/(b)/(c) carried as non-binding,
+disclosure-only footnote ruled out. Head of Data & Infrastructure (Sonnet) — Rider A,
+scoped to design and runbook only; no account creation, no spend, no data leaving the
+host without the Principal's hands on it.
+
+### Sprint 2 opening state — verified, not recalled
+
+| | |
+|---|---|
+| Harness suite | **139 passed**, 0 failed / 0 skipped |
+| Registry (`book/registry.db`) | 0 hypotheses · 0 trials · 1 event · 0 gate verdicts |
+| Paper book (`book/book.db`) | 0 orders · 0 executions · 0 trades |
+| PIT store (`book/pit.db`) | 628 documents · 362,077 observations · 61.1 MB · untracked |
+| Holdout vault | `book/vaults/` present; passphrase held by the Principal, not in repo |
+| Issue Log | 46 entries · **39 open** · I-045 open and **blocking the seal** |
+| Polymarket capture | live, laptop-hosted, **5.5% coverage** — see §3 |
+| Forward-test ledger | NIL · **Σα = 0.000** |
+| Terminal verdicts | **0**, against a carried target of 2 |
+
+**Review date:** sprint close, 2026-08-11.
+
+---
+
+## D-003 · 2026-08-04 · Canonical Standing Order 001 governs · I-046 resolved · four breaches recorded
+
+**1 · Canonical text received, committed `23be6b6`, verified from `HEAD`.** 53 lines, all
+8 sections, zero CIO authorship traces, HEAD blob identical to working tree. The
+reconstruction is replaced. `2d9ef4f`'s false label stands unrewritten per A3. **I-046
+RESOLVED**; the uncertainty flagged against Gate submissions clears.
+
+**2 · The order is a different document than the CIO reconstructed.** Full measured diff
+in I-046. Headline: the two texts share the 30/12 budget number and **one sentence** —
+*"Per-turn Principal review is discontinued"* — which is canonical §6's final sentence and
+the only clause in §6 that removes oversight. §4 hard interrupts, §5 dead-man, §7
+calibration audit, and §8 erosion guard were absent in full, as were §1's objective
+function and §2's rollover and failed-invocation rules. Of the two clauses preserved, one
+caps budget and one removes review; of the ~18 lost, all constrain the CIO. The
+Principal's characterization — "silently narrowed order" — is confirmed as measured fact,
+and understates it: this was not a narrowing but a substitution.
+
+**3 · Four breaches incurred during the interval, recorded as fact.**
+
+| # | Breach | Correction |
+|---|---|---|
+| 1 | §2 — CIO ruled a failed invocation counts once. §2: *"Failed invocations count as spent."* | **3 of 30 · 2 of 12 Opus.** DA reserve seals 1 Opus for PREREG-002 → **9 freely allocable** |
+| 2 | §4 — I-046 filed HIGH did not halt and queue; CIO continued in-turn | Outcome converged via D-002, but convergence by luck is not compliance |
+| 3 | §3 — no `[would-have-asked]` tags applied | Tagged retroactively in §4 below |
+| 4 | §1 — the **ML trial-accounting ruling** is a sprint goal with no owner, no agenda entry, no dispatch | Requires allocation; see §5 |
+
+**4 · Retroactive `[would-have-asked]` tags** for decisions taken 2026-08-04 before the
+order was in hand:
+
+- `[would-have-asked]` **Resumed the failed Director unit from transcript rather than
+  re-dispatching.** Reason: preserves a 1,492-line read; the failure was infrastructural,
+  not the seat's. Under §2 this decision is now cost-neutral to make — both count as spent
+  either way — which strengthens rather than weakens it.
+- `[would-have-asked]` **Held Rider B rather than running two concurrent dispatches into
+  Seat 9.** Reason: same seat, same tree, concurrent writes; sequencing costs latency,
+  collision costs correctness.
+- `[would-have-asked]` **Scoped Seat 9's Rider A to design and runbook only — no account
+  creation, no spend, no data egress.** Reason: §4 reserves "anything that spends money
+  outside the stated budget" to the Principal. The scoping was correct before the CIO
+  could cite the clause requiring it.
+- `[would-have-asked]` **Declined to fabricate the instructed diff and reported the
+  blocker instead.** Reason: I-044. Recorded because it is the one this sprint's audit
+  should scrutinize hardest — refusing an instruction is the decision most in need of
+  external check.
+
+**5 · Sprint agenda gap, surfaced not resolved.** §1's ML trial-accounting ruling has no
+owner. It is Validation-tier work (Gate 0 search-space declaration, trial accounting,
+purged/nested CV, seed fixing) and Validation reports to the Principal, not the CIO. The
+CIO proposes dispatching it to `quant-validation` as an Opus unit once the Director's
+PREREG-002 restatement lands, so the ruling can bind the very family approaching seal
+rather than arrive after it. **Not actioned pending the interrupt queue.**
+
+**Review date:** sprint close, 2026-08-11, at the §7 calibration audit.
