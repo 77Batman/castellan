@@ -73,6 +73,29 @@ The interrupt set may be widened by any seat and narrowed only by the Principal 
 
 ---
 
+## ADDENDUM — I-050 ruling, 2026-08-05 · estimator-change asymmetry · §8 WIDENING
+
+*Recorded here rather than only in the decision record because §8 provides that the
+interrupt set may be widened by any seat and narrowed only by the Principal in writing.
+This is a Principal widening, in writing, and belongs in the order it widens.*
+
+> Estimator corrections toward a statistic's stated assumptions belong to Validation and
+> need no Principal act. **Any estimator change that loosens — relaxes an assumption,
+> widens a tolerance, swaps to a more permissive construction — is a §2 threshold matter
+> and interrupts, regardless of framing.**
+
+**Why it is stated as an asymmetry.** The Principal's own reason: *"so this ruling can't be
+cited sideways later."* The I-050 precedent is that a permissive measurement defect is
+repaired without ceremony. Left unqualified, that precedent is exactly the shape a future
+seat would cite to wave through a loosening as "just an estimator change." The direction of
+the change, not its vocabulary, decides which side of §4 it falls on.
+
+**Operative test for any seat proposing an estimator change:** does the corrected statistic
+measure more of what it always claimed to measure, or less? Toward the stated assumption →
+Validation's, no interrupt. Away from it, by any framing → **§4, and it queues.**
+
+---
+
 ## ADDENDUM — D-003, 2026-08-04 · tool-permission policy
 
 *Appended at the Principal's instruction. Verified before acceptance: `.claude/settings.json`

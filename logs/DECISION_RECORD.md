@@ -1348,3 +1348,80 @@ Validation to rule on a document with a known-wrong number in it.** Sequencing: 
 repairs, then C2. `[would-have-asked]`.
 
 **Review date:** on the Principal's ruling on I-050.
+
+---
+
+## S2-D-010 · 2026-08-05 · I-050 approved · estimator asymmetry enters §8 · two dispatches
+
+**1 · I-050 APPROVED.** The Principal confirms on the record that this is **not a threshold
+change**: `T_STAT_HURDLE = 3.0` stands, and *"what changes is that the number compared
+against it now measures what it always claimed to measure."* Precedent named: **Ruling
+003's bisection-artifact logic — permissive measurement defects are repaired without
+ceremony.**
+
+**2 · §8 WIDENING, recorded into the order itself.** The Principal attached an asymmetry
+*"so this ruling can't be cited sideways later"*:
+
+> Estimator corrections **toward** a statistic's stated assumptions belong to Validation and
+> need no Principal act. Any estimator change that **loosens** — relaxes an assumption,
+> widens a tolerance, swaps to a more permissive construction — **is a §2 threshold matter
+> and interrupts, regardless of framing.**
+
+§8 provides that the interrupt set may be widened by any seat and narrowed only by the
+Principal in writing. This is a widening, in writing, so it is written into
+`ops/STANDING-ORDER-001.md` as an addendum rather than left in the decision record alone —
+a widening that lives only in the record is one a future seat reads the order without
+finding. The operative test is recorded there in one line: **does the corrected statistic
+measure more of what it always claimed to measure, or less?**
+
+The CIO notes what this forecloses, since that is the point of it: the I-050 precedent,
+left unqualified, is precisely the shape a future seat would cite to wave a loosening
+through as "just an estimator change."
+
+**3 · Two dispatches, parallel, no file or seat collision.**
+
+- **Director, Opus — PREREG-002 revision R-002.** Three repairs: §10.4's ceiling **110 →
+  109** per RULING-004; **I-053**'s unexecutable §7.2 escalation rule, which the harness
+  refuses for every menu size ≥ 2 and which is therefore currently decorative; and recording
+  what the corrected Gate 1 estimator changes for this family **pre-seal**. The brief asks
+  explicitly whether R6's `MinBTL(86) = 6.14 yr` and its **0.43-year margin** survive the
+  ceiling correction — *a margin that shrinks is a finding*, and the Director is told to say
+  so rather than preserve R-001's numbers.
+- **Validation, Opus — specification and red-first tests.** Specifies the corrected `sr_tstat`
+  construction with no implementer discretion, and writes acceptance tests **that fail against
+  today's harness**. Validation specifies; **Seat 9 implements**, per the Charter's ownership
+  of the harness.
+
+**4 · The suite will go red by design, and this is recorded in advance rather than
+discovered.** Floor stands at **160 passed**. After Validation's dispatch the suite is
+expected **red**, deliberately, until Seat 9's implementation turns it green and the floor
+rises. **If this session ends with the suite red, that is the intended state of a red-first
+regime and not an incident** — I-036's precedent (an agent leaving the suite red by
+accident) is the opposite case and must not be confused with it.
+
+**5 · `[would-have-asked]` — I-051 added to Validation's scope.** Its CV-leakage defects
+(`walk_forward_windows` purges and embargoes nothing; `purged_kfold_splits` ignores feature
+lookback) are the **same permissive direction** as I-050 and blocked on the **same harness
+area**, so they ride the same revision rather than waiting for a separate unit. The brief
+tells Validation the CIO's sequencing **is not binding on its scope** and it may decline to
+bundle them. Reason for the tag: bundling a MEDIUM into a Principal-ruled HIGH's
+implementation is the kind of scope decision the CIO would previously have surfaced.
+
+**6 · One question added to Validation's brief on the CIO's own initiative:** does the
+corrected estimator move **RULING-004's `N` = 109 ceiling or its MinBTL arithmetic**, both
+computed under the *uncorrected* statistic? If the ceiling moves, the firm needs it now,
+pre-seal — not after PREREG-002 is frozen. This is the second-order consequence of a
+first-order correction, and nobody had asked it.
+
+**7 · Budget.** **8 of 30 · 6 of 12 Opus.** DA reserve 1. Freely allocable Opus: **5.**
+
+**8 · §5 dead-man clock reset** by this checkpoint. **8 invocations remain** before the
+mandatory halt, whichever comes first with the 5-calendar-day limit.
+
+**9 · Sequence from here**, the Principal having left it to the CIO: Seat 9 implements
+Validation's spec (Sonnet) → **C2** Gate 0 intake verdict once the Director's R-002 lands,
+so Validation does not rule on a document carrying a known-wrong ceiling → **C3** Devil's
+Advocate memo on the §2 reserve Opus, last before any Gate 1 submission. **Rider B**
+(snapshot scheduling) and **Rider C** (casebook harvest) remain outstanding and are Sonnet.
+
+**Review date:** on the return of R-002 and the estimator specification.
