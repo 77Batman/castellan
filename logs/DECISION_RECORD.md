@@ -1425,3 +1425,180 @@ Advocate memo on the §2 reserve Opus, last before any Gate 1 submission. **Ride
 (snapshot scheduling) and **Rider C** (casebook harvest) remain outstanding and are Sonnet.
 
 **Review date:** on the return of R-002 and the estimator specification.
+
+---
+
+## S2-D-011 · 2026-08-05 · R-002 lands · §4 HARD INTERRUPT — KC-002 clauses 2 and 3 restated
+
+**1 · §4 HARD INTERRUPT FILED. Trigger: *"any kill-condition signature or restatement."***
+R-002's **R9** names its own targets: *"§14 KC-002 anti-reinterpretation clauses **2 and
+3**"*, plus the sealed **`forward_kill_condition`** field. Verified on the document
+[measured].
+
+**This is a larger change than Interrupt 1 was, and the CIO says so rather than leaning on
+the earlier approval.** Interrupt 1 was §14.2 *commentary* — expectation-setting, marked
+`[inferred]`, operative clauses untouched. **R9 changes operative post-kill machinery**: what
+a successor family must declare after KC-002 fires. Clause 3 read *"a new family opened with
+`n_inherited ≥` the killed family's final `n_trials` plus its own"*; it now reads
+`predecessor_family` alone with `n_inherited` = the successor's own new search.
+
+**Why the Director changed it, stated as the seat states it:** the struck form was
+*redundant and unexecutable from the same misreading* — `family_stats` already sums the
+predecessor chain transitively across `predecessor_chain` [measured, `registry.py`], so
+re-declaring the count in `n_inherited` double-counts it, which is exactly what
+`InheritedCountDoubleCountError` refuses. **The clause's intent — that a restatement cannot
+escape its predecessor's trial count — is preserved and is now enforced by the harness
+instead of asserted by the sponsor.**
+
+KC-002's **operative clauses (a)/(b)/(c), thresholds, window, and the absolute 2027-01-31
+observation date are unedited**, and R10 records KC-002 as unaffected by the estimator
+correction, its clauses being bare comparisons with no `t`. The CIO reports that scope as
+fact and does not argue from it.
+
+**2 · The Director found an error in Validation's ruling, issued hours earlier.** The same
+`family_stats` misreading appears in **four** binding clauses across two documents —
+PREREG-002 §7.2, KC-002 clause 3, §19.3's successor, and **`VALIDATION-RULING-004` ML-17,
+which copied this document's formula citing it as source.** Filed **I-055, MEDIUM**, routed
+to `quant-validation`. **A seat correcting the independent gatekeeper's fresh ruling, in the
+gatekeeper's own arithmetic, is the firm working.**
+
+**3 · The expected outcome for this family moved against it, pre-seal.** Gate 1's `t` on net
+returns is the one criterion the estimator correction narrows. Composing R4(b)'s ≈2× haircut
+with the ≈3.3× inflation puts the required uncorrected, pre-haircut `t` at **order 20**
+[inferred — the family's own ρ is unmeasured and measuring it is a trial]. §11.6's *"largest
+single hurdle"* no longer describes the 50% haircut. **§19.3 is revised against the family:
+conditional on F-002 surviving in full, the expected Gate 1 outcome is now PARK-WITH-TRIGGER,
+not PROCEED.** The §19 verdict to fund stands, because F-002 and KC-002 deliver a verdict
+without touching a `t` — and under the Principal's S2-D-006 ruling a correct kill is a full
+terminal verdict.
+
+**4 · The ceiling correction did not move R6's margin, and the Director refused to pretend
+it did.** `N` = 86, `MinBTL(86) = 6.14 yr`, and the **0.43-year margin are unchanged** —
+86 < 109, so the correction never reaches them. What shrank is unused headroom, **24 → 23
+trials**. The seat considered reporting this as a narrowing of R6's margin and rejected it as
+*"theatre in the pessimistic direction."* Recorded because the incentive at a sprint whose
+goal is verdicts runs toward dramatising, and the seat ran the other way.
+
+**5 · I-053's severity understates its firing date for this family, and the Director raised
+it without overwriting Validation's rating.** §19.3's named successor changes K6 (menu size
+4, requiring `3 × chain_total`), which the harness refuses today — **so the successor cannot
+be opened until the registry repair lands**, and that successor is this seat's stated
+most-likely deliverable. The CIO accepts this as a **sequencing constraint**: the registry
+repair rides with Seat 9's implementation dispatch, not later.
+
+**6 · Two issues filed, both MEDIUM, with reasoning on the record.** I-055 — the error runs
+**conservative**, is latent at 0 trials, blocks nothing. I-056 — ML-2 makes a missing ML
+declaration a Gate 0 **rejection** rather than a deferral, applies firm-wide, but no number
+is wrong and the fix is one sentence per unsealed document; PREREG-002 repaired, **PREREG-001
+and the template still open.** Third and fourth consecutive seat to state a severity
+rationale unprompted.
+
+**7 · CIO error, second of the same kind.** The Director was told to number from **I-055**;
+Validation, still in flight, was told the same. **The CIO issued one starting number to two
+parallel dispatches** — the same class of mistake as taking I-049 from Validation's range
+during its outage. Collision will have to be resolved when Validation returns.
+
+**8 · Suite deliberately NOT run, adopting the Director's reasoning.** Validation has two
+untracked in-progress test files on disk (`harness/tests/test_tstat_hac.py`,
+`test_cv_purge_embargo.py`); a run now would report on Validation's half-written work, not the
+Director's. **`logs/ISSUE_LOG.md` is likewise NOT staged this commit** — Validation may be
+appending to it, and staging a half-written entry is precisely I-054's failure mode. Named
+paths only, and the risky path deliberately excluded.
+
+**9 · Seal-readiness: NOT seal-ready, five blocking** — C2, C7, C8, C11 blocking now; C3
+blocking at Gate 1. C12 **discharged narrowly** (cadence only; §7.1.1 now refuses in advance
+any reading of `DATA-VERIFY-002` as evidence of no *parameter* break). **C13** new, folding
+into C2's intake with three questions for Validation. **I-045 still not closed — the Director
+correctly declined again.** *"R-002 created no blocker, discharged one, and still leaves the
+document further from a comfortable seal than it found it."*
+
+**10 · Budget.** 8 of 30 · 6 of 12 Opus, unchanged — R-002 was already counted. DA reserve 1.
+Freely allocable Opus: **5.** §5 dead-man: **8 invocations remain** since the last checkpoint.
+
+**Review date:** on the Principal's ruling on the KC-002 restatement.
+
+---
+
+## S2-D-012 · 2026-08-05 · Estimator spec lands · §4 HARD INTERRUPT — I-057 · numbering fixed
+
+**1 · §4 HARD INTERRUPT FILED. Two triggers, one item:** *"any issue filed HIGH"* and *"any
+finding by Validation… addressed to the Principal."* Filed separately from S2-D-011's
+interrupt and **not batched with it**, per §8.
+
+**I-057 — MinBTL and the Deflated Sharpe Ratio carry the identical serial-independence
+defect I-050 identifies in the t-statistic.** Validation's finding, relayed as filed:
+MinBTL counts observations; DSR's `z = (sr−sr₀)·√(T−1)/√denom` corrects for skew and
+kurtosis and **for nothing serial**. Corrected, the admissible ceiling is **55 at ρ = 0.1,
+31 at ρ = 0.2, 19 at ρ = 0.3, and 2 at ρ = 0.83**; RULING-004 §2.3's additive term 0.642
+becomes **2.099** at ρ = 0.83 [all measured].
+
+**Validation's own qualification travels with the number and the CIO relays it unsoftened:**
+ρ here is the **net return series'** autocorrelation, *which the firm has never measured for
+any family.* **The honest reading is not "the ceiling is 2" — it is "the ceiling is a
+function of an unmeasured quantity and is below 109 at every ρ > 0."**
+
+**Validation did not repair it, and said why:** out of scope for this dispatch, and grafting
+a serial term onto DSR's published non-normality denominator is *a specification choice, not
+a substitution.* **It timed the filing pre-seal deliberately** — the firm is days from
+writing **109** into a sealed document as a maximum, under an assumption it has just formally
+acknowledged its own data violates.
+
+**2 · The answer to the CIO's added question: `N` = 109 does not move, and PREREG-002 can
+seal on it without re-arithmetic.** `min_backtest_length_years` is a function of `N` and the
+Sharpe only; nothing in the estimator spec touches that path. Validation reproduced 109 and
+`MinBTL(86) = 6.1359` against the live harness [measured]. **But the second half of its
+answer is I-057: 109 is not a conservative number and must stop being described as one.** The
+question was asked to find out whether a first-order correction had a second-order
+consequence. It did, and it is larger than the first-order one.
+
+**3 · The corrected estimator makes the Principal's §8 asymmetry mechanical rather than
+remembered.** `t` becomes Newey–West HAC on the sample mean, Bartlett kernel, autocovariances
+divided by `T−1` so lag 0 reduces **exactly** to today's `sr_tstat`, Andrews (1991) AR(1)
+plug-in truncation floored at `label_span − 1` and at any caller-stated lag as a **one-sided
+max — a sponsor can raise it, never lower it** — and the graded figure taken as
+**`min(t_NW, t_raw)`**, so **the change can never loosen.** The Principal's asymmetry ruling
+is thereby enforced by construction rather than by a rule someone must remember to apply.
+The CIO records this as the strongest single piece of design in the sprint.
+
+**4 · Red by design, verified** [measured]: **26 failed, 162 passed.** 28 tests added, 26
+failing. Two are deliberate guards that must stay **green** — `test_hac_t13` (E-1,
+`sr_tstat` must not be mutated in place) and `test_hac_t14` (E-10, the uncorrected figure
+must never acquire a verdict; implementing it as a `Criterion` row would fail every Gate
+forever). **Floor rises 160 → 188** on implementation. `harness/castellan/` untouched;
+registry 0/0. **This red state is the intended state under the Principal's red-first regime
+and is not I-036.**
+
+**5 · I-051 rode along, with a mitigation the CIO did not ask for.** Validation accepted the
+bundling — same class, same files, and *"a serially-honest `t` computed on folds that are not
+serially clean is half a repair"* — then **partitioned the tests into two files so the issues
+close independently, and a failure on the MEDIUM item cannot hold the HIGH one hostage.**
+That is a better answer than the CIO's brief allowed for.
+
+**6 · I-058, LOW — Validation audited its own work of hours earlier and found it wrong.** Two
+of its pre-authored acceptance tests in RULING-004 §11 were defective: a *correct*
+implementation would have **failed ML-T-12** (Bartlett at lag 10 gives 0.4197 against an
+asymptotic 0.3333 — 25.9% apart, outside its own 20% tolerance), and ML-T-11's third
+assertion asserted a condition that is not leakage in an expanding window. Both corrected in
+writing, **pre-implementation**, under the standing term that binds the author as hard as the
+implementer. Combined with the Director finding ML-17's arithmetic defect at I-055, **the
+independent gatekeeper's ruling has now been corrected twice in one day — once by another
+seat and once by itself.**
+
+**7 · CIO STRUCTURAL FIX — issue numbering. The collision is the CIO's and it has now
+recurred five times** (I-013, I-041, I-054, plus the Director and Validation both being sent
+to I-055 in parallel today). Validation states correctly that the structural fix is the
+CIO's, not a seat's. **Effective immediately: the CIO allocates a disjoint, explicitly stated
+issue-number range to every dispatch at dispatch time**, sized generously, and never reuses a
+range or takes a number from a range already issued to a live seat. Seats continue to
+re-check the high-water mark before appending — Validation did, which is why I-057/I-058 are
+clean — but that is a seat's defence against a CIO error, not the fix.
+
+**8 · Budget.** 8 of 30 · 6 of 12 Opus, unchanged — both dispatches already counted. DA
+reserve 1. Freely allocable Opus: **5.** §5 dead-man: **8 invocations remain.**
+
+**9 · Two interrupts now stand open** — S2-D-011's KC-002 restatement and this entry's
+I-057. **Both block their own threads; unrelated work continues** (§4). The threads they
+block are the same one: **the PREREG-002 seal**, which is Standing Order §1's first
+objective. The CIO is not treating that as grounds to soften either filing.
+
+**Review date:** on the Principal's rulings.

@@ -43,6 +43,34 @@ House rule 6 applies throughout: **[measured]** = read or executed in this repos
 
 ---
 
+## REVISION BLOCK — R-002 · 2026-08-05 · PRE-SEAL
+
+> **This document remains UNSEALED. `book/registry.db` holds 0 hypotheses and 0 trials [measured — this session, `SELECT COUNT(*)` on `hypotheses` and `trials`]. Every change below was made before `open_hypothesis` was called and therefore before any result on this family existed to select on. P7 has not yet bitten. Trial budget for this revision was ZERO and no number was computed — every figure used is a prior `[measured]` or `[cited]` finding carried forward with its source named, or arithmetic on two already-cited integers, labelled at the point of use.**
+
+**Authority:** dispatch S2-D-010 · **Occasion:** `research/VALIDATION-RULING-004-ml-trial-accounting.md` (Validation, 2026-08-04) and Issue Log **I-050**, **I-053**; `research/DATA-VERIFY-002-cadence-homogeneity.md` (Seat 9, 2026-08-04).
+**Reasoning memo:** `research/DIR-RESTATE-001-prereg002-mechanism.md` §7, which records what changed and why.
+
+| # | Clause changed | What changed | Why |
+|---|---|---|---|
+| **R8** | §1 recommendation box; §10.4 table and note; §10.1 contingent branch; §18 family exit; §19.2; §21 `success_criteria` | **The absolute admissible ceiling is `N` = 109, not 110.** The `N = 110` row's verdict cell — *"exactly at the span — zero margin"* — was **mislabelled**: `MinBTL(110) = 6.574` exceeds the 6.571 available, so 110 **fails**. Corrected, and the hard-stop trigger moves 110 → 109. | [cited — `VALIDATION-RULING-004` §2.2, §12, which states *"The true maximum is 109 and I am recording the correction."*] The measured figure `MinBTL(110) = 6.574` was already in this document; only the verdict drawn from it was wrong. |
+| **R8(b)** | §10.4 | **R6's figures do NOT move, and the margin that does move is named.** Ceiling `N` = 86, `MinBTL(86, SR 1.0) = 6.14 yr`, margin **0.43 yr** — all unchanged, because 86 < 109. **What shrinks is the unused headroom above the declared ceiling: 24 → 23 trials.** | Stated because the dispatch is right that a shrinking margin is a finding, and because the honest finding here is that the *binding* margin is untouched while a *different* margin lost one trial. Reporting the second as though it were the first would be theatre in the pessimistic direction. |
+| **R8(c)** | §1 recommendation box; §18 family exit; §19.2 | **Three surviving instances of the superseded trial budget `80` are conformed to R6's `79`.** R6 moved the budget 80 → 79 and these three clauses were not moved with it. | An internal contradiction between a document's recommendation box and its own budget section is exactly the kind of thing P7 freezes permanently and no later artifact can reconcile. Found on this pass, repaired on this pass, disclosed rather than silently conformed. |
+| **R9** | §7.1.1; §7.2 BINDING ESCALATION RULE and the paragraph defending it; §14 KC-002 anti-reinterpretation clauses **2 and 3**; §19.3's named successor; §21 `universe`, `forward_kill_condition`; §22 (new row 12) | **The escalation rule is repaired on three heads and made executable.** (i) **Scope:** it read *K1–K6* and now reads **K1–K7** — K7 is discounted to 1 by the same rule and was not covered by the mechanism that makes the discount honest. (ii) **Quantity:** `n_inherited ≥ menu_size × chain_total` **over-declares by one `chain_total`**, because `family_stats` already sums the predecessor chain transitively; the correct declaration for a target denominator of `menu_size × chain_total` is **`n_inherited = (menu_size − 1) × chain_total`**. (iii) **Executability:** the registry refuses **both** forms for every menu size ≥ 2, so the rule as written was **decorative**. It is replaced by a form the harness executes today — **refusal, i.e. a hard stop** — with the harness change named and escalated rather than assumed. | **I-053** [cited — `logs/ISSUE_LOG.md` I-053; `VALIDATION-RULING-004` ML-17]. Head (ii) is **this seat's own arithmetic defect, found in its own rule** [measured — `harness/castellan/registry.py` `family_stats`, which sums `n_inherited` and logged trials transitively across `predecessor_chain`]. Filed **I-055**. |
+| **R10** | §5.4; §16 row 1; §19.3; §21 `success_criteria`; §22 (new row 13) | **What the I-050 estimator correction changes for this family's Gate 1 submission is recorded pre-seal.** `T_STAT_HURDLE = 3.0` **does not move.** F-002 leg (i) **already** uses a Newey–West `t` and is therefore unaffected; **KC-002 is unaffected**, its clauses being bare comparisons with no `t`. **Gate 1's t-criterion is the one that narrows**, on a return series that is autocorrelated by construction. §19.3's expectation is revised **against** the family. | **I-050**, approved by the Principal [cited — `VALIDATION-RULING-004` §14, §14.1: the `t` assumed serial independence; the firm's one measured instance is ρ = 0.83, implying ≈3.3× inflation, and the error ran **permissive**]. A pre-registration that did not say what a known-pending correction does to its own Gate 1 margin would be arranging a later surprise. |
+| **R11** | New §10.7; §10.5 walk-forward clause; §9.2 (new look-ahead row); §15 step 7; §16 (t-stat and σ_SR rows); §20 C13; §21 `success_criteria`; §22 (new row 14) | **`VALIDATION-RULING-004` binds this family in two places and neither was previously carried.** (i) **ML-2** requires a family asserting it is *not* fitted to carry that assertion **as a sentence in the sealed block** — *"Silence is not that assertion"* — and a missing or partial ML block is **REJECTED at Gate 0, not deferred**. The sentence is added. (ii) **ML-1**'s boundary case spares this family **only because** the plateau centroid advances by rule; the **walk-forward step was unspecified**, and per-window re-selection at an argmax would have made this a **fitted family**, at which point ML-13 charges the grid's full cardinality per window. The walk-forward configuration is now **fixed at the plateau centroid** and no per-window selection occurs. | [cited — `VALIDATION-RULING-004` ML-1, ML-2, ML-13, §12]. Validation's §12 records PREREG-002 §10 as *"Untouched"* — that is correct **for the `N` accounting** and §10.7 confirms it choice by choice; it is **not** correct that the ruling leaves the document alone, and this row records the difference rather than resting on the summary line. |
+| **R12** | §7.1.1 blocking-check paragraph; §20 C12; the seal-readiness block | **C12 is DISCHARGED, and the discharge is narrower than the premise it was protecting.** `DATA-VERIFY-002` measures **0 deviating days of 4,802 symbol-days** on BTC and ETH, both directions, full span [measured — Seat 9]. **That verifies the CADENCE dimension only, not the PARAMETER dimension:** the documented 2025-09-18 firm-wide change shows **3 prints on both symbols**, so a cadence sweep is structurally blind to it, and **K7 governs it by declaration rather than by measurement.** | [measured — `research/DATA-VERIFY-002-cadence-homogeneity.md` §3, §4]. C12's own text asked for a print-count sweep and got a clean one; recording the discharge without recording what the instrument cannot see would leave the family's homogeneity claim resting on a control that was never pointed at the risk. |
+
+**ONE ROOT CAUSE UNDER R9, NAMED BECAUSE IT APPEARS IN FOUR PLACES AND WAS REPAIRED FOUR TIMES.** Every head-(ii) defect above is the same misreading: **that a successor must carry its predecessor's trial count in `n_inherited`, when `family_stats` already carries it transitively through `predecessor_family`** [measured — `registry.py`]. It appears in (1) §7.2's escalation rule, (2) **KC-002 anti-reinterpretation clause 3** — *"a new family opened with `n_inherited ≥` the killed family's final `n_trials` plus its own"*, which is **redundant and unexecutable for the same reason and is replaced by `predecessor_family` alone**, (3) §19.3's named successor, and (4) **`VALIDATION-RULING-004` ML-17, which copies this document's formula citing it as the source** [cited]. **The firm's rule that a restatement cannot escape its predecessor's count is delivered better by the harness than by any of the four sentences that tried to state it.** Filed **I-055**.
+
+**What was NOT done, and why, so the absence is legible:**
+
+- **No seal.** Sealing is sequenced separately and is not this seat's to trigger. **C2, C3, C7, C8 and C11 remain open** and the seal-readiness block at the foot of this document is updated rather than relaxed.
+- **I-045 is NOT closed by this revision.** Its owner line routes closure to `quant-validation` and this seat does not have it. C12 — a condition in this seat's own document — is discharged; **that is not the same act and the two must not be read as one.**
+- **No declared menu edited.** K1's option (8) still names SOL and K4's option (2) still names SOL. Only selections move, and in this revision **no selection moved at all** — R8 through R12 touch a ceiling, an escalation rule, a disclosure, an assertion, and a condition's status. **`N_conditioning` remains 7 and the trial budget remains 79.**
+- **No number computed.** The one arithmetic operation performed is `109 − 86 = 23`, on two integers each already `[cited]` or `[measured]` — the same treatment §7.3 gives its counterfactual product.
+
+---
+
 ## 0. Provenance — what was read, what was run, and what this seat did not do
 
 **Read this session** [measured]: `FUND_CHARTER.md` Parts II (Seats 2, 7, 9, 10), III (§3.1–3.5), IV (§4.1–4.6), V (§5.1–5.4), VI (§6.6), VII (§7.2–7.8), Appendices C and D · `CLAUDE.md` · `.claude/agents/director-of-research.md` · `research/PREREG-001-forward-lag.md` **in full** · `research/DATA-INGEST-001-crypto-etf.md` **in full** · `VALIDATION-RULING-002` §3.4 (R1–R4) in full · `VALIDATION-ACCEPTANCE-001` §5 (P1–P8) and §6 (G1–G5) in full · `VALIDATION-RULING-001` §3–4 headings · **`VALIDATION-GATE0-001-forward-lag.md` §1.2–1.6 (C-001 and the E1–E5 conditions), §2 (C-002 capacity), §4.1.1 (the four F-001 defects), §4.3** · `logs/DECISION_RECORD.md` D-006, D-007, D-008, D-009 in full · `logs/ISSUE_LOG.md` I-011, I-019, I-023, I-024, I-025, I-026, I-027, I-028, **I-029, I-030, I-031, I-032, I-033** in full · `harness/castellan/{costs,engine,grid,gates,registry,loaders,data,holdout}.py`.
@@ -89,7 +117,7 @@ House rule 6 applies throughout: **[measured]** = read or executed in this repos
 | **Horizon** | Continuous. Daily rebalance with a turnover band. No event trigger, no holding-period cap. |
 | **Conviction** | **Moderate on the mechanism; low on the conditioning claim; high on the falsifier's ability to settle it.** This seat's stated expectation (§19.3) is that the family produces a **KILL memo naming a successor**, and that the kill comes from bar granularity rather than from the market. |
 | **Trial count `N` at seal** | **`N_inherited` = 0** [measured — no prior search exists]. **`N_conditioning` = 6**, declared with menus at §7. **Declared floor `N` = 6.** |
-| **Trial budget** | **80** post-seal trials. Ceiling `N` = 86. **Absolute admissible ceiling `N` = 110** — §10.4 shows why, and it is arithmetic, not preference. |
+| **Trial budget** | ~~**80** post-seal trials~~ **[R8(c) · 2026-08-05] 79 post-seal trials** — R6 moved the budget to 79 and this box was not updated with it; the inconsistency is repaired here rather than sealed. Ceiling `N` = 86, unchanged. ~~**Absolute admissible ceiling `N` = 110**~~ **[R8 · 2026-08-05] Absolute admissible ceiling `N` = 109** [cited — `VALIDATION-RULING-004` §2.2, §12] — §10.4 shows why, and it is arithmetic, not preference. |
 | **Breakeven cost** (house rule 5) | **Cannot be stated, and the reason is a defect not an omission.** `CRYPTO_PERP_TAKER` charges funding as a cost on **gross** notional, so on this family's delta-neutral pair it applies **−21.9%/yr** where the strategy **receives** +10.95%/yr [measured — §12]. The sign is inverted and the base doubled. **No net number from this family means anything until that is repaired.** |
 | **Falsifier decisiveness** (I-029) | **P(F-002 survives \| the conditioning is pure noise) ≈ 1.3 × 10⁻⁴**, against F-001's measured **31%** [cited — I-029]. **F-002 contains no `argmax` and no selection of any kind.** Nulls, α, and a minimum-sample leg are stated at §5.3; the audit against all four F-001 defects is §5.5, including **two that were live in this document's first draft and are repaired rather than argued around.** |
 
@@ -261,6 +289,30 @@ F-002's leg (i) tests the **pre-haircut** `t(α)`. Gate 1's `t ≥ 3.0` applies 
 
 **These are deliberately different bars and the difference is deliberate.** F-002 asks whether the family should continue to exist. Gate 1 asks whether it should receive capital. A family that clears the first and not the second is a legitimate outcome and is written up as a PARK-WITH-TRIGGER, not a PROCEED.
 
+> ### **[R10 · 2026-08-05] WHAT THE I-050 ESTIMATOR CORRECTION CHANGES FOR THIS FAMILY'S GATE 1 SUBMISSION — recorded pre-seal, because a Gate 1 margin that narrows under a correction the firm has already approved is not a later surprise, it is a present fact.**
+>
+> **The correction, as approved.** The Gate 1 `t`-statistic is computed as `SR × √T`, which **assumes the return series is serially independent**. The firm holds one measured instance where that assumption fails badly — **daily funding autocorrelation ρ = 0.83, implying a `t` overstated by ≈3.3×** — and **the error runs in the permissive direction** [cited — `VALIDATION-RULING-004` §14, §14.1; I-050, approved by the Principal]. The estimator is being corrected to its own stated assumption in a parallel Validation dispatch. **`T_STAT_HURDLE = 3.0` DOES NOT MOVE.** This is an estimator repair, not a threshold change, and it requires no Charter amendment [cited — same].
+>
+> **Whether this family is exposed: yes, structurally, and the exposure is not a possibility but a property of the payoff.** The measured ρ = 0.83 is on the **funding rate series**, which is this family's revenue line and its state variable. A delta-neutral carry position's net return is **funding accrual plus a basis increment**, and funding accrual is the persistent term. **A carry residual is autocorrelated by construction** — this document already asserts exactly that at §5.2 leg (i), which is why leg (i) was written with a Newey–West `t` in the first place. **This seat therefore states pre-seal that this family's net return series is expected to carry material positive autocorrelation** [inferred — from the payoff's construction and from the measured ρ = 0.83 on the funding series; **NOT measured on this family's net returns, which would be a trial against a 0-trial registry**].
+>
+> **What moves, and what does not, clause by clause:**
+>
+> | Clause | Depends on the uncorrected statistic? | Consequence |
+> |---|---|---|
+> | **F-002 leg (i)** (§5.2) | **NO.** It specifies a **Newey–West `t` at 21-bar truncation**, pre-committed, *"because a carry residual is autocorrelated by construction and an OLS `t` on it is inflated in a known direction."* | **Unaffected.** The falsifier was already written to the corrected estimator, one document before the correction was ruled. §5.3's `α = 0.0013` and the joint false-survival rate of **1.3 × 10⁻⁴ stand unedited.** |
+> | **F-002 legs (0), (ii), (iii)** | **NO.** A bar count, a ratio of tail means, and a sign test on an annualized return. No `t` appears. | Unaffected. |
+> | **KC-002 clauses (a), (b), (c)** (§14) | **NO.** Three bare one-sided comparisons against thresholds — *"none has a null distribution, an alpha, or a power statement"* (§14.1). | **Unaffected. Stated explicitly so nobody re-opens the kill condition on the strength of an estimator change.** |
+> | **DSR, PBO, WFE, subperiod positivity, P&L concentration, capacity, correlation** | **NO.** None is a `t`. | Unaffected. |
+> | **Gate 1's `t ≥ 3.0` on net returns** (§4.4, §6.3) | **YES. This is the one that narrows, and it is the criterion §5.4 above is entirely about.** | **See below.** |
+>
+> **The arithmetic of the narrowing, bounded rather than computed.** §5.4 establishes that clearing Gate 1's `t ≥ 3.0` **post-haircut** requires roughly **2×** the pre-haircut figure, the 50% haircut halving expected return without touching the standard error. The I-050 correction multiplies the required *uncorrected* `t` by the inflation factor at the family's realized autocorrelation. **At the firm's one measured ρ of 0.83 that factor is ≈3.3** [cited — I-050]. Composing the two: **an uncorrected, pre-haircut `t` of order 3.0 × 2 × 3.3 ≈ 20** [inferred — arithmetic on two cited multipliers, stated as an order of magnitude and **not** as a forecast; **the family's own ρ is unmeasured and may be materially lower than 0.83, in which case the factor is materially smaller**].
+>
+> **This seat will not pretend that number is anything other than forbidding, and will not soften it by assuming the family's ρ is small.** *"Probably small"* is `[assumed]` doing the work of `[measured]` — Validation's own words on this point [cited — `VALIDATION-RULING-004` §13] — and this seat adopts them against its own family.
+>
+> **The honest reading, stated pre-seal:** **§11.6 already recorded the 50% haircut as *"the largest single hurdle this family faces."* It is no longer the largest.** The composition of the haircut with the corrected estimator is, and unlike the haircut it is **not** a policy this seat accepted for argumentative credit — it is arithmetic on a payoff shape this family chose. **The family's Gate 1 margin is narrower than R-001 recorded, before a single bar has been fitted, and the correct place for that fact is this document rather than a Validation Report in 2027.**
+>
+> **What this does NOT change.** It does not change the verdict at §19 (fund it, ~4 Sonnet units) — the case there is that a **verdict is reachable**, and F-002 and KC-002, which deliver the verdict, are both unaffected. It does not make the family exploratory. **It reprices what a Gate 1 PASS would take, and §19.3 is revised to say so.** A family that could clear F-002 and not Gate 1 was already pre-registered as a **PARK-WITH-TRIGGER** outcome (§5.4 above); **R10's effect is to make that the expected outcome conditional on surviving F-002, rather than one of two.**
+
 **Live defect that makes this less certain than it reads.** §4.6 does not specify the **point of application** of the haircut — halve the return series, halve the Sharpe, or halve the alpha — and the three give materially different Gate 1 outcomes. **I-019 records that R4(a)/(b) have schema and no computation attached**, so nothing in the harness resolves it either. **This is escalated to Validation at Gate 0 intake as an interpretive question this seat does not own** (§20, C5).
 
 ### 5.5 F-002 audited against the four F-001 defects · **I-029, filed against this seat**
@@ -354,7 +406,7 @@ F-002's leg (i) tests the **pre-haircut** `t(α)`. Gate 1's `t ≥ 3.0` applies 
 
 ### 7.1.1 **[R5 · 2026-08-04]** Why K7 exists, why option (1) is the selection, and the one in-sample trigger named by date
 
-**Why the choice must exist at all.** Binance states verbatim that *"there may be further adjustments to the funding rate settlement frequency... there will be no further announcement on such adjustments"* [cited — official, `DATA-VERIFY-001` §3.2]. This family's holdout classification is **FORWARD** (§11.2) and KC-002 is computed over `[C, C+187 days]` (§14). **A funding-parameter change on BTC or ETH inside that window is therefore a live possibility with no pre-registered treatment**, and any treatment invented afterwards is a post-seal conditioning choice — refused by P3, and pursuable only as a successor family at the §7.2 escalated `n_inherited`. **Declaring the rule now costs 1; discovering the need for it later costs the menu size times the family's final trial count.** That is the §7.2 incentive working as designed, and this seat is paying the cheap side of it deliberately.
+**Why the choice must exist at all.** Binance states verbatim that *"there may be further adjustments to the funding rate settlement frequency... there will be no further announcement on such adjustments"* [cited — official, `DATA-VERIFY-001` §3.2]. This family's holdout classification is **FORWARD** (§11.2) and KC-002 is computed over `[C, C+187 days]` (§14). **A funding-parameter change on BTC or ETH inside that window is therefore a live possibility with no pre-registered treatment**, and any treatment invented afterwards is a post-seal conditioning choice — refused by P3, and pursuable only as a successor family at the §7.2 escalated `n_inherited`. ~~**Declaring the rule now costs 1; discovering the need for it later costs the menu size times the family's final trial count.**~~ **[R9 · 2026-08-05] Declaring the rule now costs 1; discovering the need for it later costs the LINE — the escalated registration is refused by the harness today (I-053) and §7.2's replacement makes the hard stop the sealed behaviour.** The incentive this paragraph describes therefore points the same way and points harder. That is the §7.2 incentive working as designed, and this seat is paying the cheap side of it deliberately.
 
 **Four properties that make option (1) a defensible selection rather than merely a selection:**
 
@@ -369,7 +421,17 @@ F-002's leg (i) tests the **pre-haircut** `t(α)`. Gate 1's `t ≥ 3.0` applies 
 >
 > **Naming it pre-seal is the whole point.** A rule that fires only on events nobody has yet identified invites a run-time argument about whether it fires. This one has its single known in-sample instance written into the sealed text, dated, with its arithmetic effect conceded to be nil and the rule applied anyway.
 >
-> **What is not yet known, and is a blocking pre-seal check (§20, C12):** whether BTC or ETH carries any *other* cadence departure inside the sample. I-045 measures a BTC control at **0 days with >3 prints, before and after** [measured], which is decisive for BTC in the *shortening* direction only — a cadence **lengthening** (fewer than 3 prints/day) would not be caught by that test, and **ETH was not the control and has not been measured at all.** Sealing K7 while asserting that the primary universe has no other in-sample break would be the I-045 defect committed a second time in its own remedy.
+> ~~**What is not yet known, and is a blocking pre-seal check (§20, C12):** whether BTC or ETH carries any *other* cadence departure inside the sample. I-045 measures a BTC control at **0 days with >3 prints, before and after** [measured], which is decisive for BTC in the *shortening* direction only — a cadence **lengthening** (fewer than 3 prints/day) would not be caught by that test, and **ETH was not the control and has not been measured at all.** Sealing K7 while asserting that the primary universe has no other in-sample break would be the I-045 defect committed a second time in its own remedy.~~
+>
+> **[R12 · 2026-08-05 · C12 IS DISCHARGED — AND THE DISCHARGE IS NARROWER THAN THE PREMISE IT WAS PROTECTING, WHICH IS THE PART WORTH READING.]**
+>
+> **What was measured** [measured — `research/DATA-VERIFY-002-cadence-homogeneity.md` §3–§4, Seat 9, via `PITStore.asof` on `field='funding_rate'`]: **BTC and ETH carry exactly three funding prints on every one of 2,401 calendar days each — 4,802 symbol-days, 7,203 prints per symbol, `2,401 × 3 = 7,203` exactly, zero deviating days in EITHER direction, and a calendar span independently confirmed gap-free.** The `value_counts()` of prints-per-day returns a single bucket, `{3: 2401}`, for both symbols. **SOL's 11 deviating days serve as the working control that the instrument can in fact detect a break** [measured — I-045; `VALIDATION-RULING-003` §A2] — a null result from a test with no demonstrated positive is worth much less, and this one has its positive.
+>
+> **What that verifies, and what it does NOT.** It verifies the **CADENCE** dimension. **It does not verify the PARAMETER dimension, and the document's own named trigger is the proof:** **2025-09-18 — the firm-wide `/(8/N)` formula change — shows 3 prints on BTC and 3 on ETH** [measured — `DATA-VERIFY-002` §4, checked by name]. **A documented, dated, real change to the funding formula is INVISIBLE to a cadence sweep.** So is a clamp-cap change, an interest-rate change, or any parameter change that leaves the settlement interval alone — **which is the majority of the parameter space, and includes the exact change (the ±2.00% cap) that killed SOL's usability.**
+>
+> **The consequence, stated as the load-bearing sentence of this whole paragraph:** **K7 governs the parameter dimension BY DECLARATION, not by measurement.** Its trigger is *"a **documented** change to the formula or to per-contract parameters"* — an observable in the vendor's announcements, not in the firm's store. **C12 has confirmed the premise K7 was built on in the one dimension the firm can measure, and has thereby made visible that the other dimension has no instrument at all.** §17 risk #12's residual — *"an unnoticed change is still possible, since detection depends on Seat 9 observing it"* — is therefore **not** narrowed by C12's clean result, and any reading of `DATA-VERIFY-002` as *"the primary universe has no in-sample parameter break"* is a **misreading of a cadence measurement as a parameter measurement.** It is written here, in the sealed text's own section, so that the misreading is refused in advance rather than corrected later.
+>
+> **Also unchanged by the clean result:** the 2025-09-18 trigger **still fires** on BTC and ETH, exactly as declared above, with its arithmetic effect conceded to be nil and the rule applied anyway. `DATA-VERIFY-002` is evidence about K7's **premise**; it is not a substitute for K7 and it does not narrow K7's scope by one day [cited — `DATA-VERIFY-002` §6, which says the same in Seat 9's own words].
 
 ### 7.2 The `N` contribution, and the rule that makes it honest
 
@@ -385,13 +447,37 @@ F-002's leg (i) tests the **pre-haircut** `t(α)`. Gate 1's `t ≥ 3.0` applies 
 
 **And the pre-commitment is enforced, not asserted:**
 
-> **BINDING ESCALATION RULE.** If any of K1–K6 is revised after any result on this family is seen, the revision is **not** an amendment to this family — P3 refuses it and logs `hypothesis_amendment_refused`. It requires a **successor family**, opened with
+> ~~**BINDING ESCALATION RULE.** If any of K1–K6 is revised after any result on this family is seen, the revision is **not** an amendment to this family — P3 refuses it and logs `hypothesis_amendment_refused`. It requires a **successor family**, opened with `n_inherited ≥ (menu size of the revised choice) × (this family's final n_trials)`, and if more than one is revised, the **product** of the revised menu sizes. The successor inherits neither this family's schedule, nor its allocation, nor its narrative.~~
 >
-> `n_inherited ≥ (menu size of the revised choice) × (this family's final n_trials)`,
+> **[R9 · 2026-08-05 · STRUCK AND REPLACED. The struck rule was UNEXECUTABLE and therefore decorative, and it was defective on two further heads this seat found while repairing the first. All three are stated before the replacement, because a rule replaced without naming what was wrong with it is a rule that gets re-broken.]**
 >
-> and if more than one is revised, the **product** of the revised menu sizes. The successor inherits neither this family's schedule, nor its allocation, nor its narrative.
+> **Head (i) — SCOPE. The rule covered K1–K6 and did not cover K7.** R5 declared K7 and R6 discounted it to a contribution of **1**, on the same pre-commitment reasoning that discounts K1–K6. **The escalation rule is the entire mechanism that makes that discount conservative rather than convenient** (see the paragraph below, which says so in terms). A choice discounted by a rule it is not subject to is discounted for nothing. **This is a defect R-001 introduced in the same revision that created K7, inside the section whose job is to prevent exactly that.**
+>
+> **Head (ii) — QUANTITY. `n_inherited ≥ menu_size × chain_total` over-declares by one `chain_total`.** `TrialRegistry.family_stats` computes `n_trials = Σ n_inherited(chain, including self) + Σ logged(chain, including self)` and sums transitively across `predecessor_chain` [measured — `harness/castellan/registry.py`, `family_stats`]. The predecessor's own total is therefore **already inside** the successor's denominator by summation. Declaring `n_inherited = menu_size × chain_total` on top of it yields a successor denominator of `(menu_size + 1) × chain_total`, not `menu_size × chain_total`. **For a target denominator of `menu_size × chain_total`, the correct declaration is `n_inherited = (menu_size − 1) × chain_total`.** The error runs in the **conservative** direction — it over-charges the successor — which is why it survived R-001 unnoticed, and it is a defect regardless: a denominator nobody can reproduce from the rule that produced it is not a denominator. Filed **I-055**. *(The identical formula appears in `VALIDATION-RULING-004` **ML-17**, which cites this document's rule as its source [cited]; I-055 is addressed to Validation as well as to this seat for that reason.)*
+>
+> **Head (iii) — EXECUTABILITY, which is I-053 and is the head that makes the other two academic.** `open_hypothesis` raises `InheritedCountDoubleCountError` whenever a successor declares `n_inherited ≥ chain_total` [measured — `registry.py`, the `chain_total > 0 and n_inherited >= chain_total` guard]. **Both the struck form and the corrected form of head (ii) exceed `chain_total` for every menu size ≥ 2**, and K1–K7's menu sizes are 10, 3, 9, 5, 5, 4, 5 — **every one of them ≥ 3**. The rule the firm wrote could not be executed against the registry the firm built, on any of its seven choices, ever. **The guard is not wrong**; its docstring states the design intent — *"A genuine new search larger than the entire predecessor chain is a Validation escalation, not a silent registration"* [cited — `registry.py`]. **What is missing is the continuation: there is no argument, event, or authorized route by which Validation, having adjudicated the escalation, can then permit the registration** [cited — I-053].
+>
+> ### THE REPLACEMENT — BINDING, AND EXECUTABLE BY THE HARNESS AS IT STANDS TODAY
+>
+> **If any of K1–K7 is revised after any result on this family is seen**, the revision is **not** an amendment to this family — P3 refuses it and logs `hypothesis_amendment_refused` [measured]. The sanctioned continuation is a **successor family** under `predecessor_family`, opened with
+>
+> ```
+> n_inherited  =  (menu size of the revised choice  −  1)  ×  (this family's final n_trials)
+> ```
+>
+> — the product of `(menu size − 1)` across dimensions where more than one is revised — **so that the successor's `family_stats` denominator, which already sums this family's chain transitively, totals the intended `menu_size × chain_total`.** The successor inherits neither this family's schedule, nor its allocation, nor its narrative.
+>
+> **AND, BECAUSE THAT REGISTRATION IS REFUSED BY THE HARNESS TODAY, THE RULE'S OPERATIVE CONTENT UNTIL I-053 IS REPAIRED IS THIS:**
+>
+> > **A post-result revision of any of K1–K7 TERMINATES THE LINE.** The successor cannot be registered; an unregistered family cannot run a backtest (A2); and this document **forbids by name** the one move that would obtain a registration — **declaring a lower `n_inherited` than the escalation requires, in order to satisfy the guard.** That is the under-declaration I-053 names as *"the one that will be taken under schedule pressure"* [cited], it is Appendix B #2 (*"trial counts are lost"*), and no seat may take it on this family for any reason, including that the alternative is abandoning a line of work.
+>
+> **What this costs and what it buys, stated rather than left to be discovered.** It costs the family its only sanctioned route out of a revision: until the harness repair ships, revising a declared choice is not expensive, it is **fatal**. It buys the property that the rule now describes something the firm can actually do — refuse — rather than something it merely says. **A hard stop is a worse outcome for this family and a better rule than an escalation path that terminates in an exception nobody can clear.**
+>
+> **THE HARNESS CHANGE IS ESCALATED, NOT ASSUMED.** This seat does not own `registry.py` and does not repair it here. The repair required is I-053's: *an explicit Validation-authorized route — a keyword argument carrying a logged authorization event reference, or equivalent — that **preserves the raise by default** and permits registration only against a recorded authorization, logged as `n_inherited_escalation_authorized`*, against pre-authored acceptance test **ML-T-14**, which *"requires both halves: a change that merely removes the guard fails it"* [cited — I-053; `VALIDATION-RULING-004` §11.5]. **Owner: `head-of-data-infra`. This document does not wait on it and is not blocked by it** — the hard stop above is the sealed behaviour, and if the repair lands the escalated registration becomes available at `(menu size − 1) × chain_total` without any amendment to this family, because the sealed text already names that quantity.
 
 **Why erring toward 1 is not the sycophantic direction here.** D-009 records that erring *low* on `N` is the sycophantic direction and erring *high* is conservative. The escalation rule is what makes 1 conservative rather than convenient: it is cheap only for as long as the choices are never touched, and it becomes ruinous the instant they are. **A researcher who intends to revise pays the full menu price with interest; a researcher who does not, pays 1.** That is the correct incentive and it is the only design this seat could find that gives one.
+
+> **[R9 · 2026-08-05 — this paragraph was TRUE OF A RULE THAT COULD NOT BE EXECUTED, and that is worth saying plainly.]** Between R-001 and this revision, the sentence *"it becomes ruinous the instant they are"* was **false in operation**: the price it threatened could not be charged, because the registration that would have charged it was refused for every menu size ≥ 2 [measured — I-053]. **The discount to 1 was therefore, for that interval, resting on a deterrent that did not exist.** Under R9's replacement the sentence is true again and in a stronger form — the price is not ruinous, it is **terminal**, until the harness repair lands. **This is recorded rather than quietly fixed because the interesting fact is not that the rule is now sound; it is that a control this document called its most important one was inoperative and nobody, including its author, noticed until Validation read the harness against it.**
 
 ### 7.3 The counterfactual — the number that makes the rider's value concrete
 
@@ -497,6 +583,7 @@ Checked deliberately, because an undeclared conditioning is a defect and the fai
 | **Filling on the signal bar** | `run_backtest(execution_lag=1)`. `execution_lag < 1` raises `SameBarFillError` [measured — `engine.py:30`]. The weight decided at bar `t`'s close earns returns from `t+1`. Not waivable. |
 | **The funding print vs. the bar it is attributed to** | Funding posts at 00:00 / 08:00 / 16:00 UTC. The day's three prints are complete only at 16:00 UTC, after which no further print lands that calendar day [measured — max `event_time` on every funding series is `T16:00:00Z`]. **The day-`t` aggregate is therefore knowable at 16:00Z on day `t`, and it is consumed as a decision input at day `t`'s close, filling at `t+1`. That is a genuine 8-hour margin, not a boundary case.** Stated explicitly so nobody re-derives it. |
 | **Trailing-window screens** | The 30-day funding baseline, the volatility cut, and the T-capacity screen are all evaluated on windows ending **strictly before** the day screened [cited — Ruling 001 §4.2 overriding constraint]. |
+| **[R11 · 2026-08-05 · NEW] The CV embargo is shorter than this family's own feature lookback** | **NOT MITIGATED. A live channel, named at Gate 0 rather than discovered in a WFE number.** `purged_kfold_splits` embargoes `⌈0.01·T⌉` = **24 bars** on a 2,398-bar sample; **K1's lookback is 30 days**, so a training bar 25–30 bars after a test fold computes `z(t)` from **inside that fold**. `walk_forward_windows` applies **no purge and no embargo at all** [cited — `VALIDATION-RULING-004` §1(5), ML-18, §6.1; **I-051**]. **The 1% embargo is a Charter §4.2 constant (`EMBARGO_FRACTION = 0.01`) and is not this seat's to raise**; ML-18 rules it *"a floor rather than a target."* **Consequence for this family, stated plainly: its purged-CV and walk-forward results carry a leakage channel proportional to the excess of its 30-day lookback over the 24-bar embargo, in the permissive direction, until I-051 is repaired.** Owner `head-of-data-infra`; escalated, not absorbed. |
 | **Vendor pre-adjusted series (A4)** | **Not applicable and this is a real advantage.** Neither leg has splits or dividends; nothing is back-adjusted; `auto_adjust` has no meaning for a crypto pair. **A4's hazard does not exist for this family**, in contrast with the eight ETFs in the same store. |
 | **I-020 (`yfinance` UTC offset)** | **Does not touch this family.** I-020 is a `yfinance` defect; `parse_ccxt_ohlcv` and `parse_ccxt_funding` build timestamps from milliseconds-since-epoch, which are absolute [cited — DATA-INGEST-001 §4: *"it holds for ccxt, not for yfinance"*]. **No `yfinance` series is used here.** Stated so this is not read as a general clearance of I-020. |
 | **`knowledge_time` on the backfill** | **Declared limitation** [cited — DATA-INGEST-001 §3]: every row backfilled this session carries `knowledge_time` = the ingestion instant. **This family may not claim to have tested point-in-time *knowledge* for dates before its ingest session.** It tests point-in-time *ordering*, which is what the hypothesis needs. Identical to PREREG-001's position and equally binding. |
@@ -573,14 +660,35 @@ Against the primary universe's **6.571 years**:
 | 35 | 4.56 yr | clears | 2.01 |
 | 80 | 6.01 yr | clears | 0.56 |
 | **86** *(budget exhausted + conditioning)* | **6.14 yr** | **clears** | **0.43** |
-| 110 | 6.574 yr | **exactly at the span — zero margin** | 0.00 |
+| ~~110~~ **[R8 · 2026-08-05] 109** | ~~6.574 yr~~ **≤ 6.571 yr** | ~~**exactly at the span — zero margin**~~ **the true maximum; clears** | ~~0.00~~ **≥ 0.00** |
+| **110** **[R8]** | **6.574 yr** | **FAILS — 0.003 yr past the span.** The verdict cell above read *"exactly at the span — zero margin"* and that was **wrong**: 6.574 > 6.571. | — |
 | 125 | 6.80 yr | **FAILS** | — |
 
-> **`N = 110` is the absolute ceiling.** Beyond it, this family is arithmetically dead at the Gate 1 Sharpe floor and **no result can revive it** — exactly the position the forward-lag family occupies from its first day. Stated at pre-registration rather than discovered at Gate 1.
+> **[R8 · 2026-08-05 — THE CEILING IS 109, NOT 110, AND THE ERROR WAS THIS DOCUMENT'S OWN READING OF ITS OWN MEASURED NUMBER.]**
+>
+> ~~**`N = 110` is the absolute ceiling.**~~ **`N` = 109 is the absolute ceiling** [cited — `VALIDATION-RULING-004` §2.2, which computes the maximum total `N` satisfying `MinBTL(N, 1.0) ≤ span` by bisection at 6.571 years and returns **109**, and §12, which records: *"The true maximum is 109 and I am recording the correction."*]. **`MinBTL(109)` is not computed here** — the ceiling is `[cited]`, not re-derived, because re-deriving it is a computation this seat's zero-trial budget does not authorize and because monotonicity plus the two figures already on this table settle it.
+>
+> **The correction was available inside this document before Validation made it.** `MinBTL(110) = 6.574` was already `[measured]` here, against **6.571** available. 6.574 > 6.571. **The row's verdict cell nevertheless read *"exactly at the span — zero margin."*** That is a mislabel of a measured number, not a measurement error, and it ran in the **permissive** direction — it admitted one trial the arithmetic refuses. Recorded in this form because a correction that arrives from outside and is absorbed without saying it could have been caught inside is how the same defect survives.
+>
+> Beyond 109, this family is arithmetically dead at the Gate 1 Sharpe floor and **no result can revive it** — exactly the position the forward-lag family occupies from its first day. Stated at pre-registration rather than discovered at Gate 1.
+>
+> **WHAT THIS DOES AND DOES NOT DO TO R6's FIGURES — the question the dispatch asks, answered plainly in both directions.**
+>
+> | Quantity | Before R8 | After R8 | Moves? |
+> |---|---:|---:|---|
+> | Declared ceiling `N` (budget 79 + conditioning 7) | 86 | **86** | **No** |
+> | `MinBTL(86, SR 1.0)` | 6.14 yr | **6.14 yr** | **No** — 86 < 109, so nothing about the ceiling correction reaches it |
+> | **Margin against 6.571 yr at the declared ceiling** | **0.43 yr** | **0.43 yr** | **NO. R6's margin does not shrink.** |
+> | Absolute admissible ceiling | 110 | **109** | **Yes, by one trial** |
+> | **Unused headroom between declared and absolute ceiling** | **24 trials** | **23 trials** | **Yes — this is the margin that shrinks** |
+>
+> **`109 − 86 = 23`** [arithmetic on two integers, one `[cited]` and one `[measured]`; no market data touched, no `castellan.stats` call made — the same treatment §7.3 gives its counterfactual product].
+>
+> **The finding, stated so it is neither buried nor inflated.** The margin the Gate 1 length criterion actually turns on — 0.43 years at `N` = 86 — **is untouched**, and this seat will not dress a one-trial change to a ceiling it does not intend to approach as though it were a change to the criterion it does intend to clear. **What genuinely shrank is the family's room to be wrong about its own budget:** the distance between what it declared and what the arithmetic permits is now 23 trials rather than 24, i.e. **one over-budget family-year of slack out of twenty-four**. If the trial budget is ever argued upward, the argument now has one trial less to work with, and §10.5's prohibition on expanding the budget on the strength of an early result is one trial more binding.
 >
 > ~~On the SOL-inclusive 5.87-year span the ceiling is **74**, which is why K4 puts SOL secondary [measured].~~ **[R3 · 2026-08-04] MOOT. SOL is not in the universe (§6.1, K4 option 4), so no SOL-inclusive span exists and the 74-trial ceiling never binds. The measured figure is left struck rather than deleted because it is part of the record of why K4 was originally selected as it was.**
 >
-> **The ceiling relaxes only on a higher realized Sharpe** — `MinBTL(110, 1.5) = 2.92 yr` — but **the budget is not permitted to expand on that basis.** Expanding a trial budget because early results look good is the overfitting operation wearing a schedule's clothing.
+> **The ceiling relaxes only on a higher realized Sharpe** — `MinBTL(110, 1.5) = 2.92 yr`, **[R8 · 2026-08-05]** a figure measured at the superseded 110 and retained unrecomputed because it is quoted only to make a qualitative point and `MinBTL` is monotone, so the value at 109 is no larger — but **the budget is not permitted to expand on that basis.** **[R8]** `VALIDATION-RULING-004` §2.2 puts the same point in the firm's most uncomfortable form: the admissible `N` at 6.571 years is **109 at SR 1.0 and 9,384 at SR 1.5** [cited], and *"a rule that lets a sponsor pick which column of that table applies to them is not a rule"* [cited — same, §13]. **This family fixes its column at SR 1.0 and does not move.** Expanding a trial budget because early results look good is the overfitting operation wearing a schedule's clothing.
 
 ### 10.5 Trial budget
 
@@ -592,7 +700,7 @@ Against the primary universe's **6.571 years**:
 | **F-002** (§5) — `R_bench`, `R_strat`, `R_bench_scaled` | **3** |
 | Pre-grid diagnostics: per-regime-cell decomposition, capacity measurement, cost sensitivity at 1× / 2× / repaired-preset, skew & expected-shortfall line, ~~SOL on its own span~~ **[R3/R6 · 2026-08-04 — struck; SOL is not in the universe]** | ~~≤ **8**~~ **≤ 7** |
 | **±50% parameter grid** (below) | **25** |
-| Walk-forward efficiency — Charter §4.4 requires **≥ 10 windows**, each a refit and therefore a logged trial | ≤ **20** |
+| Walk-forward efficiency — Charter §4.4 requires **≥ 10 windows**, each a refit and therefore a logged trial. **[R11 · 2026-08-05] Each window is refit AT THE FIXED PLATEAU-CENTROID CONFIGURATION; no window re-selects and no per-window optimum is computed or reported — §10.7(c), which is what keeps ML-1's fitted-family trigger from firing** | ≤ **20** |
 | **`N_forward`** — forward-window generation through 2027-01-31. **These are trials, not confirmations** (Validation C-001 **E3**), they are logged as such, and **no reported result may be selected from among them** | ≤ **22** |
 | **Total** | ~~**80**~~ **[R6] 79** |
 
@@ -600,7 +708,7 @@ Against the primary universe's **6.571 years**:
 
 **The ±50% grid: 2 parameters × 5 steps = 25 points, and the constraint is measured not chosen.**
 
-`grid_from_center(fraction=0.5, steps=5, max_points=200)` **raises `ValueError` above 200 points** [measured — `grid.py:27`], and independently §10.4 caps total `N` at 110. A 3-parameter grid is 5³ = **125 points**, which alone would put `N` at 125 + 2 + 8 = 135 and **fail the length criterion outright**. A 4-parameter grid is 625 points and the harness refuses it.
+`grid_from_center(fraction=0.5, steps=5, max_points=200)` **raises `ValueError` above 200 points** [measured — `grid.py:27`], and independently §10.4 caps total `N` at ~~110~~ **[R8 · 2026-08-05] 109**. A 3-parameter grid is 5³ = **125 points**, which alone would put `N` at 125 + 2 + 8 = 135 and **fail the length criterion outright** — **[R8]** and fails it against 109 by more, not less, so the constraint that fixed the grid at 2 parameters is strengthened rather than disturbed. A 4-parameter grid is 625 points and the harness refuses it.
 
 > **Therefore: `lookback` and `k` (the de-scale slope) are gridded at ±50%, 5 steps each = 25 points. `d` (the deadband) and `band` (the turnover band) are fixed at pre-registration and are not gridded. `w_max = 1.0` is not a free parameter — it is the statement that the strategy never exceeds the benchmark's size, which is part of K2 and not a tuning knob.**
 >
@@ -613,6 +721,49 @@ Against the primary universe's **6.571 years**:
 ### 10.6 What `σ_SR` will and will not mean
 
 `deflated_sharpe_ratio` takes `fam.sr_period_std` — the cross-sectional standard deviation of Sharpe ratios across **logged** trials. With 25 grid points plus ~20 walk-forward refits, this family will produce a **genuinely populated** trial distribution, which is the input §4.1's whole apparatus requires and which a family with three hand-run variants cannot supply. **This is a real methodological advantage of budgeting a grid, and it is the argument for spending 25 trials on one rather than treating the grid as a Gate 1 tax.** Recorded so the budget's shape is understood as a design choice.
+
+### 10.7 **[R11 · 2026-08-05]** `VALIDATION-RULING-004` — does it bind this family, and where the answer is not "no"
+
+**The short answer, stated first because the long one has three parts:** the ruling's **`N` accounting** leaves this document's accounting **intact**, and the reason is checkable choice by choice rather than assertable. **But the ruling is not silent on this family**, and two of its clauses reach this document in ways nothing here previously carried. Both are repaired below. **A third — its correction of §10.4's ceiling — is R8.**
+
+**Validation's own summary line is `PREREG-002 §10: "Untouched"`** [cited — `VALIDATION-RULING-004` §12]. **That line is correct about §10 and would be wrong if read as "the ruling does not reach this document,"** and this seat records the difference rather than resting on the summary.
+
+#### (a) ML-1's trigger — does this family fire it?
+
+> **ML-1:** *"A hypothesis family is a **fitted family** … if **any** number that enters a reported result is selected by comparing two or more candidates on a quantity computed from the sample"* [cited].
+
+| Candidate operation in this family | Selected on a sample-computed quantity? | Verdict |
+|---|---|---|
+| **K1–K7** — the seven conditioning choices | **No.** Each was selected **before any measurement**, from a menu declared in this document, against a registry holding 0 families and 0 trials [measured]. **K4's R3 move is the only selection that changed after data existed, and it moved on a DOCUMENTED VENDOR ACT dated 2022-11-09, not on any statistic — §9.1 records the three checkable facts that establish this, including that no return statistic on SOL has ever been computed by this family.** | Does not fire |
+| **The ±50% parameter grid** (§10.5, 25 points) | **The grid compares candidates on the sample — but the configuration that ADVANCES is the plateau centroid, fixed by rule.** ML-1's boundary case rules exactly this: *"The ±50% parameter grid Charter §4.4 already requires of every family … does not by itself make a family a fitted family, because the configuration that advances is the plateau centroid, fixed by rule, not the grid's argmax. **A family becomes a fitted family the moment any selection is made at an argmax rather than by a declared rule**"* [cited]. | **Does not fire — CONDITIONALLY, and the condition is §10.5's commitment that only `plateau_centroid_params` advances. That commitment is now load-bearing in a way it was not when it was written.** |
+| **Walk-forward, ≥10 windows** (§10.5, §15 step 7) | **UNSPECIFIED IN R-001, AND THAT WAS THE GAP.** *"Each a refit and therefore a logged trial"* does not say whether each window **re-selects** its configuration. **If it did, ML-1 would fire, this would become a fitted family, and ML-13 would charge the grid's full cardinality — per window.** | **REPAIRED. See (c).** |
+| **F-002's three series and its four legs** | **No.** Three pre-specified series, four pre-committed constants, *"no `argmax`, no grid, no peak, and no selection over candidates of any kind"* (§5.5). | Does not fire |
+
+**Verdict: this family is NOT a fitted family**, and ML-3 through ML-27 do not reach it — **conditional on (c) below, without which the answer would have been the opposite.**
+
+#### (b) ML-2 binds every family, including this one, and this document did not carry it
+
+> **ML-2:** *"A family that asserts it is not a fitted family carries, in the same sealed block, the single sentence: 'No number reported by this family is selected by comparing candidates on a quantity computed from the sample.' **Silence is not that assertion.**"* And: *"A Gate 0 intake with a missing or partial ML block is **REJECTED, not deferred**"* [cited].
+
+**This document was silent, and silence is the failure mode ML-2 names by name.** The sentence is added verbatim to §21's `success_criteria` field, where it is hashed into `prereg_sha256` and frozen under P3. **It is an assertion of fact in a sealed document and this seat makes it deliberately and checkably** — (a) above is the check, and if any one of its rows is later found to be wrong, the assertion is false in a sealed field, which is a heavier consequence than a wrong verdict and is the correct weight for it.
+
+**Filed as I-056:** `PREREG-001-forward-lag` is also silent and is also unsealed. **Under ML-2 as written it would be REJECTED at Gate 0 for a missing ML block** — a rejection on a paperwork clause, of a family already crippled on arithmetic, which is a poor use of a Gate 0 verdict. It is cheap to fix pre-seal and expensive to discover at intake.
+
+#### (c) The walk-forward specification — the one place the answer changed the document
+
+> **[R11 · 2026-08-05 · BINDING.]** **The ≥10 walk-forward windows are evaluated at the FIXED plateau-centroid configuration carried forward from §10.5's grid. No window re-selects, re-fits by comparison, or reports a per-window optimum. Each window is a refit of the strategy's estimated quantities at a FIXED configuration — which ML-1 explicitly does not catch (*"OLS coefficients under a declared specification, a covariance matrix, a rolling mean — these are unique minimizers of a declared objective, not selections among candidates"* [cited]) — and each remains a logged trial against the ≤20 allocation.**
+>
+> **This is a defect repair, not a design change, and the distinction is the same one R4 turned on.** The struck state was **silence**, and silence here does not default to the safe reading — a walk-forward that re-optimizes per window is the ordinary implementation and is what an unspecified instruction would most likely have produced. **Sealing the silence would have left the fitted/not-fitted question to be settled by whoever wrote the loop, after `C`, which is a researcher degree of freedom of the largest possible kind: it decides whether ML-3's 109-trial ceiling is charged against a declared `N` of 86 or against 86 plus 25 configurations per window.**
+>
+> **It costs the family nothing it had.** §10.5 already committed that *"only `plateau_centroid_params` advances"*; this clause states the consequence for the step that would otherwise have quietly re-opened the selection. **It removes a degree of freedom and adds none, which is why it is admissible pre-seal against a 0-trial registry.**
+
+#### (d) ML-13 leaves §7.2's menu discount intact for K1–K7, and the reason is the discount's own stated condition
+
+> **ML-13:** *"The pre-commitment discount — menu size reduced to 1 — is available **if and only if** the selection is fully determined at sealing by facts stated in the sealed document, without reference to any quantity computed from the sample… **No fitting search ever receives the discount.**"* And: *"This is an extension of PREREG-002 §7.2, not an exception to it"* [cited].
+
+**Every one of K1 through K7 satisfies the condition on the row-by-row evidence at (a).** `N_conditioning` therefore remains **7**, the trial budget remains **79**, ceiling `N` remains **86**, and `MinBTL(86) = 6.14` against 6.571 stands. **This is what "the extension leaves the `N` accounting intact" means, and it is worth stating as a conclusion drawn per choice rather than as a citation of Validation's summary line** — because the summary line would still have read "Untouched" if one of the seven had failed the test, and the party best placed to find that is the seat that made the seven choices.
+
+**One asymmetry recorded against this family's interest.** ML-13's *"declaration still buys the family something real… It is just not worth a factor of `|Θ|`"* is the ruling's statement of what a menu declaration is worth to a **fitted** family. This family claims the full factor — 7 rather than 135,000 (§7.3) — **on the strength of a condition it asserts about itself.** §7.2's escalation rule is the enforcement, and R9 has just established that the enforcement was **inoperative** between R-001 and this revision. **The discount and its enforcement were, for that interval, not in the same document in any operative sense. That is the sharpest single criticism available against this family's `N` accounting, it is this seat's to raise, and it is raised here rather than left for the Red-Team Memo to find.**
 
 ---
 
@@ -673,10 +824,10 @@ Which seats originated or ratified each binding design field, with model and sta
 | Hypothesis statement, mechanism (§3) | **Director of Research** | — | Opus | unknown [assumed] |
 | The §3.3 argument that the unconditioned carry is factor beta under §5.4 | **Director of Research**, on Charter §5.4 as written | — | Opus / human (Charter) | unknown [assumed] |
 | Falsifier F-002 (§5) | **Director of Research** | — | Opus | unknown [assumed] |
-| Conditioning declarations K1–K6 and their menus (§7) | **Director of Research** | **the Principal** (the rider requiring them) | Opus / human | unknown [assumed] |
+| Conditioning declarations ~~K1–K6~~ **[R9 · 2026-08-05] K1–K7** and their menus (§7) — **K7 was declared at R5 and this provenance row was not extended with it** | **Director of Research** | **the Principal** (the rider requiring them) | Opus / human | unknown [assumed] |
 | The §7.2 pre-commitment rule and its escalation | **Director of Research** | — | Opus | unknown [assumed] |
 | Universe, sizing rule, parameter centres (§6) | **Director of Research** | — | Opus | unknown [assumed] |
-| Trial budget and the `N ≤ 110` ceiling (§10.4–10.5) | **Director of Research**, on `castellan.stats` output | — | Opus | unknown [assumed] |
+| Trial budget and the ~~`N ≤ 110`~~ **[R8 · 2026-08-05] `N ≤ 109`** ceiling (§10.4–10.5) | **Director of Research**, on `castellan.stats` output; **[R8] the ceiling's correction from 110 to 109 originates with Quant Validation** [cited — `VALIDATION-RULING-004` §2.2, §12] | Quant Validation | Opus | unknown [assumed] |
 | KC-002 (§14) | **Director of Research**, adopting KC-001's shape (Devil's Advocate, REDTEAM-001 §B.5) including the silence clause | **requires the Principal's signature before any capital** | Opus / human | unknown [assumed] |
 | `CRYPTO_PERP_TAKER` audit (§12) | **Director of Research** [measured from source] | — | Opus | unknown [assumed] |
 | The redirect of Pod B compute to this mandate | **Director of Research** (PREREG-001 §17.2 item 4) · **the Principal** (approved) | — | Opus / human | unknown [assumed] |
@@ -861,8 +1012,8 @@ Costing both legs at the perp preset's 5.0 bp commission understates the spot le
 >
 > **Anti-reinterpretation clauses, binding:**
 > 1. **No re-parameterisation.** All three quantities are computed on the **sealed** specification — not a tuned variant, not the plateau centroid discovered later, not a subset, not "the version we would have run."
-> 2. **No post-`C` exclusions.** Any regime filter, date exclusion, asset exclusion, venue change, or universe restriction not present in the sealed pre-registration is inadmissible in this computation. **This clause is the §7 declaration made enforceable**, and any of K1–K6 revised in order to change this computation's answer is refused by P3 and, if pursued, opens a successor family at the §7.2 escalated `n_inherited`.
-> 3. **No restatement as continuation.** A hypothesis restated after 2027-01-31 is a **new family**, opened with `n_inherited ≥` the killed family's final `n_trials` plus its own, and inherits neither this family's schedule, nor its allocation, nor its narrative.
+> 2. **No post-`C` exclusions.** Any regime filter, date exclusion, asset exclusion, venue change, or universe restriction not present in the sealed pre-registration is inadmissible in this computation. **This clause is the §7 declaration made enforceable**, and any of ~~K1–K6~~ **[R9 · 2026-08-05] K1–K7** revised in order to change this computation's answer is refused by P3 and, if pursued, ~~opens a successor family at the §7.2 escalated `n_inherited`~~ **[R9] TERMINATES THE LINE — §7.2's replacement records that the escalated successor registration is refused by the harness today (I-053), that the sealed continuation is `n_inherited = (menu size − 1) × chain_total` if and when that repair lands, and that declaring a lower figure in order to satisfy the guard is forbidden by name.**
+> 3. **No restatement as continuation.** A hypothesis restated after 2027-01-31 is a **new family**, ~~opened with `n_inherited ≥` the killed family's final `n_trials` plus its own~~ **[R9 · 2026-08-05] opened with `predecessor_family = "funding-carry-conditioning-002"` and `n_inherited` = its OWN new search only**, and inherits neither this family's schedule, nor its allocation, nor its narrative. **[R9 — the struck form was both redundant and unexecutable, from the same misreading as §7.2's head (ii).]** `family_stats` sums `n_inherited` and logged trials **transitively across `predecessor_chain`** [measured — `registry.py`], so setting `predecessor_family` carries this family's entire final count into the successor's denominator **automatically**; re-declaring it in `n_inherited` double-counts it, which is exactly what `InheritedCountDoubleCountError` refuses. **The clause's intent — that a restatement cannot escape this family's trial count — is delivered by `predecessor_family` alone, and is delivered better, because the harness enforces it instead of the sponsor asserting it.**
 > 4. **Kill is automatic on the date.** It requires no meeting, no vote, and no CIO concurrence. **It is not appealable to the CIO.** Only the Principal may reverse it, in writing, logged in `logs/DECISION_RECORD.md` as an Appendix-B-#4 override with its reason on the face of the record and reported in the next Monthly Letter.
 > 5. **SILENCE IS A KILL.** If the computation is not performed on 2027-01-31 — **for any reason, including that the perp price series was never ingested, that the cost model was never repaired, that Validation had no unit available, or that the harness was not ready — the family is killed by default.** A kill condition that can be defeated by not running it is not a kill condition. **This clause is copied deliberately from KC-001, where the Devil's Advocate predicted it would be the one someone tried to soften. It has not been softened here either, and the seat that would benefit most from softening it is the seat that wrote it.**
 
@@ -903,7 +1054,7 @@ Costing both legs at the perp preset's 5.0 bp commission understates the spot le
 | **4** | **Capacity measurement** — trailing-20-session median notional per leg per asset against the $2.5M screen; and the skew / expected-shortfall line on both series. | ~1 Sonnet unit | §4.4 capacity, if depth is absent. Reported regardless. | ≤ 2 |
 | **5** | Per-regime-cell decomposition, cost sensitivity at 1× / 2× / repaired preset, ~~SOL on its own span,~~ **[R3 · struck]** T-capacity window robustness. | ~1 Sonnet unit | Nothing — required reporting | ≤ 6 |
 | **6** | **±50% grid**, 2 parameters × 5 steps, via `run_parameter_grid`. **Plateau centroid advances; argmax is reported alongside it and never carried forward.** | ~1 Sonnet unit | §4.4 parameter surface | **25** |
-| **7** | Walk-forward, ≥ 10 windows, purged k-fold with 1% embargo. | ~1 Sonnet unit | §4.4 WFE | ≤ 20 |
+| **7** | Walk-forward, ≥ 10 windows, purged k-fold with 1% embargo. **[R11 · 2026-08-05] Every window refit at the FIXED plateau-centroid configuration — no per-window selection (§10.7(c)).** **[R11] Two harness defects are carried into this step rather than assumed away:** `walk_forward_windows` applies **no purge and no embargo at all**, and `purged_kfold_splits` embargoes `⌈0.01·T⌉` = **24 bars on a 2,398-bar sample — SHORTER THAN THIS FAMILY'S OWN 30-DAY FEATURE LOOKBACK**, so a training bar after the test fold computes its state variable from inside it [cited — `VALIDATION-RULING-004` §1(5), ML-18, §6.1; **I-051**, MEDIUM, owner `head-of-data-infra`]. **This is a live leakage channel for THIS family specifically, because its 30-day K1 lookback is longer than the embargo the harness applies.** Not this seat's to repair; **named at Gate 0 so a WFE result is not read as clean.** | ~1 Sonnet unit | §4.4 WFE | ≤ 20 |
 | **8** | Forward-window generation through 2027-01-31, for KC-002. | ongoing | KC-002 | ≤ 25 |
 
 > **Steps 0–3 are the whole decision.** Everything from step 4 onward exists to make a *positive* result trustworthy. **None of it is needed to make a negative result decisive**, and if step 2 fires the firm has spent one Sonnet unit and one ingest to kill a family, which is a successful deliverable and is written up as one.
@@ -918,7 +1069,9 @@ Costing both legs at the perp preset's 5.0 bp commission understates the spot le
 
 | §4.4 criterion / concern | Status | Reason |
 |---|---|---|
-| **Net Sharpe, t-stat, DSR, PBO** | **Computable and — uniquely among the firm's families so far — correctly denominatored** | `N_inherited = 0` is honest, the grid populates `σ_SR` genuinely, and I-027's residual is **0.13 years of MinBTL** (§10.3). |
+| **Net Sharpe, DSR, PBO** | **Computable and — uniquely among the firm's families so far — correctly denominatored** | `N_inherited = 0` is honest, the grid populates `σ_SR` genuinely, and I-027's residual is **0.13 years of MinBTL** (§10.3). |
+| **t-statistic** **[R10 · 2026-08-05 — SPLIT OUT OF THE ROW ABOVE, WHERE IT DID NOT BELONG]** | **Computable, and its ESTIMATOR is currently wrong in the permissive direction** | The row above previously carried the `t`-stat and claimed it *"correctly denominatored."* **The denominator was honest; the estimator was not.** `SR × √T` assumes serial independence; the firm's measured instance is **ρ = 0.83 → ≈3.3× inflation**, permissive [cited — I-050, Principal-approved]. **This family's net return is funding accrual plus a basis increment and is autocorrelated by construction** [inferred]. Correct after I-050's estimator repair; **`T_STAT_HURDLE = 3.0` does not move.** F-002 leg (i) is unaffected — it was written Newey–West from the start (§5.4 R10). |
+| **`σ_SR` — the input DSR is actually denominated in** **[R10 · NEW]** | **Populated, and this family is on the right side of a defect it did not know about** | `deflated_sharpe_ratio` benchmarks against `expected_max_sharpe(N, σ_SR)`, **linear in σ_SR**, and `family_stats.sr_period_std` is computed **from logged trials only** — so a family that logs only near-identical survivors reports σ_SR near zero and **defeats DSR at any `N`** [cited — `VALIDATION-RULING-004` §2.3, §1(3), which calls this *"the largest hole in the firm's apparatus"* and finds σ_SR *"roughly three times more load-bearing than `N`"*]. **This family logs all 25 grid points and ~20 walk-forward refits and reports the plateau centroid, not a survivor subset** (§10.5–10.6), so its σ_SR is estimated on the space searched. **Recorded because §10.6 previously argued this as a methodological advantage without knowing it was also a defence against a named hole.** |
 | **Backtest length ≥ MinBTL(N) and ≥ 4 years** | **Clears, with margin, at the declared budget** | 6.571 years available; `MinBTL(86, SR 1.0) = 6.14`. **This is the criterion that kills `forward-lag-001` and this family clears it** (§10.4). |
 | **Holdout ≥ 12 months, most recent 25%** | **Reachable but the earliest date is contested** | §11.3 — three readings, three earliest-Gate-1 dates from 2027-07-28 to 2030-07-28. **Escalated to Validation, not assumed.** |
 | **Capacity ≥ 10× allocation** | **Evaluable with data on disk** | The `volume` field already exists for spot; perp volume arrives at step 1. **Contrast I-026**, where the instrument does not exist at all. |
@@ -983,7 +1136,7 @@ Ranked by how much each should move the decision.
 | Participation cap | ≤ 5%/day of trailing-20-session volume per leg (§4.2 `ADV_PARTICIPATION_MAX`); liquidity floor ≤ 15% of 20-day ADV (§5.1). |
 | Correlated cluster | **BTC and ETH are one cluster, not two positions.** Their funding series co-move; treating them as independent would understate concentration. Cluster cap 15% of pod capital (§5.1) applies to the crypto-carry cluster as a whole. |
 | Position exit | **None.** No target, no stop, no maximum hold (§6.2). Risk is managed by size, which is the hypothesis. |
-| **Family exit** | **F-002 fires** → KILL memo, written with the same care as a PROCEED memo (house rule 1). **KC-002 fires** → registry TERMINATED, automatic, not appealable to the CIO. **Trial budget exhausted at 80, or `N` reaching 110** → this seat halts the family and reports it before Validation raises it. |
+| **Family exit** | **F-002 fires** → KILL memo, written with the same care as a PROCEED memo (house rule 1). **KC-002 fires** → registry TERMINATED, automatic, not appealable to the CIO. ~~**Trial budget exhausted at 80, or `N` reaching 110**~~ **[R8 · 2026-08-05] Trial budget exhausted at 79, or `N` reaching 109** → this seat halts the family and reports it before Validation raises it. **The hard stop moved down by one trial and the budget figure is conformed to R6; neither is discretionary.** |
 | Sizing on a Gate 1 pass | ≤ 25% of target allocation initially, ramped on realized performance (§4.5). |
 | Drawdown | Charter §5.2 ladder applies at pod level. **This seat notes for the CRO that a $250k sleeve cannot on its own reach a pod-level Tier 3, which is why KC-002 clause (c) operates at the sleeve level** — the firm's standing ladder is too coarse to see this family fail. |
 
@@ -1020,7 +1173,7 @@ PREREG-001 §17 recommended **ADMITTED-AS-EXPLORATORY** and *"fund the falsifier
 |---|---|
 | **C1** — Validation's funding-cost specification. Fraction of an Opus unit. **Everything else is blocked on it.** | Any net-P&L claim, in any document or in the paper book, before C1 lands. |
 | **Steps 1–3** — perp ingest, benchmark run, strategy run, F-002 in full. **~2 Sonnet units.** | Intraday ingest (~345,000 bars) **until F-002 survives.** It is the successor's requirement, not this family's. |
-| **Steps 4–7** — capacity, diagnostics, the 25-point grid, walk-forward. **~2 Sonnet units, conditional on F-002 surviving.** | Any expansion of the trial budget past 80, or of `N` past 110, on the strength of an early result. §10.4. |
+| **Steps 4–7** — capacity, diagnostics, the 25-point grid, walk-forward. **~2 Sonnet units, conditional on F-002 surviving.** | Any expansion of the trial budget past ~~80~~ **[R8(c) · 2026-08-05] 79**, or of `N` past ~~110~~ **[R8] 109**, on the strength of an early result. §10.4. |
 | **One Devil's Advocate Opus unit** for the mandatory Red-Team Memo (C3). | Any Gate 1 apparatus before §11.3's holdout reading is settled. |
 
 ### 19.3 The honest expectation, recorded now so it is not claimed as foresight later
@@ -1028,7 +1181,7 @@ PREREG-001 §17 recommended **ADMITTED-AS-EXPLORATORY** and *"fund the falsifier
 [inferred, from the design rather than from any measurement]
 
 - **Leg (iii) survives.** A positive net carry over 6.5 years on BTC and ETH is the most likely of the three outcomes, and it would confirm what the Charter already says rather than discovering anything.
-- **Leg (i) is close to a coin flip**, and the 50% haircut makes clearing Gate 1's version of it (`t(α) ≈ 6.0` pre-haircut) considerably less than even.
+- **Leg (i) is close to a coin flip**, and the 50% haircut makes clearing Gate 1's version of it (`t(α) ≈ 6.0` pre-haircut) considerably less than even. **[R10 · 2026-08-05 — this line is revised AGAINST the family and the revision is the largest single change R-002 makes to a pre-registered expectation.]** F-002 leg (i) itself is **unaffected** by I-050 — it was pre-committed as a Newey–West `t` — but **Gate 1's `t` on net returns was not**, and its estimator is being corrected from `SR × √T` to one that does not assume serial independence. On a payoff whose revenue line is the firm's one measured ρ = 0.83 series, the composition of the 50% haircut with the corrected estimator puts the required **uncorrected, pre-haircut `t` at order 20** (§5.4 R10) [inferred — arithmetic on two cited multipliers; the family's own ρ is unmeasured]. **This seat therefore states pre-seal: conditional on F-002 surviving in full, the expected Gate 1 outcome is PARK-WITH-TRIGGER, not PROCEED.** That is a worse pre-registered expectation than R-001 carried, it is recorded before any result exists to be embarrassed by, and **it is not a reason to withdraw the family** — §19.1's case is that a *verdict* is reachable, and F-002 and KC-002 deliver the verdict without touching a `t`.
 - **Leg (ii) is the most likely killer, and the reason is granularity, not the market.** A daily conditioning signal is being asked to reduce a tail that materializes intraday. **That is asking a daily instrument to dodge an intraday event, and the honest prior is that it cannot.**
 
 > **[R7 · 2026-08-04 — two revisions to this expectation, both against the family.]**
@@ -1041,7 +1194,7 @@ PREREG-001 §17 recommended **ADMITTED-AS-EXPLORATORY** and *"fund the falsifier
 
 > **If leg (ii) fires, the KILL memo names a specific successor and that successor is the family worth the firm's compute:**
 >
-> **the same claim, on 1-hour or 8-hour bars, opened with `predecessor_family = "funding-carry-conditioning-002"` and `n_inherited ≥` this family's final `n_trials`** — carried transitively, per K6's escalation, at the granularity menu's size if K6 is what changed. It would need ~345,000 bars of ccxt history, which the firm can retrieve, and it would be able to see the risk this family cannot.
+> **the same claim, on 1-hour or 8-hour bars, opened with `predecessor_family = "funding-carry-conditioning-002"`** and ~~`n_inherited ≥` this family's final `n_trials`~~ **[R9 · 2026-08-05] `n_inherited` = its own new search only, this family's count arriving through `predecessor_family` by transitive summation** — **and note that a successor changing K6 is a revision of a declared choice, so §7.2's replacement governs it: at K6's menu size of 4 the escalated declaration is `3 × chain_total`, which the harness refuses today, and until I-053 is repaired THIS SUCCESSOR CANNOT BE OPENED.** That is a real and newly-visible cost of the family's most likely terminal outcome (§19.3(3)), and it is stated here rather than discovered on the day the KILL memo names the successor. It would need ~345,000 bars of ccxt history, which the firm can retrieve, and it would be able to see the risk this family cannot.
 >
 > **That is the result this seat actually expects to deliver: not an edge, and not a bare null, but a measured demonstration that the edge is unmeasurable at daily granularity — which is a finding the firm can act on, and which costs ~4 Sonnet units to establish rather than the 20 it would cost to go straight to intraday.**
 
@@ -1071,8 +1224,17 @@ PREREG-001 §17 recommended **ADMITTED-AS-EXPLORATORY** and *"fund the falsifier
 | **C8** | The seal and `HoldoutVault.seal()` occur in the **same session, same UTC day**; passphrase supplied by the Principal and written nowhere. | PM Pod B + the Principal | **BLOCKING** (P7) |
 | **C9** | `binanceusdm` perpetual OHLCV ingested for BTC/ETH/SOL, bounded by the sealed ceiling at `C`. | head-of-data-infra | Blocking on **measurement**, not on sealing |
 | **C10** | **I-022** — the trial-count criterion stops returning a literal `True`. Until then the 80-trial budget is enforced by this seat and by nothing else. | head-of-data-infra | Blocking on **Gate 1**, not on sealing |
-| **C12** **[R5 · NEW · 2026-08-04]** | **The in-sample cadence sweep on the PRIMARY universe, to establish that K7 has no unnamed in-sample trigger.** Seat 9 measures, for **BTC and ETH** across the full span, the count of `funding_rate` prints per UTC day, and enumerates **every** date on which the count departs from 3 — **in both directions**. I-045's BTC control tests only `>3 prints` and **ETH was never the control** [measured — I-045], so the primary universe's cadence homogeneity is currently **asserted, not measured**. Any date found is a K7 trigger and **must be named in the sealed text by date**, alongside 2025-09-18 (§7.1.1). **This is a row-count query on `book/pit.db` and is NOT a trial** — the same class as §0's `COUNT(*)`/`MIN`/`MAX` diagnostics and as I-045's own measurement. Cost: a fraction of a Sonnet unit. | head-of-data-infra → quant-validation | **BLOCKING ON SEALING.** Sealing K7 while asserting an unverified homogeneity claim about the primary universe would be the I-045 defect committed a second time inside its own remedy. |
+| **C12** **[R5 · 2026-08-04]** · **[R12 · 2026-08-05 · DISCHARGED, NARROWLY — see the note under this table]** | **The in-sample cadence sweep on the PRIMARY universe, to establish that K7 has no unnamed in-sample trigger.** Seat 9 measures, for **BTC and ETH** across the full span, the count of `funding_rate` prints per UTC day, and enumerates **every** date on which the count departs from 3 — **in both directions**. I-045's BTC control tests only `>3 prints` and **ETH was never the control** [measured — I-045], so the primary universe's cadence homogeneity is currently **asserted, not measured**. Any date found is a K7 trigger and **must be named in the sealed text by date**, alongside 2025-09-18 (§7.1.1). **This is a row-count query on `book/pit.db` and is NOT a trial** — the same class as §0's `COUNT(*)`/`MIN`/`MAX` diagnostics and as I-045's own measurement. Cost: a fraction of a Sonnet unit. | head-of-data-infra → quant-validation | **BLOCKING ON SEALING.** Sealing K7 while asserting an unverified homogeneity claim about the primary universe would be the I-045 defect committed a second time inside its own remedy. |
 | **C11** | **The leg-(ii) null calibration (§5.5(e)).** A block-bootstrap or sign-randomization of the conditioning schedule against the realized `R_bench` series, average exposure held fixed, converting §5.3's `≤ 0.10` from **[assumed]** to **[measured]**. ≤ 2 trials. **This seat recommends Validation require it.** | Director of Research, on Validation's requirement | **Recommended BLOCKING on sealing** — see below |
+| **C13** **[R11/R9 · NEW · 2026-08-05]** | **Validation's ruling, at the C2 intake and not separately, on three items R-002 puts in front of it: (1) the ML-2 non-fitted assertion at §21 and the §10.7(a) check that supports it — ACCEPTED or REJECTED, ML-2 making a partial ML block a Gate 0 rejection rather than a deferral; (2) whether §7.2's repaired escalation rule, whose operative content until I-053 is repaired is a HARD STOP, is the form Validation wants sealed, or whether it prefers the family to wait on the harness repair instead; (3) whether ML-17's own formula should be corrected to `(menu size − 1) × chain_total` per I-055, since RULING-004 copies this document's arithmetic and inherits its defect.** | Quant Validation | **NOT a separate blocker — resolved inside C2's intake verdict.** Listed so the intake knows what it is being asked, not to lengthen the blocker list. |
+
+> **[R12 · 2026-08-05] ON C12's DISCHARGE, AND WHY IT IS RECORDED AS NARROW RATHER THAN AS CLOSED.**
+>
+> **C12 as written asked for a print-count sweep on BTC and ETH, both directions, full span. It got one, and the result is clean: 0 deviating days of 4,802 symbol-days** [measured — `DATA-VERIFY-002` §3–§4], **with SOL's 11 deviating days as a working positive control that the instrument detects a break when one is there** [measured — I-045; Ruling 003 §A2]. **The condition is DISCHARGED and this seat, which created it, says so plainly rather than holding it open to look careful.**
+>
+> **It verified the CADENCE dimension only.** The documented 2025-09-18 firm-wide formula change shows **3 prints on both symbols** — a real, dated parameter change that a cadence sweep is structurally blind to. **K7 governs the parameter dimension by DECLARATION, not by measurement**, and §7.1.1's R12 note carries the full statement. **`DATA-VERIFY-002` must not be cited as evidence that the primary universe has no in-sample parameter break. It is not evidence about that at all.**
+>
+> **Two boundaries this seat observes rather than crosses.** **(1) I-045 is NOT closed by this revision** — its owner line routes closure to `quant-validation`, and C12's discharge is a different act on a different object. **(2) `DATA-VERIFY-002` §6 records that Seat 9 filed no Issue Log entry because its escalation rule was conditional on finding a deviation and none was found. That is correct** [cited], and this seat adds no entry either: **a clean measurement is not an issue, and the narrowness of what it covers is disclosed in this document rather than filed as a defect in Seat 9's work, which contained none.**
 
 ### 20.1 The sequencing call — this seat adopts Validation's ruling against its own earlier position
 
@@ -1493,12 +1655,64 @@ universe                          = "Venue: binance (spot) and binanceusdm (perp
                                      measurement, from a menu declared IN THIS SEALED PRE-REGISTRATION,
                                      and is BINDING; a choice involving no search over results contributes
                                      1, not the menu size, and the menu declaration is what makes that
-                                     checkable. BINDING ESCALATION: any revision to any of K1-K6 after any
+                                     checkable.
+                                     BINDING ESCALATION. [R9, 2026-08-05, PRE-SEAL - STRUCK AND REPLACED
+                                     ON THREE HEADS. The struck rule read: 'any revision to any of K1-K6
+                                     after any result on this family is seen is refused by P3 and requires
+                                     a SUCCESSOR FAMILY opened with n_inherited >= (menu size of the
+                                     revised choice) x this family's final n_trials, or the PRODUCT of the
+                                     menu sizes if more than one is revised.' HEAD (i) SCOPE: it covered
+                                     K1-K6 and NOT K7, which R5 declared and R6 discounted to 1 on the
+                                     same reasoning - a choice discounted by a rule it is not subject to
+                                     is discounted for nothing. HEAD (ii) QUANTITY: family_stats computes
+                                     n_trials = SUM n_inherited(chain incl. self) + SUM logged(chain incl.
+                                     self), summing TRANSITIVELY across predecessor_chain [measured -
+                                     registry.py], so the predecessor's total is ALREADY inside the
+                                     successor's denominator; declaring menu_size x chain_total on top
+                                     yields (menu_size + 1) x chain_total. The correct declaration for a
+                                     target denominator of menu_size x chain_total is (menu_size - 1) x
+                                     chain_total. The error ran CONSERVATIVE, which is why it survived, and
+                                     it is a defect regardless - filed I-055, and addressed to Validation
+                                     as well because RULING-004 ML-17 copies the same formula citing this
+                                     document as its source. HEAD (iii) EXECUTABILITY (I-053): open_
+                                     hypothesis raises InheritedCountDoubleCountError whenever a successor
+                                     declares n_inherited >= chain_total [measured - registry.py], and BOTH
+                                     the struck and the corrected forms exceed chain_total for every menu
+                                     size >= 2 - K1-K7's sizes are 10, 3, 9, 5, 5, 4, 5, all >= 3 - so the
+                                     rule could not be executed on any of its seven choices, ever. THE
+                                     GUARD IS NOT WRONG; what is missing is the continuation, there being
+                                     no argument, event or authorized route by which Validation, having
+                                     adjudicated the escalation, can then permit the registration.]
+                                     THE REPLACEMENT, BINDING: any revision to any of K1-K7 after any
                                      result on this family is seen is refused by P3 and requires a
-                                     SUCCESSOR FAMILY opened with n_inherited >= (menu size of the revised
-                                     choice) x this family's final n_trials, or the PRODUCT of the menu
-                                     sizes if more than one is revised; the successor inherits neither
-                                     schedule nor allocation nor narrative. COUNTERFACTUAL, recorded so
+                                     SUCCESSOR FAMILY under predecessor_family opened with
+                                     n_inherited = (menu size of the revised choice - 1) x this family's
+                                     final n_trials, the product of (menu size - 1) across dimensions where
+                                     more than one is revised, SO THAT THE SUCCESSOR'S family_stats
+                                     DENOMINATOR - which already sums this chain transitively - TOTALS THE
+                                     INTENDED menu_size x chain_total; the successor inherits neither
+                                     schedule nor allocation nor narrative. AND, BECAUSE THAT REGISTRATION
+                                     IS REFUSED BY THE HARNESS AS IT STANDS, THE OPERATIVE CONTENT UNTIL
+                                     I-053 IS REPAIRED IS: A POST-RESULT REVISION OF ANY OF K1-K7
+                                     TERMINATES THE LINE. The successor cannot be registered, an
+                                     unregistered family cannot run a backtest (A2), and THIS DOCUMENT
+                                     FORBIDS BY NAME the one move that would obtain a registration -
+                                     declaring a LOWER n_inherited than the escalation requires in order to
+                                     satisfy the guard. That is the under-declaration I-053 names as 'the
+                                     one that will be taken under schedule pressure', it is Appendix B #2,
+                                     and no seat may take it on this family for any reason including that
+                                     the alternative is abandoning a line of work. The harness change is
+                                     ESCALATED, NOT ASSUMED: I-053's repair is an explicit Validation-
+                                     authorized route that PRESERVES THE RAISE BY DEFAULT and permits
+                                     registration only against a logged n_inherited_escalation_authorized
+                                     event, against pre-authored acceptance test ML-T-14 which requires
+                                     BOTH halves - a change that merely removes the guard fails it [cited -
+                                     I-053; RULING-004 section 11.5]. Owner: head-of-data-infra. This
+                                     family is NOT blocked on it: the hard stop is the sealed behaviour,
+                                     and if the repair lands the escalated registration becomes available
+                                     at (menu size - 1) x chain_total WITHOUT ANY AMENDMENT TO THIS FAMILY,
+                                     because this sealed text already names that quantity.
+                                     COUNTERFACTUAL, recorded so
                                      the rider's value is legible: had K1-K7 been selected AFTER seeing
                                      results, the product would be [R5, 2026-08-04] 10 x 3 x 9 x 5 x 5 x
                                      4 x 5 = 135,000 [arithmetic on declared menu sizes; NO market data
@@ -1560,7 +1774,48 @@ horizon                           = "CONTINUOUS. No event trigger, no target, no
                                      point-in-time KNOWLEDGE for dates before its ingest session; it tests
                                      point-in-time ORDERING, which is what the hypothesis needs."
 
-success_criteria                  = "Tiered. (1) F-002 survival: no leg fires, and leg (0) firing is
+success_criteria                  = "[R11, 2026-08-05, PRE-SEAL - THE ML-2 ASSERTION, ADDED VERBATIM AND
+                                     PLACED FIRST BECAUSE RULING-004 ML-2 MAKES ITS ABSENCE A GATE 0
+                                     REJECTION RATHER THAN A DEFERRAL, AND BECAUSE 'SILENCE IS NOT THAT
+                                     ASSERTION'.]
+                                     NO NUMBER REPORTED BY THIS FAMILY IS SELECTED BY COMPARING CANDIDATES
+                                     ON A QUANTITY COMPUTED FROM THE SAMPLE.
+                                     This family is NOT a fitted family under RULING-004 ML-1 and ML-3
+                                     through ML-27 do not reach it. The assertion is checkable and section
+                                     10.7(a) is the check, choice by choice: K1-K7 were each selected
+                                     BEFORE any measurement from a menu declared in this document against
+                                     a registry holding 0 families and 0 trials [measured], and K4's R3
+                                     move - the only selection that changed after data existed - moved on a
+                                     DOCUMENTED VENDOR ACT DATED 2022-11-09, not on any statistic, with no
+                                     return statistic on SOL ever computed by this family; the +/-50%
+                                     parameter grid compares candidates on the sample but the configuration
+                                     that ADVANCES is the PLATEAU CENTROID FIXED BY RULE, never the argmax,
+                                     which is ML-1's own boundary case verbatim ('a family becomes a fitted
+                                     family the moment any selection is made at an argmax rather than by a
+                                     declared rule'); THE >=10 WALK-FORWARD WINDOWS ARE EVALUATED AT THE
+                                     FIXED PLATEAU-CENTROID CONFIGURATION AND NO WINDOW RE-SELECTS,
+                                     RE-FITS BY COMPARISON, OR REPORTS A PER-WINDOW OPTIMUM [R11 - this was
+                                     UNSPECIFIED before this revision, and an unspecified walk-forward
+                                     would most likely have been implemented as a per-window
+                                     re-optimization, which WOULD have fired ML-1 and charged the grid's
+                                     full cardinality PER WINDOW; sealing the silence would have left the
+                                     fitted/not-fitted question to whoever wrote the loop, after C]; and
+                                     F-002 contains no argmax, no grid, no peak and no selection of any
+                                     kind. IF ANY ROW OF THAT CHECK IS LATER FOUND WRONG, THIS ASSERTION IS
+                                     FALSE IN A SEALED FIELD, WHICH IS A HEAVIER CONSEQUENCE THAN A WRONG
+                                     VERDICT AND IS THE CORRECT WEIGHT FOR IT.
+                                     ML-13 accordingly leaves this document's N accounting INTACT and the
+                                     reason is the discount's own stated condition, satisfied choice by
+                                     choice above rather than asserted: N_conditioning = 7, trial budget
+                                     79, ceiling N = 86, MinBTL(86, SR 1.0) = 6.14 years against 6.571
+                                     available. THE ASYMMETRY RECORDED AGAINST THIS FAMILY'S INTEREST: the
+                                     discount from 135,000 to 7 rests on a condition the family asserts
+                                     about itself, whose enforcement is section 7.2's escalation rule - and
+                                     R9 establishes that that enforcement was INOPERATIVE between R-001 and
+                                     R-002 (I-053). That is the sharpest criticism available against this
+                                     family's N accounting and this seat raises it rather than leaving it
+                                     to the Red-Team Memo.
+                                     TIERED SUCCESS CRITERIA. (1) F-002 survival: no leg fires, and leg (0) firing is
                                      INSUFFICIENT-DATA rather than survival. (2) KC-002 survival at
                                      C + 187 days: no clause fires - and per KC-002's own text, SURVIVING
                                      IT CONFIRMS NOTHING. (3) Gate 1: every criterion of Charter
@@ -1587,7 +1842,63 @@ success_criteria                  = "Tiered. (1) F-002 survival: no leg fires, a
                                      (I-027)'; and the disclosure line 'F-002 false-survival rate under
                                      the no-information null: 1.3e-4 [derived, with the leg-(ii) term
                                      ASSUMED / MEASURED per C11]' - because I-029's finding is that an
-                                     unstated alpha is how a formality gets reported as a falsifier.
+                                     unstated alpha is how a formality gets reported as a falsifier;
+                                     and [R10, 2026-08-05] the disclosure line 'Gate 1 t-statistic:
+                                     computed under the I-050-corrected estimator; the uncorrected
+                                     SR x sqrt(T) figure is reported alongside it and the two must be
+                                     shown together' - because this family's net return is funding accrual
+                                     plus a basis increment and is AUTOCORRELATED BY CONSTRUCTION, the
+                                     firm's one measured instance of the failing assumption being rho =
+                                     0.83 on the funding series itself, implying ~3.3x inflation in the
+                                     PERMISSIVE direction [cited - I-050, Principal-approved; RULING-004
+                                     sections 14, 14.1].
+                                     WHAT I-050 CHANGES FOR THIS FAMILY, RECORDED PRE-SEAL SO IT IS NOT A
+                                     LATER SURPRISE: T_STAT_HURDLE = 3.0 DOES NOT MOVE - this is an
+                                     estimator repair, not a threshold change, and requires no Charter
+                                     amendment. F-002 LEG (i) IS UNAFFECTED: it was pre-committed as a
+                                     NEWEY-WEST t at 21-bar truncation, one document before the correction
+                                     was ruled, expressly because 'a carry residual is autocorrelated by
+                                     construction and an OLS t on it is inflated in a known direction' - so
+                                     section 5.3's alpha = 0.0013 and the joint false-survival rate of
+                                     1.3e-4 STAND UNEDITED. F-002 legs (0), (ii) and (iii) contain no t and
+                                     are unaffected. KC-002 CLAUSES (a), (b) AND (c) CONTAIN NO t AND ARE
+                                     UNAFFECTED - stated explicitly so no seat re-opens the kill condition
+                                     on the strength of an estimator change. DSR, PBO, WFE, subperiod
+                                     positivity, P&L concentration, capacity and correlation are unaffected.
+                                     THE ONE CRITERION THAT NARROWS IS GATE 1's t >= 3.0 ON NET RETURNS,
+                                     and it narrows materially: section 5.4 already established that the
+                                     R4(b) 50% haircut requires roughly 2x the pre-haircut figure, and
+                                     composing that with the correction at the firm's one measured rho puts
+                                     the required UNCORRECTED, PRE-HAIRCUT t at ORDER 20 [inferred -
+                                     arithmetic on two cited multipliers, stated as an order of magnitude
+                                     and NOT as a forecast; THIS FAMILY'S OWN rho IS UNMEASURED and may be
+                                     materially lower, in which case the factor is materially smaller -
+                                     but 'probably small' is [assumed] doing the work of [measured], which
+                                     is Validation's own formulation and this seat adopts it AGAINST its
+                                     own family]. CONSEQUENCE FOR THE PRE-REGISTERED EXPECTATION, revised
+                                     against the family: section 11.6 recorded the 50% haircut as 'the
+                                     largest single hurdle this family faces' and IT IS NO LONGER THE
+                                     LARGEST - the composition of the haircut with the corrected estimator
+                                     is, and unlike the haircut it is not a policy accepted for
+                                     argumentative credit but arithmetic on a payoff shape this family
+                                     chose. CONDITIONAL ON F-002 SURVIVING IN FULL, THE EXPECTED GATE 1
+                                     OUTCOME IS PARK-WITH-TRIGGER, NOT PROCEED. This does NOT change the
+                                     section 19 verdict: that case rests on a VERDICT being reachable, and
+                                     F-002 and KC-002 both deliver one without touching a t.
+                                     [R11, 2026-08-05] TWO HARNESS LEAKAGE DEFECTS ARE CARRIED RATHER THAN
+                                     ASSUMED AWAY, because one of them is sized against THIS family's own
+                                     parameter: walk_forward_windows applies NO purge and NO embargo at
+                                     all, and purged_kfold_splits embargoes ceil(0.01*T) = 24 BARS on a
+                                     2,398-bar sample - SHORTER THAN THIS FAMILY'S 30-DAY K1 LOOKBACK - so
+                                     a training bar 25-30 bars after a test fold computes z(t) from INSIDE
+                                     that fold [cited - RULING-004 section 1(5), ML-18, section 6.1;
+                                     I-051, MEDIUM, owner head-of-data-infra]. EMBARGO_FRACTION = 0.01 is a
+                                     Charter 4.2 constant and is not this seat's to raise; ML-18 rules it a
+                                     FLOOR RATHER THAN A TARGET. The purged-CV and walk-forward results of
+                                     this family therefore carry a leakage channel proportional to the
+                                     excess of its 30-day lookback over the 24-bar embargo, IN THE
+                                     PERMISSIVE DIRECTION, until I-051 is repaired. Named at Gate 0 so a
+                                     WFE number is not read as clean.
                                      RECORDED AT PRE-REGISTRATION, all [measured] from castellan.stats:
                                      n_inherited = 0 (no prior search exists); [R5/R6, 2026-08-04]
                                      N_conditioning = 7 (was 6; K7 adds one); trial
@@ -1609,15 +1920,37 @@ success_criteria                  = "Tiered. (1) F-002 survival: no leg fires, a
                                      87 and MinBTL(87, SR 1.0) must be computed before sealing; it is
                                      BOUNDED BY ALREADY-MEASURED FIGURES in [6.14, 6.574] years, MinBTL
                                      being monotone increasing in N, so the Gate 1 length criterion clears
-                                     either way and the margin lies between 0.00 and 0.43 years. ABSOLUTE
-                                     ADMISSIBLE CEILING N = 110, at which MinBTL = 6.574 = the entire
-                                     available span and margin is zero; BEYOND 110 THE FAMILY IS
-                                     ARITHMETICALLY DEAD AT THE GATE 1 SHARPE FLOOR AND NO RESULT CAN
-                                     REVIVE IT. [R3, 2026-08-04: the clause 'On the SOL-inclusive
+                                     either way and the margin lies between 0.00 and 0.43 years. [R8,
+                                     2026-08-05, PRE-SEAL - THE ABSOLUTE CEILING IS CORRECTED FROM 110 TO
+                                     109. The prior text read: 'ABSOLUTE ADMISSIBLE CEILING N = 110, at
+                                     which MinBTL = 6.574 = the entire available span and margin is zero.'
+                                     That was a MISLABEL OF THIS DOCUMENT'S OWN MEASURED NUMBER, in the
+                                     PERMISSIVE direction: MinBTL(110) = 6.574 EXCEEDS the 6.571 available,
+                                     so 110 FAILS by 0.003 years and is not 'exactly at the span'.]
+                                     ABSOLUTE ADMISSIBLE CEILING N = 109 - the true maximum satisfying
+                                     MinBTL(N, 1.0) <= 6.571 years [cited - VALIDATION-RULING-004 section
+                                     2.2 by bisection, and section 12: 'The true maximum is 109 and I am
+                                     recording the correction']. MinBTL(109) IS NOT RECOMPUTED HERE; the
+                                     ceiling is cited, not re-derived, against a 0-trial registry. BEYOND
+                                     109 THE FAMILY IS ARITHMETICALLY DEAD AT THE GATE 1 SHARPE FLOOR AND
+                                     NO RESULT CAN REVIVE IT. WHAT THIS DOES NOT MOVE, stated because the
+                                     opposite would be assumed: the DECLARED ceiling N = 86 (budget 79 +
+                                     conditioning 7), MinBTL(86, SR 1.0) = 6.14 years, and the 0.43-year
+                                     margin against 6.571 available are ALL UNCHANGED, because 86 < 109.
+                                     WHAT IT DOES MOVE: the unused headroom between the declared ceiling
+                                     and the absolute one falls from 24 trials to 23 (109 - 86 = 23,
+                                     arithmetic on two integers, no market data touched). The margin the
+                                     length criterion turns on is untouched; the margin for being wrong
+                                     about the budget is one trial smaller. [R3, 2026-08-04: the clause 'On the SOL-inclusive
                                      5.87-year span the ceiling is 74' is MOOT - no SOL-inclusive span
                                      exists and the 74 ceiling never binds. Retained struck because it is
                                      part of the record of why K4 was originally selected as it was.] The
-                                     ceiling relaxes on a higher realized Sharpe (MinBTL(110,1.5)=2.92)
+                                     ceiling relaxes on a higher realized Sharpe (MinBTL(110,1.5)=2.92 -
+                                     [R8] measured at the superseded 110 and retained unrecomputed because
+                                     it is quoted only qualitatively and MinBTL is monotone, so the value
+                                     at 109 is no larger; the admissible N at 6.571 years is 109 at SR 1.0
+                                     and 9,384 at SR 1.5 [cited - RULING-004 section 2.2], and THIS FAMILY
+                                     FIXES ITS COLUMN AT SR 1.0 AND DOES NOT MOVE)
                                      but THE BUDGET MAY NOT EXPAND ON THAT BASIS - expanding a trial
                                      budget because early results look good is the overfitting operation
                                      wearing a schedule's clothing.
@@ -1717,13 +2050,30 @@ forward_kill_condition            = "KC-002. Observation date = C + 187 days, fi
                                      subset, not the version we would have run. (2) No post-C exclusions -
                                      any regime filter, date exclusion, asset exclusion, venue change or
                                      universe restriction not present in the sealed pre-registration is
-                                     inadmissible in this computation; this clause is the K1-K6 declaration
-                                     made enforceable, and any of K1-K6 revised in order to change this
-                                     computation's answer is refused by P3 and, if pursued, opens a
-                                     successor family at the escalated n_inherited. (3) No restatement as
+                                     inadmissible in this computation; this clause is the [R9, 2026-08-05]
+                                     K1-K7 declaration
+                                     made enforceable, and any of K1-K7 revised in order to change this
+                                     computation's answer is refused by P3 and, if pursued, [R9]
+                                     TERMINATES THE LINE - the escalated successor registration being
+                                     refused by the harness today (I-053), the sealed continuation being
+                                     n_inherited = (menu size - 1) x chain_total if and when that repair
+                                     lands, and a lower declaration to satisfy the guard being forbidden by
+                                     name. (3) No restatement as
                                      continuation - a hypothesis restated after 2027-01-31 is a NEW family
-                                     opened with n_inherited >= the killed family's final n_trials plus its
-                                     own, inheriting neither schedule nor allocation nor narrative.
+                                     [R9, 2026-08-05: the prior text read 'opened with n_inherited >= the
+                                     killed family's final n_trials plus its own', which was REDUNDANT AND
+                                     UNEXECUTABLE from the same misreading of family_stats as head (ii)
+                                     above] opened with predecessor_family = this family and n_inherited =
+                                     ITS OWN NEW SEARCH ONLY, inheriting neither schedule nor allocation
+                                     nor narrative. family_stats sums n_inherited and logged trials
+                                     TRANSITIVELY across predecessor_chain [measured - registry.py], so
+                                     predecessor_family alone carries this family's entire final count into
+                                     the successor's denominator; re-declaring it in n_inherited
+                                     double-counts and is refused by InheritedCountDoubleCountError. The
+                                     clause's INTENT - that a restatement cannot escape this family's trial
+                                     count - is delivered by predecessor_family alone and is delivered
+                                     BETTER, because the harness enforces it instead of the sponsor
+                                     asserting it.
                                      (4) Kill is automatic on the date, requires no meeting, no vote and no
                                      CIO concurrence, and IS NOT APPEALABLE TO THE CIO; only the Principal
                                      may reverse it, in writing, logged in DECISION_RECORD.md as an
@@ -1769,10 +2119,14 @@ model_prior_provenance            = "R4(a). Per I-009 the firm does not know its
                                      cutoff unknown: hypothesis statement and mechanism; the Charter-5.4
                                      argument that the unconditioned carry is factor beta; falsifier
                                      F-002 and each of its four pre-committed constants; conditioning
-                                     declarations K1-K6 and their menus; the pre-commitment rule that a
+                                     declarations [R9, 2026-08-05] K1-K7 and their menus (K7 was declared
+                                     at R5 and this provenance line was not extended with it); the
+                                     pre-commitment rule that a
                                      menu-declared pre-measurement choice contributes 1 rather than the
                                      menu size, and its escalation rule; universe, sizing rule and
-                                     parameter centres; the trial budget and the N <= 110 ceiling, derived
+                                     parameter centres; the trial budget and the [R8, 2026-08-05] N <= 109
+                                     ceiling (the ceiling's correction from 110 originates with Quant
+                                     Validation, RULING-004 sections 2.2 and 12), derived
                                      from castellan.stats output; KC-002, adopting KC-001's shape
                                      (originated by the Devil's Advocate, REDTEAM-001 B.5, Opus) including
                                      the silence clause verbatim in force; the CRYPTO_PERP_TAKER audit,
@@ -1833,26 +2187,34 @@ HoldoutVault(vault_dir="book/vaults/funding-carry-conditioning-002-binance",
 | **9** **[R3 · NEW]** | **The R3 decision to drop SOL rather than control for the break** | **A published, dated citation establishing when SOLUSDT's ±2.00% cap REVERTED.** That single date is the entire difference between a break control being executable and not. `DATA-VERIFY-001` §7(4) records that no such source was found and that Binance states it does not announce subsequent adjustments [cited — official]. **If Seat 9 finds it, candidate (b) becomes better than (c)** — it would let the family keep SOL's cross-section and its tail observation under a fully documented control, and this seat would reverse R3 pre-seal and say so. |
 | **10** **[R5 · NEW]** | **K7 contributing 1 to `N_conditioning`** | A Validation ruling that a data-validity rule triggered by a vendor's documented act is not a conditioning choice and contributes **0**. This seat declared 1 deliberately, per D-009's finding that erring low on `N` is the sycophantic direction. **If ruled to 0, `N_conditioning` returns to 6 and the trial budget should return to 80** — ceiling `N` = 86 either way, so nothing downstream moves. |
 | **11** **[R7 · NEW]** | **The prediction that KC-002 clause (b) is the leading cause of death** (§14.2 R7) | A measured dynamic range on `z(t)` showing the ±25% notional threshold is crossed on ≥30 days despite the ~35% floor censoring. **That is not computable before sealing** — it is a trial — so this prediction is pre-registered as [inferred] and will be settled by the family's own forward window rather than argued about now. **If it is wrong, the successor named at §19.3 needs finer bars only; if it is right, the successor needs the uncensored premium index as well.** |
+| **12** **[R9 · NEW · 2026-08-05]** | **The §7.2 escalation rule's replacement — a hard stop rather than an escalated successor** | **The I-053 harness repair landing**: a Validation-authorized route that preserves the `InheritedCountDoubleCountError` raise by default and permits registration against a logged `n_inherited_escalation_authorized` event, green against acceptance test ML-T-14. **On that day the sealed text's own formula — `n_inherited = (menu size − 1) × chain_total` — becomes executable and the hard stop lifts without any amendment to this family.** Nothing else changes it: **this seat will not accept a lower `n_inherited` to obtain a registration the escalation refuses**, and says so here so that a future seat under schedule pressure has to overrule a written sentence rather than fill a silence. |
+| **13** **[R10 · NEW · 2026-08-05]** | **The pre-registered expectation that Gate 1 is PARK-WITH-TRIGGER rather than PROCEED conditional on F-002 surviving** (§19.3, §5.4 R10) | **A measured autocorrelation on THIS family's net return series materially below the firm's one measured instance of ρ = 0.83.** The order-20 required uncorrected pre-haircut `t` is arithmetic on two cited multipliers at *that* ρ, and the family's own ρ is **unmeasured** — measuring it is a trial and the registry is at 0. **If the family's net-return ρ comes in near zero, the corrected and uncorrected `t` figures agree, the composition collapses to the haircut alone, and §11.6's original reading stands.** Both figures are required side by side on every artifact for exactly this reason (§21). **This seat states its expectation is the pessimistic branch and will accept the measurement either way.** |
+| **14** **[R11 · NEW · 2026-08-05]** | **The ML-2 assertion that this is not a fitted family** (§10.7, §21) | **Validation ruling any row of §10.7(a)'s check wrong at intake.** The most exposed row is the ±50% grid: ML-1 spares it *only* because the plateau centroid advances by rule, so **any future artifact that reports or carries forward `argmax_params` as the configuration makes this family a fitted family retroactively**, at which point ML-13 charges the grid's full cardinality and ML-3's ceiling of 109 is breached by the grid alone. **The assertion is sealed and false-in-a-sealed-field is the penalty; that is the correct weight and this seat chose it deliberately.** |
 | 8 | **Anything about the funding carry being an edge** | Nothing. §3.3 says it is not, §5.4 of the Charter says the firm does not pay for it, and **the only claim this document makes is about conditioning.** If a future artifact reports this family's raw carry Sharpe as though it were the result, that artifact is defective and this section is the pre-registered reason why. |
 
 ---
 
-*Director of Research · Castellan Capital · 2026-07-28 · **revised R-001, 2026-08-04, pre-seal (I-045)***
+*Director of Research · Castellan Capital · 2026-07-28 · **revised R-001, 2026-08-04, pre-seal (I-045)** · **revised R-002, 2026-08-05, pre-seal (RULING-004 ceiling correction · I-053 · I-050 · C12)***
 
 *~~This document is complete and sealable.~~ **[R-001 · 2026-08-04] This document is COMPLETE and NOT YET SEALABLE.** It is not sealed. Sealing fixes `C` (D-007) and is Pod B's act, after Validation's Gate 0 intake. Nothing may be added after.*
 
 > **SEAL-READINESS, STATED HONESTLY BY THE SEAT THAT WOULD BENEFIT FROM STATING IT OTHERWISE.**
 >
-> **The I-045 defect is closed. The document is not seal-ready, and the binding blockers are not I-045's.**
+> **[R-002 · 2026-08-05] The I-045 defect is closed. C12 is discharged. The document is STILL NOT SEAL-READY, and five conditions remain open — none of them created by this revision, and none of them relaxed by it.**
 >
 > | Blocker | Status |
 > |---|---|
-> | **C12 · in-sample cadence sweep on BTC and ETH** **[R5 · NEW]** | **OPEN — BLOCKING.** The primary universe's cadence homogeneity is currently asserted, not measured: I-045's control covers **BTC only** and only in the `>3 prints` direction. **Introduced by this revision and blocking because of it.** Fraction of a Sonnet unit. |
+> | ~~**C12 · in-sample cadence sweep on BTC and ETH** **[R5 · NEW]** — **OPEN, BLOCKING**~~ | **[R12 · 2026-08-05] DISCHARGED, NARROWLY.** 0 deviating days of 4,802 symbol-days on BTC and ETH, both directions, full span [measured — `DATA-VERIFY-002` §3–§4], with SOL's 11 deviating days as a working positive control. **Verified the CADENCE dimension only: the documented 2025-09-18 formula change shows 3 prints on both symbols, so a cadence sweep is blind to the PARAMETER dimension, which K7 governs by declaration rather than by measurement.** §20 and §7.1.1 carry the full statement. **This is not the closure of I-045, which is `quant-validation`'s.** |
 > | **C2 · Validation's Gate 0 intake verdict on this document** | **OPEN — BLOCKING.** No Gate 0 intake verdict on PREREG-002 exists; Ruling 003 is a cost-model specification and explicitly is not one [cited — `VALIDATION-RULING-003` §7.2]. |
 > | **C11 · the leg-(ii) null calibration** | **OPEN — BLOCKING.** Required measured before sealing [cited — `VALIDATION-RULING-003` §6.6]. ≤2 trials. |
 > | **C3 · Devil's Advocate Red-Team Memo** | **OPEN.** None exists. Blocking on Gate 1, and the seat's reserved Opus unit is the mechanism. |
 > | **C7 · KC-002 signed by sponsor and Principal** · **C8 · seal and vault in one session/UTC day** | **OPEN — BLOCKING**, and executional rather than analytical. |
 > | **C1 · the funding-cost repair** | **DISCHARGED as a specification** [cited — `VALIDATION-RULING-003` §7.1]; **implementation open as I-034**, which closes when the 19 acceptance tests plus the existing suite are green **and not before**. Ruling 003 makes the ordering binding: **repair green → seal → F-002.** |
 > | **C9 · perp OHLCV** | **CLOSED** [measured — `DATA-INGEST-002` §2]. |
+> | **C13 · Validation's ruling on R-002's three items** **[R11/R9 · NEW · 2026-08-05]** | **OPEN — NOT a separate blocker.** Resolved inside C2's intake verdict: the ML-2 assertion and its §10.7(a) check; the repaired §7.2 escalation rule in its hard-stop form; and whether ML-17's own formula takes I-055's correction. Listed so the intake knows what it is being asked. |
 >
-> **D-015 records the Principal's reading and this revision is an instance of it: *"the ceiling binding at the seal is the control functioning."* A seal that should not happen is not a failure. This seat states plainly that it should not happen yet, and names C12 — a blocker this revision itself created — first, rather than last.**
+> **D-015 records the Principal's reading and R-001 was an instance of it: *"the ceiling binding at the seal is the control functioning."* A seal that should not happen is not a failure.**
+>
+> **[R-002 · 2026-08-05] WHAT THIS REVISION DID TO SEAL-READINESS, IN THE DIRECTION THAT IS LESS FLATTERING.** R-001 created a blocker (C12) and named it first. **R-002 creates none, discharges one, and nonetheless leaves the document further from a comfortable seal than it found it** — because the three repairs are, in substance: a ceiling that was one trial too generous, a **control this document called its most important one that was inoperative for the whole of its existence** (§7.2, I-053), and a **Gate 1 margin that is materially narrower than R-001 recorded** (§5.4, §19.3, I-050). **None of those blocks the seal. All three make the sealed document a worse-looking and more accurate description of the same family, which is the only direction a pre-registration is allowed to move in before it freezes.**
+>
+> **The five that remain open and blocking — C2, C3, C7, C8, C11 — are unchanged by this revision and are not this seat's to clear.**

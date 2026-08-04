@@ -1815,3 +1815,246 @@ the instance, is what should be read at the quarterly review.**
 
 **Resolution:** open — pattern entry, for the quarterly review under Charter §7.8.
 **Pattern tag:** `in-progress-work-committed-under-unrelated-message` · `record-asserts-what-is-not-so`
+
+---
+
+## I-055 · 2026-08-05 · The `n_inherited` escalation formula over-declares by one `chain_total` — one misreading of `family_stats`, written into four binding clauses across two documents · Severity: MEDIUM · Owner: director-of-research → quant-validation
+
+*Filed by the Director of Research against its own rule, during revision R-002 of `PREREG-002`. The CRO owns this log; this entry is made under dispatch S2-D-010.*
+
+**Description.** `TrialRegistry.family_stats` computes
+`n_trials = Σ n_inherited(chain, including self) + Σ logged(chain, including self)`,
+summing **transitively** across `predecessor_chain` [measured — `harness/castellan/registry.py`,
+`family_stats`]. A successor's denominator therefore **already contains** its predecessor chain's
+entire total the moment `predecessor_family` is set.
+
+Four binding clauses were written as though it did not:
+
+| # | Clause | Text | Defect |
+|---|---|---|---|
+| 1 | `PREREG-002` §7.2 escalation rule (as of R-001) | `n_inherited ≥ menu_size × chain_total` | Yields a successor denominator of `(menu_size + 1) × chain_total`, not `menu_size × chain_total`. **Correct declaration: `(menu_size − 1) × chain_total`** |
+| 2 | `PREREG-002` §14 KC-002 anti-reinterpretation **clause 3** | *"a NEW family opened with `n_inherited ≥` the killed family's final `n_trials` plus its own"* | **Redundant** — `predecessor_family` alone delivers the intent — **and unexecutable**, being exactly what `InheritedCountDoubleCountError` refuses |
+| 3 | `PREREG-002` §19.3's named successor family | `n_inherited ≥` this family's final `n_trials` | Same as 2 |
+| 4 | **`VALIDATION-RULING-004` ML-17** | `n_inherited ≥ (cardinality of the enlarged dimension) × (this family's final n_trials)` | Same as 1. **The ruling cites `PREREG-002` §7.2 as its source and inherits the arithmetic with it** [cited — ML-17: *"This is PREREG-002 §7.2's escalation rule applied to the fitting space, deliberately and without softening"*] |
+
+**Direction of the error: CONSERVATIVE.** Every instance over-charges the successor's denominator
+rather than under-charging it, which is why it survived R-001, Validation's read of R-001, and the
+drafting of ML-17. **It is a defect regardless: a denominator that cannot be reproduced from the rule
+that produced it is not a denominator, and Charter Appendix B #2 is about the trial count being
+*unreconstructable*, not about its sign.**
+
+**Relation to I-053.** I-053 finds the same clauses **unexecutable** — the guard refuses
+`n_inherited ≥ chain_total` for every menu size ≥ 2. **I-055 is a different finding about the same
+sentences: even with I-053's harness repair shipped, implementing the formula as written would
+register the wrong number.** The two must be closed together, or the repair will faithfully implement
+an over-declaration. **Whoever closes I-053 must use `(menu_size − 1) × chain_total`.**
+
+**Repair, in three parts.**
+1. **`PREREG-002`** — done, pre-seal, revision **R-002 / R9**. All three instances struck and replaced;
+   clause 3 replaced by `predecessor_family` alone.
+2. **`VALIDATION-RULING-004` ML-17** — **not this seat's to edit.** Raised to Validation as item (3) of
+   condition **C13**, to be ruled at `PREREG-002`'s Gate 0 intake.
+3. **I-053's harness repair** — must register `(menu_size − 1) × chain_total`, not
+   `menu_size × chain_total`. Acceptance test **ML-T-14** should assert the resulting `family_stats`
+   total equals `menu_size × chain_total`, which tests the composition rather than the argument.
+
+**Why MEDIUM, and the rating is not shaded in either direction.** Latent — zero families, zero trials
+[measured — `book/registry.db`: 0 hypotheses, 0 trials]. It produces no wrong number today and changes
+no verdict today. It is not LOW because it sits in a **binding clause of a Validation ruling** and in
+the sealed field set of a family about to be registered, and because it fires on the same event as
+I-053. It is not HIGH because the error runs conservative and nothing is blocked on it: **rating it
+HIGH to force a §4 interrupt on a conservative arithmetic error in a latent clause would be the
+inflation the Standing Order warns against, and this seat declines it.**
+
+**A note this seat owes the log rather than the reader.** Three of the four instances are this seat's
+own text, and the fourth exists because Validation trusted it. **The defect propagated by citation,
+which is the mechanism the firm should watch for**: a rule quoted approvingly into a second binding
+document acquires no additional verification by being quoted.
+
+**Resolution:** open — part 1 discharged pre-seal; parts 2 and 3 open.
+**Pattern tag:** `rule-written-cannot-be-executed` · `defect-propagated-by-citation` · `harness-correctness-latent`
+
+---
+
+## I-056 · 2026-08-05 · `RULING-004` ML-2 makes a missing ML declaration a Gate 0 REJECTION, and neither existing pre-registration carries one · Severity: MEDIUM · Owner: director-of-research
+
+*Filed by the Director of Research during revision R-002 of `PREREG-002`, under dispatch S2-D-010.*
+
+**Description.** `VALIDATION-RULING-004` **ML-2** is binding and effective immediately [cited — §1
+Effectivity]. It requires that a family asserting it is **not** a fitted family carry, **in the sealed
+block**, the sentence *"No number reported by this family is selected by comparing candidates on a
+quantity computed from the sample,"* and states **"Silence is not that assertion."** It further states
+that **"A Gate 0 intake with a missing or partial ML block is REJECTED, not deferred"** — Charter §4.3
+being binary [cited].
+
+**Both of the firm's pre-registrations were silent** [measured — read this session]:
+
+| Document | Status | Disposition |
+|---|---|---|
+| `PREREG-002-crypto-funding-basis` | Unsealed | **REPAIRED** — revision R-002 / R11 adds the sentence verbatim to §21's `success_criteria`, with the supporting choice-by-choice ML-1 check at the new §10.7(a) |
+| `PREREG-001-forward-lag` | Unsealed | **NOT REPAIRED.** Under ML-2 as written it would be **REJECTED at Gate 0 for a missing ML block** |
+
+**Why this is worth an entry rather than a note.** `forward-lag-001` is already crippled on arithmetic
+— `MinBTL(31,250) = 17.06 years` against a venue with less than four [cited — `PREREG-001` §9.4]. **A
+Gate 0 rejection on a paperwork clause would waste the one thing that document is still good for: a
+clean, arithmetic, on-the-record rejection for the reason that actually kills it.** Fixing it costs one
+sentence pre-seal and cannot be fixed after.
+
+**A second-order point, raised and not resolved.** ML-2's rejection is *binary and immediate*, and the
+clause it enforces did not exist when either document was written. **This seat is not asking for
+relief** — the sentence is cheap and the requirement is right. It flags for Validation that **ML-2
+applies to every future pre-registration in the firm**, including ones drafted by seats that have not
+read Ruling 004, and that the cheapest place to enforce it is `reference/TEMPLATES.md` §7.2 rather than
+at intake. **That is a suggestion to the CIO on document templates, not a request to Validation.**
+
+**Repair.** (1) Add the ML-2 sentence to `PREREG-001` before it is sealed — Director of Research, one
+sentence, pre-seal. (2) Add it to the pre-registration template in `reference/TEMPLATES.md` — CIO /
+Director of Research. (3) No harness change is required.
+
+**Why MEDIUM.** It is latent — nothing is sealed and no verdict has been issued — and the fix is one
+sentence in each of two unsealed documents. It is not LOW because the consequence ML-2 attaches is a
+**rejection, not a deferral**, and because it applies firm-wide going forward rather than to one
+family. It is not HIGH because no number is wrong, nothing is blocked, and the correction is available
+at zero cost until the moment of sealing.
+
+**Resolution:** open — `PREREG-002` discharged; `PREREG-001` and the template open.
+**Pattern tag:** `new-binding-clause-not-back-applied` · `gate0-admissibility`
+
+---
+
+## I-057 · 2026-08-04 · MinBTL and the Deflated Sharpe Ratio carry the identical serial-independence defect I-050 identifies in the t-statistic — correcting them moves the admissible `N` ceiling below 109 at every ρ > 0 · Severity: HIGH · Owner: quant-validation
+
+*Filed by Validation under `research/VALIDATION-SPEC-001-estimator-corrections.md` §4.2, in
+the course of answering the CIO's pre-seal question about the `N` = 109 ceiling. Entered in
+the log per the S2-D-006 arrangement; the CRO's ownership of the log is unchanged.*
+**ADDRESSED TO THE PRINCIPAL. Interrupt, pre-seal on PREREG-002.**
+
+**Description [measured].** I-050 establishes that `sr_tstat` assumed serial independence and
+that the firm's data violates it. **Two further Charter §4.4 criteria make the same
+assumption, in the same permissive direction, and neither is repaired by
+`VALIDATION-SPEC-001`:**
+
+- **`min_backtest_length_years`** measures required backtest length in **observation count**
+  [measured — `stats.py:119–133`]. Under autocorrelation `ρ` the effective sample size is
+  `T·(1−ρ)/(1+ρ)`, so the calendar span a given `N` actually requires is larger by
+  `(1+ρ)/(1−ρ)`.
+- **`deflated_sharpe_ratio`** computes `z = (sr − sr₀)·√(T−1)/√denom` [measured —
+  `stats.py:115`]. `√(T−1)` is the i.i.d. standard error of the Sharpe. `denom` corrects for
+  skew and excess kurtosis; **it corrects for nothing serial.**
+
+**What it does to the number the firm is about to seal against.** Maximum `N` satisfying
+`MinBTL(N, SR 1.0)·(1+ρ)/(1−ρ) ≤ 6.571 years` [measured, this session]:
+
+| ρ of the net return series | Inflation | `N` ceiling |
+|---|---:|---:|
+| 0.0 *(today's assumption)* | 1.00 | **109** |
+| 0.1 | 1.22 | 55 |
+| 0.2 | 1.50 | 31 |
+| 0.3 | 1.86 | 19 |
+| 0.493 *(SOL funding [cited — Ruling 003 §3.2])* | 2.95 | 8 |
+| 0.802 *(ETH funding [cited])* | 9.10 | 2 |
+| 0.829 *(BTC funding [cited])* | 10.70 | **2** |
+
+Ruling 004 §2.3's additive DSR term `0.642` becomes `0.875` at ρ = 0.3 and `2.099` at
+ρ = 0.829 [measured]; that section's whole table shifts upward by that amount.
+
+**The qualification that stops this being alarmism, stated with the finding rather than
+after it.** `ρ` here is the autocorrelation of a family's **net return series**, which the
+firm has **not measured for any family**. The figures 0.829 / 0.802 / 0.493 are *funding*
+autocorrelations. A net series is `gross + carry − costs` and the price-return component is
+close to serially independent, so the realized `ρ` lies between and is family-specific
+[cited — I-050's own qualification 1]. **The honest reading is not "the ceiling is 2." It is:
+the ceiling is a function of a quantity the firm has never measured, and at every ρ > 0 it is
+below 109.**
+
+**What this does and does not do to work in flight.** **It does not move any number in
+`VALIDATION-RULING-004` and it does not move `N` = 109 today.** `min_backtest_length_years`
+is a function of the trial count and the Sharpe only; `VALIDATION-SPEC-001` touches neither.
+109 and `MinBTL(86) = 6.1359` were both reproduced against the live harness this session
+[measured] and stand exactly as recorded. **PREREG-002 can seal on 109 without
+re-arithmetic.** What the Principal and the Director need before that seal is the second
+fact: **109 is not a conservative figure.** It is the maximum under an assumption the firm
+has just formally acknowledged its own data violates. PREREG-002's declared ceiling of 86
+[cited] sits inside the ρ = 0 arithmetic and outside the ρ = 0.2 arithmetic.
+
+**Why it is not repaired in the same dispatch that repaired I-050.** Out of scope, and it
+carries a design question the t-statistic did not: the DSR's `denom` already carries a
+published non-normality adjustment [cited — Bailey & López de Prado 2014] and grafting a
+serial-dependence term onto it is a specification choice rather than a substitution. **Doing
+that badly, fast, inside a dispatch scoped to something else is how a permissive defect
+becomes a wrong number.** Under the Principal's I-050 asymmetry the repair is Validation's to
+make without a Principal act; it needs a dispatch, not an authorization.
+
+**Why HIGH.** Same test the log's existing HIGH entries satisfy and the same test I-050 was
+rated on: *a Charter criterion is unenforceable or wrong in a way that changes verdicts.*
+`DSR ≥ 0.95` and `≥ MinBTL(N)` are both Charter §4.4 criteria and both run permissive. **No
+family is affected today — the firm has run zero trials — but the number 109 is being
+written into a pre-registration this week.**
+
+**Repair.** A Validation-specified correction to `min_backtest_length_years` and
+`deflated_sharpe_ratio`, red-first, in the same regime as `VALIDATION-SPEC-001`, with the
+lag/effective-sample construction reusing `stats.hac_lag_andrews` once that ships. Until
+then: **no document may describe 109, or any MinBTL figure, as conservative or as carrying
+margin.** That is effective immediately.
+
+**Resolution:** open.
+**Pattern tag:** `estimator-assumption-unchecked` · `correct-inference-applied-too-narrowly`
+
+---
+
+## I-058 · 2026-08-04 · Two of Validation's own pre-authored acceptance tests were defective; a correct implementation would have failed one of them · Severity: LOW · Owner: quant-validation
+
+*Filed by Validation against itself, under `research/VALIDATION-SPEC-001-estimator-corrections.md`
+§5. Caught by the author before implementation; cost zero.*
+
+**Description [measured].** Ruling 004 §11 sets the standing term that *"Seat 9 implements
+against these and does not amend them. A test Seat 9 believes is wrong is escalated to me, in
+writing, before it is changed."* On writing the executable form of those tests, **two of the
+five in scope were found wrong.**
+
+**(a) ML-T-12's tolerance was unsatisfiable by a correct implementation.** It asserts that on
+AR(1) with `ρ = 0.8`, `sr_tstat_nw(r, lag=10)/sr_tstat(r)` lies within 20% of the asymptotic
+`√((1−ρ)/(1+ρ)) = 0.3333`. A Bartlett-kernel HAC truncated at lag 10 recovers **0.4197** —
+**25.9% away** [measured]. The gap is the Bartlett kernel's down-weighting, which is what
+makes the estimator positive semi-definite; it is not an implementation error. **The draft
+asked a correct implementation to reproduce an asymptotic value at a truncation far too short
+to reach it.**
+
+**(b) ML-T-11's third assertion asserted a condition that is not leakage.** It requires that
+*"no training bar in a later window reads within 30 bars of a previous test fold's end."* In
+an expanding-window walk-forward, window `k`'s test fold is legitimately past data by window
+`k+1`; a later training bar reading it is the expanding window working. Enforcing it would
+delete correct training data from every subsequent window for no leakage reason. **Authored
+by transporting the k-fold forward-embargo intuition into a construction that has no training
+bars after the test fold.**
+
+**Why this matters more than a typo.** The dangerous branch of (a) is not the failing test —
+it is the pressure it puts on the implementer. Seat 9 implements Newey–West correctly, the
+pre-authored test fails, and the cheapest route to green is to change the *implementation*:
+abandon the Bartlett kernel, or fabricate a scale factor. **That is I-036's failure arriving
+through a defective test instead of a weakened one, and it would have been much harder to
+detect, because the test would have looked like the control that caught it.**
+
+**Repair, already done.** `VALIDATION-SPEC-001` §5 records both corrections in writing,
+pre-implementation, with the replacements: ML-T-12's assertion is remade at the
+Andrews-selected lag where it holds within 15% of the closed form and 20% of the asymptotic
+value across 10 seeds [measured]; ML-T-11's third condition is **withdrawn** and replaced by
+`test_cvt8`, which asserts its opposite deliberately so the withdrawal cannot be silently
+reversed. ML-T-9, ML-T-10 and ML-T-13 were checked and are correct as drafted.
+
+**Why LOW.** It never fired: caught by the author, before implementation, at zero cost, and
+no artifact outside Ruling 004 §11 cited either test. **Had it survived one more dispatch it
+would have been MEDIUM**, because by then a correct implementation would have been under
+pressure from it. The standing-term escalation route worked — it was simply exercised by the
+author rather than the implementer.
+
+**The process point, which is the reason this is filed rather than fixed silently.**
+Pre-authored tests are written as prose in a ruling and are not executed until an
+implementer's dispatch. **A prose assertion about a numerical tolerance is not checkable until
+someone runs it, and the seat with the strongest incentive to check it is the one that wrote
+it.** Going forward this seat numerically verifies every pre-authored tolerance in the session
+that authors it, and states in the ruling that it has.
+
+**Resolution:** closed on filing — both corrections are in
+`research/VALIDATION-SPEC-001-estimator-corrections.md` §5 and in the executable tests.
+**Pattern tag:** `pre-authored-test-unverified` · `control-that-would-have-pressured-correct-code`

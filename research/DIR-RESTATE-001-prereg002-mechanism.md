@@ -473,5 +473,153 @@ cost of being wrong is permanent under P7.
 
 ---
 
-*Director of Research · Castellan Capital · 2026-08-04*
-*Reasoning memo for revision R-001 of `research/PREREG-002-crypto-funding-basis.md`. No hypothesis was opened, no trial was run, no vault was sealed, and `book/` was not touched.*
+# ADDENDUM — REVISION R-002 · 2026-08-05 · PRE-SEAL
+
+**Dispatch:** S2-D-010 · **Compute:** 1 Opus unit · **Trial budget: ZERO.**
+**Registry state at open and at close: `book/registry.db` — 0 hypotheses, 0 trials** [measured — `SELECT COUNT(*)`, this session]. **No number was computed. No harness code was touched. Nothing was sealed and nothing was committed.**
+
+## 7. WHAT R-002 CHANGED IN `PREREG-002`, AND WHY
+
+R-001 was occasioned by a defect in the family's own data (I-045). **R-002 is occasioned entirely by findings made outside this seat and pointed at it** — Validation's `RULING-004`, the Principal's approval of I-050, Seat 9's `DATA-VERIFY-002` — and its honest one-line summary is: **three of the four repairs make the document worse-looking and none of them makes it wrong.**
+
+### 7.1 R8 — the admissible ceiling is 109, not 110, and the mislabel was internal
+
+**The change.** `VALIDATION-RULING-004` §2.2 computes, by bisection, the maximum total `N` satisfying `MinBTL(N, 1.0) ≤ 6.571 years` and returns **109**; §12 records the correction against this document's stated 110 [cited]. `PREREG-002` §10.4's table is corrected, the `N = 110` row is re-verdicted **FAILS**, and every downstream hard stop moves 110 → 109 (§1, §10.5, §18, §19.2, §21).
+
+**What moves and what does not — the question the dispatch pressed, answered in both directions.**
+
+| Quantity | Before | After | Moves? |
+|---|---:|---:|---|
+| Declared ceiling `N` (budget 79 + conditioning 7) | 86 | **86** | No |
+| `MinBTL(86, SR 1.0)` | 6.14 yr | **6.14 yr** | No |
+| **Margin at the declared ceiling** — R6's figure | **0.43 yr** | **0.43 yr** | **NO** |
+| Absolute admissible ceiling | 110 | **109** | Yes, by one |
+| **Unused headroom, declared → absolute** | **24 trials** | **23 trials** | **Yes — this is the margin that shrank** |
+
+**`109 − 86 = 23`** [arithmetic on two integers already `[cited]`/`[measured]`; no `castellan.stats` call, no market data].
+
+**This seat considered and rejected reporting the correction as a narrowing of R6's margin.** It is not one. 86 < 109, so the correction does not reach `MinBTL(86)` at all, and presenting a one-trial change to a ceiling the family does not intend to approach as though it were a change to the criterion the family intends to clear would be **theatre in the pessimistic direction** — which is a defect of the same kind as theatre in the optimistic direction and is not made acceptable by being uncomfortable. **What genuinely shrank is the family's room to be wrong about its own budget, and that is what is written.**
+
+**The part worth more than the number.** `MinBTL(110) = 6.574` was **already `[measured]` in this document**, against 6.571 available. The row's verdict cell nevertheless read *"exactly at the span — zero margin."* **6.574 > 6.571.** The correction was available inside the document, in the permissive direction, and required no external input — Validation found it by reading this document's own table more carefully than its author had. That is recorded in `PREREG-002` §10.4 in those terms, because **a correction absorbed without saying it could have been caught internally is how the same class of defect survives**.
+
+**R8(c), incidental.** Three clauses still carried the superseded trial budget `80` after R6 moved it to `79` (§1's recommendation box, §18, §19.2). Conformed, disclosed, not silently fixed.
+
+### 7.2 R9 — I-053, and whether the escalation rule was repairable at the document level
+
+**The finding, stated precisely, because "unexecutable" understates it.** §7.2's binding escalation rule had **three** defects, of which the dispatch named one.
+
+**(i) Scope.** The rule read *K1–K6*. R5 declared **K7** and R6 discounted it to 1 **on the same pre-commitment reasoning** — and the escalation rule is the entire mechanism that makes that reasoning conservative rather than convenient. **A choice discounted by a rule it is not subject to is discounted for nothing.** This is a defect R-001 introduced in the same revision that created K7, inside the section whose job is to prevent exactly that class of omission. **Repaired: K1–K7 throughout, including in KC-002's anti-reinterpretation clause 2 and in the sealed `universe` and `forward_kill_condition` fields.**
+
+**(ii) Quantity.** `family_stats` sums `n_inherited` and logged trials **transitively across `predecessor_chain`** [measured — `registry.py`], so a successor's denominator **already contains** its predecessor's total the moment `predecessor_family` is set. `n_inherited ≥ menu_size × chain_total` therefore yields `(menu_size + 1) × chain_total`. **The correct declaration for the intended denominator is `(menu_size − 1) × chain_total`.** The same misreading appears in **four** places — §7.2, KC-002 clause 3, §19.3's successor, and **`RULING-004` ML-17, which copies this document's formula citing it as the source.** Filed **I-055**. Direction of error: **conservative**, which is why it survived R-001, Validation's read of R-001, and ML-17's drafting.
+
+**(iii) Executability — I-053.** `open_hypothesis` refuses `n_inherited ≥ chain_total`; K1–K7's menu sizes are 10, 3, 9, 5, 5, 4, 5, **all ≥ 3**, so **both** the struck and the corrected forms are refused, on every choice, always.
+
+> **The sharpest statement of I-053, which this seat did not find in the entry itself: the harness can carry the CHAIN, but it cannot carry a MULTIPLIER ON the chain.** Set `predecessor_family` and declare `n_inherited = 0` and the registration succeeds, the predecessor's count is carried, and **the menu-size factor — the entire economic content of the escalation rule — is never charged.** The registry has no expression for "this successor's search is `K` times the whole chain that preceded it." **That is the hole, and it is exactly the size of the discount §7.2 grants.**
+
+**Was it repairable at the document level? PARTLY, AND THE PARTITION IS THE ANSWER.**
+
+- **Heads (i) and (ii) are fully repairable in the document, and are repaired.** Both are defects in what the rule *says*.
+- **Head (iii) is NOT repairable at the document level.** No sentence in a pre-registration can make `registry.py` accept a registration it refuses. **A document cannot repair a harness.**
+- **But the document CAN change what the rule REQUIRES, to something the harness executes today — and refusal is something the harness executes.** The replacement therefore states both: the **quantity** to be declared if and when I-053's repair lands (`(menu_size − 1) × chain_total`), **and** the operative content until then — **a post-result revision of any of K1–K7 TERMINATES THE LINE**, with the under-declaration route **forbidden by name**. **The rule is now executable, and what it executes is a hard stop.**
+
+**Four alternatives considered and rejected, with reasons, so the choice is auditable:**
+
+| # | Alternative | Rejected because |
+|---|---|---|
+| **(a)** | Declare a **lower** `n_inherited` that satisfies the guard | This is precisely what I-053 names as *"the one that will be taken under schedule pressure"* and is Appendix B #2 — the trial count lost. **It is forbidden by name in the sealed text**, so that a future seat must overrule a written sentence rather than fill a silence. |
+| **(b)** | Omit `predecessor_family`, so the guard never fires | This is the **abandon-and-re-pre-register loophole Ruling 001 F4 exists to close** [cited — `registry.py` docstring]. Rejected on sight. |
+| **(c)** | Stage the count through intermediate registrations until the guard is satisfied | Gaming a guard by construction, and it corrupts the chain with families that never existed. A rule that can be satisfied by manufacturing predecessors is not a rule. |
+| **(d)** | Make I-053's harness repair a **blocking condition on sealing** | Rejected, and this is the closest call. The rule fires **only on a post-result revision**, which this family is forbidden to make; it can seal, run F-002, reach a verdict and be killed without the repair ever being needed. I-030's *"delay is strictly cheaper than sealing defective"* applies to defects **the seal would freeze** — and the sealed text here is **correct under both harness states**, naming the quantity for the repaired world and the hard stop for the current one. **Blocking the seal on it would delay for a contingency the document forbids.** |
+
+**What the rejection of (d) costs, stated rather than glossed.** It costs the successor family at §19.3 — *"the same claim, on 1-hour or 8-hour bars"* — which is **this seat's stated most-likely deliverable**. A successor changing K6 (menu size 4) requires `3 × chain_total`, which is refused. **Until I-053 is repaired, the family this document expects to produce CANNOT BE OPENED.** That is written into §19.3 rather than discovered on the day the KILL memo names it.
+
+**One thing this seat raises and does not decide.** Validation rated I-053 **MEDIUM** on the ground that it is *"latent and has never fired."* That rating is defensible on the firm-wide view. **On this family's view, its expected firing date is this family's own KILL memo, which §19.3 predicts as the most likely terminal outcome.** This seat therefore **raises the rating for Validation's reconsideration and does not overwrite it** — re-rating another seat's Issue Log entry is not this seat's to do, and the raise belongs in the record either way.
+
+### 7.3 R10 — what the I-050 estimator correction changes for this family
+
+**The correction, as approved:** the Gate 1 `t` is `SR × √T`, which assumes serial independence; the firm's one measured instance is **ρ = 0.83 → ≈3.3× inflation**, in the **permissive** direction; the estimator is being corrected; **`T_STAT_HURDLE = 3.0` does not move** [cited — `RULING-004` §14, §14.1; I-050, Principal-approved].
+
+**Dependency check on every pre-registered expectation the dispatch named — §5, §14, §16, §19:**
+
+| Clause | Depends on the uncorrected statistic? |
+|---|---|
+| **F-002 leg (i)** | **No.** Pre-committed as a **Newey–West `t`, 21-bar truncation**, expressly because *"a carry residual is autocorrelated by construction and an OLS `t` on it is inflated in a known direction."* **The falsifier was written to the corrected estimator one document before the correction was ruled.** §5.3's `α = 0.0013` and the joint false-survival rate of **1.3 × 10⁻⁴ stand unedited.** |
+| **F-002 legs (0), (ii), (iii)** | **No.** A bar count, a ratio of tail means, a sign test. |
+| **§14 KC-002 (a), (b), (c)** | **No.** Three bare one-sided comparisons; *"none has a null distribution, an alpha, or a power statement."* **Stated explicitly in the document so no seat re-opens the kill condition on an estimator change.** |
+| **§16** | **Yes, in one row, which was wrong as written.** §16's first row claimed net Sharpe, `t`-stat, DSR and PBO *"correctly denominatored."* **The denominator was honest; the estimator was not.** The `t` is split into its own row and re-verdicted. |
+| **§19.3** | **Yes.** Revised **against the family** — see below. |
+| **§5.4** | **Yes, and it becomes MORE coherent.** §5.4 compared F-002's Newey–West `t(α)` against Gate 1's `t`; before the correction that was an implicit comparison of a corrected statistic against an uncorrected one. The `≈6.0` pre-haircut figure is arithmetic on the haircut alone and does not move; its **meaning** sharpens. |
+
+**The narrowing, bounded rather than computed.** The R4(b) haircut requires ≈**2×** the pre-haircut `t`; the correction multiplies the required *uncorrected* `t` by the inflation factor at the family's realized autocorrelation, ≈**3.3** at the firm's one measured ρ. Composed: **an uncorrected, pre-haircut `t` of order 3.0 × 2 × 3.3 ≈ 20** [inferred — arithmetic on two cited multipliers, stated as an order of magnitude, **not** a forecast].
+
+**Three disciplines applied to that number, all against the family.**
+1. **The family's own ρ is UNMEASURED and may be much lower than 0.83** — 0.83 is measured on the *funding series*, not on this family's *net returns*. **Measuring it is a trial and the registry is at 0**, so it is not measured here.
+2. **This seat nevertheless does not discount the figure on that ground.** *"Probably small"* is `[assumed]` doing the work of `[measured]` — Validation's own formulation [cited — `RULING-004` §13] — and this seat adopts it against its own family.
+3. **The consequence is written as a revised pre-registered expectation, not as a caveat:** **§11.6 recorded the 50% haircut as *"the largest single hurdle this family faces."* It is no longer the largest.** And **conditional on F-002 surviving in full, the expected Gate 1 outcome is PARK-WITH-TRIGGER, not PROCEED.**
+
+**What it does not change.** The §19 verdict — fund it, ~4 Sonnet units — **stands**, because that case rests on a *verdict being reachable*, and **F-002 and KC-002 both deliver a verdict without touching a `t`.** A pre-registration whose Gate 1 odds worsen while its falsifier's decisiveness is untouched has become **more** worth running per unit of compute, not less: the compute buys the kill, and the kill is what §19.3 expects to deliver.
+
+### 7.4 R11 — does `RULING-004` bind this family? Yes, in three places, and the `N` accounting survives
+
+**The dispatch asked the right question and the answer is not the summary line.** `RULING-004` §12 records `PREREG-002` §10 as *"Untouched."* **That is correct about §10 and would be wrong if read as "the ruling does not reach this document."**
+
+**(a) ML-1's fitted-family trigger does NOT fire — and one row of the check was a genuine gap.** K1–K7 were each selected pre-measurement from a declared menu against a 0-trial registry, and **K4's R3 move — the only selection that changed after data existed — moved on a documented vendor act dated 2022-11-09, not on any statistic**, with no return statistic on SOL ever computed. The ±50% grid compares candidates on the sample but **the plateau centroid advances by rule**, which is ML-1's own boundary case verbatim. F-002 selects nothing.
+
+> **The gap: the ≥10 walk-forward windows were UNSPECIFIED as to whether each re-selects its configuration.** Per-window re-selection at an argmax **would have fired ML-1**, made this a fitted family, and charged the grid's full cardinality **per window** — against an absolute ceiling of 109. **Silence here does not default to the safe reading: a walk-forward that re-optimizes per window is the ordinary implementation.** Sealing the silence would have left the fitted/not-fitted question to whoever wrote the loop, after `C`. **Repaired: every window is refit at the FIXED plateau-centroid configuration; no window re-selects.** It removes a degree of freedom and adds none, which is what makes it admissible pre-seal.
+
+**(b) ML-2 binds every family including this one, and this document was silent.** ML-2 requires the non-fitted assertion **as a sentence in the sealed block** and states *"Silence is not that assertion"*; a missing or partial ML block is **REJECTED, not deferred**. **Added verbatim to §21**, with §10.7(a)'s choice-by-choice check behind it. **`PREREG-001` is also silent and is also unsealed — filed I-056.**
+
+**(c) ML-13 leaves the `N` accounting intact, and the reason is checkable per choice.** The discount survives for all seven of K1–K7 **on ML-13's own stated condition** — selection determined at sealing without reference to a sample-computed quantity. `N_conditioning` = **7**, budget **79**, ceiling `N` = **86**, `MinBTL(86) = 6.14` against 6.571. **This is stated as a conclusion drawn per choice rather than as a citation of Validation's summary line, because the summary line would have read "Untouched" even if one of the seven had failed, and the party best placed to find that is the seat that made the seven choices.**
+
+**One asymmetry recorded against the family, in the sealed text.** The discount from 135,000 to 7 rests on a condition the family asserts about itself, enforced by §7.2's escalation rule — **and R9 has just established that the enforcement was inoperative for the whole interval between R-001 and R-002.** **That is the sharpest single criticism available against this family's `N` accounting, and it is raised by this seat rather than left for the Red-Team Memo to find.**
+
+**(d) A fourth reach, not asked about and carried anyway: I-051.** `RULING-004` ML-18 finds `purged_kfold_splits` embargoes `⌈0.01·T⌉` = **24 bars** on a 2,398-bar sample, and `walk_forward_windows` applies **no purge and no embargo at all** [cited]. **This family's K1 lookback is 30 days — longer than the embargo.** A training bar 25–30 bars after a test fold computes `z(t)` from inside it. **This is a live leakage channel sized against this family's own declared parameter, in the permissive direction.** `EMBARGO_FRACTION = 0.01` is a Charter §4.2 constant and not this seat's to raise; ML-18 rules it *"a floor rather than a target."* **Named in §9.2, §15 step 7 and the sealed field set so a WFE number is not read as clean.** Owner `head-of-data-infra` under I-051.
+
+### 7.5 R12 — C12 discharged, and why the discharge is recorded as narrow
+
+**`DATA-VERIFY-002` delivers exactly what C12 asked for and delivers it clean:** BTC and ETH carry **exactly three funding prints on every one of 2,401 days each — 4,802 symbol-days, zero deviating days in either direction**, `2,401 × 3 = 7,203` exactly, span independently confirmed gap-free [measured]. **SOL's 11 deviating days are the working positive control** that the instrument detects a break when there is one [measured — I-045; Ruling 003 §A2] — **a null from a test with no demonstrated positive is worth much less, and this one has its positive.** **C12 is DISCHARGED and this seat, which created it, says so plainly rather than holding it open to look careful.**
+
+> **And the discharge is narrower than the premise it was protecting, which is the part worth reading.** It verifies the **CADENCE** dimension. **The document's own named K7 trigger is the proof that this is not the same as the parameter dimension: 2025-09-18 — the firm-wide `/(8/N)` formula change — shows 3 prints on BTC and 3 on ETH** [measured — `DATA-VERIFY-002` §4, checked by name]. **A documented, dated, real change to the funding formula is INVISIBLE to a cadence sweep.** So is a clamp-cap change — **the exact change that killed SOL's usability.**
+>
+> **Therefore: K7 governs the parameter dimension BY DECLARATION, not by measurement**, its trigger being an observable in the vendor's announcements rather than in the firm's store. §17 risk #12's residual is **not** narrowed by C12's clean result, and **any reading of `DATA-VERIFY-002` as "the primary universe has no in-sample parameter break" is a misreading of a cadence measurement as a parameter measurement.** That refusal is written into `PREREG-002` §7.1.1 — inside the sealed text — so it is refused in advance rather than corrected later.
+
+**Two boundaries observed rather than crossed.** **I-045 is not closed by this revision** — its owner line routes closure to `quant-validation`, and C12's discharge is a different act on a different object. And **no Issue Log entry is filed against `DATA-VERIFY-002`**: a clean measurement is not an issue, Seat 9's escalation rule was correctly conditional on finding a deviation, and the narrowness of what the instrument covers is a property of the question C12 asked — **which this seat wrote.**
+
+### 7.6 Issues filed, with the rating reasoning exposed
+
+| # | Finding | Severity | Owner |
+|---|---|---|---|
+| **I-055** | The `n_inherited` escalation formula over-declares by one `chain_total`; one misreading of `family_stats` written into four binding clauses across two documents, including `RULING-004` ML-17 | **MEDIUM** | director-of-research → quant-validation |
+| **I-056** | `RULING-004` ML-2 makes a missing ML declaration a Gate 0 **rejection**, and neither existing pre-registration carries one; `PREREG-002` repaired, `PREREG-001` open | **MEDIUM** | director-of-research |
+
+**Neither is HIGH and neither is under-rated to avoid the interrupt.** The test applied is the log's own: *a Charter criterion unenforceable or wrong in a way that changes verdicts* — the shape of I-029, I-034, I-037, I-050. **I-055's error runs conservative, is latent at 0 trials, and blocks nothing**; rating it HIGH to force a §4 interrupt on a conservative arithmetic error in a latent clause would be the inflation the Standing Order warns against. **I-056's consequence is a rejection rather than a deferral and it applies firm-wide going forward**, which takes it above LOW; but no number is wrong, nothing is blocked, and the fix is one sentence per unsealed document, which keeps it below HIGH. **The one HIGH-severity matter in R-002's field of view is I-050, and it is already filed, already rated HIGH by Validation, and already before the Principal.**
+
+### 7.7 Seal-readiness after R-002
+
+**R-001 created a blocker and named it first. R-002 creates none and discharges one — and still leaves the document further from a comfortable seal than it found it**, because the three repairs are, in substance: a ceiling one trial too generous, **a control this document called its most important one that was inoperative for the whole of its existence**, and **a Gate 1 margin materially narrower than R-001 recorded.**
+
+| Condition | Status |
+|---|---|
+| **C2** · Validation's Gate 0 intake verdict | **OPEN — BLOCKING.** None exists. |
+| **C3** · Devil's Advocate Red-Team Memo | **OPEN.** Blocking on Gate 1. |
+| **C7** · KC-002 signed by sponsor and Principal | **OPEN — BLOCKING**, executional. |
+| **C8** · seal and vault in one session, same UTC day | **OPEN — BLOCKING**, executional. |
+| **C11** · leg-(ii) null calibration | **OPEN — BLOCKING.** ≤2 trials, required measured before sealing. |
+| **C12** · in-sample cadence sweep | **[R12] DISCHARGED, narrowly** — cadence dimension only. |
+| **C13** **[NEW]** · Validation's ruling on R-002's three items | **OPEN — not a separate blocker**; resolved inside C2's intake verdict. |
+| **C1** · funding-cost repair | Specification **discharged**; implementation open as **I-034**. |
+| **C9** · perp OHLCV | **CLOSED.** |
+
+**Nothing in R-002 relaxes a condition, and R-002 does not seal.** Sealing is sequenced separately and is not this seat's to trigger.
+
+### 7.8 What R-002 did not do
+
+- **No seal, no vault, no registry write, no commit, no harness change.**
+- **I-045 not closed** — `quant-validation`'s.
+- **No declared menu edited, and in this revision NO SELECTION MOVED AT ALL.** R8–R12 touch a ceiling, an escalation rule, a disclosure, an assertion and a condition's status. **`N_conditioning` remains 7; the trial budget remains 79.**
+- **No number computed.** The one arithmetic operation is `109 − 86 = 23`, on two integers each already `[cited]` or `[measured]`.
+
+---
+
+*Director of Research · Castellan Capital · 2026-08-04 · **addendum §7 added 2026-08-05 for revision R-002***
+*Reasoning memo for revisions R-001 and R-002 of `research/PREREG-002-crypto-funding-basis.md`. No hypothesis was opened, no trial was run, no vault was sealed, and `book/` was not touched.*
