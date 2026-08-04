@@ -857,7 +857,15 @@ host without the Principal's hands on it.
 
 ---
 
-## D-003 · 2026-08-04 · Canonical Standing Order 001 governs · I-046 resolved · four breaches recorded
+## D-002 · 2026-08-04 · Canonical Standing Order 001 governs · I-046 resolved · four breaches recorded
+
+> **Renumbered D-003 → D-002 on 2026-08-04.** The CIO had taken `D-003` for this entry
+> while the Principal's own D-002 (the canonical-text paste) had no entry of its own; the
+> Principal then issued a D-003 of his own for the tool-permission policy. The Principal
+> owns this sequence. This entry, which records the Principal's D-002, now carries its
+> number; his tool-permission policy takes D-003 below. `[would-have-asked]` — renumbered
+> rather than letting two D-003s stand, because a decision record with a duplicate key is
+> unusable at the §7 audit and the collision only gets more expensive with age.
 
 **1 · Canonical text received, committed `23be6b6`, verified from `HEAD`.** 53 lines, all
 8 sections, zero CIO authorship traces, HEAD blob identical to working tree. The
@@ -910,6 +918,29 @@ PREREG-002 restatement lands, so the ruling can bind the very family approaching
 rather than arrive after it. **Not actioned pending the interrupt queue.**
 
 **Review date:** sprint close, 2026-08-11, at the §7 calibration audit.
+
+---
+
+## D-003 · 2026-08-04 · Tool-permission policy matching the delegated authority
+
+**Principal-issued.** A tool-permission policy is committed at `.claude/settings.json`:
+routine operations no longer prompt; **sudo, scheduled tasks, bulk deletion, and
+credential paths remain Principal-only.** *"Any residual prompt means the task is reaching
+outside scope — queue it, don't work around it."*
+
+**Verified before acceptance** [measured], because two of the three artifacts asserted as
+committed this session were not: `.claude/settings.json` is present on disk **and in
+`HEAD`** at commit `9678e5c`, and its contents match the description — `allow` covers
+Read/Edit/Write/Task/Glob/Grep, `git`, `python3`, `pip`, `pytest`, `sqlite3` and routine
+shell; `deny` covers `sudo`, `rm -rf`, `crontab`, `launchctl`, `~/.ssh/**`, `~/.aws/**`.
+**This one is real.** Appended to `ops/STANDING-ORDER-001.md` as an addendum.
+
+**CIO reading of the operative clause.** "Queue it, don't work around it" is treated as an
+extension of §4: a permission prompt is itself an interrupt signal, and the CIO may not
+re-route a denied operation through an allowed tool to reach the same effect. Immediate
+bite on **Rider A** — the VPS migration touches `crontab`/`launchctl` (denied) and spends
+money (§4 reserved). Both were scoped to `[PRINCIPAL]` steps by instruction before the
+policy existed; the policy now enforces mechanically what the dispatch enforced by wording.
 
 ---
 

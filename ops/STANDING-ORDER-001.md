@@ -70,3 +70,25 @@ At sprint close, the Principal audits every `[would-have-asked]` entry. Each one
 The interrupt set may be widened by any seat and narrowed only by the Principal in writing. No adjective ("material," "significant," "routine") may be introduced into §4 by interpretation. The CIO may not batch, summarize, or soften interrupt items — they arrive as filed. This order does not modify the independence of Seats 2, 6, and 7, whose reporting line to the Principal is untouched and outside this protocol.
 
 *Signed: the Principal. The Principal has the last say — this order changes where the say is exercised, not who holds it.*
+
+---
+
+## ADDENDUM — D-003, 2026-08-04 · tool-permission policy
+
+*Appended at the Principal's instruction. Verified before acceptance: `.claude/settings.json`
+is present on disk and in `HEAD` at commit `9678e5c`, and its contents match this
+description — routine operations allowed; `sudo`, `rm -rf`, `crontab`, `launchctl`,
+`~/.ssh/**` and `~/.aws/**` denied.*
+
+> D-003: a tool-permission policy is committed at `.claude/settings.json` matching your
+> delegated authority — routine operations no longer prompt; denied categories (sudo,
+> scheduled tasks, bulk deletion, credential paths) remain Principal-only. Any residual
+> prompt means the task is reaching outside scope — queue it, don't work around it.
+
+**CIO note on the last clause.** "Queue it, don't work around it" is read as an extension
+of §4 rather than a convenience: a permission prompt is now itself an interrupt signal, and
+the CIO may not re-route a denied operation through an allowed tool to achieve the same
+effect. This has immediate bite on **Rider A** — Seat 9's VPS migration touches scheduled
+tasks (`crontab`/`launchctl`, denied) and would spend money (§4 reserved). Both were
+already scoped to `[PRINCIPAL]` steps before this policy existed; the policy now enforces
+mechanically what the dispatch enforced by instruction.
