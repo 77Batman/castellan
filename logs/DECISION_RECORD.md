@@ -1191,3 +1191,41 @@ changed. C2 goes on Validation's return. `[would-have-asked]`.
 **7 · Budget.** 5 of 30 · 3 of 12 Opus, unchanged — C12 was the Sonnet unit already counted.
 
 **Review date:** on the ML ruling's return, when C2 dispatches.
+
+---
+
+## S2-D-008 · 2026-08-04 · Second Opus termination · I-049 filed MEDIUM · budget corrected
+
+**1 · The ML trial-accounting ruling died at the same transition the Director's did**, with
+the same error, after the same kind of large read, leaving nothing on disk. Verified before
+resuming [measured]: no ruling file, `book/registry.db` intact at 0 hypotheses / 0 trials,
+suite **160 passed**, tree unmodified apart from the live capture files. **Resumed from
+transcript** with the incremental-write instruction that the Director's resume carried.
+
+**2 · I-049 filed at MEDIUM,** with the reasoning for *not* filing HIGH stated on the face
+of the entry, since §8 forbids under-rating to dodge a §4 interrupt: no corruption of data,
+record, or number; recovery path known and tested; **cost is budget alone.** A
+**pre-committed escalation trigger** is written in — **a third occurrence makes it HIGH**,
+because at that rate the failure threatens §2 budget exhaustion, which is itself a §4
+interrupt, and the correct response then is a dispatch-design change rather than another
+resume.
+
+**3 · Budget, corrected under §2.** *"Failed invocations count as spent."*
+
+| | |
+|---|---|
+| Invocations | **6 of 30** |
+| Opus | **4 of 12** |
+| DA Gate 1 reserve (§2, PREREG-002 approaching seal) | 1 |
+| **Freely allocable Opus** | **7** |
+
+**Four Opus units have produced two artifacts.** Two of the twelve — 17% of the sprint's
+scarcest tier — bought nothing. This is recorded plainly rather than absorbed, because the
+§1 objectives are unmet and the tier is what pays for them.
+
+**4 · What the CIO is not doing.** Not spending a unit to diagnose whether the terminations
+correlate with read volume or with infrastructure. Two data points support no claim either
+way, and the sprint's objectives are unmet. The assessment is marked `[assumed]` in I-049
+rather than dressed as a finding.
+
+**Review date:** on the ML ruling's return.

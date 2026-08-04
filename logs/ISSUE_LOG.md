@@ -1507,3 +1507,51 @@ other prospective-only fix in this data source has had (`DATA-PROBE-001`,
 construction, for all prior capture history. No further action closes the historical
 gap — there is none available.
 **Pattern tag:** `not-polled-vs-failed-indistinguishable` · `prospective-only-fix`
+
+---
+
+## I-049 · 2026-08-04 · Opus dispatches terminate on API error at the read→write transition, twice, costing 2 of 12 sprint Opus units for zero artifacts · Severity: MEDIUM · Owner: CIO
+
+**Description.** Two Opus dispatches this sprint died identically [measured]:
+
+| | Seat | Last words before termination | Artifacts on disk |
+|---|---|---|---|
+| 1 | Director of Research — PREREG-002 restatement | *"I have what I need. Writing the memo first."* | none |
+| 2 | Head of Quant Validation — ML trial-accounting ruling | *"I have what I need. Writing the ruling."* | none |
+
+Both terminated with `API Error: Connection closed mid-response`, both **at the transition
+from reading to writing**, both after a large multi-document read, both leaving **nothing on
+disk**. Verified after each: registry intact at 0/0, suite passing, tree unmodified apart
+from the live capture files. **No corruption in either case — the cost is pure budget.**
+
+**Cost.** Under Standing Order 001 §2, *"failed invocations count as spent."* Two failures
+plus two resumes is **4 Opus units consumed to produce 2 artifacts**, against a sprint tier
+of 12. **The failure rate has consumed 17% of the sprint's scarcest resource for zero
+output.**
+
+**Mitigation applied.** Both resumes carried an explicit instruction to write to disk
+incrementally — create the file with its skeleton, fill it section by section — so a
+subsequent termination costs one section rather than everything. The Director's resumed run
+completed under that instruction. Whether the instruction caused the completion or the
+retry did is **not established** and should not be claimed.
+
+**Why MEDIUM and not HIGH, stated because the temptation runs the other way.** §8 forbids
+under-rating an issue to avoid triggering a §4 interrupt, so the reasoning is on the record:
+there is no data corruption, no record corruption, no incorrect number, and no lost
+analysis that was not re-derivable — the failures are recoverable and the recovery path is
+known and tested. The cost is budget alone.
+
+**Escalation trigger, pre-committed so it is not a judgment call later.** **A third
+occurrence makes this HIGH**, because at that rate the failure mode threatens §2 budget
+exhaustion, and **budget exhaustion in either tier is itself a §4 hard interrupt.** At that
+point the correct response is not another resume but a dispatch-design change — smaller
+reads, split briefs, or artifacts written before analysis rather than after.
+
+**What would change the assessment.** Evidence that the terminations correlate with
+something the firm controls — read volume, context size, dispatch length — rather than with
+infrastructure. None has been gathered; two data points do not support a claim either way,
+and the CIO is not going to spend a unit measuring it while the sprint's objectives are
+unmet. Recorded as `[assumed]`, not `[measured]`.
+
+**Resolution:** open — monitoring, with the escalation trigger above.
+**Pattern tag:** `dispatch-dies-at-read-write-transition`
