@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Read", "Edit", "Write", "Task", "Glob", "Grep",
+      "Bash(git:*)", "Bash(python:*)", "Bash(python3:*)",
+      "Bash(pip:*)", "Bash(pip3:*)", "Bash(pytest:*)",
+      "Bash(sqlite3:*)", "Bash(ls:*)", "Bash(cat:*)",
+      "Bash(mkdir:*)", "Bash(mv:*)", "Bash(cp:*)",
+      "Bash(grep:*)", "Bash(tail:*)", "Bash(head:*)",
+      "Bash(wc:*)", "Bash(find:*)", "Bash(echo:*)",
+      "WebFetch", "WebSearch"
+    ],
+    "deny": [
+      "Bash(sudo:*)",
+      "Bash(rm -rf:*)",
+      "Bash(crontab:*)",
+      "Bash(launchctl:*)",
+      "Read(~/.ssh/**)",
+      "Read(~/.aws/**)"
+    ]
+  }
+}
