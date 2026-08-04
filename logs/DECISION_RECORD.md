@@ -1229,3 +1229,122 @@ way, and the sprint's objectives are unmet. The assessment is marked `[assumed]`
 rather than dressed as a finding.
 
 **Review date:** on the ML ruling's return.
+
+> **AMENDED 2026-08-04 — this entry's own commit message is false, and Validation caught it,
+> not the CIO.** Commit `ffd73a9` carries the message *"leaving nothing on disk… tree
+> clean."* That was true when the CIO verified it, **before** resuming the dispatch. It was
+> **not** true when the CIO committed: `git add -A` swept up **77 lines of
+> `VALIDATION-RULING-004` in progress**, written by the resumed Validation seat working
+> concurrently — **written incrementally because the CIO had instructed it to.** Verified
+> [measured]: `git show ffd73a9 --stat` lists the ruling file.
+>
+> **Root cause is the CIO's commit practice, not the seat's.** `git add -A` while a
+> background dispatch is writing captures whatever that dispatch has reached, and the
+> commit message then describes a tree that no longer exists. **Corrective, effective
+> immediately: no `git add -A` while any dispatch is in flight — stage named paths only.**
+>
+> Filed by Validation as **I-054**, the *third* occurrence of I-013/I-041's shape. Under A3
+> history is not rewritten, so `ffd73a9` stands with its false message and this amendment
+> is the correction. The CIO notes for the §7 audit that the seat which found this was the
+> one the CIO had just finished describing as having produced nothing.
+
+---
+
+## S2-D-009 · 2026-08-04 · ML trial-accounting ruling lands · §4 HARD INTERRUPT — I-050
+
+**1 · §4 HARD INTERRUPT FILED. Two triggers, one item:** *"any issue filed HIGH"* and *"any
+finding by Validation… addressed to the Principal."*
+
+**I-050 — the Gate 1 t-statistic assumes serial independence and nothing corrects it.**
+Validation's finding, relayed unbatched and unsoftened per §8: the firm's own measured
+autocorrelation **ρ = 0.83** implies roughly **3.3× inflation** of the t-statistic, the
+error runs in the **permissive** direction, and no existing criterion corrects it.
+Validation states `T_STAT_HURDLE = 3.0` **does not move** — the *estimator* is corrected to
+its own stated assumption, which it holds is Seat 3's ownership. **No Charter amendment, no
+threshold change, and no override is requested anywhere in the ruling.** The one-paragraph
+form is at ruling §14.1.
+
+The CIO takes no position on I-050 and has none to take: Validation reports to the
+Principal, and this is inside its mandate.
+
+**2 · Checked, not relayed** [measured]: `book/registry.db` 0 hypotheses / 0 trials; suite
+**160 passed**; `git diff -- harness/` **empty**; ruling delivered at 1,412 lines. A2 intact.
+Severities on disk match the seat's report — I-050 HIGH, I-051 through I-054 MEDIUM.
+
+**3 · The ruling, in the numbers that bind.** 27 clauses (ML-1…ML-27), 14 acceptance tests.
+
+`N = n_inherited + n_declared_fits + n_logged` — the sealed cardinality of the declared
+search space, plus every `run_backtest` call, plus inherited count, with exactly one
+reduction (a candidate set fully re-selected inside a correctly purged nested inner loop,
+reporting only the outer-fold aggregate, contributes 1).
+
+**The finding the dispatch did not ask for, and which the CIO judges the most consequential
+thing in the document:** `N` alone deflates almost nothing — **`N × σ_SR` does.** Moving `N`
+from 10 to 100,000 raises the DSR bar by **0.56 Sharpe** at σ_SR = 0.20; moving σ_SR from
+0.20 to 0.80 at fixed `N` = 1,000 raises it by **1.96** [measured]. **σ_SR is roughly three
+times more load-bearing than `N`, and the firm currently lets the sponsor choose it by
+choosing which trials get a return series.** That is a governance hole in the gate the firm
+believed was its strictest control, found by the seat whose job is to find it. ML-16's
+mandatory pre-selection dispersion sample (m ≥ 32, uniform over the declared space, run
+first) closes it.
+
+**Second consequential number, and it reshapes the firm's opportunity set:** at the Gate 1
+Sharpe floor of 1.0 against the **6.571 years** of BTC/ETH history the firm holds, maximum
+admissible total `N` is **109**; after required diagnostics, roughly **30 configurations of
+genuine search remain.** **This forecloses neural nets, AutoML, and large sweeps at Gate 1
+on every data surface this firm currently has — at intake, before compute is spent.** The
+CIO records this as a *finding*, not a *constraint to be worked around*: it means the honest
+ML frontier for Castellan is small-search, high-prior work, and any pod proposing otherwise
+is proposing something the firm cannot validate.
+
+**4 · Standing consequence accepted.** Until `n_declared_fits` exists in the registry, **no
+fitted family may be sealed as Gate-1-eligible — ADMITTED-AS-EXPLORATORY is the ceiling.**
+Zero fitted families exist, so today's cost is zero. Blocked on harness work: ML-11, ML-3's
+enforcement, ML-16's DSR criterion, ML-18/ML-21(c) and §6.1, ML-26 enforcement, ML-17's
+mechanism. Everything else effective immediately.
+
+**5 · No contradictions created; one pre-existing contradiction found.** PREREG-002 §7.2's
+menu discount is *extended*, not contradicted; `run_parameter_grid`'s "every point is a
+logged trial" preserved unamended. But **PREREG-002 §7.2's binding escalation rule is
+unexecutable** — it requires `n_inherited ≥ menu_size × chain_total`, which `open_hypothesis`
+refuses for every menu size ≥ 2 (**I-053**). And **PREREG-002 §10.4's ceiling is 109, not
+110** — a correction to a document awaiting seal, which now needs the Director's hand before
+sealing.
+
+**CIO check on whether this is a §4 Charter–harness divergence: it is not, and the CIO
+verified rather than assumed in the direction that would have avoided an interrupt.**
+`FUND_CHARTER.md` §7.2 is *Research Memo*; the escalation rule lives in PREREG-002's own
+§7.2. Document–harness divergence, not Charter–harness. Recorded so the reasoning is
+auditable at §7.
+
+**6 · Issue-numbering collision, recorded not absorbed.** The dispatch told Validation to
+number from **I-049**; the CIO filed I-049 for the termination pattern *during Validation's
+outage*. Validation renumbered itself to **I-050…I-054** and recorded the collision rather
+than overwriting. **The CIO caused it** by allocating a number to itself from a range already
+issued to a seat.
+
+**7 · I-052 rated MEDIUM by Validation with its reasoning on the record** — its shape is
+I-027's, but I-027 was HIGH because a live family was blocked; nothing is blocked here and
+the ruling supplies a safe default. **Rating it HIGH to force attention would be the mirror
+of the error §8 warns against.** The CIO endorses the reasoning and notes it is the second
+seat this session to state a severity rationale unprompted.
+
+**8 · Termination continuity.** Nothing lost, nothing re-derived, conclusion did not move —
+and Validation marks that `[assumed]`, not `[measured]`, at ruling §0.2, because the first
+run wrote no artifact to check against. **Same discipline the Director showed on the same
+failure.** The §2–§3 arithmetic is independently re-runnable and is `[measured]`.
+
+**9 · Oracle pointer.** Validation reports no Oracle tool in its invocation. Placed by the
+CIO under A3.
+
+**10 · Budget.** **6 of 30 · 4 of 12 Opus** — the resume was already counted at S2-D-008.
+DA reserve 1. Freely allocable Opus: **7.**
+
+**11 · C2 remains undispatched.** It is now unblocked on both counts — C12 clean, Validation
+free — but the ruling has just changed what a Gate 0 intake verdict on PREREG-002 must
+check: §10.4's ceiling correction and I-053's unexecutable escalation rule are both live
+against that document. **Dispatching C2 before the Director repairs §10.4 would send
+Validation to rule on a document with a known-wrong number in it.** Sequencing: Director
+repairs, then C2. `[would-have-asked]`.
+
+**Review date:** on the Principal's ruling on I-050.

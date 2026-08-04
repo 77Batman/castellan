@@ -1555,3 +1555,263 @@ unmet. Recorded as `[assumed]`, not `[measured]`.
 
 **Resolution:** open — monitoring, with the escalation trigger above.
 **Pattern tag:** `dispatch-dies-at-read-write-transition`
+
+---
+
+## I-050 · 2026-08-04 · The Gate 1 t-statistic assumes serial independence and nothing corrects it — the firm's own data holds a measured case where it inflates `t` ≈ 3.3× · Severity: HIGH · Owner: quant-validation → head-of-data-infra
+
+*Filed by Validation under `research/VALIDATION-RULING-004-ml-trial-accounting.md` ML-26.
+Entered in the log at the CIO's instruction under S2-D-006; the CRO's ownership of the log
+is unchanged.*
+
+**Description.** `stats.sr_tstat` computes `SR_period · √T` [measured — `stats.py:51–60`],
+and `evaluate_gate1` holds that figure against `T_STAT_HURDLE = 3.0` [measured —
+`gates.py:260–262`]. **The estimator assumes the net return series is serially
+independent.** Under first-order autocorrelation `ρ`, the variance of the mean is inflated
+by approximately `(1+ρ)/(1−ρ)`, so the true `t` is smaller than the reported one by
+`√((1−ρ)/(1+ρ))`.
+
+**The assumption is not merely theoretical here.** Ruling 003 §3.2 records measured daily
+funding autocorrelation of **0.829 (BTC), 0.802 (ETH), 0.493 (SOL)** [cited — Ruling 003,
+tagged measured there]. At `ρ = 0.829` the inflation factor is `√(1.829 / 0.171) = 3.27`.
+**A pure carry return stream would report a t-statistic roughly 3.3× larger than its
+serially-corrected value, against the firm's single most-cited number.**
+
+**Two qualifications, entered so the finding is not overstated.** (1) A real family's net
+series is `gross + carry − costs`, and the price-return component is close to serially
+independent, so the realized inflation factor lies **between 1 and 3.3** and is
+family-specific and unmeasured. (2) The naive claim that overlapping holding periods imply
+an inflated `t` is **too strong** — what inflates `t` is autocorrelation *of the return
+series*, which arises from a persistent P&L component (carry, funding, multi-bar ML labels),
+not from holding-period overlap as such. **Neither qualification changes the direction, and
+the direction is permissive.**
+
+**Why nobody caught it.** Ruling 003 §6.5 already required Newey–West for F-002's `t(α)`,
+on exactly this reasoning, and confirmed it as drafted: *"a carry residual is autocorrelated
+by construction and the OLS `t` is inflated in a known direction"* [cited]. That requirement
+was attached to one falsifier on one family. **The Gate 1 criterion that every family must
+clear still uses the uncorrected estimator.** The correct inference was drawn and then
+applied one level too narrowly.
+
+**Repair.** A Newey–West option on `sr_tstat` (lag truncation ≥ `L − 1` for a label span
+`L`, or a stated lag for an autocorrelated carry family), used by `evaluate_gate1`'s t-stat
+criterion, with **both** figures on the report and the uncorrected one explicitly labelled.
+Acceptance tests **ML-T-12** and **ML-T-13** are pre-authored in Ruling 004 §11.4.
+
+**This is not a Charter amendment and none is requested.** `T_STAT_HURDLE = 3.0` does not
+move. What is corrected is the **estimator of `t`**, to match the assumption it already
+claims. That falls under Seat 3's ownership of "the backtest harness's statistical
+correctness" [cited — Charter Seat 3].
+
+**Why HIGH.** The test applied is the one the log's existing HIGH entries satisfy: *a
+Charter criterion is unenforceable or wrong in a way that changes verdicts.* I-029 (a
+falsifier passing noise 31% of the time), I-034 (a cost path guaranteeing a false KILL) and
+I-037 (a robustness test manufacturing its own bracket ceiling) are the same shape. **No
+family is currently affected — the firm has run zero trials — but every family will be.**
+
+**Resolution:** open. Closes when the Newey–West path ships, ML-T-12 and ML-T-13 are green,
+and the existing 160 still pass.
+**Pattern tag:** `estimator-assumption-unchecked` · `correct-inference-applied-too-narrowly`
+
+---
+
+## I-051 · 2026-08-04 · One CV splitter applies no purge and no embargo at all; the other embargoes 1% of bars with no regard to feature lookback · Severity: MEDIUM · Owner: head-of-data-infra
+
+*Filed by Validation under Ruling 004 ML-18 and §6.1.*
+
+**Description — two defects in `harness/castellan/cv.py`, both [measured].**
+
+**(a) `walk_forward_windows` purges nothing and embargoes nothing.** It yields
+`idx[: fold[0]]` as the training set — every bar strictly before the test fold
+[measured — `cv.py:43–61`]. It takes neither a `label_span` nor an `embargo_fraction`
+argument; there is nothing to configure. Charter §4.4 requires *"purged k-fold with 1%
+embargo applied"* **and** WFE across ≥ 10 windows [cited]. The harness satisfies the first
+through `purged_kfold_splits` and the second through a splitter satisfying neither.
+
+**(b) `purged_kfold_splits`'s embargo ignores feature lookback.** It purges `label_span`
+bars before the test fold — correct — and embargoes `⌈n_samples · 0.01⌉` bars after it
+[measured — `cv.py:28–40`]. A training observation after the test fold whose features are
+computed on a trailing window of width `W` reads data from `[t − W, t]`; if `W > embargo`,
+that window reaches back inside the test fold. **On a 2,398-bar sample the embargo is 24
+bars** [measured]. PREREG-002 §7.1's K1 declares a **30-day** trailing baseline [cited] —
+the realistic case exceeds the embargo, not a constructed one.
+
+**Direction of the error.** Both leaks let training data carry information from the test
+fold. For a **fitted** family that raises the out-of-sample leg of the walk-forward ratio
+and therefore **raises WFE** — permissive against a `WFE_MIN = 0.50` criterion.
+
+**Why it has never fired.** The firm holds zero families and zero trials [measured], and
+for a family that fits nothing on the training indices `walk_forward_windows` is a slicing
+convenience with no training step to contaminate. **It would fire on the first fitted
+family.** Same latency profile as the `gates.py` global-event defect Ruling 001 rated
+MEDIUM, and rated the same way for the same reason.
+
+**Interim control, effective immediately (Ruling 004 §6.1):** **`walk_forward_windows` may
+not be used by a fitted family.** Its WFE windows must come from ML-21(c)'s sequential
+purged construction, and the required embargo — `max(⌈0.01·T⌉, feature lookback, label
+span)` — is computed by the caller, stated in the sealed method, and checked by Validation
+at Gate 1.
+
+**Repair.** `purged_kfold_splits(feature_lookback=…)`, refusing to split when it is not
+stated; `walk_forward_windows(label_span=…, embargo_fraction=…)` applying both. Acceptance
+tests **ML-T-9**, **ML-T-10** and **ML-T-11** are pre-authored in Ruling 004 §11.3; today's
+implementation fails ML-T-11's three assertions.
+
+**Resolution:** open.
+**Pattern tag:** `harness-correctness-latent` · `charter-requirement-partially-implemented`
+
+---
+
+## I-052 · 2026-08-04 · The registry cannot express an ML family's declared fit count, and DSR cannot be computed on a dispersion subset · Severity: MEDIUM · Owner: head-of-data-infra
+
+*Filed by Validation under Ruling 004 ML-11, ML-16 and §9 (capabilities H-A and H-B).*
+
+**Description.** Ruling 004 defines `N` for a fitted family as
+`n_inherited + n_declared_fits + n_logged`. **`n_declared_fits` does not exist** — there is
+no column, no `open_hypothesis` parameter, no `_BINDING_FIELDS` entry, and no term in
+`family_stats`'s `n_trials` [measured — `registry.py`]. A fitted family's declared search
+space therefore cannot reach `evaluate_gate1`, which means DSR, PBO and MinBTL are all
+computed against a denominator that omits the search that did the selecting.
+
+**Second, and statistically the more consequential half.** `deflated_sharpe_ratio`
+benchmarks against `expected_max_sharpe(N, σ_SR)`, which is **linear in σ_SR** [measured —
+`stats.py:111`], and `family_stats.sr_period_std` is the standard deviation over **every**
+logged trial [measured — `registry.py:541–547`]. Ruling 004 §2.3 measures the relative
+weight: moving `N` from 10 to 100,000 raises the DSR bar by **0.56** Sharpe at
+`σ_SR = 0.20`, while moving `σ_SR` from 0.20 to 0.80 at `N = 1,000` raises it by **1.96**.
+**σ_SR is roughly three times more load-bearing than `N`, and the harness has no way to
+compute it on the pre-selection dispersion sample rather than on whatever mix of clustered
+survivors happens to be logged.**
+
+**Interim control, effective immediately.** Ruling 004 caps fitted families at
+**ADMITTED-AS-EXPLORATORY** — researched, not Gate-1-eligible — until `n_declared_fits`
+reaches `family_stats().n_trials`; and where
+`σ_SR(dispersion sample) > σ_SR(all logged)`, the DSR criterion is **INSUFFICIENT-DATA**,
+never PASS. Validation will not substitute a hand-computed DSR: that is a narrated number
+inside the firm's most important criterion, which A1 forbids and which I-014 records the
+firm having been bitten by once already.
+
+**Repair.** H-A: an integer column, in `_BINDING_FIELDS`, summed transitively, added to
+`FamilyStats.n_trials`, rendered on the report as its own component and never merged into
+`n_inherited` or `n_logged`. H-B: a designated dispersion subset of logged trials from
+which `sr_period_std` is computed for DSR. Acceptance tests **ML-T-1 … ML-T-8**
+pre-authored in Ruling 004 §11.1–§11.2.
+
+**Why MEDIUM and not HIGH, stated because the temptation runs the other way.** Its shape is
+I-027's, which was rated HIGH — but I-027 was HIGH because a live family was blocked on it.
+**Nothing is blocked here: the firm holds zero fitted families, and Ruling 004 closes the
+gap safely with a stated default.** A missing capability with no waiting consumer and a
+safe default is MEDIUM. Rating it HIGH to force attention would be the mirror of the error
+Standing Order §8 warns against.
+
+**Resolution:** open. Closes when H-A and H-B ship, ML-T-1 … ML-T-8 are green, and the
+existing 160 still pass. On closure, Ruling 004's exploratory-only cap on fitted families
+lifts automatically.
+**Pattern tag:** `denominator-declared-but-unenforced` · `dsr-input-chosen-by-sponsor`
+
+---
+
+## I-053 · 2026-08-04 · The `n_inherited` escalation path terminates in a dead end — PREREG-002 §7.2's binding escalation rule cannot be executed · Severity: MEDIUM · Owner: head-of-data-infra → director-of-research
+
+*Filed by Validation under Ruling 004 ML-17.*
+
+**Description.** PREREG-002 §7.2 carries a **binding escalation rule**: if a declared
+conditioning choice is revised after any result is seen, the revision requires a successor
+family opened with `n_inherited ≥ (menu size of the revised choice) × (this family's final
+n_trials)`, and the product where more than one is revised [cited].
+
+`open_hypothesis` raises `InheritedCountDoubleCountError` whenever a successor declares
+`n_inherited ≥ chain_total`, where `chain_total = family_stats(predecessor).n_trials`
+[measured — `registry.py:294–308`]. **The escalation formula produces
+`n_inherited ≥ menu_size × chain_total`, which exceeds `chain_total` whenever
+`menu_size ≥ 2` — i.e. for every one of K1 through K7, whose menu sizes are 10, 3, 9, 5, 5,
+4 and 5** [cited — PREREG-002 §7.1]. **The rule the firm has written cannot be executed
+against the registry the firm has built.**
+
+**The guard is not wrong.** Its own docstring states the design intent: *"A genuine new
+search larger than the entire predecessor chain is a Validation escalation, not a silent
+registration — this exception IS that escalation path"* [cited]. That is correct.
+**What is missing is the continuation: there is no argument, event, or authorized route by
+which Validation, having adjudicated the escalation, can then permit the registration.**
+The escalation path raises and then stops.
+
+**Consequence if unrepaired.** A sponsor who must revise a sealed conditioning choice has
+two options and both are wrong: abandon the line, or re-register under a number the guard
+will accept, which is **below** the escalation the rule requires and therefore
+under-declares the denominator. **The second is the one that will be taken under schedule
+pressure, and it is the exact failure Appendix B #2 names.**
+
+**Repair.** An explicit Validation-authorized route — a keyword argument carrying a logged
+authorization event reference, or an equivalent — that **preserves the raise by default**
+and permits the registration only against a recorded authorization, logged as
+`n_inherited_escalation_authorized`. Acceptance test **ML-T-14** is pre-authored in Ruling
+004 §11.5 and requires **both** halves: a change that merely removes the guard fails it.
+
+**Why MEDIUM.** Latent and has never fired — zero families, zero trials [measured]. It
+produces no wrong number and affects no verdict. It fires on PREREG-002's first post-seal
+revision and on the first fitted family's first search-space enlargement.
+
+**Resolution:** open.
+**Pattern tag:** `harness-correctness-latent` · `rule-written-cannot-be-executed`
+
+---
+
+## I-054 · 2026-08-04 · Third occurrence — a seat's in-progress work committed under an unrelated message, this time inside the commit asserting that nothing reached disk · Severity: MEDIUM · Owner: fable-5-cio
+
+*Filed by Validation, on its own dispatch, against the commit that swept up its own
+partial artifact. Raised because three instances make it a pattern and the log is the
+firm's only instrument for detecting one.*
+
+**Description [measured].** Commit **`ffd73a9`** — *"S2-D-008 / I-049: second Opus
+termination at the read-write transition; budget corrected"* — contains **76 lines of
+`research/VALIDATION-RULING-004-ml-trial-accounting.md`**, which is Validation's ruling
+in progress: its header block and §0 provenance section, i.e. the first incremental write
+of the resumed run.
+
+```
+$ git ls-tree HEAD research/ | grep ruling-004
+100644 blob eb26fcb…  research/VALIDATION-RULING-004-ml-trial-accounting.md
+$ git show HEAD:research/VALIDATION-RULING-004-ml-trial-accounting.md | wc -l
+      76
+```
+
+**Why this is more than a filing-hygiene note.** The commit's own message states that both
+terminated runs left *"nothing on disk"* and that the tree was verified *"unmodified apart
+from the live capture files."* Both statements were true of the **terminations**. Neither
+was true of the **commit**, which was taken while the resumed run was mid-write and which
+therefore records, in the book of record, a partial ruling under a message that says no
+ruling exists. **Under Amendment A3 the git repository is the book of record** [cited —
+Charter Part VIII], so a commit message that contradicts its own contents is a defect in
+the record itself, not in a summary of it.
+
+**The pattern, which is the reason this is filed rather than mentioned.**
+
+| # | Entry | Instance |
+|---|---|---|
+| 1 | **I-013** · 2026-07-28 | CIO committed a seat's in-progress work under an unrelated message |
+| 2 | **I-041** · 2026-07-29 | A source-only revert left a schema migration on disk, committed under an unrelated message |
+| 3 | **I-054** · this entry | A seat's in-progress ruling committed under the incident message asserting the seat produced nothing |
+
+**Three instances of one shape.** Charter §7.8 makes the log *"a filter — by examining what
+it catches and where it came from, the firm eliminates the source"* [cited]. Two instances
+were incidents; three is a source. **The source is that commits are taken on a wall-clock
+or ritual trigger rather than on a state check of what is currently being written.**
+
+**No harm occurred and that is not the point.** Nothing was corrupted, nothing was lost,
+the registry stands at 0 hypotheses / 0 trials, and the harness suite passes 160 [measured,
+verified by this seat before and after]. The partial was superseded by the completed ruling
+in the same working tree. **The defect is that the record briefly asserted something false
+about a seat's output, and a firm whose book of record can do that has a recording problem
+independent of whether this instance cost anything.**
+
+**Suggested remedy, offered rather than ruled** — commit hygiene is the CIO's, not
+Validation's: before any commit, check whether a dispatched seat is mid-artifact, and
+either exclude that path or say in the message that it is a partial. The second is
+cheaper and preserves the incremental-write protection the resume instruction introduced.
+
+**Why MEDIUM.** Same rating as I-013 and I-041, for consistency and because the harm is to
+the record's accuracy rather than to any number, verdict, or dataset. **The recurrence, not
+the instance, is what should be read at the quarterly review.**
+
+**Resolution:** open — pattern entry, for the quarterly review under Charter §7.8.
+**Pattern tag:** `in-progress-work-committed-under-unrelated-message` · `record-asserts-what-is-not-so`
