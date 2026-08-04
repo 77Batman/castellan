@@ -1,69 +1,53 @@
-# STANDING ORDER 001 — Sprint 2
+# STANDING ORDER 001 — PRINCIPAL DELEGATION PROTOCOL
 
-**Issued:** 2026-07-31 (D-015 §3) · **In force:** Sprint 2, 2026-08-03 → 2026-08-11
-**Authority:** Principal · **Status:** binding
+*Issued by the Principal · Effective at Sprint 2 open · Calibration mode · Supplements Charter Part IX; amends nothing*
 
-> **Provenance note.** This file was written on **2026-08-04** by the CIO at the opening
-> of Sprint 2. The Principal's D-001 message stated the Standing Order was "committed at
-> `ops/`"; it was not — no such file existed in the repository or in any commit. Its
-> operative text lived only in `logs/DECISION_RECORD.md` D-015 §3–4, which is the source
-> reconstructed below. Nothing here is invented; §1–§3 are D-015's text. §4 records the
-> riders added by the Principal's D-001 message of 2026-08-03. Under **A3 the repo is the
-> book of record**, so the order now exists where the Principal believed it already did.
+## §1 · Goal — the objective function
 
----
+Sprint 2's goal, stated once and optimized literally:
 
-## §1 · Compute ceiling
+- PREREG-002 sealed and executing, with its forward-test ledger entry recorded.
+- The ML trial-accounting ruling landed (search space declared at Gate 0; every fitted configuration a logged trial; purged/nested CV mandatory; seeds fixed).
+- Two hypotheses driven to terminal verdicts — a correct kill counts identically to a pass. The goal is verdicts, not survivals. Any optimization that pressures a gate rather than resolving a hypothesis is a violation of this order, not a fulfillment of it.
+- The Σα forward-test ledger and origin-ratio metrics maintained and reported.
 
-**30 invocations · 12 of them Opus.**
+## §2 · Budget
 
-The ceiling is hard. D-015 records the Principal's reasoning for why it binds, and it is
-the correct reading of Sprint 1:
+30 seat invocations, of which at most 12 Opus. No rollover. Failed invocations count as spent (D-012). The DA's Gate 1 reserve convention continues: one Opus unit sealed per family approaching seal.
 
-> *"The ceiling binding at the seal is the control functioning; the seal that didn't
-> happen this week is a seal that would have frozen two defects permanently."*
+## §3 · Delegated by default
 
-A ceiling that stops a seal is the ceiling working. It is not a missed milestone.
+The CIO exercises every authority the Charter already grants it without checkpointing the Principal, including: dispatch and sequencing, intra-budget reallocation between seats, incident response, worktree/merge mechanics, and agenda adjustments within the sprint goal. Each such decision is logged in the decision record as it is made. Calibration rule: any decision the CIO would previously have brought to the Principal is additionally tagged `[would-have-asked]`, with one line stating what it decided and why. The tag changes nothing about execution; it exists to be audited at sprint close (§7).
 
-## §2 · First Director unit
+## §4 · Hard interrupts — enumerated, mechanical, no judgment
 
-The **PREREG-002 mechanism restatement, with I-045 in hand.** Funded from Sprint 2's
-Opus allocation because the restatement is Opus-tier Director judgment, not Sonnet-scope
-handling.
+The loop halts and queues for the Principal on any of the following. These are triggers, not thresholds; no seat, including the CIO, decides whether an item "really" qualifies:
 
-**Principal input on homogeneity remedies — NON-BINDING:**
+- Any Charter §2 reserved authority: real capital, any override, any validation-threshold change, any new asset class or data source, any Charter amendment, anything that spends money outside the stated budget.
+- Any seal, any kill-condition signature or restatement, any KC silence-kill firing.
+- Any issue filed HIGH.
+- Any finding by Validation, the CRO, or the Devil's Advocate addressed to the Principal.
+- Any drawdown-ladder rung, at any level.
+- Any action requiring the holdout passphrase.
+- Any detected Charter–harness divergence.
+- Budget exhaustion in either tier.
 
-| | Remedy |
-|---|---|
-| (a) | per-contract time-varying documented parameters |
-| (b) | a declared break control |
-| (c) | dropping SOL under the existing universe menu — menu size 5 already declared, so this costs no new `N` |
+Interrupt items block their own thread until ruled; unrelated work continues. Silence is never approval for an interrupt item.
 
-**Explicitly ruled out: a disclosure-only footnote.** Principal: it *"is out of scope for
-the operative state variable, which also rules out Sonnet-scope handling."*
+## §5 · Dead-man clause
 
-## §3 · Sequence
+If 10 invocations are spent, or 5 calendar days elapse, since the last Principal checkpoint — whichever comes first — the loop halts everything and waits. A halted firm is a correct outcome; an unsupervised one is not.
 
-**M1 → seal → forward clock starts.**
+## §6 · Checkpoint cadence
 
-The **two-terminal-verdicts goal carries into Sprint 2 unchanged, honest either way.**
+The Principal reviews: the Friday Research Review, the Monthly Letter, and the interrupt queue as it arrives. The decision record and `[would-have-asked]` log are the review surface between checkpoints. Per-turn Principal review is discontinued.
 
-## §4 · Riders (Principal, 2026-08-03)
+## §7 · Calibration audit and graduation
 
-**Rider A — VPS migration of the Polymarket capture** is promoted to the sprint's **first
-Sonnet dispatch.** Spend approved, ~$5/month. Until cutover, gaps are logged as
-host-sleep, and **all liveness analysis must distinguish not-polled from no-quote.**
+At sprint close, the Principal audits every `[would-have-asked]` entry. Each one the Principal would have decided differently is a calibration finding, discussed on the record. Graduation of this order to standing policy requires (a) a clean or explained audit, and (b) a Charter Part IX amendment ratified at the Quarterly Review. Until then this order expires with the sprint and must be reissued.
 
-**Rider B — `book/pit.db` has left git tracking** (GitHub size limits). Compressed
-snapshots replace it; Seat 9 implements the scheduled version with weekly retention. The
-**A3 clarification enters the decision record: git for decisions and code, snapshots for
-bulk data.**
+## §8 · Erosion guard
 
-**Rider C — one Sonnet line-item at sprint close:** harvest the Issue Log into
-`ops/CASEBOOK.md`.
+The interrupt set may be widened by any seat and narrowed only by the Principal in writing. No adjective ("material," "significant," "routine") may be introduced into §4 by interpretation. The CIO may not batch, summarize, or soften interrupt items — they arrive as filed. This order does not modify the independence of Seats 2, 6, and 7, whose reporting line to the Principal is untouched and outside this protocol.
 
-**Per-turn Principal review is discontinued** as of 2026-08-03.
-
----
-
-**Review date:** sprint close, 2026-08-11.
+*Signed: the Principal. The Principal has the last say — this order changes where the say is exercised, not who holds it.*
