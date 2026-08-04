@@ -779,7 +779,7 @@ is where it is funded.
 
 ---
 
-## D-001 · Sprint 2 · 2026-08-04 · Sprint 2 opens · riders A/B/C · A3 clarification
+## S2-D-001 · Sprint 2 · 2026-08-04 · Sprint 2 opens · riders A/B/C · A3 clarification
 
 Principal's dispatch of 2026-08-03. Recorded by the CIO at the open of Sprint 2.
 
@@ -857,7 +857,7 @@ host without the Principal's hands on it.
 
 ---
 
-## D-002 · 2026-08-04 · Canonical Standing Order 001 governs · I-046 resolved · four breaches recorded
+## S2-D-002 · 2026-08-04 · Canonical Standing Order 001 governs · I-046 resolved · four breaches recorded
 
 > **Renumbered D-003 → D-002 on 2026-08-04.** The CIO had taken `D-003` for this entry
 > while the Principal's own D-002 (the canonical-text paste) had no entry of its own; the
@@ -921,7 +921,7 @@ rather than arrive after it. **Not actioned pending the interrupt queue.**
 
 ---
 
-## D-003 · 2026-08-04 · Tool-permission policy matching the delegated authority
+## S2-D-003 · 2026-08-04 · Tool-permission policy matching the delegated authority
 
 **Principal-issued.** A tool-permission policy is committed at `.claude/settings.json`:
 routine operations no longer prompt; **sudo, scheduled tasks, bulk deletion, and
@@ -944,7 +944,7 @@ policy existed; the policy now enforces mechanically what the dispatch enforced 
 
 ---
 
-## D-004 · 2026-08-04 · Director's PREREG-002 restatement lands · §4 HARD INTERRUPT — KC-002 restated
+## S2-D-004 · 2026-08-04 · Director's PREREG-002 restatement lands · §4 HARD INTERRUPT — KC-002 restated
 
 **1 · §4 HARD INTERRUPT FILED. Trigger: *"any kill-condition signature or restatement."***
 
@@ -1001,7 +1001,7 @@ reward.
 **6 · `[would-have-asked]` — C12's measurement dispatch.** C12 is a row-count query on
 already-ingested data, not a trial. Under §3 dispatching it is delegated. **No decision was
 required**: its owner is Seat 9, which is mid-dispatch on Rider A, and two concurrent
-dispatches into one seat and one tree was already ruled against in D-003 §4. C12 is queued
+dispatches into one seat and one tree was already ruled against in S2-D-002 §4. C12 is queued
 behind Rider A's return, not held for the Principal.
 
 **7 · Budget.** 3 of 30 · 2 of 12 Opus. DA reserve holds 1 Opus for this family under §2 —
@@ -1012,7 +1012,7 @@ allocable Opus: **9**.
 
 ---
 
-## D-005 · 2026-08-04 · Rider A returns · §4 HARD INTERRUPT — spend exceeds the stated budget
+## S2-D-005 · 2026-08-04 · Rider A returns · §4 HARD INTERRUPT — spend exceeds the stated budget
 
 **1 · §4 HARD INTERRUPT FILED. Trigger: *"anything that spends money outside the stated
 budget."*** The Principal approved **~$5/month**. Seat 9's provider selection is a
@@ -1040,12 +1040,12 @@ in-flight code change; that trade is the Principal's to review at §7.
 **4 · Two issues filed, both MEDIUM, neither an interrupt.** **I-047** — an un-retried
 Gamma call crashing on DNS failure after host wake was the measured, repeated, uncaught
 cause of real capture gaps; **four occurrences found in `polymarket-book.err`**, fixed with
-retry/backoff. This means the 5.5% coverage figure is **not** wholly host-sleep as D-001 §3
+retry/backoff. This means the 5.5% coverage figure is **not** wholly host-sleep as S2-D-001 §3
 recorded; part of it is a defect the firm shipped. **I-048** — "not polled" vs "polled,
 whole batch failed" were **provably indistinguishable** in `book/pit.db` before today.
 Closed going forward at **2026-08-04T16:53:16Z** via a heartbeat wired into every exit path;
 **permanently open for all prior history**. The seat checked the schema rather than
-accepting the assertion carried in D-001, and the assertion was wrong.
+accepting the assertion carried in S2-D-001, and the assertion was wrong.
 
 **5 · Dual-writer decision, accepted under §3.** The VPS owns a capture-only store
 (`pit_capture.db`) born empty, never touching `book/pit.db`; data reaches the real store
@@ -1061,14 +1061,14 @@ any other source.** The CIO accepts this as operational architecture within dele
 **7 · Runbook: 14 steps, 7 marked `[PRINCIPAL]`** — account and droplet creation, SSH key,
 two file transfers, install execution, the VPS→local pull, and the laptop-decommission
 decision. **Nothing was provisioned, no account created, no money spent, no data
-transmitted off this host.** Under D-003's policy, `crontab`/`launchctl` are denied and the
+transmitted off this host.** Under S2-D-003's policy, `crontab`/`launchctl` are denied and the
 spend is §4-reserved, so the cutover cannot proceed without the Principal regardless.
 
 **8 · Budget.** 3 of 30 · 2 of 12 Opus, unchanged — Rider A was the Sonnet unit already
 counted. DA reserve holds 1 Opus. Freely allocable Opus: **9**.
 
 **9 · Record-integrity note, flagged not fixed.** `logs/DECISION_RECORD.md` now contains
-**two each** of D-001…D-004 — Sprint 1's and Sprint 2's — because Standing Order 001
+**two each** of D-001…D-004 (now S2-prefixed) — Sprint 1's and Sprint 2's — because Standing Order 001
 restarts the sequence per D-015 §3. The keys are no longer unique, which will bite at the
 §7 audit. The CIO proposes a sprint prefix (`S2-D-001`) but **has not renumbered the
 Principal's scheme unilaterally.** Awaiting direction.
