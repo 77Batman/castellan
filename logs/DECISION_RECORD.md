@@ -1602,3 +1602,92 @@ block are the same one: **the PREREG-002 seal**, which is Standing Order §1's f
 objective. The CIO is not treating that as grounds to soften either filing.
 
 **Review date:** on the Principal's rulings.
+
+---
+
+## S2-D-013 · 2026-08-05 · Both interrupts ruled · §10.4 seals a function, not a constant
+
+**1 · Interrupt A APPROVED AND COUNTERSIGNED, and a standing principle issued.** The
+Principal rules R9 the **KC-001 clause-3 precedent applied to KC-002**: one counting path,
+owned by the registry's transitive summation, with `InheritedCountDoubleCountError`
+enforcing what prose previously asserted.
+
+> **STANDING, ALL KILL CONDITIONS: inheritance is computed, never re-declared.**
+
+**This is firm-wide and outlives this family.** It is recorded here, and it needs to reach
+`reference/GATES.md` and `reference/TEMPLATES.md` so a future pre-registration cannot
+re-introduce the pattern by writing it fresh. **Not yet actioned — queued as a Sonnet
+line-item.** Confirmed unedited: operative clauses (a)/(b)/(c), thresholds, 2027-01-31.
+
+**2 · Interrupt B — I-057 APPROVED AS FILED, and Validation's qualification adopted
+verbatim as the finding's meaning:** *"the ceiling is a function of an unmeasured quantity,
+below 109 at every ρ > 0."*
+
+**3 · THE SEALING RULING — §10.4 does not seal a constant.**
+
+> **`N_max = min(109, corrected-MinBTL ceiling at ρ̂)`**, where ρ̂ is the family's net-return
+> autocorrelation, **measured by the harness from logged trials at evaluation time.**
+
+The Principal's own defence of why this is admissible: it is **monotone-conservative** —
+measurement can only tighten, never loosen — so **it is not the I-029(d) operation**; it is
+*"the `min(t_NW, t_raw)` construction extended to `N`."* The CIO records the symmetry
+because it is the sprint's most reusable idea: **the firm has now twice solved a
+"measurement could be gamed" problem by making the conservative direction the only
+structurally available one**, rather than by writing a rule against gaming it.
+
+**4 · Sequence ruled by the Principal, executed by the CIO.** Validation specifies the
+corrected MinBTL/DSR serial treatment — *"it correctly declined to improvise one; the
+deliberation is what the unit buys"* — same regime, **red-first, floor rises from 188**. The
+Director **then** revises §10.4 to the functional form and sets the trial budget against a
+**conservative ρ assumption stated in the document**, because *"burning `N` the measured
+ceiling may disallow is the sponsor's risk to declare, not discover."*
+
+**5 · The consequence, stated by the Principal pre-emptively and recorded so sprint close
+inherits no surprise:**
+
+> *"if ρ̂ measures ≥ 0.1, the admissible ceiling falls below the declared `N` = 86 and this
+> family cannot clear Gate 1's length criterion on the data we hold. That outcome, should it
+> arrive, is the machinery answering — a PARK or kill on measured ρ is a terminal verdict
+> under §1, not a malfunction."*
+
+**The CIO has written this into Validation's brief explicitly**, with the instruction that it
+is *not* being asked for a specification that lets PREREG-002 survive: if the correct
+treatment kills the firm's only family on the data it holds, specify it anyway and say so.
+This is the §1 clause *"the goal is verdicts, not survivals"* under its first real test —
+the first time this sprint that following the machinery may cost the firm its only asset.
+
+**6 · Two dispatches, deliberately overlapping, with the collision managed rather than
+avoided.**
+
+- **Validation, Opus** — `VALIDATION-SPEC-002`, the corrected MinBTL/DSR serial treatment.
+  Six things it must settle, of which the CIO judges two most likely to be gamed later:
+  **how ρ̂ is estimated at zero, few, or unstable trials**, and **whether a family can become
+  retroactively inadmissible** — the case the firm will actually hit. Monotone-conservatism
+  must be **built into the construction and guarded by a test**, not stated as intent.
+- **Seat 9, Sonnet** — implements `VALIDATION-SPEC-001`'s 26 clauses, floor **160 → 188**.
+
+**These two run concurrently on the same directory on purpose**, because Seat 9's work is
+gated only on SPEC-001 and waiting would idle it for an Opus deliberation. The collision is
+handled by instruction rather than by sequencing: Seat 9 verifies against its **two named
+test files** and reports whole-suite counts **separately with the caveat attached**;
+Validation writes only into **new files** and is told not to read a moving suite count as a
+signal about its own work. `[would-have-asked]`.
+
+**7 · Two standing properties written into Seat 9's brief as inviolable**, above the tests
+themselves: the graded figure is `min(t_NW, t_raw)` and the lag floor is a one-sided max, so
+**an estimator change may tighten and never loosen** — and if the implementation admits any
+path where the corrected statistic is *more* permissive, **it is wrong regardless of what the
+tests say.** Also: `test_hac_t13` and `test_hac_t14` are green today and **a run that turns
+those two red is worse than one leaving the other 26 red.**
+
+**8 · The numbering fix is in force for the first time.** Validation holds **I-060–I-069**,
+Seat 9 holds **I-070–I-079**, disjoint and stated at dispatch. I-059 reserved to the CIO.
+
+**9 · Budget.** **10 of 30 · 7 of 12 Opus.** DA reserve 1. Freely allocable Opus: **4** —
+enough for the Director's §10.4 revision, C2's intake verdict, and C3 on the reserve, with
+nothing spare. **The sprint's Opus tier is now the binding constraint**, and two of the four
+units it lost went to I-049's terminations.
+
+**10 · §5 dead-man: 6 invocations remain** since the last Principal checkpoint.
+
+**Review date:** on the return of SPEC-002 and the SPEC-001 implementation.
