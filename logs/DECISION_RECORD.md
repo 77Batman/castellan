@@ -2129,3 +2129,81 @@ Principal was using to sequence work. Corrected here rather than quietly adjuste
 against 2 committed** (Director §10.4, C2). §5 dead-man: **8 invocations remain.**
 
 **Review date:** on the Principal's rulings on I-060, §13, and the three HIGHs above.
+
+---
+
+## S2-D-020 · 2026-08-06 · Four interrupts ruled · last Opus slack spent · two dispatches
+
+**Headroom at ruling: `session 19% · weekly-opus 15%`**, fresh, no termination since it
+arrived — the staleness rule's conservative posture is **not** triggered, and that reading is
+recorded rather than assumed.
+
+**1 · I-060 — recorded as a finding, reconciliation DEFERRED to Sprint 3, strict reading
+governs.** The Principal's framing, offered as non-binding input: the live question is whether
+**pre-declared, unconditional diagnostics constitute selection** (and burn `N`) **or
+measurement** (fixed obligations, no degrees of freedom, hence no argmax to correct for). The
+collision is between two artifacts of the same author and its reconciliation is Validation's.
+
+**Nothing operational blocks**: no ML family exists and **none may register until the
+reconciliation lands.** Until then **diagnostics count toward `N`.** And the sentence that
+matters most:
+
+> *"if reconciliation confirms mutual unsatisfiability, 'the ML frontier is empty on the data
+> we hold' is recorded as an honest finding, not routed around."*
+
+**2 · §13(a) COUNTERSIGNED. 0.034 supersedes 0.1 on the record.** *"My number was a
+prediction, Validation's is a derivation."* The tightening required no act under the asymmetry —
+as designed. On the CIO having surfaced it prominently anyway: *"the right instinct;
+**authorized silence is still silence.**"* **The Director's §10.4 revision writes against
+0.034.**
+
+**§13(b) acknowledged** — choosing the estimator that reproduces ruled numbers over the
+family-favourable one, with the discarded alternative named, *"is the conduct the order selects
+for."* **§13(c) — R-3/D-6 floors stand, no removal.**
+
+**3 · I-075/077/078 and the declined construction — batched into ONE Validation invocation**,
+funded from the sprint's last spare Opus unit. All four are Validation-judgment by
+construction. On the fourth, the Principal's ruling is the sharp one:
+
+> *"the seat was right that adoption is not the implementer's act, **which is not a finding
+> that the construction is wrong.**"*
+
+**The procedural question is settled and the substantive one is open.** The CIO's brief tells
+Validation that a construction making every test pass *"deserves suspicion rather than
+gratitude"* — and that if it is correct, to say plainly that an implementer found a defect in
+the specification and correctly declined to fix it unilaterally.
+
+On I-078 the Principal requires **written justification per test** that each protected property
+survives or is superseded — **not a blanket acceptance.** *"Until ruled, the green floor is
+honestly three lower."*
+
+**4 · Budget consequence, ruled in advance.** This spends the last slack. **Any further
+termination triggers the exhaustion contingency as already ruled: seal to Sprint 3, DA reserve
+sealed, no red-team skipped.** Both briefs state this to the seat, so each works knowing what
+its own failure costs.
+
+**5 · Two dispatches, parallel, and the CIO records why parallel rather than serial.** The
+staleness rule permits it — headroom fresh, no termination since. Sequencing would cost a full
+wall-clock cycle with the sprint closing on the 11th. Against that, two concurrent Opus units
+double the single-window exposure at exactly the moment slack reaches zero. **The CIO judged
+wall-clock the binding constraint and takes the exposure.** `[would-have-asked]`.
+
+**Pre-split judgment stated explicitly rather than left implicit**, per the Principal's rule:
+the CIO judges the Validation adjudication **under the ~800-line threshold** — four focused
+rulings plus three per-test justifications, not a specification — and sent it as one unit,
+**instructing the seat to stop and say so rather than truncate if that judgment is wrong.**
+Pre-splitting would have cost two units, which the sprint does not have; **saying so is better
+than discovering it.**
+
+**6 · Dead-man miscount — acknowledged, no act follows.** The Principal: *"the conservative
+direction doesn't make misstating runway harmless, and saying so unprompted is why no act
+follows."*
+
+**7 · The SPEC-002 implementation `[would-have-asked]` — NOT reversed.** The
+implementing-binding-clauses versus authoring-disputed-numbers distinction *"reads sound, and
+it will be graded where it belongs, at the §7 audit."*
+
+**8 · Budget.** **15 of 30 · 10 of 12 Opus.** Remaining Opus: **2 — C2's intake verdict and the
+sealed DA reserve. Zero slack.** §5 dead-man: **8 invocations remain**, on the corrected count.
+
+**Review date:** on the return of R-003 and RULING-005.
