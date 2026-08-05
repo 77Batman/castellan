@@ -2370,3 +2370,63 @@ the Director declined for the third time, correctly.
 reserve. Zero slack.** Sonnet available. §5 dead-man: **8 invocations remain.**
 
 **Review date:** on the Principal's rulings on I-065, RULING-005 §9, and I-022.
+
+---
+
+## S2-D-023 · 2026-08-05 · Rider A cutover executed · VPS live · 48-hour parallel run opens
+
+**1 · Rider A steps 1–6 COMPLETE.** The Principal executed the `[PRINCIPAL]` steps; the VPS is
+live as of **2026-08-05T23:30:59Z**. Health check clean: timer **active**, cadence **900s**
+(next 23:46:22Z against last 23:30:56Z), last poll result **success**, heartbeat **active with 1
+attempt and 0 failed**, `captured 20/20 token books across 10 markets`, disk **12% of 24 GB**
+with `pit_capture.db` at 488 KB.
+
+**Approved spend now committed: $6.00/month exact**, per the Principal's S2-D-006 ruling.
+
+**2 · THE 100% COVERAGE FIGURE IS NOT A COVERAGE MEASUREMENT AND IS NOT RECORDED AS ONE.** The
+health check reports `coverage: 100.00%` — over a window of **span 0.0h, expected polls 0.0,
+successful polls 1**. That is one poll divided by a zero-length window. **It is structurally
+uninformative at n = 1 and would be misleading if quoted.** This firm has spent the sprint
+refusing numbers that look like measurements and are not; this one is refused on the same
+grounds, and the reporter is not at fault — the arithmetic is correct and the window is simply
+too short to mean anything yet.
+
+**The first coverage figure worth having arrives at the end of the 48-hour parallel run.**
+
+**3 · The comparison baseline, measured now so it is not reconstructed later** [measured]:
+**laptop capture stands at 59 polls over 172.3h = 8.6% coverage.** That is the number the VPS
+must beat, over the same span, on step 8. It has drifted up from the 5.5% measured at cold start
+— consistent with I-047's retry fix landing and the host being awake more — which is itself a
+reason to compare over a **common window** rather than against a historical figure.
+
+**4 · One divergence to expect and not misread.** The VPS reports `0 resolved/retired`; the
+laptop reports `20`. **The VPS's universe state is a fresh store with no history of
+retirements**, not a disagreement about the market universe. Both report the same
+`10 active (5 liquid / 5 thin)`. **They will diverge on retirement counts until the first merge**,
+and that divergence is expected rather than a break. Recorded now so nobody files it as one.
+
+**5 · Step 7 is running: both hosts capture in parallel for ≥48 hours**, deliberately spanning a
+weekday/weekend transition — the exact pattern that produced the 59.9-hour gap. **Window closes
+no earlier than 2026-08-07T23:30Z.** No action required during it.
+
+**The laptop job must NOT be disabled** (step 13, "at leisure"). Verified still running:
+`2026-08-05T23:22:37Z, captured 20/20`.
+
+**6 · Remaining Rider A steps: 8–12**, none of them `[PRINCIPAL]` except **step 9's pull**.
+Step 10's merge carries the standing instruction from `DATA-INFRA-002` §1: **a nonzero
+`RESTATED` count stops the merge and escalates to Validation under A4**, and the CIO adds
+that a snapshot of `book/pit.db` should be taken before the first real merge — which requires
+**Rider B's steps 2–6, still unexecuted.** The two riders are now coupled: **the first merge
+should not happen before the snapshot regime is installed.**
+
+**7 · I-059 filed** — the runbook's step 4 was unexecutable as written in two places (missing
+`/opt/castellan` parents before transfer; `scp -r` without `/*` nesting the install files one
+directory too deep). Neither was caught because nobody had run it. **A runbook that has never
+been executed is a hypothesis**, which is the same finding Rider B's restore-verification was
+built to answer, arriving from the other direction.
+
+**8 · Budget.** **15 of 30 · 10 of 12 Opus**, unchanged — the cutover consumed no seat
+invocation. Three §4 interrupts remain open before the Principal: **I-065**, **RULING-005 §9**,
+**I-022**.
+
+**Review date:** 2026-08-07T23:30Z, when the parallel-run window closes.
