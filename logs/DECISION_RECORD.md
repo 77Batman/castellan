@@ -1973,3 +1973,82 @@ tests) is Sonnet and is queued behind Rider B**, which holds Seat 9.
 **3, against 2 committed** (Director §10.4, C2). §5 dead-man: **5 invocations remain.**
 
 **Review date:** on the Principal's rulings on I-060 and §13.
+
+---
+
+## S2-D-018 · 2026-08-06 · Rider B delivered · SPEC-002 implementation dispatched
+
+**1 · Rider B complete. No issue above MEDIUM, so no interrupt.** Verified independently
+[measured]: suite **42 failed, 204 passed, 246 total**; the five protected `harness/castellan/`
+files **untouched**; severities on disk 3 MEDIUM / 1 LOW as reported.
+
+**2 · The requirement the CIO called decisive was actually met, not merely designed.** Restore
+verification is **unconditional and inside the same invocation that creates the snapshot** —
+decompress, `PRAGMA integrity_check`, row-count match against counts recorded at backup time
+— and was **proven live this session against a full 68.5 MB scratch copy of the real
+`book/pit.db`, end to end in ~3 seconds.** *A backup nobody has restored is a hypothesis;
+this one has been restored.*
+
+**3 · Failure surfacing.** Any failure preserves prior good snapshots untouched, writes a
+status file that **carries `last_success` forward across failures**, appends to a failure log,
+and exits nonzero; `check_snapshot_health.py` flags staleness > 30h or a failed last attempt.
+At daily cadence that surfaces **same-day**, well inside the one-week bar. The seat
+**recommended** an integration point at Ops's Close & Reconcile and **declined to assign it**,
+correctly — that is a CIO/Ops call. **Taken: the CIO assigns it, and it is queued with the
+other Ops line-items rather than actioned now.**
+
+**4 · The seat re-derived rather than trusting the CIO's restatement, and the figure moved.**
+Measured growth **35.93 MB/day** against `DATA-INFRA-002`'s cited 32.64 — **+10.1%** — which
+revises the VPS runway **21.1 → 19.2 months** (I-073). The brief required re-derivation
+specifically to catch this, and it caught it. Retention: 7 daily snapshots × 3 databases = 21
+files, ≈69 MB today, ≈157 MB once the approved VPS cutover reaches full cadence, against 1.6 TB
+free.
+
+**5 · Registry and book included, defended rather than assumed.** *"A2 makes the registry
+load-bearing and uncommitted mid-session state is lost identically regardless of file size"* —
+< 2 KB compressed, < 1 s added. Git stays their primary book of record under A3; this is a
+cheap, session-boundary-independent second.
+
+**6 · I-072 is the CIO's error and the seat was right to file it.** The Rider B brief quoted a
+baseline of *"1 failed, 187 passed of 188"* that was **stale by the time the seat ran** —
+Validation's SPEC-002 tests landed in between, moving the suite to 246 total. **This is the
+direct cost of running concurrent dispatches with a stated baseline.** Corrective applied
+immediately: **the S2-D-018 brief carries a baseline re-measured seconds before dispatch, with
+the reason for the re-measurement stated in the brief itself.**
+
+**7 · Two gaps carried, not closed.** **I-071** — the backup exposure was *disclosed twice and
+never logged* until now, and stays open until the regime is actually installed; **6 of 9
+runbook steps are `[PRINCIPAL]`** because `crontab`/`launchctl` are denied under D-003, so the
+firm's backup regime remains uninstalled and dependent on the Principal's hands. **I-074** —
+the VPS's capture-only `pit_capture.db` has **no backup coverage between merges**, a
+pre-existing gap re-confirmed and explicitly not closed by this dispatch.
+
+**8 · SPEC-002's implementation dispatched to Seat 9 — Sonnet — and the CIO records this as a
+scope judgment the Principal can reverse.** `[would-have-asked]`.
+
+**The question:** §13's three findings are addressed to the Principal and therefore interrupt
+under §4; does that interrupt block *implementing* SPEC-002's clauses?
+
+**The CIO's judgment: no, and the reasoning is on the record so it can be overruled cheaply.**
+§13(a) *reports* a tightening already made under Validation's standing authority — the §8
+asymmetry the Principal wrote — rather than requesting an act. §13(b) discloses a choice
+already made. §13(c) explicitly declines to ask for anything. **None of the three holds the
+clauses in abeyance; they are binding now.** Against that: **`test_monotone_conservatism.py` is
+the gate on closing I-057, a HIGH the Principal has already approved**, and holding would leave
+an approved HIGH open for no gain. **If the Principal overrules the 0.034 tightening, the
+rework costs one Sonnet unit** — the unconstrained tier, not the Opus tier.
+
+**What the CIO did NOT dispatch on the same reasoning:** the Director's §10.4 revision, which
+**writes the threshold itself** and would be spending a scarce Opus unit on a number the
+Principal has not yet seen contradicted. That one genuinely is the same thread. **The
+distinction is between implementing binding clauses and authoring a figure under dispute.**
+
+**9 · Budget.** **13 of 30 · 8 of 12 Opus** — S2-D-018 is Sonnet. DA reserve 1 sealed. Freely
+allocable Opus: **3, against 2 committed.** §5 dead-man: **4 invocations remain.**
+
+**10 · Queue, unchanged and lengthening:** *"inheritance is computed, never re-declared"* into
+`reference/GATES.md` and `reference/TEMPLATES.md`; **I-056**'s ML-2 block for PREREG-001 and the
+template; the snapshot health check into Close & Reconcile; **Rider C**'s casebook harvest;
+**Rider A**'s approved-but-unexecuted $6.00/month VPS cutover.
+
+**Review date:** on the Principal's rulings on I-060 and §13.

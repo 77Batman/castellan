@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>capital.castellan.pit-snapshot</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>/Users/<user>/projects/castellan-capital/deploy/pit-snapshot/run_snapshot_and_health.sh</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>/Users/<user>/projects/castellan-capital</string>
+  <key>StartInterval</key>
+  <integer>86400</integer>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>/Users/<user>/projects/castellan-capital/logs/capture/pit-snapshot.out</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/<user>/projects/castellan-capital/logs/capture/pit-snapshot.err</string>
+</dict>
+</plist>

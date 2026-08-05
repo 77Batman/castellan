@@ -2376,3 +2376,117 @@ drift back.
 
 **Resolution:** closed on filing — corrected in the specification and pinned by a test.
 **Pattern tag:** `stated-consequence-looser-than-the-arithmetic` · `caught-before-reliance`
+
+---
+
+## I-071 · 2026-08-04 · `book/pit.db`'s backup exposure was described twice but never filed as a discrete Issue Log entry, and remains open until installed · Severity: MEDIUM · Owner: head-of-data-infra
+
+**Description.** `S2-D-001` §2 and `S2-D-016` (`logs/DECISION_RECORD.md`) both describe the same
+fact in prose — `book/pit.db` left git tracking, the replacement snapshot regime is "currently
+manual, to iCloud," which is to say dependent on somebody remembering — and both call it the
+firm's largest un-actioned data-loss exposure. Neither entry produced an Issue Log row. **A
+disclosed exposure that reaches no log is functionally undisclosed**, the identical shape this
+log already names in I-019 and I-022.
+
+**What this dispatch (`DATA-INFRA-003`) delivers, and what it does not.** `harness/scripts/
+snapshot_book.py` and `harness/scripts/check_snapshot_health.py` (12 new tests,
+`harness/tests/test_snapshot_regime.py`, all passing; also run live against a scratch copy of
+the real `book/*.db`, §3 of the research doc) plus a launchd plist and wrapper script under
+`deploy/pit-snapshot/` are built, tested, and ready. **Under the Principal's D-003
+tool-permission policy, `crontab`/`launchctl` are denied to every seat and scheduling is
+Principal-only** — nothing here is installed, no snapshot has been taken of the real
+`book/pit.db`, and the manual-to-iCloud regime is exactly as unreliable today as it was before
+this dispatch. **The exposure closes when the six `[PRINCIPAL]` runbook steps in
+`research/DATA-INFRA-003-snapshot-regime.md` §6 are executed, not before.**
+
+**Resolution:** open — blocking on the Principal's runbook steps. Filed now so the gap between
+"tooling exists" and "exposure closed" is on the record rather than assumed away by the next
+reader of `S2-D-016`.
+**Pattern tag:** `disclosed-but-never-logged` · `tooling-delivered-is-not-risk-closed`
+
+---
+
+## I-072 · 2026-08-04 · Harness suite state materially diverged from the dispatch's stated baseline · Severity: MEDIUM · Owner: quant-validation
+
+**Description.** `S2-D-016`'s dispatch text states the suite stands at "1 failed, 187 passed of
+188." **Measured at the start of this session, before this dispatch's own code existed**
+[measured]: `python3 -m pytest harness/tests -q` → **42 failed, 192 passed (234 total)**. After
+this dispatch's 12 new, passing tests: **42 failed, 204 passed (246 total)** — the failure count
+is unchanged; every added test passes; nothing this seat touched moved the needle on the 42.
+
+**Cause, established rather than assumed** [measured]: the 42 failures are concentrated in
+`test_minbtl_serial.py`, `test_monotone_conservatism.py`, and `test_vif_estimator.py` — files
+that, per this session's file listing, are Validation's own concurrent `SPEC-002`
+serial-corrections work, not anything this dispatch's scope (this seat was explicitly told not
+to touch `stats.py`/`cv.py`/`gates.py`/`carry.py`/`errors.py`, and did not — `git diff --stat`
+confirms zero lines changed in those five files). This reads as new, pre-authored tests
+outrunning their own implementation mid-session — the same shape I-058/I-070 already name —
+not a regression.
+
+**Why filed rather than silently reconciled.** A dispatch's stated baseline is exactly the kind
+of number this seat is instructed elsewhere in the same dispatch to re-derive rather than trust.
+A 41-test gap between a stated baseline and a measured one is large enough that a future reader
+trusting the dispatch's prose over a fresh run would draw a materially wrong conclusion about
+suite health. Not this seat's failures to explain in full — Validation owns that work and its
+own accounting — but worth a durable pointer so the two numbers in this dispatch's own return
+message (own-tests vs. whole-suite) are not mistaken for a discrepancy this seat introduced.
+
+**Resolution:** open — informational to Validation, who owns the concurrent work; not a defect
+of this dispatch's deliverable.
+**Pattern tag:** `stated-baseline-diverges-from-measured` · `concurrent-work-mid-flight`
+
+---
+
+## I-073 · 2026-08-04 · `DATA-INFRA-002`'s VPS disk-runway estimate is built on a per-round byte figure now measured ~10% higher · Severity: LOW · Owner: head-of-data-infra
+
+**Description.** `DATA-INFRA-002` §3 cites **339,968 bytes/round**, measured once, from three
+capture rounds run during `DATA-INFRA-001`, and derives a ~21.1-month VPS disk runway from it.
+**Re-derived this session** [measured], per this dispatch's own instruction not to trust the
+CIO's restatement: an apportioned-physical-bytes measurement (SQLite `dbstat`, `documents` table
+fully attributable to `source IN ('polymarket-clob','polymarket-capture-meta')`, `observations`
+table apportioned by each source's logical-byte share) across all **52** real production rounds
+now in `book/pit.db`, spanning 2026-07-29 to 2026-08-05, gives **≈374,400 bytes/round** — about
+**+10.1%** on the cited figure. Independently cross-checked with three fresh live capture rounds
+run this session directly against a scratch copy of the real store (356,352 / 262,144 / 94,208
+bytes — noisy at n=3 due to per-poll book-depth variation, but consistent in order of magnitude).
+
+**Why the higher figure, named rather than left as unexplained drift.** `DATA-INFRA-002` itself
+was written the same day the heartbeat mechanism (I-047/I-048) started writing
+`polymarket-capture-meta` documents on every poll — additional document rows the original
+339,968-byte measurement did not include. Some of the +10% is very plausibly that addition,
+though this was not isolated and confirmed as the sole cause.
+
+**Consequence, and why LOW.** At the design/full-900s-cadence extrapolation this gives **≈35.9
+MB/day** (was ≈32.6 MB/day) and revises the $6/mo droplet's ~21.1-month runway to **≈19.2
+months** — a real but non-urgent revision, still comfortably inside the horizon `DATA-INFRA-002`
+already flagged as needing a retention/rollup decision "well before the ceiling, not at it."
+
+**Resolution:** open — informational correction to `DATA-INFRA-002` §3's runway figure; no
+action required at current headroom.
+**Pattern tag:** `cited-figure-drifts-on-remeasurement`
+
+---
+
+## I-074 · 2026-08-04 · The snapshot regime protects the laptop's authoritative store only; the VPS's own capture-only store has no backup coverage between merges · Severity: MEDIUM · Owner: head-of-data-infra
+
+**Description.** `DATA-INFRA-003`'s snapshot regime (`harness/scripts/snapshot_book.py`) targets
+`book/pit.db`, `book/registry.db`, `book/book.db` — the authoritative store, which per
+`DATA-INFRA-002` §1 lives only on this laptop/repo checkout and never on the VPS. The VPS (once
+provisioned, Rider A, still unexecuted) will run its own capture-only `pit_capture.db`, pulled
+down and merged **weekly, recommended, not enforced** (`DATA-INFRA-002` §7 step 12). Between
+merges, up to a week of VPS-captured Polymarket history exists **only on the VPS, with no
+redundancy of its own beyond DigitalOcean's own infrastructure** — a gap `DATA-INFRA-002` §6
+already named as "NOT mitigated" and §9 already flagged ("no retention/rollup policy exists yet
+for the VPS's capture-only store"). This dispatch does not close that gap; it is explicitly out
+of this dispatch's scope (Rider B is `book/pit.db`, not `pit_capture.db`), and it is re-confirmed
+open here rather than left to be rediscovered as a surprise once the VPS is live.
+
+**Natural extension, not built this session.** `snapshot_book.py`'s `DB_SPECS` mapping is a
+one-line addition away from covering `pit_capture.db` on the VPS via its own systemd timer
+(the same already-approved pattern `DATA-INFRA-002` uses for the capture job itself) — flagged
+as a follow-up for whoever next revisits the VPS runbook, not undertaken here because it touches
+Rider A's deploy artifacts and the VPS does not exist yet.
+
+**Resolution:** open — pre-existing gap, re-confirmed, scoped out of this dispatch.
+**Pattern tag:** `partial-ingest-silently-incomplete` (sibling: same shape as I-035, a different
+partial-coverage gap) · `backup-regime-does-not-follow-the-data-to-every-host`

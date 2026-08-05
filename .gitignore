@@ -6,3 +6,13 @@ __pycache__/
 # agent worktrees — transient, not book of record
 .claude/worktrees/
 book/pit.db
+
+# DATA-INFRA-003 -- compressed snapshots and their status/manifest files are
+# bulk/generated data (A3: "git for decisions and code, snapshots for bulk
+# data"), not book-of-record artifacts. logs/capture/snapshot-failures.log
+# and the pit-snapshot launchd stdout/stderr are the same class of thing as
+# the existing polymarket-book.out/.err (operational output, not decisions).
+book/snapshots/
+logs/capture/snapshot-failures.log
+logs/capture/pit-snapshot.out
+logs/capture/pit-snapshot.err
