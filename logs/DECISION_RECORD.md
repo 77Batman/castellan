@@ -1756,3 +1756,66 @@ the CIO records 187 as the operative floor in the interim rather than claiming t
 3 committed.** §5 dead-man: **6 invocations remain.**
 
 **Review date:** on the Principal's ruling on I-049.
+
+---
+
+## S2-D-015 · 2026-08-06 · I-049 HIGH sustained · dispatch practice changed · contingency ruled
+
+**1 · HIGH sustained, remedy approved as proposed.** SPEC-002 resumed **once** — the single
+authorized resume — scoped to §6–§13 and the tests, with §0–§5 explicitly not to be
+rewritten. The Principal noted the CIO's refusal of the easy severity argument for the §7
+audit in the favourable direction; recorded here without further comment, since a seat
+grading its own conduct is worth nothing.
+
+**2 · STANDING DISPATCH PRACTICE, effective for all Opus units this sprint — not merely
+subsequent ones.** **Analysis writes to disk before synthesis begins**, so a termination costs
+one section and never a read. The resume itself conforms naturally: §0–§5 *is* the analysis,
+already on disk, and the resumed unit is the authoring half.
+
+**3 · Two mechanical mitigations authorized, and the CIO can execute only one of them.**
+
+- **(1) Pre-dispatch headroom check via `/usage`.** *The CIO cannot perform this.* `/usage` is
+  an interactive client command; no tool available to this seat invokes it, and there is no
+  API surface for session headroom. **This mitigation is unimplemented and will stay
+  unimplemented until the Principal runs `/usage` himself before an Opus dispatch, or
+  supplies another signal.** Recorded as a gap rather than reported as adopted — an
+  authorized control the firm believes is running and is not is the I-046 failure in a new
+  costume.
+- **(2) Pre-split at ~800 projected lines, priced as two.** **This one the CIO owns and it is
+  in force.** Applied immediately: SPEC-002's remaining work — six tail sections plus test
+  files — projects well under the threshold, so it went as a single invocation, and the
+  reasoning was stated in the brief rather than left implicit.
+
+**4 · D-012 stands. Every termination counts as spent, and no exception is created by the
+escalation.** The CIO notes the trap the Principal closed: an escalation that *also* refunded
+its own cost would make filing HIGH profitable, and a control that pays the filer is not a
+control. Budget after the resume: **11 of 30 · 8 of 12 Opus.** DA reserve 1 sealed. **Freely
+allocable Opus: 3, against 2 committed** (Director's §10.4 revision, C2's intake verdict).
+**One unit spare.**
+
+**5 · CONTINGENCY RULED IN ADVANCE, so budget exhaustion cannot improvise.** If a fourth
+termination lands and free Opus falls below committed work, the sequence re-prioritizes to
+**SPEC-002 completion → Director §10.4 revision → C2**, with **C3's reserve remaining
+sealed.**
+
+> **The Red-Team memo is submission-gated and is not skippable. No Gate 1 submission occurs
+> this sprint without it. If the budget cannot reach C3, the seal moves to Sprint 3 rather
+> than the memo being dropped.**
+
+The Principal's reasoning, recorded because it settles a class of future arguments and not
+just this one: *"A slipped seal is Ruling 001's lesson; a skipped red-team is Appendix B's."*
+**The schedule is the thing that yields. The adversarial check is not.** This closes the
+route by which a sprint deadline becomes an argument for thinner scrutiny — the route every
+firm of this kind eventually finds.
+
+**6 · What this means for §1's first objective, stated plainly.** PREREG-002 **sealed and
+executing** is now conditional on a chain of four things landing inside the remaining budget:
+SPEC-002's completion, the Director's §10.4 functional-form revision, C2's intake verdict,
+and C3's Red-Team memo. **The CIO's honest assessment is that the seal is more likely to slip
+to Sprint 3 than to land**, and under §5's contingency that is the ruled outcome rather than
+a failure. Recorded now, not at sprint close.
+
+**7 · §5 dead-man: 6 invocations remain** since the last Principal checkpoint, which this
+ruling resets.
+
+**Review date:** on SPEC-002's completion.
