@@ -144,3 +144,4 @@ Traceback (most recent call last):
   File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/urllib/request.py", line 1322, in do_open
     raise URLError(err)
 urllib.error.URLError: <urlopen error [Errno 8] nodename nor servname provided, or not known>
+[2026-08-04T18:53:34Z] CAPTURE CRASHED: URLError(gaierror(8, 'nodename nor servname provided, or not known'))
