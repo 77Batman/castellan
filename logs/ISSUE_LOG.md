@@ -2685,3 +2685,302 @@ Validation (not this seat) updates the 8 name-dependent assertions in the same p
 that G2's zero-trial case should be carved out of M-7's blanket rule. No option is exercised
 unilaterally here.
 **Pattern tag:** `spec-correctly-implemented-breaks-protected-fixture` · `floor-regression-from-substantive-not-cosmetic-change`
+
+---
+
+## I-065 · 2026-08-05 · VALIDATION-SPEC-002's D-2 violates its own C-1(iv): the Deflated Sharpe Ratio gets MORE PERMISSIVE as measured serial dependence rises, on the `vif < 1` branch with `z < 0` · Severity: HIGH · Owner: quant-validation
+
+**Description.** D-2 as authored specifies `z_serial = z_iid / sqrt(vif)`, `DSR = min(Phi(z_serial),
+Phi(z_iid))`. Seat 9 implemented it literally, `test_mono_03` failed, and Seat 9 escalated rather
+than adopting the fix it had already found (I-077). **The escalation was correct and the
+construction Seat 9 identified is correct: the defect is in my specification, not in the
+implementation.**
+
+**Measured, this session, 200,000 draws of `(z in [-8,8], vif1, vif2 in (0,50])`:**
+
+| Property | literal D-2 | clamped `z/sqrt(max(vif,1))` |
+|---|---:|---:|
+| C-1(iii) `DSR_serial <= DSR_iid` | 0 violations | 0 violations |
+| **C-1(iv) `DSR_serial` non-increasing in `vif`** | **3,848 violations** | **0 violations** |
+| C-1(iv) restricted to `vif >= 1` | 0 | 0 |
+
+Violating draw in full: `z = -0.0500`, `vif` raised `0.591 -> 12.376`, `DSR_serial` rises
+`0.4741 -> 0.4801`. Mechanism: for `z < 0` and `vif < 1`, `z/sqrt(vif)` is MORE negative, so the
+`min` selects the serial branch, and that branch is increasing in `vif` across `(0,1)`. The
+literal construction is therefore not conservative below 1 — it is **sign-dependent**:
+uncorrected for `z > 0`, arbitrarily extra-tight for `z < 0`.
+
+**Separately measured:** the two constructions are **bit-identical for every `vif >= 1`** (max
+absolute difference `0.000e+00` over 200,000 draws, `vif in [1,200]`), which is the entire region
+R-7's floor permits the estimator to produce. The amendment therefore changes **no live Gate
+number and no live Gate verdict**, ever.
+
+**Also measured:** M-2 already IS the clamp — `min_backtest_length_years_serial(86,1.0,252,
+vif=0.25) = 6.1359 = mb_iid * max(0.25,1.0)`. D-2 was the odd one out among the three
+corrections C-5 claims are the same construction.
+
+**Root cause, mine.** C-1(iii)+(iv)+D-5 together FORCE exact equality on `vif in (0,1]`, so
+`test_mono_03`'s exact-equality assertion is a theorem of C-1 rather than an extra demand — but
+the document never made that interaction explicit, and `test_mono_05` (C-4) sweeps `vif in
+(0,50]` while carrying the (iv) assertion only on the MinBTL side. **The DSR side of C-1(iv) is
+unswept below 1.** That gap is why a spec defect reached an implementer instead of a test.
+
+**Resolution:** RULING 005-A — D-2 amended to `z_serial = z_iid / sqrt(max(vif, 1.0))`, outer
+`min` (D-6) retained unchanged, `ValueError` guards unchanged. One-line change in
+`harness/castellan/stats.py`, owed by Seat 9. `test_mono_03` goes green on it. Closes when that
+lands AND `test_mono_05`'s (iv) sweep is extended to the DSR side below `vif = 1`.
+**Pattern tag:** `spec-defect-found-by-implementer` · `permissive-on-an-unreachable-branch` ·
+`author-error-caught-by-the-pre-authored-test-regime`
+
+---
+
+## I-066 · 2026-08-05 · VALIDATION-SPEC-002 M-6/D-8's mandatory criterion renames rescinded — presentational, and the protection is delivered by the threshold string, the note, and M-11 · Severity: MEDIUM · Owner: quant-validation
+
+**Description.** M-6 renamed the length criterion to `"Backtest length (years, serial-corrected
+MinBTL)"` and D-8 the DSR criterion to `"Deflated Sharpe Ratio (serial-corrected)"`. Seat 9
+reverted both (I-078a) on the argument that they break 8 protected tests keyed on the exact old
+name strings for zero benefit, since the only two tests checking for `"serial"` in the name
+failed anyway on I-075. **I-075's repair (RULING 005 Item 1) removed that premise**, so the
+rename was ruled on its merits rather than inherited.
+
+**Rescinded.** The test applied, in order: (1) does rescinding move any graded quantity in the
+permissive direction? **No** — `value`, `threshold`, `verdict` and `note` are byte-identical
+under either name and a criterion name enters no arithmetic. (2) Is M-6's protection delivered
+elsewhere? **Yes, measured**: threshold `">= max(4, MinBTL_serial=14.51)"`, notes
+`"MinBTL(iid) = 3.39y; VIF = 4.284; N_max = 3"` and `"DSR(iid) = 0.9955, VIF = 2.904, T_eff =
+483"`. A reader holding only that row cannot mistake the graded number for the uncorrected one,
+because the uncorrected one is printed beside it with the VIF — which carries the SIZE of the
+correction, not merely its existence. (3) M-11 (a MinBTL quoted without its VIF is inadmissible
+and I return it) is unchanged and depends on no string. (4) Upholding it costs 8 previously-green
+protected acceptance tests, in two files, to change a lookup key.
+
+**Recorded as an amendment rather than an operational choice because the conclusion is the cheap
+one, and that is exactly when the reasoning must be visible.** Had the rename been load-bearing
+on any graded quantity it would have been upheld and the 8-test bill sent to the CIO.
+
+**Resolution:** RULING 005-B. Criteria keep `"Backtest length (years)"` and `"Deflated Sharpe
+Ratio"`. M-6/M-10/D-8's threshold-string and note requirements are unchanged and remain
+mandatory. `test_mbs_10`/`test_dsr_07` amended in the same pass to assert on what is graded
+(`"MinBTL_serial" in crit.threshold`; `crit.value == approx(rep.dsr_serial)` and
+`rep.dsr_serial < rep.dsr_iid`) — strictly stronger than the name-substring assertion they
+replace, which could not detect a correctly-renamed criterion graded on the wrong number. Closed.
+**Pattern tag:** `presentational-clause-rescinded` · `cheap-conclusion-reasoning-recorded`
+
+---
+
+## I-067 · 2026-08-05 · `test_seeded_n.py::_calibrated_returns` does not do what its docstring says — `np.argsort` is not stable, and the helper emits rho_hat ~ +0.55 / VIF ~ 10.6-12.6 · Severity: MEDIUM · Owner: quant-validation
+
+**Description.** The helper's docstring states it interleaves "so no run-length artefact affects
+any block-based stat." It does not. `np.argsort` defaults to quicksort, which is not stable, so
+the intended `+std / -std` alternation is not produced. **Measured, this session:**
+
+| call | sign-runs | i.i.d. expectation | rho_hat | vif_hac | vif_gate | lag |
+|---|---:|---:|---:|---:|---:|---:|
+| `_calibrated_returns(0.12, 2000)` | 452 | ~1000 | +0.5488 | 12.571 | 12.571 | 19 |
+| `_calibrated_returns(1/sqrt(365), 1462)` | 342 | ~731 | +0.5332 | 10.647 | 10.647 | 16 |
+
+**Consequence.** This is the fixture underneath `test_h7` and `test_h8`, and it is why I-078
+reported those two as substantive casualties of the serial correction. `test_h8`'s protected
+property survives anyway (both verdicts unchanged — see I-068), but **`test_h7`'s PASS/FAIL
+differential is destroyed by the fixture's own autocorrelation**, not by the correction: at
+`VIF = 12.571` the `N=2` family's DSR falls `0.9900 -> 0.7442`, so both families FAIL and the
+test demonstrates nothing about the seeded denominator. An i.i.d. draw standardised to the same
+per-period Sharpe measures `VIF = 1.03-1.09` and restores the differential cleanly (three seeds,
+`DSR(N=2) = 0.987-0.989` PASS, `DSR(N=31252) = 0.000` FAIL).
+
+No live consequence today — `book/registry.db` stands at 0 hypotheses / 0 trials and no Gate
+verdict has ever been computed on this helper. It is a test-integrity defect that produced a
+false casualty.
+
+**Resolution:** open — the docstring's claim must be corrected or the helper's interleave fixed
+(`kind="stable"`), and **every other consumer of `_calibrated_returns` must be checked for
+sensitivity to serial structure**, not just h7/h8. Owed by the seat that owns `test_seeded_n.py`.
+Any test that uses this helper for a serially-sensitive statistic is measuring the helper.
+**Pattern tag:** `test-fixture-integrity` · `false-casualty-from-a-defective-fixture`
+
+---
+
+## I-068 · 2026-08-05 · I-078's three protected casualties ruled per test — two survive, one loses real coverage and must be rebuilt rather than accepted · Severity: MEDIUM · Owner: quant-validation
+
+**Description.** The Principal required written justification per test that each protected
+property either survives or is superseded. No blanket acceptance was offered and none should be
+read in. Full reasoning in `research/VALIDATION-RULING-005-spec002-acceptance.md` section 4.
+
+| Test | Protected property | Disposition |
+|---|---|---|
+| `test_holdout_p1.py::test_G2` | I-010: the length criterion's value is the CALENDAR span from `oos_index`, reported as such, and an agreeing sponsor is not falsely flagged | **Survives on 2 of 3 sub-assertions, exactly** — measured `crit.value = 4.974674880219028 == years_calendar`, no `DISAGREEMENT` in note; G3/G4/G5 all still green. The 3rd (`verdict != "INSUFFICIENT-DATA"`) is **deliberately superseded**: under the old code this zero-trial family **PASSED** at an implied `VIF = 1`, which violates Validation's own standing rule (unknown/unmeasurable N is INSUFFICIENT-DATA, never PASS). M-7 upheld with **no** zero-trial carve-out. |
+| `test_seeded_n.py::test_h8` | Seeded `N` flows into MinBTL and moves the VERDICT | **Survives intact.** Measured at `VIF = 10.647`: `famSeeded` FAIL -> FAIL (MinBTL 17.063 -> 181.671y), `famPlain` PASS -> PASS (0.270 -> 2.876y, need 4.0). **Both verdicts unchanged**; only two hard-coded VIF=1 literals are superseded. Nothing given up. |
+| `test_seeded_n.py::test_h7` | Seeded `N` flows into DSR and moves the VERDICT ("seeding must change the VERDICT, not merely the number") | **Property survives; COVERAGE IS GENUINELY LOST.** Both families now FAIL (`N=2`: DSR 0.9900 -> 0.7442), so the differential — the only test in the suite proving a seeded denominator can flip a DSR verdict — is gone. Cause is the fixture (I-067), not the correction. **Must be rebuilt, not accepted.** |
+
+**Actions owed by the seats owning those files** (Validation may not edit protected tests):
+- `test_G2`: log **one** trial return series into `famA` in `test_holdout_p1.py`'s `registry`
+  fixture, so the length criterion is fully computed and all three sub-assertions are exercised
+  as authored. The 3rd assertion is **kept**, not deleted — re-pointed at a family that can
+  legitimately carry a graded verdict. Re-run G3/G4/G5, which share the fixture.
+- `test_h8`: update the two threshold literals to `181.67` / `2.876` (`abs=0.05`), assertion
+  structure and both verdict assertions unchanged, comment naming RULING 005-D and the measured
+  VIF. Recommended in the same pass: assert `MinBTL_serial / MinBTL_iid == approx(VIF)`, which
+  pins the property instead of two literals.
+- `test_h7`: replace the candidate with an i.i.d. draw standardised to per-period Sharpe `0.12`;
+  re-point the value comparand from `deflated_sharpe_ratio` to `deflated_sharpe_ratio_serial(...,
+  vif=<measured>)`; **keep the `crit_u.verdict == "PASS"` / `crit_s.verdict == "FAIL"` assertions
+  verbatim** — they are the test; and assert the fixture's own `vif_gate < 1.5` so the serial
+  structure cannot silently return.
+
+**Floor.** Suite measured `239/7/246` at dispatch start, **`241/5/246`** after Validation's own
+edits (I-075 retarget + I-066 rename rescission). Ruled floor once the three fixture edits and
+I-065's one-liner land: **`245/246`**, the remainder being `test_mbs_12` (I-076). **Until then
+the firm's green floor is honestly lower and none of the three is closed by this ruling.**
+
+**Resolution:** open — closes when the three fixture edits land.
+**Pattern tag:** `per-test-adjudication-not-blanket-acceptance` · `property-survives-coverage-lost`
+
+---
+
+---
+
+## I-080 · 2026-08-06 · Every trial budget this firm has written was set against an unstated `rho = 0`, and PREREG-002's sat at exactly the ceiling that assumption permits — zero margin · Severity: MEDIUM · Owner: director-of-research
+
+*Filed by the Director of Research against this seat's own document, under
+`research/PREREG-002-crypto-funding-basis.md` R-003 / §10.5.1. Found and repaired in the same
+revision.*
+
+**Description [cited + integer arithmetic].** PREREG-002's trial budget through R-002 was
+**79 post-seal + 7 conditioning = ceiling `N` = 86**. Validation's derivation of the family's
+binding threshold gives `N_max(rho_hat = 0.034) = 86` [cited — `VALIDATION-SPEC-002` §6.2,
+§7.2; I-064]. **The declared ceiling sat exactly on the ceiling, with zero trials of margin,
+against a `rho_hat` that has never been measured for this or any family and that
+`VALIDATION-SPEC-002` §7.5 places "plausibly anywhere in [0.0, 0.5]."**
+
+**The defect is not the number. It is that no `rho` was ever declared.** The budget was set
+against `rho = 0` **by silence** — not by argument, because when it was written no other
+assumption existed. **A permissive assumption made silently on the sponsor's behalf, in the
+sponsor's favour, is the exact shape of defect `VALIDATION-SPEC-002` V-4 names**, and this
+seat committed it in its own budget while writing three revisions about ceilings.
+
+**Why this is firm-wide and not one document's error.** Nothing in the Charter, in
+`GATES.md`, or in any pre-registration template requires a trial budget to state the serial
+assumption it is set against. **Every trial budget this firm writes from now on is exposed to
+the same silence unless the requirement is made explicit at intake.**
+`VALIDATION-SPEC-002` V-7 already provides the instrument — a declared, non-binding planning
+`rho` at Gate 0 — but V-7 makes it **non-binding and grading nothing**, so a sponsor may
+declare a planning `rho` and budget against a different one, or decline to declare at all.
+
+**Why MEDIUM and not HIGH.** It cannot produce a wrong PASS. Gate 1's length criterion is
+evaluated on measured quantities and fails correctly (V-3). It produces **wasted research and
+a false sense of budget** — the same harm and the same rating as I-063, which is its
+structural twin at the intake ceiling rather than at the budget.
+
+**Not applicable to `PREREG-001-forward-lag`, and the reason is not reassuring.** That family
+is seeded at 31,250 with `MinBTL` = 17.06 years against a span in the low single digits
+[cited — PREREG-001 §9.4]; a VIF above 1 makes it deader, not differently dead. **Its immunity
+is a fact about that family, not evidence the defect is benign.**
+
+**Repair, done for this family and NOT done for the firm.** PREREG-002 R-003 declares
+`rho_plan = 0.10` at §10.5.1 with its justification, and rebuilds the budget in two stages —
+47 authorized at that `rho`, ≤ 32 declared-and-unauthorized, unlocked only by a measured
+`rho_hat` (§10.5.2). **The firm-wide half is not this seat's to close:** whether a declared
+planning `rho` becomes a mandatory Gate 0 field, and whether it binds the budget or merely
+prints, is Validation's under V-7 and the Principal's if it changes the Gate 0 item list.
+**Raised, not resolved.**
+
+**Resolution:** open (firm-wide leg). Closed for `funding-carry-conditioning-002` by R-003.
+**Pattern tag:** `permissive-assumption-made-by-silence` · `zero-margin-at-an-unmeasured-threshold` · `sponsor-favourable-default`
+
+---
+
+## I-081 · 2026-08-06 · I-060's diagnostics-versus-ceiling collision is scoped to fitted families, but the collision is not fitted-family-specific — it reaches PREREG-002 at `rho_hat` > 0.034, tighter than I-060's own 0.045 · Severity: MEDIUM · Owner: quant-validation
+
+*Filed by the Director of Research under `research/PREREG-002-crypto-funding-basis.md`
+R-003 / §10.9(a), on the choice-by-choice check the S2-D-020 dispatch required.*
+
+**Description.** I-060 states that Ruling 004's mandatory diagnostics and the corrected MinBTL
+ceiling are mutually unsatisfiable above `rho_hat` = 0.045, and prices the collision against
+**ML-3's obligation stack** — dispersion 32, ±50% grid 25, seed ensemble 10, walk-forward 10,
+falsifier legs 2–3, ≈ 79.5 total [cited — I-060; Ruling 004 ML-3]. **ML-3 through ML-27 reach
+only fitted families** [cited — Ruling 004 ML-1, ML-2].
+
+**The check on PREREG-002 returns two different answers and both are findings.**
+
+1. **As a clause, I-060 does not bite.** PREREG-002 is not a fitted family — established row
+   by row at its §10.7(a), conditional on the plateau-centroid commitment and §10.7(c)'s
+   walk-forward fix. ML-16's 32-trial dispersion sample does not reach it, and the family
+   obtains ML-16's *statistical* content free: 25 grid points plus ≥ 10 walk-forward refits
+   give **35 series at Stage 1 alone, above Ruling 004 §2.4's `m >= 32` floor, at zero
+   incremental `N`**, because they are already budgeted trials [cited — PREREG-002 §10.6].
+   Under the Principal's conservative reading — **diagnostics count toward `N`** pending the
+   Sprint 3 reconciliation — every diagnostic that family will run was already inside its
+   declared `N` before R-003. **No exception was found on the pass.**
+2. **As arithmetic, it bites, and at a tighter threshold than I-060's own.** I-060's real
+   content is its closing sentence — *"a family that cannot afford its own diagnostics has not
+   discovered a problem with the diagnostics; it has discovered that this firm's data cannot
+   support that family at that persistence"* [cited] — **and that sentence has no
+   fitted-family content whatever.** PREREG-002's obligations exhaust its ceiling at
+   `rho_hat` > **0.034**; I-060's exhaust theirs at 0.045. **A NON-fitted family is inside the
+   same collision, one notch tighter, and is not exempt from it by being non-fitted.**
+
+**The concrete exposure for future intakes.** A sponsor of a non-fitted family reads I-060,
+sees "ML-16 mandatory dispersion sample," correctly concludes "not me," and **misses that its
+own Charter §4.4 mandatory stack collides identically** — the ±50% grid (25) plus ≥ 10
+walk-forward windows is 35 trials, which exceeds `N_max` at `rho_hat` ≈ 0.20
+(`N_max` = 31) [cited — `VALIDATION-SPEC-002` §6.2] **before a falsifier leg or a diagnostic
+is spent.** The grid and the walk-forward are Charter requirements, not Ruling 004
+requirements, and no ruling exempts anyone from them.
+
+**Why MEDIUM.** It cannot produce a wrong PASS — the length criterion fails correctly on
+measured quantities. It produces **planning error at intake in exactly the population least
+warned about it**, and it is cheap to fix by re-scoping one paragraph.
+
+**Repair — a scope note, not a new constraint. Validation's to make or refuse.** I-060 is
+sound on its own terms and this entry does not ask for any number in it to move. It asks that
+its statement of scope record that the collision applies to **every** family's mandatory work
+against the corrected ceiling, with the Charter §4.4 stack (grid 25 + walk-forward ≥ 10 = 35,
+crossing at `rho_hat` ≈ 0.20) named alongside the ML-3 stack (79.5, crossing at 0.045).
+PREREG-002 §10.9(a) carries the finding for this family in the interim.
+
+**Resolution:** open.
+**Pattern tag:** `finding-scoped-narrower-than-its-own-reasoning` · `exemption-that-does-not-exempt` · `constraint-collision-under-corrected-assumption`
+
+---
+
+## I-082 · 2026-08-06 · `VALIDATION-SPEC-002` §7.5's dilution gloss points the wrong way for a delta-neutral family, where the near-independent component is the one hedged out by design · Severity: LOW · Owner: quant-validation
+
+*Filed by the Director of Research under `research/PREREG-002-crypto-funding-basis.md`
+R-003 / §10.5.1 reason 4.*
+
+**Description.** `VALIDATION-SPEC-002` §7.5 and R-15 place a family's `rho_hat` below its
+funding autocorrelation on the reasoning that *"a net series is `gross + carry − costs`; its
+price-return component is close to serially independent and its carry component is not, so the
+realized `rho_hat` depends on the position-weighted mix and lies somewhere below the funding
+figure"* [cited].
+
+**The clause is correct and its conditional — "depends on the position-weighted mix" — is
+explicit. The illustrative gloss around it nonetheless points a reader toward the LOW end of
+the [0.0, 0.5] interval, and for a delta-neutral family it should point toward the high end.**
+PREREG-002's position is long 1.0 unit spot and short `w(t)` units perp: **the price-return
+component is deliberately hedged out**, so the term that dilutes `rho_hat` toward zero is
+precisely the term the strategy removes on purpose. What remains is funding carry (persistent),
+a basis increment, and a weight `w(t)` that is a closed-form function of a trailing-30-day
+standardized deviation and is therefore persistent by construction.
+
+**What this entry does NOT claim.** It does not claim `rho_hat` for this or any family. **No
+`rho_hat` has been measured for any family in this firm and none is quoted here.** The funding
+autocorrelations 0.829 / 0.802 / 0.493 are **not** `rho_hat` and R-15's prohibition on quoting
+them as such is correct and is observed. This is a statement about which end of a cited
+interval a *structurally carry-heavy* family should be expected to occupy, and it is
+`[inferred]` — reasoning, not measurement, and it does not narrow the interval.
+
+**Why LOW.** §7.5's own conditional is right, no number moves, no criterion is affected, and
+the clause is explicitly labelled by Validation as *"stated so it is not read as a
+prediction."* The exposure is that a future seat reading §7.5 for a delta-neutral carry family
+takes the reassuring half of the sentence. **Caught before reliance, and the reliance it would
+have produced runs in the sponsor's favour, which is the direction that matters.**
+
+**Repair — one clause, Validation's to make or refuse.** That §7.5's mix argument note the
+delta-neutral case explicitly: **where the price-return leg is hedged rather than held, the
+diluting term is absent and the family should be planned at the upper end of the interval.**
+PREREG-002 §10.5.1 reason 4 carries this against its own interest in the interim, and its
+declared `rho_plan = 0.10` is set on that reasoning.
+
+**Resolution:** open.
+**Pattern tag:** `correct-clause-misleading-gloss` · `illustration-points-away-from-the-conditional` · `runs-in-the-sponsors-favour`

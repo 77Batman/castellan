@@ -226,18 +226,42 @@ def test_mbs_09_the_explicit_min_never_binds():
 
 def test_mbs_10_gate1_length_criterion_is_serial_corrected(registry):
     """M-6: renamed, graded on the serial figure, and the i.i.d. figure,
-    the VIF and N_max all travel on the criterion's face."""
+    the VIF and N_max all travel on the criterion's face.
+
+    I-075 / VALIDATION-RULING-005 Item 1: the family argument was authored
+    as "hac" (copied from test_tstat_hac.py, whose own fixture pre-opens
+    that family) while `_seed_family` seeds "F". The test therefore graded
+    an empty family and hit M-7's INSUFFICIENT-DATA branch instead of the
+    fully-computed branch it exists to exercise. Retarget authorized by
+    Validation; the guard below makes the same slip loud rather than silent.
+    """
     _seed_family(registry, rho=0.6, T=1400)
+    assert registry.family_stats("F").n_trials == 12, (
+        "I-075 guard: this test grades family 'F' and is meaningless "
+        "against an unseeded family")
     r = _ar1(1400, 0.6, 0.0006, 999)
     idx = pd.bdate_range("2016-01-01", periods=1400)
-    rep = evaluate_gate1("F", "hac", registry, r, 252,
+    rep = evaluate_gate1("mbs10-strat", "F", registry, r, 252,
                          backtest_years=(idx.max() - idx.min()).days / 365.25,
                          oos_index=idx)
 
     crit = _criterion(rep, "backtest length")
-    assert "serial" in crit.name.lower(), (
-        "M-6: the criterion must be renamed so an excerpt of the table "
-        "cannot be read as the uncorrected requirement")
+    # VALIDATION-RULING-005 Item 3(a): M-6's criterion RENAME is RESCINDED.
+    # It is presentational, it moves no graded quantity, and applying it
+    # breaks protected acceptance tests keyed on the exact name string,
+    # which is a lookup key across the suite. The protection M-6 wanted --
+    # an excerpt of the row cannot be read as the uncorrected requirement --
+    # is asserted here where it actually lives: the graded threshold names
+    # the SERIAL figure and the i.i.d. figure is printed beside it. M-11
+    # (a MinBTL quoted without its VIF is inadmissible and I return it)
+    # remains the binding protection against a mis-read excerpt.
+    assert "MinBTL_serial" in crit.threshold, (
+        "M-6 (as amended): the graded threshold must name the serial "
+        "figure on the criterion's face")
+    assert f"{rep.minbtl_serial_years:.2f}" in crit.threshold
+    assert rep.minbtl_serial_years > rep.minbtl_iid_years, (
+        "this fixture is rho=0.6; if the correction does not bind here "
+        "the test is not exercising M-6 at all")
     note = (crit.note or "").lower()
     for needle in ("minbtl(iid)", "vif", "n_max"):
         assert needle in note, f"M-6: criterion note must carry {needle!r}"

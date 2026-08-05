@@ -2207,3 +2207,94 @@ it will be graded where it belongs, at the §7 audit."*
 sealed DA reserve. Zero slack.** §5 dead-man: **8 invocations remain**, on the corrected count.
 
 **Review date:** on the return of R-003 and RULING-005.
+
+---
+
+## S2-D-021 · 2026-08-06 · RULING-005 · the declined construction is ADOPTED · §4 INTERRUPT
+
+**1 · §4 HARD INTERRUPT. Two triggers: *"any issue filed HIGH"* (I-065) and *"any finding by
+Validation addressed to the Principal"* (RULING-005 §9).**
+
+**I-065 · HIGH — D-2 as Validation wrote it violates Validation's own C-1(iv).** Over **200,000
+draws** [measured]: the literal form produces **3,848 violations** — `DSR_serial` **rising**
+with `vif`, i.e. *more measured serial dependence producing a more permissive statistic*,
+inside the clause written to prevent exactly that. The clamped form produces **zero**.
+
+A violating draw, quoted: `z = −0.0500`, `vif` raised `0.591 → 12.376`, `DSR_serial` rises
+`0.4741 → 0.4801`. **Mechanism: for `z < 0` and `vif < 1`, `z/√vif` is more negative, so the
+`min` selects the serial branch, which is increasing in `vif` across `(0,1)`. The literal form
+is not conservative below 1 — it is sign-dependent.**
+
+**2 · SEAT 9 WAS RIGHT, AND THE CONSTRUCTION IS ADOPTED.** Validation tested it *"as something
+to be suspicious of, not grateful for"* — the disposition the CIO's brief asked for — and it
+survived. Measured further: the two constructions are **bit-identical for every `vif ≥ 1`**
+(max diff `0.000e+00`), the entire region R-7's floor permits, **so the amendment changes no
+live Gate number, ever.** And M-2 already *was* the clamp; **D-2 was the odd one out among the
+three corrections C-5 claims are one construction.**
+
+Validation asked that this be recorded in its own voice, and the CIO records it verbatim in
+substance: *"An implementer found a defect in my specification and correctly declined to fix it
+unilaterally. The value of a pre-authored test regime is destroyed the first time an implementer
+amends the spec to make tests pass — especially when the implementer is right."*
+
+**Root cause filed against itself**: `test_mono_05` sweeps `vif ∈ (0,50]` but carries C-1(iv)
+only on the MinBTL side, leaving the DSR side unswept below 1.
+
+**3 · I-077 ruled REQUIRED, not overreach — and the reasoning inverts the CIO's expectation.**
+C-3 injects an estimator-unreachable `vif` *precisely so* the consumer-layer guarantee is
+verified independently of the estimator; a guarantee holding only on inputs R-7 already filtered
+**collapses C-2's two enforcement layers into one while the document claims two.** Further,
+C-1(iii)+(iv)+D-5 together *force* exact equality on `vif ∈ (0,1]` — **the assertion is a
+theorem of C-1, not an extra demand.**
+
+**4 · I-078 ruled per test. The Principal's instrument was the right one and here is what it
+caught.**
+
+| Test | Disposition |
+|---|---|
+| `test_G2` | Survives on **2 of 3** sub-assertions exactly. Third **deliberately superseded**: the old code *PASSED* a zero-trial family at an implied VIF = 1, violating Validation's own never-PASS-on-unknown-`N` rule. **M-7 upheld, no zero-trial carve-out.** Assertion kept, not deleted — the fixture logs a trial. |
+| `test_h8` | **Survives intact.** At VIF = 10.647: FAIL→FAIL, PASS→PASS. **Both verdicts unchanged**; two VIF = 1 literals superseded. |
+| `test_h7` | **Property survives; coverage GENUINELY LOST.** Both families now FAIL, destroying the only test proving a seeded denominator can flip a DSR verdict. **Must be rebuilt, not accepted.** |
+
+> *"A blanket acceptance would have quietly cost the firm the `test_h7` guarantee. That is why
+> the Principal's per-test requirement was the right instrument."*
+
+**5 · A fifth item Item 1 forced open, and the CIO notes the chain.** With the family corrected,
+both tests then failed on the M-6/D-8 **rename** — which Seat 9 had reverted *on the argument
+that it bought nothing because these tests failed anyway.* **That premise died with I-075.**
+Rename **RESCINDED** (I-066), and Validation replaced name-substring assertions with assertions
+on what is *graded* — **strictly stronger, since a substring cannot detect a correctly-renamed
+criterion graded on the wrong number.**
+
+**6 · I-067 is the one the CIO rates as most likely to spread.** `_calibrated_returns` **does
+not do what its docstring claims** — `np.argsort` is not stable; it emits `ρ̂ ≈ +0.55`, VIF
+10.6–12.6. **It is the fixture that produced a false casualty**, and *"every other consumer of
+it needs checking."* This is a defective generator sitting underneath an unknown number of
+tests, and **it is why the CIO is not dispatching the fixture rebuilds yet** — see §9.
+
+**7 · I-076 deliberately NOT adjudicated, and the refusal is the finding.** The remedy on offer
+was widening an `[inferred]` 20% band to 26% **after** measuring a 25.4% miss — *"an
+adjust-the-threshold-to-fit-the-result operation on its face."* It may still be right, but it
+needs the band re-derived from something other than the observed miss. *"It does not get decided
+as a footnote."*
+
+**8 · Verified independently** [measured]: suite **241 passed / 5 failed / 246**, up from 239/7.
+`harness/castellan/` **untouched — the one-liner is not yet applied.** Registry **0 hypotheses /
+0 trials**; `book/vaults/` holds only `.gitkeep`. `test_dsr_serial.py` now **10/10**.
+
+**I-057 does NOT close.** `test_monotone_conservatism.py` is non-partitionable and `test_mono_03`
+is red; `test_minbtl_serial.py` is independently red on `test_mbs_12`.
+
+**9 · NOTHING DISPATCHED, and the reason is substantive rather than procedural.** The remaining
+work is one Seat 9 one-liner plus three fixture rebuilds. The one-liner is mechanical. **The
+fixture rebuilds are not, because I-067 says the fixture generator itself is defective** —
+rebuilding `test_h7` on `_calibrated_returns` would rebuild it on the thing that broke it. The
+CIO is not spending a unit to do that. **Held for the Principal**, with the scope question
+attached: I-067's blast radius is unknown and *"every other consumer needs checking"* is not a
+task anyone has been funded to do.
+
+**10 · Budget.** **15 of 30 · 10 of 12 Opus.** Remaining Opus: **2 — C2's intake verdict and the
+sealed DA reserve. Zero slack**, as ruled. Sonnet remains available. §5 dead-man: **8
+invocations remain.**
+
+**Review date:** on the Principal's ruling on I-065 and §9.

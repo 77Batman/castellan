@@ -203,22 +203,38 @@ def test_dsr_06_right_tail_saturation_does_not_launder_a_fail():
 
 def test_dsr_07_gate1_dsr_criterion_is_serial_corrected(registry):
     """D-8: renamed, graded on the floored serial figure, and the i.i.d.
-    figure, VIF and T_eff all travel on the criterion's face."""
+    figure, VIF and T_eff all travel on the criterion's face.
+
+    I-075 / VALIDATION-RULING-005 Item 1: family argument was authored as
+    "hac" against a registry that only carries "F". Retarget authorized by
+    Validation; the guard below makes the same slip loud rather than silent.
+    """
     registry.open_hypothesis("F", "s", "m", "f", "u", "h", "sc",
                              trial_budget=500)
     for i in range(12):
         registry.log_trial("F", {"i": i}, _ar1(1400, 0.5, 0.0006, 700 + i),
                            252)
+    assert registry.family_stats("F").n_trials == 12, (
+        "I-075 guard: this test grades family 'F' and is meaningless "
+        "against an unseeded family")
     r = _ar1(1400, 0.5, 0.0011, 4242)
     idx = pd.bdate_range("2016-01-01", periods=1400)
-    rep = evaluate_gate1("F", "hac", registry, r, 252,
+    rep = evaluate_gate1("dsr07-strat", "F", registry, r, 252,
                          backtest_years=(idx.max() - idx.min()).days / 365.25,
                          oos_index=idx)
 
     crit = _criterion(rep, "deflated sharpe")
-    assert "serial" in crit.name.lower(), (
-        "D-8: the criterion must be renamed so an excerpt cannot be read "
-        "as the uncorrected statistic")
+    # VALIDATION-RULING-005 Item 3(a): D-8's criterion RENAME is RESCINDED,
+    # for the reasons given at test_mbs_10. The protection is asserted on
+    # the thing that is actually graded instead of on a substring of a
+    # label: the value carried into the verdict must be the SERIAL figure,
+    # with the i.i.d. figure printed beside it in the note.
+    assert crit.value == pytest.approx(rep.dsr_serial), (
+        "D-8 (as amended): the GRADED value must be the serial-corrected "
+        "statistic, not the i.i.d. one")
+    assert rep.dsr_serial < rep.dsr_iid, (
+        "this fixture is rho=0.5; if the correction does not bind here "
+        "the test is not exercising D-8 at all")
     note = (crit.note or "").lower()
     for needle in ("dsr(iid)", "vif", "t_eff"):
         assert needle in note, f"D-8: criterion note must carry {needle!r}"
