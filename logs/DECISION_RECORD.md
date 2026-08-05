@@ -2430,3 +2430,63 @@ invocation. Three §4 interrupts remain open before the Principal: **I-065**, **
 **I-022**.
 
 **Review date:** 2026-08-07T23:30Z, when the parallel-run window closes.
+
+---
+
+## S2-D-024 · 2026-08-05 · Rider B installed and verified · I-071 CLOSES · both riders now live
+
+**1 · Rider B steps 2–6 executed and verified end-to-end. I-071 CLOSES.** Destination **(A)**
+chosen — iCloud `castellan-backups`, the option the seat recommended but explicitly **could not
+confirm existed** from inside its sandbox. The Principal confirmed it, which is exactly the
+division of labour the `[PRINCIPAL]` marking exists to produce.
+
+Health output verified: **`pit OK · registry OK · book OK`**, all `last good 0.0h ago`,
+`pit-snapshot run: OK`.
+
+**The firm's backup regime is now running rather than designed.** It has been designed, tested,
+restore-verified against a 68.5 MB copy of the real store, and — as of now — **installed**. That
+last step was the one that mattered and it was the one nothing in this firm could do for itself.
+
+**2 · I-090 filed — a second runbook defect, found only in execution.** Step 3 says to edit *"the
+`--dest` argument"* in a file that **invokes two scripts**. Executed literally, the snapshotter
+wrote to iCloud while the health checker read `book/snapshots/` — **supervising a directory
+nothing writes to.** Fixed at `2cdd779`.
+
+**No false confidence was possible, and the CIO verified rather than assumed it:**
+`book/snapshots/` **does not exist** [measured], so a health check against it reports failure and
+**cannot report OK on stale snapshots, because there are none.** §4's *fail loudly* requirement
+held on its first live test — against a defect in its own installation procedure.
+
+**3 · The pattern, which is now two-for-two and is the CIO's to own.** I-059: Rider A's runbook
+unexecutable in two places. I-090: Rider B's executable but wrong in one. **Both written by seats
+that could not run them; both defects surfaced on first execution and only on first execution.**
+
+**This is not carelessness. `[PRINCIPAL]` steps are the only steps in this firm that no seat can
+test.** Every runbook the firm writes inherits the gap, and nothing currently distinguishes a
+step that has been *executed* from one that has only been *written*. The immediate remedy is
+cheap — name each invocation rather than the file — but the pattern stays open.
+
+**4 · Both riders are now live, and the coupling recorded at S2-D-023 is satisfied.** The
+snapshot regime is installed, so **the first VPS merge is no longer blocked on it.** Sequence
+from the parallel run's close: step 8 compare over a **common window** → snapshot → step 9 pull →
+step 10 merge, **stopping on any nonzero `RESTATED` count and escalating to Validation under
+A4**.
+
+**5 · One unexplained detail, flagged rather than filed.** Retention counts came back asymmetric
+— **pit 3 retained, registry 2, book 2** — from invocations that snapshot all three together. The
+likely cause is the `unload`/`load` cycle firing `RunAtLoad` more than once, but **the CIO does
+not know why one database has an extra retained copy and the others do not**, and asymmetric
+retention across databases written by the same invocation is the kind of small discrepancy that
+turns out to matter. **Worth one look at the next Data & Infra session; not worth an issue
+today.**
+
+**6 · Remote is current.** `9678e5c..2cdd779` pushed; the book of record now exists off this
+laptop for the first time this sprint. Working tree carries only the two live-capture files.
+
+**7 · Steps 8/9 of Rider B deferred as stated** — the Close & Reconcile wiring and the VPS
+capture-store coverage question (I-074), both "at leisure."
+
+**8 · Budget.** **15 of 30 · 10 of 12 Opus**, unchanged — installation consumed no seat
+invocation. Three §4 interrupts remain open: **I-065**, **RULING-005 §9**, **I-022**.
+
+**Review date:** 2026-08-07T23:30Z, parallel-run close.

@@ -3021,3 +3021,40 @@ correctness, and the Principal may return it there.
 **Resolution:** open — **HIGH, before the Principal.** Blocks: sealing any document whose trial
 budget the harness is expected to enforce.
 **Pattern tag:** `harness-correctness-latent` · `decorative-until-depended-on`
+
+---
+
+## I-090 · 2026-08-05 · Rider B's runbook step 3 pointed the snapshotter at iCloud and left the health checker pointing at the default — second runbook defect found only in execution · Severity: MEDIUM · Owner: CIO → head-of-data-infra
+
+> **CIO issue-number range declared: I-090–I-099.** The CIO previously took numbers from ranges
+> issued to live seats, five times. This range is the CIO's own and no seat is dispatched into it.
+
+**Description.** `DATA-INFRA-003` §6 step 3 instructs the Principal to *"edit the `--dest`
+argument in `deploy/pit-snapshot/run_snapshot_and_health.sh`."* **That file invokes two
+scripts.** The step's wording covers only the first. Executed literally, `snapshot_book.py`
+writes to iCloud while `check_snapshot_health.py` reads `book/snapshots/` — **the health checker
+supervising a directory nothing writes to.**
+
+Found by the Principal during execution and fixed at commit `2cdd779` [measured — both
+invocations now carry `--dest "$HOME/Library/Mobile Documents/com~apple~CloudDocs/castellan-backups"`].
+
+**No false confidence was possible, and this is worth stating precisely rather than assuming.**
+`book/snapshots/` **does not exist** [measured] — it was never created, because the destination
+was redirected before the first run. A health check against a non-existent directory reports
+failure; **it cannot report OK on stale snapshots, because there are no stale snapshots.** The
+`fail loudly` requirement of §4 held. Whether the defect surfaced *as* that failure or the
+Principal caught it by reading, the CIO does not know and does not claim.
+
+**Why this is the same finding as I-059, one rider apart.** Rider A's runbook was unexecutable
+in two places; Rider B's was executable but wrong in one. **Both were written by a seat that
+could not run them, and both defects surfaced on first execution and only on first execution.**
+The pattern is not carelessness — it is that `[PRINCIPAL]` steps are the only steps in this firm
+that no seat can test. Every future runbook inherits it.
+
+**Remedy, not actioned:** a runbook whose steps touch multiple invocations should name each
+invocation explicitly rather than naming the file. Cheap, and it would have caught this.
+
+**Resolution:** the immediate defect is **closed** at `2cdd779`. The pattern is **open** — no
+mechanism yet distinguishes a runbook step that has been executed from one that has only been
+written.
+**Pattern tag:** `runbook-untestable-by-its-author` · `found-only-in-execution`
