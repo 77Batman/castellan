@@ -2052,3 +2052,80 @@ template; the snapshot health check into Close & Reconcile; **Rider C**'s casebo
 **Rider A**'s approved-but-unexecuted $6.00/month VPS cutover.
 
 **Review date:** on the Principal's rulings on I-060 and §13.
+
+---
+
+## S2-D-019 · 2026-08-06 · SPEC-002 implemented, 42 reds → 7 · §4 INTERRUPT — three HIGH · dead-man count corrected
+
+**1 · §4 HARD INTERRUPT. Trigger: *"any issue filed HIGH"* — three of them, presented
+separately per §8.**
+
+**I-075 · HIGH — two of SPEC-002's own Gate 1 integration tests grade the wrong family.**
+`test_mbs_10` and `test_dsr_07` grade an **unseeded** family (`"hac"`) instead of the one
+actually seeded (`"F"`). Seat 9 **verified by substitution that the arithmetic is correct once
+the right family is used** — so the implementation is right and the tests are wrong. **Blocks
+I-057 Items 1/2 from closing under the spec's own partition rule.**
+
+**I-077 · HIGH — `test_mono_03`, the structural test, fails on an exact-equality
+sub-assertion.** D-2's literal `z_serial = z_iid/√vif` does not reduce exactly at an
+**estimator-unreachable input** (`vif = 0.25`, below R-2/R-7's own 1.0 floor) with a negative-z
+fixture. **The actual monotone-conservatism inequality (C-1(iii)) holds unconditionally by
+construction of `min()`** — what is missing is a stronger, un-stated exact-equality guarantee.
+
+**I-078 · HIGH — SPEC-002's mandatory renames and M-7's blanket rule structurally conflict
+with eight pre-existing protected tests.** Seat 9 reverted the renames at zero cost, saving
+six. **Three are genuine casualties and are now failing: `test_G2` (holdout calendar span),
+`test_h7`, `test_h8` (seeded denominator).** Verified independently.
+
+**The CIO flags what Seat 9 could not decide for itself: accepting three previously-green
+protected tests as "unavoidable consequences of correctly implementing the spec" is a
+Validation judgment, not an implementer's.** Seat 9 filed it HIGH rather than absorbing it,
+which is the correct disposal — but the acceptance itself needs Validation's ruling, and until
+it comes **the firm's green floor has fallen by three tests it previously held.**
+
+**2 · THE FINDING THE CIO RATES ABOVE ALL THE ARITHMETIC.** Seat 9 **found a construction that
+would have made every one of the 46 tests pass with zero collateral** — `z_serial =
+z_iid/√(max(vif, 1.0))`, the direct arithmetic analogue of M-2's own `max` — **and deliberately
+did not adopt it**, because D-2 is classified mechanical/no-consultation and *"adopting an
+un-authorized construction to force green is exactly what this dispatch told me not to do a
+second time."*
+
+**It had the fix in hand, it was almost certainly right, and it filed an issue instead.** This
+is the second time this seat has left a red test red under the one circumstance where routing
+around would have looked like success. **A full-green report was available and was declined.**
+Recorded at length because the §7 audit should weigh it, and because a firm that only notices
+this behaviour when it fails has learned nothing.
+
+**3 · Results, verified independently** [measured]: **239 passed, 7 failed, 246 total**, from a
+baseline of 204/42. All **four guards still green** (`test_mbs_05`, `test_mbs_13`,
+`test_vif_16`, `test_dsr_02`). Registry **0 hypotheses / 0 trials**; `book/vaults/` holds only
+`.gitkeep`; **no test file modified.**
+
+**4 · I-057 DOES NOT CLOSE, and the seat said so plainly.** `test_monotone_conservatism.py` is
+**6/7**, and the file is non-partitionable by its author's own §11.3. *"I am stating this
+plainly rather than reporting a partial result as success."*
+
+**5 · Monotone-conservatism verified by direct sweep, not inference** — as the brief required.
+**145 draws for `N_max`** (the ceiling never rises above the VIF = 1 default) and **900 draws
+for DSR** (`DSR_serial ≤ DSR_iid`) across ρ ∈ [−0.6, +0.8], using **real measured VIFs, never
+adversarially injected** — **zero violations in both.** `variance_inflation` additionally
+reproduces SPEC-001's M-12 HAC/AR(1) reference table to 3 d.p. **The Principal's ruling that
+the sealing form cannot loosen is now empirically demonstrated, not merely specified.**
+
+**6 · Routed back rather than decided: R-16 only** (`test_mbs_12`'s 20% band missed by one draw
+of nine, 25.4% vs 1.20 — filed I-076 MEDIUM, not adjusted). R-10 touched but not hit. M-13,
+M-14, D-4, R-9, R-12, V-6/V-7 untriggered at 0 trials. One item **outside** the eight was
+surfaced rather than decided — D-2's exact-equality gap, I-077.
+
+**7 · CORRECTION — the CIO has been reporting the §5 dead-man count wrong.** Recomputed
+[measured]: the last Principal checkpoint was the `/usage` ruling, at which the firm stood at
+**11 of 30**. Two invocations have been spent since — Rider B and the SPEC-002 implementation.
+**The correct figure is 8 invocations remaining, not the 4 reported at S2-D-018 or the 5 at
+S2-D-017.** The CIO was counting from a stale checkpoint. **The error ran in the conservative
+direction and is still an error**, and it understated the firm's runway in reports the
+Principal was using to sequence work. Corrected here rather than quietly adjusted.
+
+**8 · Budget.** **13 of 30 · 8 of 12 Opus.** DA reserve 1 sealed. Freely allocable Opus: **3,
+against 2 committed** (Director §10.4, C2). §5 dead-man: **8 invocations remain.**
+
+**Review date:** on the Principal's rulings on I-060, §13, and the three HIGHs above.

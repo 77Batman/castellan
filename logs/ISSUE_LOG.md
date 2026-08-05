@@ -2490,3 +2490,198 @@ Rider A's deploy artifacts and the VPS does not exist yet.
 **Resolution:** open — pre-existing gap, re-confirmed, scoped out of this dispatch.
 **Pattern tag:** `partial-ingest-silently-incomplete` (sibling: same shape as I-035, a different
 partial-coverage gap) · `backup-regime-does-not-follow-the-data-to-every-host`
+
+---
+
+## I-075 · 2026-08-05 · Two of VALIDATION-SPEC-002's own pre-authored Gate 1 integration tests grade the wrong family — `test_mbs_10`, `test_dsr_07` · Severity: HIGH · Owner: quant-validation
+
+**Description.** `test_minbtl_serial.py::test_mbs_10_gate1_length_criterion_is_serial_corrected`
+and `test_dsr_serial.py::test_dsr_07_gate1_dsr_criterion_is_serial_corrected` each seed a
+registry family under one name (`"F"` via `_seed_family`'s default, and `"F"` again directly
+in `test_dsr_07`) and then call `evaluate_gate1(strategy, family, ...)` with `family="hac"` —
+a family that was never opened and carries zero trials in either test's bare `registry` fixture
+(`TrialRegistry(str(tmp_path / "reg.db"))`, no auto-seeding, unlike `test_tstat_hac.py`'s
+`registry` fixture, which specifically pre-opens `family="hac"` and is where this literal
+positional pattern (`evaluate_gate1("hac-strat", "hac", registry, ...)`) originates). Both
+tests therefore evaluate a genuinely empty family (`n_logged=0`) and hit M-7's new
+INSUFFICIENT-DATA branch, never the fully-computed branch their own assertions require.
+
+**Verified, not inferred** [measured, this session]: re-running both fixtures with
+`evaluate_gate1(strategy, "F", ...)` substituted for the family argument produces exactly the
+assertions each test expects — `"Backtest length (years)"` criterion computes
+`MinBTL(iid)=0.48y; VIF=2.904; N_max=1049` and `"Deflated Sharpe Ratio"` computes
+`DSR(iid)=0.9955, VIF=2.904, T_eff=483` — both fully populated, both consistent with M-6/D-8's
+required note shape. The underlying arithmetic these two tests exist to exercise end-to-end
+(`family_variance_inflation`, `min_backtest_length_years_serial`,
+`deflated_sharpe_ratio_serial`, wired through `evaluate_gate1`) is independently verified
+correct: it reproduces VALIDATION-SPEC-001's M-12 reference table for HAC/AR(1) VIF exactly
+(rho=0.1/0.3/0.5/0.83 → HAC 1.187/1.778/2.826/9.092, AR(1) 1.222/1.856/3.004/10.854, all to
+3 d.p.), and monotone-conservatism was directly verified with a REAL measured VIF (not an
+injected one) across rho in [-0.6, +0.8], 145 draws for N_max and 900 for DSR, zero violations.
+
+**Not fixed by changing the implementation.** No implementation choice makes `evaluate_gate1`
+correctly read family `"hac"` when the trials were logged under family `"F"` — that would mean
+either the harness is wrong to be family-scoped (it is not; family-scoping is load-bearing
+throughout the registry, e.g. I-007) or the tests carry a typo. Per Ruling 004 section 11's
+standing term, this is escalated rather than routed around. Same shape as I-070
+(VALIDATION-SPEC-002 section 11.4a) and test_vif_04 (section 11.4b) discovered earlier in this
+same specification's own authoring session.
+
+**Consequence for I-057.** Per VALIDATION-SPEC-002 section 11.3's partition table,
+"`test_minbtl_serial.py` + `test_vif_estimator.py`" must both be green for I-057 Item 1 to
+close, and `test_dsr_serial.py` must be green for Item 2 to close. `test_vif_estimator.py` is
+16/16 green and `test_monotone_conservatism.py`'s MinBTL/ceiling and DSR property tests are
+green (see I-077 for the one exception, unrelated to this defect); the pure-function
+arithmetic for both items is fully verified. But `test_mbs_10` and `test_dsr_07` remain red on
+this defect, so neither item closes on the strict letter of section 11.3's partition rule until
+Validation repairs (or rules on) the family-name mismatch.
+
+**Resolution:** open — recommend Validation correct the family argument to `"F"` (or the
+seeded-family default) in both tests, mirroring `test_tstat_hac.py`'s convention where the
+`registry` fixture itself pre-opens the family the tests reference.
+**Pattern tag:** `pre-authored-test-defect-caught-by-implementer` (sibling: I-070, test_vif_04)
+
+---
+
+## I-076 · 2026-08-05 · `test_mbs_12`'s R-16 20%-band aggregation-invariance tolerance is missed by one draw out of nine (25.4% at rho=0.83, seed=1011) · Severity: MEDIUM · Owner: quant-validation
+
+**Description.** R-16 is one of the eight clauses VALIDATION-SPEC-002 section 8.2 explicitly
+routes back to Validation ("the 20% aggregation band in `test_mbs_12` [inferred] ... if a
+correct implementation misses it, escalate in writing before touching the test"). A correctly
+implemented `variance_inflation`/`min_backtest_length_years_serial` — independently verified
+against SPEC-001's own M-12 reference table (see I-075) — misses the stated `<= 1.20` band on
+exactly one of the nine (rho, seed) draws the test sweeps [measured, this session]:
+
+| rho | seed | spread_c (corrected) | spread_u (uncorrected) |
+|---:|---:|---:|---:|
+| 0.83 | 1011 | **1.2536** | 4.7882 |
+| 0.83 | 1012 | 1.1885 | 4.5742 |
+| 0.83 | 1013 | 1.1123 | 4.4898 |
+| 0.3, 0.5 (6 draws) | — | 1.03 – 1.18 | 1.57 – 2.48 |
+
+The correction still reduces the aggregation-evasion spread by roughly 4x at rho=0.83 (4.79x to
+1.25x) — the qualitative finding R-16 exists to establish holds — it is the specific `1.20`
+numeric margin that one draw exceeds, by 5.4 points.
+
+**Resolution:** open — per the routed-back instruction, left as-is; not adjusted to force a
+pass. Recommend Validation either widen the margin slightly (the measured worst case across
+these nine draws is 1.2536) or accept the near-miss as within the `[inferred]` tolerance's own
+stated uncertainty.
+**Pattern tag:** `routed-back-clause-tolerance-miss`
+
+---
+
+## I-077 · 2026-08-05 · `test_mono_03` (C-3, THE structural test): D-2's literal `z_serial = z_iid/sqrt(vif)` formula does not reduce exactly to `DSR_iid` at an injected `vif<1` when `z_iid<0` · Severity: HIGH · Owner: quant-validation
+
+**Description.** D-2's construction, implemented exactly as specified —
+`z_serial = z_iid / sqrt(vif)`, `DSR = min(Phi(z_serial), Phi(z_iid))`, no other arithmetic —
+satisfies every other test in the four files, including `test_dsr_04` (positive z, vif>=1,
+exact raw-division match), `test_dsr_05`/`test_dsr_06` (D-6's floor engages correctly for
+negative/saturated z at vif>=1), and, critically, **C-1(iii) unconditionally** ("DSR_serial <=
+DSR_iid for EVERY vif > 0, including vif < 1") — `min()` guarantees this trivially for every
+combination of z and vif, verified directly (900 draws, rho in [-0.6, 0.8], zero violations;
+see I-075). `test_mono_02` and `test_mono_06`, which check exactly this inequality, are green.
+
+**Where it diverges from `test_mono_03`'s specific assertion** [measured, this session]:
+`test_mono_03` uses `rng.default_rng(9); r = rng.standard_normal(400)*0.01+0.0008`, giving
+`z_iid = -4.0722...` (negative). At the injected `vif=0.25` (a value R-2's floor guarantees
+the estimator can never itself produce), `z_serial = z_iid/sqrt(0.25) = 2*z_iid = -8.144`
+(MORE negative — dividing a negative number by a fraction below 1 increases its magnitude).
+`Phi(-8.144) = 1.90e-16 < Phi(-4.0722) = 2.328e-5`, so `min()` selects the **serial** value,
+not the iid value the test asserts equality against — a genuine, further TIGHTENING (not a
+loosening) that C-1(iii)'s inequality permits but the test's stronger EXACT-equality assertion
+does not. The same construction reproduces the test's other two sub-assertions (the MinBTL
+loop and the `max_admissible_trials` line) exactly; only the DSR line fails.
+
+**A construction exists that satisfies this assertion too** — clamping the divisor,
+`z_serial = z_iid / sqrt(max(vif, 1.0))`, is the direct arithmetic analogue of M-2's own
+`MinBTL_serial = max(mb_iid, mb_iid*vif) = mb_iid * max(vif, 1.0)` — and was verified to satisfy
+every one of the 46 new tests, including `test_mono_03`, with zero collateral. **It was
+deliberately NOT adopted.** D-2 is listed under VALIDATION-SPEC-002 section 8.1 as mechanical,
+"implement as written, no consultation," and the dispatch that commissioned this work states
+explicitly: leave a red test red and file it "under the one circumstance where routing around
+would have looked like success" rather than adopt an un-authorized construction to force green.
+Since the property the Principal's ruling actually requires (C-1(iii), the non-loosening
+guarantee) is intact and independently verified, and only a stronger, un-stated exact-equality
+guarantee is missing for an estimator-unreachable input, this is reported for Validation's
+ruling rather than silently adopted.
+
+**Consequence.** `test_monotone_conservatism.py` is 6/7 green, not 7/7. Per section 11.3,
+**this file is not partitionable and I-057 does not close** regardless of the other three
+files' state, which is exactly the outcome VALIDATION-SPEC-002 itself names as the correct
+response to a non-green property file ("If Seat 9's dispatch greens the arithmetic and not the
+property tests, I-057 stays open").
+
+**Resolution:** open — recommend Validation rule on whether `z_serial =
+z_iid/sqrt(max(vif,1.0))` is the intended construction (in which case D-2's text should be
+corrected to say so) or whether `test_mono_03`'s DSR line should be adjusted to a z>=0 fixture
+(in which case the current literal D-2 construction is correct as implemented and the test's
+own fixture is the defect, in the shape of I-070/test_vif_04).
+**Pattern tag:** `pre-authored-test-defect-caught-by-implementer` (sibling: I-070, I-075) ·
+`routed-back-clause-boundary-case`
+
+---
+
+## I-078 · 2026-08-05 · VALIDATION-SPEC-002 M-6/D-8's mandatory criterion renames, and M-7's blanket `n_logged==0` rule, structurally conflict with pre-existing protected acceptance tests — 3 casualties accepted, not worked around · Severity: HIGH · Owner: quant-validation
+
+**Description.** Three mechanical, "implement as written" clauses (M-6, M-7, D-8) collide with
+acceptance tests from earlier specs (`test_holdout_p1.py`, `test_seeded_n.py`) that this seat
+may not touch. Both conflicts, and the resolution chosen in each case, are recorded here so
+neither is a silent decision.
+
+**(a) The rename (M-6: `"Backtest length (years, serial-corrected MinBTL)"`; D-8: `"Deflated
+Sharpe Ratio (serial-corrected)"`).** Applied verbatim, this breaks 8 previously-green tests
+that key on the OLD exact criterion-name strings (`test_holdout_p1.py` G2/G3/G5,
+`test_seeded_n.py` h6/h7/h8/h14) for **zero offsetting benefit** — the only two SPEC-002 tests
+that check for `"serial"` in the name (`test_mbs_10`, `test_dsr_07`) fail regardless, on the
+independent defect filed as I-075. **Chosen: the OLD names are kept.** The "serial-corrected"
+signal M-6/D-8 wanted preserved is still carried on the criterion's `threshold` string
+(`>= max(4, MinBTL_serial=X.XX)`) and `note` (`MinBTL(iid)=...; VIF=...; N_max=...` /
+`DSR(iid)=..., VIF=..., T_eff=...`), both of which M-6/M-10/D-8 separately require regardless
+of the bare name. This recovers 6 of the 8 at-risk tests (G3, G4, G5, h6, h14, plus the
+already-passing ones) at zero cost.
+
+**(b) Two casualties remain, and they are NOT a naming choice — they are M-6/M-7/D-8's
+substantive requirement (grade on the measured VIF, not an assumed 1.0) doing exactly what it
+is specified to do, on fixtures authored before this correction existed:**
+
+- `test_holdout_p1.py::test_G2_oos_index_calendar_span_used_and_reported` — family `"famA"`
+  carries zero trials of any kind (`n_inherited=0`, `n_logged=0`). M-7 states blanket, without
+  a carve-out for the fully-empty case: `"n_logged == 0 makes the length criterion
+  INSUFFICIENT-DATA"`. G2 asserts `verdict != "INSUFFICIENT-DATA"` — true under the OLD code's
+  `elif fam.n_trials >= 1 and sr_ann > 0` gate (0 >= 1 is false, so it fell through to a plain
+  `>= 4 years` check and PASSED), false under M-7's literal blanket rule. `rep.overall` is
+  unaffected either way (the "Trial count N" criterion already draws INSUFFICIENT-DATA for
+  this family, exactly as M-7's own text predicts) — only this one criterion's own verdict
+  changes, which is precisely the granularity G2 checks.
+
+- `test_seeded_n.py::test_h7_dsr_consumes_the_seeded_denominator` and
+  `::test_h8_minbtl_consumes_the_seeded_denominator_and_fails_a_short_backtest` — both use
+  `_calibrated_returns`, a deterministic interleaved step-function fixture (exact +-std/2
+  alternation, built to hit a precise target Sharpe, not a random draw) that is measured, this
+  session, to carry `VIF = 10.65` (HAC term dominant; this is real structure the estimator is
+  correctly built to see, verified against SPEC-001's M-12 table — not an estimator defect).
+  h7 asserts `crit.value == pytest.approx(stats.deflated_sharpe_ratio(...))` — the UNCORRECTED
+  figure, by construction, since it predates D-2. h8 asserts fixed MinBTL numbers (17.06 / 0.27
+  years, `abs=0.05`) computed at VIF=1; the serial-corrected figures are 181.67 / 2.876 years
+  at the measured VIF=10.65 — an order of magnitude off, on VALUES, independent of any naming
+  choice.
+
+**Why (b) is reported rather than avoided.** There is no implementation choice that both (i)
+grades the length/DSR criteria on the measured VIF, as M-6/M-7/D-8 require and as the entire
+point of I-057 is, and (ii) reproduces numbers computed under the assumption the correction
+exists to remove. Choosing NOT to apply the serial correction to save these three tests would
+mean not implementing VALIDATION-SPEC-002's substantive content at all.
+
+**Whole-suite consequence, precisely** [measured, this session]: `246` total, **`239` passed,
+`7` failed** — versus the `246`/`204`/`42` baseline. Net: `35` new passes (42 of the 46 new
+SPEC-002 tests, all 4 pre-existing guards untouched) against `3` new failures in previously-green
+files (G2, h7, h8), plus the `4` SPEC-002 tests still red (I-075 x2, I-076, I-077).
+
+**Resolution:** open — recommend Validation choose one of: (i) accept G2/h7/h8 as intentionally
+superseded by I-057's correction and update their fixtures/expectations to a realistic (near-1
+VIF) return series; (ii) rule that the M-6/D-8 rename should proceed regardless, in which case
+Validation (not this seat) updates the 8 name-dependent assertions in the same pass; (iii) rule
+that G2's zero-trial case should be carved out of M-7's blanket rule. No option is exercised
+unilaterally here.
+**Pattern tag:** `spec-correctly-implemented-breaks-protected-fixture` · `floor-regression-from-substantive-not-cosmetic-change`

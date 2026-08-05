@@ -576,6 +576,30 @@ class TrialRegistry:
         t_min = min(s.size for s in series)
         return np.column_stack([s[-t_min:] for s in series]).astype(float)
 
+    def trial_returns(self, family: str) -> list[np.ndarray]:
+        """VALIDATION-SPEC-002 R-10 -- each logged trial's return series
+        at its OWN full length, transitive across ``predecessor_family``
+        in the same way :meth:`returns_matrix` already is.
+
+        :meth:`returns_matrix` truncates every column to the SHORTEST
+        common length, so one 20-bar logged trial collapses the entire
+        family's return matrix to 20 bars (I-062) -- silently degrading
+        PBO/CSCV today. Consumed by the VIF family term, that truncation
+        would drop every series below R-5's ``T >= 32`` floor and
+        evaporate the family term entirely -- a one-line attack. This
+        accessor exists so the VIF never consumes that truncation."""
+        families = [family] + self.predecessor_chain(family)
+        placeholders = ",".join("?" * len(families))
+        cur = self.conn.execute(
+            f"SELECT returns_blob FROM trials WHERE family IN "
+            f"({placeholders}) ORDER BY trial_id",
+            families,
+        )
+        return [
+            np.frombuffer(blob, dtype=np.float32).astype(float)
+            for (blob,) in cur.fetchall()
+        ]
+
     # -- events / verdicts --------------------------------------------
 
     def log_event(self, kind: str, family: str | None, detail: dict) -> int:

@@ -270,6 +270,36 @@ def expected_max_sharpe(n_trials: int, sr_std: float = 1.0) -> float:
     return float(sr_std * ((1.0 - g) * z1 + g * z2))
 
 
+def _dsr_z(
+    returns: np.ndarray,
+    n_trials: int,
+    trial_sr_std_period: float,
+) -> float:
+    """The published DSR's z arithmetic (Bailey & Lopez de Prado, 2014),
+    extracted verbatim from :func:`deflated_sharpe_ratio` (VALIDATION-SPEC-002
+    D-1). This is a refactor, not a mutation -- ``test_dsr_02`` pins
+    ``deflated_sharpe_ratio``'s output as bitwise identical to before the
+    extraction. Consumed by :func:`deflated_sharpe_ratio_serial` (D-2),
+    which needs the SAME z -- reimplementing the `denom` arithmetic a
+    second time, or recovering z via ``norm.ppf(DSR)``, are both defective
+    (D-3): the former creates a second place for the arithmetic to drift,
+    the latter loses the correction entirely in the saturated right tail.
+    """
+    r = np.asarray(returns, dtype=float)
+    r = r[~np.isnan(r)]
+    T = r.size
+    if T < 10:
+        return float("nan")
+    sr = sharpe_period(r)
+    g3 = float(skew(r))
+    g4 = float(kurtosis(r, fisher=False))  # raw kurtosis; normal => 3
+    sr0 = expected_max_sharpe(n_trials, trial_sr_std_period)
+    denom = 1.0 - g3 * sr + ((g4 - 1.0) / 4.0) * sr**2
+    if denom <= 0:
+        return float("nan")
+    return (sr - sr0) * math.sqrt(T - 1) / math.sqrt(denom)
+
+
 def deflated_sharpe_ratio(
     returns: np.ndarray,
     n_trials: int,
@@ -287,21 +317,60 @@ def deflated_sharpe_ratio(
     trial_sr_std_period : cross-sectional std of PER-PERIOD trial Sharpes
         from the registry. Passing annualized dispersion here inflates the
         benchmark and is a defect.
+
+    UNCORRECTED -- assumes serial independence (I-057). This function is
+    not edited by VALIDATION-SPEC-002 (clause D-1, same standing as M-1)
+    and is preserved exactly so every existing call site keeps its
+    meaning. The graded Gate 1 DSR is
+    ``deflated_sharpe_ratio_serial(...)``.
     """
-    r = np.asarray(returns, dtype=float)
-    r = r[~np.isnan(r)]
-    T = r.size
-    if T < 10:
+    z = _dsr_z(returns, n_trials, trial_sr_std_period)
+    if math.isnan(z):
         return float("nan")
-    sr = sharpe_period(r)
-    g3 = float(skew(r))
-    g4 = float(kurtosis(r, fisher=False))  # raw kurtosis; normal => 3
-    sr0 = expected_max_sharpe(n_trials, trial_sr_std_period)
-    denom = 1.0 - g3 * sr + ((g4 - 1.0) / 4.0) * sr**2
-    if denom <= 0:
-        return float("nan")
-    z = (sr - sr0) * math.sqrt(T - 1) / math.sqrt(denom)
     return float(norm.cdf(z))
+
+
+def deflated_sharpe_ratio_serial(
+    returns: np.ndarray,
+    n_trials: int,
+    trial_sr_std_period: float,
+    *,
+    vif: float,
+) -> float:
+    """VALIDATION-SPEC-002 D-2 -- the serial-corrected DSR.
+
+    ``z_serial = z_iid / sqrt(vif)`` -- an effective-sample-size
+    substitution on the ``sqrt(T-1)`` factor, leaving the published
+    non-normality ``denom`` byte-for-byte untouched (D-4/D-5).
+    ``DSR = min(Phi(z_serial), Phi(z_iid))`` -- D-6's non-permissive
+    floor, taken unconditionally (no sign condition on z), so an
+    estimator change can never raise the graded DSR: dividing a
+    NEGATIVE z by sqrt(vif) > 1 moves it toward zero and would otherwise
+    raise DSR, which is exactly the case this statistic exists to catch.
+
+    ``vif`` is a required keyword-only float; no default -- a default of
+    1.0 would let a caller obtain the uncorrected figure from the
+    corrected function by omission (same shape as M-2). Non-finite or
+    ``vif <= 0`` raises ``ValueError``; there is no path on which an
+    unmeasurable VIF silently behaves as 1.0 (D-3a).
+    """
+    if not math.isfinite(vif) or vif <= 0:
+        raise ValueError(f"vif must be finite and > 0, got {vif!r}")
+    z_iid = _dsr_z(returns, n_trials, trial_sr_std_period)
+    if math.isnan(z_iid):
+        return float("nan")
+    z_serial = z_iid / math.sqrt(vif)
+    dsr_iid = float(norm.cdf(z_iid))
+    dsr_serial = float(norm.cdf(z_serial))
+    return float(min(dsr_serial, dsr_iid))
+
+
+def effective_sample_size(T: int, vif: float) -> float:
+    """VALIDATION-SPEC-002 D-9 -- ``T_eff = (T-1)/vif + 1``, chosen so
+    ``sqrt(T_eff - 1) == sqrt(T-1)/sqrt(vif)`` EXACTLY -- the reported
+    effective sample size is the one the DSR arithmetic actually used.
+    Reported only; never fed back into any other statistic."""
+    return (T - 1) / vif + 1.0
 
 
 def min_backtest_length_years(
@@ -319,6 +388,258 @@ def min_backtest_length_years(
     sr_p = target_annual_sr / math.sqrt(periods_per_year)
     periods = (emax / sr_p) ** 2
     return float(periods / periods_per_year)
+
+
+def min_backtest_length_years_serial(
+    n_trials: int,
+    target_annual_sr: float,
+    periods_per_year: int = 252,
+    *,
+    vif: float,
+) -> float:
+    """VALIDATION-SPEC-002 M-2 -- the serially-corrected MinBTL.
+
+    ``MinBTL_serial = max(mb_iid, mb_iid * vif)``. :func:`min_backtest_length_years`
+    is NOT edited (M-1) -- this is a new function, not a mutation.
+
+    The outer ``max`` is the first of two independent monotone-
+    conservatism enforcements (C-2): it guarantees ``MinBTL_serial >=
+    MinBTL_iid`` for EVERY ``vif > 0``, including ``vif < 1`` -- an
+    injected value the estimator can never produce (R-2's floor), but
+    which the consumer-layer guarantee must not depend on being unable
+    to receive. ``mb_iid = inf`` (non-positive Sharpe) propagates
+    unchanged.
+
+    ``vif`` is a required keyword-only float; no default -- a default of
+    1.0 would let a caller obtain the uncorrected figure from the
+    corrected function by omission (the shape W-1 closed for
+    ``feature_lookback``). Non-finite or ``vif <= 0`` raises
+    ``ValueError``.
+    """
+    if not math.isfinite(vif) or vif <= 0:
+        raise ValueError(f"vif must be finite and > 0, got {vif!r}")
+    mb = min_backtest_length_years(n_trials, target_annual_sr, periods_per_year)
+    return max(mb, mb * vif)
+
+
+def max_admissible_trials(
+    span_years: float,
+    target_annual_sr: float,
+    periods_per_year: int = 252,
+    *,
+    vif: float,
+) -> int:
+    """VALIDATION-SPEC-002 M-4 -- the largest integer ``N >= 1`` such that
+    ``min_backtest_length_years_serial(max(N, 2), target_annual_sr,
+    periods_per_year, vif=vif) <= span_years``, found by
+    doubling-then-bisection (monotone in N because ``min_backtest_length_years``
+    is monotone in N -- Ruling 003/I-037's fixed-lag discipline extended
+    here). Returns ``1`` if no ``N >= 2`` satisfies it. Returns the
+    doubling cap ``2**31 - 1`` where the constraint never binds; the
+    caller renders that as ``"unbounded on this span"`` rather than as an
+    integer.
+
+    This is the Principal's sealed ``N_max``, made executable (M-4). A
+    pure function of ``(span, SR, ppy, vif)``; consumes no sample.
+    """
+    if not math.isfinite(vif) or vif <= 0:
+        raise ValueError(f"vif must be finite and > 0, got {vif!r}")
+    CAP = 2 ** 31 - 1
+
+    def fits(n: int) -> bool:
+        return min_backtest_length_years_serial(
+            max(n, 2), target_annual_sr, periods_per_year, vif=vif
+        ) <= span_years
+
+    if not fits(2):
+        return 1
+    if fits(CAP):
+        return CAP
+
+    lo, hi = 2, 4
+    while fits(hi):
+        lo = hi
+        hi = hi * 2
+        if hi >= CAP:
+            hi = CAP
+            break
+    while hi - lo > 1:
+        mid = (lo + hi) // 2
+        if fits(mid):
+            lo = mid
+        else:
+            hi = mid
+    return lo
+
+
+# ----------------------------------------------------------------------
+# Variance inflation factor (VALIDATION-SPEC-002 R-1 .. R-16)
+# ----------------------------------------------------------------------
+
+@dataclass(frozen=True)
+class VIFResult:
+    """VALIDATION-SPEC-002 R-1."""
+
+    vif_gate: float           # max(1.0, vif_hac, vif_ar1) -- the ONLY figure consumed
+    vif_hac: float            # sigma^2_NW(L) / gamma0, both at divisor T-1
+    vif_ar1: float            # (1 + rho+) / (1 - rho+), rho+ = max(0, rho_hat)
+    rho_hat: float            # unclipped lag-1 autocorrelation (SPEC-001 E-3)
+    lag: int                  # L, the SPEC-001 E-5 lag
+    lag_rule: str
+    source: str                # "candidate-only" | "max(candidate, family-median)"
+                                # | "unmeasurable"
+    n_series_used: int         # trial series entering the family term
+    n_series_excluded: int     # excluded by R-9's length floors
+    eligible: bool             # False => INSUFFICIENT-DATA (R-11)
+    note: str
+
+
+def variance_inflation(returns: np.ndarray, *, label_span: int = 1) -> VIFResult:
+    """VALIDATION-SPEC-002 R-2 -- the single-series VIF estimator, no
+    discretion.
+
+    ``vif_hac = sigma_NW^2(L) / gamma0``, computed as ``inflation ** 2``
+    (M-3: ``HACTStat.inflation`` is a ratio of STANDARD ERRORS;
+    ``VIF`` is a ratio of VARIANCES). ``vif_ar1 = (1 + rho+) / (1 -
+    rho+)``, ``rho+ = max(0, rho_hat)`` (R-3: the firm takes no credit
+    for negative autocorrelation). ``vif_gate = max(1.0, vif_hac,
+    vif_ar1)`` -- floored per series, before any aggregation (R-7).
+
+    The lag ``L`` is SPEC-001 E-5's rule -- Andrews-selected, floored at
+    the declared label span, capped, one-sided -- and the eligibility
+    guards (``T < 32``; ``T < 10*(L+1)``; degenerate variance;
+    ``|rho_hat| >= 0.97``) are SPEC-001's E-6/E-7/E-9, IMPORTED verbatim
+    via :func:`sr_tstat_corrected`, not re-derived or re-tuned here (R-5).
+
+    ``gamma0 == 0`` (constant series, R-4): ``vif_hac``, ``vif_ar1``,
+    ``vif_gate`` are all ``nan`` and ``eligible = False``. A degenerate
+    ``sigma_NW^2(L) <= 0`` with ``gamma0 != 0`` (unreachable under the
+    Bartlett kernel except an exact zero) drops the HAC term from the
+    ``max`` rather than treating it as zero.
+    """
+    r = np.asarray(returns, dtype=float)
+    r = r[~np.isnan(r)]
+    T = r.size
+
+    hac = sr_tstat_corrected(r, label_span=label_span)  # R-5: SPEC-001's guards, verbatim
+    rho_hat = hac.rho_hat
+
+    gamma0 = float((r - r.mean()) @ (r - r.mean())) / (T - 1) if T >= 2 else 0.0
+
+    notes = [hac.note] if hac.note else []
+
+    if gamma0 == 0.0:
+        vif_hac = float("nan")
+        vif_ar1 = float("nan")
+        vif_gate = float("nan")
+    else:
+        if math.isnan(hac.inflation):
+            vif_hac = float("nan")
+            notes.append(
+                "vif_hac omitted: sigma_NW^2(L) <= 0 with gamma0 != 0 "
+                "(R-4); dropped from the max, not treated as zero")
+        else:
+            vif_hac = float(hac.inflation ** 2)  # M-3
+        rho_plus = max(0.0, rho_hat)
+        vif_ar1 = (1.0 + rho_plus) / (1.0 - rho_plus)
+        terms = [1.0, vif_ar1]
+        if not math.isnan(vif_hac):
+            terms.append(vif_hac)
+        vif_gate = max(terms)  # R-7: floored at 1.0, per series, before aggregation
+
+    return VIFResult(
+        vif_gate=vif_gate, vif_hac=vif_hac, vif_ar1=vif_ar1, rho_hat=rho_hat,
+        lag=hac.lag, lag_rule=hac.lag_rule, source="candidate-only",
+        n_series_used=1, n_series_excluded=0, eligible=hac.eligible,
+        note="; ".join(notes),
+    )
+
+
+def family_variance_inflation(
+    trial_series: list[np.ndarray],
+    candidate_returns: np.ndarray | None,
+    *,
+    label_span: int = 1,
+    m_min: int = 8,
+) -> VIFResult:
+    """VALIDATION-SPEC-002 R-6 -- the family estimator, and the
+    anti-gaming construction.
+
+    ``vif_gate = max(candidate, family-median)`` when at least ``m_min``
+    logged trial series are eligible; ``candidate-only`` otherwise
+    (R-12). ``max`` against the candidate defends against a sponsor
+    advancing the one configuration whose own net series happens to be
+    cleanest (R-6); ``median``, not ``max``, across trials defends
+    against a single pathological trial killing the family AND against
+    the incentive not to log a trial that a ``max`` across trials would
+    create -- "the single worst incentive this firm can create" (R-6).
+
+    ``vif_gate >= variance_inflation(candidate_returns).vif_gate``
+    ALWAYS, for any ``trial_series`` whatsoever -- R-8, the single most
+    important property in this module: no number of logged trials, of
+    any construction, can drive the graded VIF below the VIF of the
+    series actually being graded.
+
+    No candidate return series (``candidate_returns is None``) ->
+    ``source = "unmeasurable"``, ``eligible = False`` -- there is no
+    fallback to VIF=1 (R-11). A trial series failing R-5's guards is
+    excluded from the median and counted in ``n_series_excluded``; if
+    more than 25% of logged trial series are excluded, ``eligible =
+    False`` regardless of the source branch -- a refusal, not a discount
+    (R-9, the dilution attack). If the candidate itself is ineligible,
+    the whole result is ineligible (R-14).
+    """
+    if candidate_returns is None:
+        return VIFResult(
+            vif_gate=float("nan"), vif_hac=float("nan"), vif_ar1=float("nan"),
+            rho_hat=float("nan"), lag=0, lag_rule="andrews",
+            source="unmeasurable", n_series_used=0, n_series_excluded=0,
+            eligible=False,
+            note="No candidate return series supplied; VIF is "
+                 "unmeasurable (R-11). There is no fallback to VIF=1.",
+        )
+
+    v_cand = variance_inflation(candidate_returns, label_span=label_span)
+
+    usable: list[VIFResult] = []
+    n_excluded = 0
+    for s in trial_series:
+        v = variance_inflation(s, label_span=label_span)
+        if v.eligible:
+            usable.append(v)
+        else:
+            n_excluded += 1
+
+    n_used = len(usable)
+    total = n_used + n_excluded
+
+    if n_used >= m_min:
+        v_fam = float(np.median([u.vif_gate for u in usable]))
+        vif_gate = max(v_cand.vif_gate, v_fam)  # R-8: never below the candidate's own
+        source = "max(candidate, family-median)"
+    else:
+        vif_gate = v_cand.vif_gate
+        source = "candidate-only"
+
+    notes: list[str] = []
+    eligible = v_cand.eligible
+    if not v_cand.eligible:
+        notes.append(
+            "candidate series is ineligible (R-5); the whole family "
+            "result is ineligible (R-14)")
+    if total > 0 and n_excluded > 0.25 * total:
+        eligible = False
+        notes.append(
+            f"R-9: {n_excluded}/{total} logged trial series excluded by "
+            "the length/eligibility floors (> 25%) -- refused rather "
+            "than discounted")
+
+    return VIFResult(
+        vif_gate=vif_gate, vif_hac=v_cand.vif_hac, vif_ar1=v_cand.vif_ar1,
+        rho_hat=v_cand.rho_hat, lag=v_cand.lag, lag_rule=v_cand.lag_rule,
+        source=source, n_series_used=n_used, n_series_excluded=n_excluded,
+        eligible=eligible, note="; ".join(notes),
+    )
 
 
 # ----------------------------------------------------------------------

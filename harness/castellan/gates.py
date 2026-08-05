@@ -102,6 +102,24 @@ class ValidationReport:
     hac_lag: int | None = None
     hac_lag_rule: str | None = None
     hac_rho_hat: float | None = None
+    # VALIDATION-SPEC-002 M-10: the serial-corrected MinBTL and the VIF
+    # that corrects it, D-8/D-9: the serial-corrected DSR and T_eff. All
+    # report fields, NOT Criterion rows (M-10 / test_hac_t14's precedent).
+    minbtl_iid_years: float | None = None
+    minbtl_serial_years: float | None = None
+    vif_gate: float | None = None
+    vif_hac: float | None = None
+    vif_ar1: float | None = None
+    vif_rho_hat: float | None = None
+    n_max_admissible_iid: int | None = None
+    n_max_admissible_serial: int | None = None
+    dsr_iid: float | None = None
+    dsr_serial: float | None = None
+    t_eff: float | None = None
+    # Convenience fields for the M-10 render block; not independently
+    # required by any test, but needed to render the block's own shape.
+    vif_source: str | None = None
+    vif_n_series_used: int | None = None
 
     def to_json(self) -> str:
         d = asdict(self)
@@ -162,6 +180,49 @@ class ValidationReport:
                 "figure assumes serial independence, is reported for continuity, "
                 "and is NOT graded.**"
             )
+        if self.vif_gate is not None:
+            lines.append("")
+            divergence_note = ""
+            if (self.vif_ar1 is not None and self.vif_hac is not None
+                    and self.vif_hac > 0 and not math.isnan(self.vif_hac)
+                    and not math.isnan(self.vif_ar1)
+                    and self.vif_ar1 > 1.5 * self.vif_hac):
+                # M-14: disclosed on the report face, not adjusted to
+                # accommodate any family. A sponsor whose Gate verdict
+                # turns on this gap brings it to Validation.
+                divergence_note = (
+                    f" — AR(1) plug-in exceeds HAC by "
+                    f"{self.vif_ar1 / self.vif_hac:.2f}×; MA/overlapping-"
+                    "label structure is the likely cause (M-13) and the "
+                    "plug-in over-states it."
+                )
+            lines.append(
+                f"Serial dependence: VIF = **{self.vif_gate:.3f}** (HAC "
+                f"{self.vif_hac:.3f}, AR(1) plug-in {self.vif_ar1:.3f}, "
+                f"ρ̂ = {self.vif_rho_hat:+.3f}, lag {self.hac_lag}, source "
+                f"{self.vif_source}, {self.vif_n_series_used} trial "
+                f"series){divergence_note}."
+            )
+            if self.minbtl_iid_years is not None:
+                minbtl_serial_str = (
+                    f"{self.minbtl_serial_years:.2f}y" if self.minbtl_serial_years
+                    is not None else "N/A"
+                )
+                lines.append(
+                    f"MinBTL: **{minbtl_serial_str}** serial-corrected · "
+                    f"{self.minbtl_iid_years:.2f}y assuming serial "
+                    "independence — **the i.i.d. figure is reported for "
+                    "continuity and is NOT graded.**"
+                )
+            if (self.n_max_admissible_iid is not None
+                    and self.n_max_admissible_serial is not None):
+                n_max = min(self.n_max_admissible_iid, self.n_max_admissible_serial)
+                lines.append(
+                    f"Admissible trial ceiling on this span and Sharpe: "
+                    f"**N_max = {n_max}** (= min({self.n_max_admissible_iid}, "
+                    f"{self.n_max_admissible_serial})). Registry N = "
+                    f"{self.n_trials}."
+                )
         if self.breakeven_cost_multiplier is not None:
             lines.append("")
             lines.append(
@@ -300,11 +361,46 @@ def evaluate_gate1(
         "t-statistic (net, HAC-corrected)", hac.t_gate, f">= {T_STAT_HURDLE}",
         t_verdict, hac_note))
 
-    # -- DSR -----------------------------------------------------------
+    # -- VIF, measured once (VALIDATION-SPEC-002 D-7: one VIF, three
+    # consumers -- the t-statistic above via hac.inflation, DSR below,
+    # and the length criterion further down). --------------------------
+    # M-7 / R-11: n_logged == 0 means no logged trial carries a return
+    # series, so the family's serial dependence is unmeasurable. There
+    # is no fallback to VIF=1 -- the permissive assumption this document
+    # exists to remove -- so the candidate is deliberately withheld too,
+    # forcing the "unmeasurable" branch rather than a candidate-only
+    # measurement for a family that has run nothing.
+    if fam.n_logged == 0:
+        vif_res = stats.family_variance_inflation([], None, label_span=label_span)
+    else:
+        vif_res = stats.family_variance_inflation(
+            registry.trial_returns(family), r, label_span=label_span)
+
+    # -- DSR (VALIDATION-SPEC-002 D-1 .. D-10) --------------------------
+    dsr_iid_val: float | None = None
+    dsr_serial_val: float | None = None
+    t_eff_val: float | None = None
     if n_ok and fam.n_trials >= 2:
-        dsr = stats.deflated_sharpe_ratio(r, fam.n_trials, fam.sr_period_std)
-        criteria.append(_crit("Deflated Sharpe Ratio", dsr, f">= {DSR_MIN}",
-                              None if math.isnan(dsr) else dsr >= DSR_MIN))
+        dsr_iid_val = stats.deflated_sharpe_ratio(r, fam.n_trials, fam.sr_period_std)
+        if not vif_res.eligible:
+            criteria.append(Criterion(
+                "Deflated Sharpe Ratio", dsr_iid_val,
+                f">= {DSR_MIN}", INSUFF,
+                f"VIF unmeasurable or ineligible ({vif_res.note or vif_res.source}); "
+                f"DSR(iid) = {dsr_iid_val:.4f}" if not math.isnan(dsr_iid_val)
+                else f"VIF unmeasurable or ineligible ({vif_res.note or vif_res.source})"))
+        else:
+            dsr_serial_val = stats.deflated_sharpe_ratio_serial(
+                r, fam.n_trials, fam.sr_period_std, vif=vif_res.vif_gate)
+            t_eff_val = stats.effective_sample_size(r.size, vif_res.vif_gate)
+            dsr_note = (
+                f"DSR(iid) = {dsr_iid_val:.4f}, VIF = {vif_res.vif_gate:.3f}, "
+                f"T_eff = {t_eff_val:.0f}")
+            criteria.append(_crit(
+                "Deflated Sharpe Ratio", dsr_serial_val,
+                f">= {DSR_MIN}",
+                None if math.isnan(dsr_serial_val) else dsr_serial_val >= DSR_MIN,
+                dsr_note))
     else:
         criteria.append(Criterion(
             "Deflated Sharpe Ratio", None, f">= {DSR_MIN}", INSUFF,
@@ -336,18 +432,47 @@ def evaluate_gate1(
             "PBO (CSCV)", None, f"<= {PBO_MAX_PAPER}", INSUFF,
             "Registry return matrix too small for S=16 CSCV"))
 
-    # -- length (I-010 G1-G5) --------------------------------------------
+    # -- length (I-010 G1-G5; VALIDATION-SPEC-002 M-6/M-7) ---------------
     # G1: backtest_years is required, no fallback. G2/G3/G4: oos_index is
     # the only thing that lets the harness VERIFY the caller's claim
     # instead of trusting it — the permissive fallback this replaced
     # (r.size / periods_per_year) silently equated observation count with
     # calendar span, which overstates length for a stacked/pooled panel.
-    length_threshold = f">= max({MIN_YEARS:g}, MinBTL(N))"
+    # M-6: renamed and rebuilt on the serial-corrected MinBTL. M-7:
+    # n_logged == 0 makes this criterion INSUFFICIENT-DATA -- keying on
+    # fam.n_trials (which n_inherited alone can satisfy) would silently
+    # reinstate VIF = 1 for exactly the families with the least evidence.
+    # NOTE (see DATA-IMPL-006 sec. "M-6/D-8 naming conflict"): M-6 specifies
+    # this criterion's name as "Backtest length (years, serial-corrected
+    # MinBTL)". That verbatim rename is NOT applied -- pre-existing,
+    # protected acceptance tests (test_holdout_p1.py G2-G5) key on the
+    # EXACT string "Backtest length (years)" and would break for zero
+    # offsetting benefit (test_mbs_10, the only SPEC-002 test that checks
+    # for "serial" in this name, fails regardless on an independent,
+    # already-escalated defect in its own fixture -- see the dispatch
+    # issue log). The "serial-corrected" signal is still carried on the
+    # criterion's threshold string and note (both required by M-6/M-10).
+    # Escalated to Validation for a ruling; not decided silently.
+    crit_name = "Backtest length (years)"
+    length_threshold = f">= max({MIN_YEARS:g}, MinBTL_serial(N))"
+
+    minbtl_iid_years_val: float | None = None
+    if fam.n_trials >= 1:
+        minbtl_iid_years_val = stats.min_backtest_length_years(
+            max(fam.n_trials, 2), sr_ann, periods_per_year)
+
+    minbtl_serial_years_val: float | None = None
+    n_max_admissible_iid_val: int | None = None
+    n_max_admissible_serial_val: int | None = None
+
     if oos_index is None or len(oos_index) < 2:
         # G4: no calendar evidence -> INSUFFICIENT-DATA, never PASS,
-        # regardless of what backtest_years claims.
+        # regardless of what backtest_years claims. Checked BEFORE M-7's
+        # n_logged==0 gate: a missing calendar span is a more fundamental
+        # data-integrity problem than an unmeasured VIF, and G3/G4/G5's
+        # priority over the trial-history gate is unchanged by this spec.
         criteria.append(Criterion(
-            "Backtest length (years)", backtest_years, length_threshold, INSUFF,
+            crit_name, backtest_years, length_threshold, INSUFF,
             "No oos_index supplied; calendar span unavailable, so "
             f"backtest_years={backtest_years:g} cannot be verified and "
             "cannot clear a Charter 4.4 floor on trust alone."))
@@ -364,28 +489,53 @@ def evaluate_gate1(
             # observation count / periods_per_year) materially overstates
             # or understates the calendar span. FAIL, not a note buried
             # in a PASS: a materially mis-stated length is a failure on a
-            # Charter 4.4 criterion.
+            # Charter 4.4 criterion. Checked BEFORE M-7's n_logged==0
+            # gate for the same reason as G4 above.
             criteria.append(_crit(
-                "Backtest length (years)", years_calendar, length_threshold, False,
+                crit_name, years_calendar, length_threshold, False,
                 f"DISAGREEMENT: backtest_years={backtest_years:.3f} vs "
                 f"calendar-verified={years_calendar:.3f} "
                 f"({disagreement:.1%} apart, > {LENGTH_DISAGREEMENT_MAX:.0%} "
                 "tolerance) — reported length does not match the oos_index "
                 "calendar span (I-010)."))
-        elif fam.n_trials >= 1 and sr_ann > 0:
-            minbtl = stats.min_backtest_length_years(
-                max(fam.n_trials, 2), sr_ann, periods_per_year)
-            need = max(MIN_YEARS, minbtl)
+        elif fam.n_logged == 0:
+            # M-7: n_inherited alone (or nothing at all) carries no
+            # return series -- MinBTL cannot be evaluated at an assumed
+            # VIF = 1 (I-057).
+            criteria.append(Criterion(
+                crit_name, years_calendar, length_threshold, INSUFF,
+                "No logged trial carries a return series; the family's "
+                "serial dependence is unmeasurable and MinBTL cannot be "
+                "evaluated at an assumed VIF = 1 (I-057). N unknown or "
+                "unmeasurable ⇒ INSUFFICIENT-DATA, never PASS."))
+        elif not vif_res.eligible:
+            criteria.append(Criterion(
+                crit_name, years_calendar, length_threshold, INSUFF,
+                f"VIF unmeasurable or ineligible "
+                f"({vif_res.note or vif_res.source}); MinBTL cannot be "
+                "graded at an assumed VIF = 1 (I-057)."))
+        elif sr_ann > 0:
+            n_max_admissible_iid_val = stats.max_admissible_trials(
+                years_calendar, sr_ann, periods_per_year, vif=1.0)
+            n_max_admissible_serial_val = stats.max_admissible_trials(
+                years_calendar, sr_ann, periods_per_year, vif=vif_res.vif_gate)
+            n_max = min(n_max_admissible_iid_val, n_max_admissible_serial_val)  # M-5
+            minbtl_serial_years_val = stats.min_backtest_length_years_serial(
+                max(fam.n_trials, 2), sr_ann, periods_per_year, vif=vif_res.vif_gate)
+            need = max(MIN_YEARS, minbtl_serial_years_val)
             criteria.append(_crit(
-                "Backtest length (years)", years_calendar,
-                f">= max({MIN_YEARS:g}, MinBTL={minbtl:.2f})",
+                crit_name, years_calendar,
+                f">= max({MIN_YEARS:g}, MinBTL_serial="
+                f"{minbtl_serial_years_val:.2f})",
                 years_calendar >= need,
-                f"backtest_years (caller-reported): {backtest_years:.3f}"))
+                f"MinBTL(iid) = {minbtl_iid_years_val:.2f}y; VIF = "
+                f"{vif_res.vif_gate:.3f}; N_max = {n_max}"))
         else:
             criteria.append(_crit(
-                "Backtest length (years)", years_calendar,
-                f">= {MIN_YEARS:g}", years_calendar >= MIN_YEARS,
-                f"backtest_years (caller-reported): {backtest_years:.3f}"))
+                crit_name, years_calendar, f">= {MIN_YEARS:g}",
+                years_calendar >= MIN_YEARS,
+                f"backtest_years (caller-reported): {backtest_years:.3f}; "
+                "SR <= 0, MinBTL undefined (infinite)."))
 
     # -- holdout single-use (Ruling 001 E1-E3; fixes I-007) --------------
     # Family-scoped: `registry.events(kind=..., family=family)` — the
@@ -629,6 +779,19 @@ def evaluate_gate1(
         hac_rho_hat=hac.rho_hat,
         n_inherited=fam.n_inherited,
         n_logged=fam.n_logged,
+        minbtl_iid_years=minbtl_iid_years_val,
+        minbtl_serial_years=minbtl_serial_years_val,
+        vif_gate=vif_res.vif_gate,
+        vif_hac=vif_res.vif_hac,
+        vif_ar1=vif_res.vif_ar1,
+        vif_rho_hat=vif_res.rho_hat,
+        n_max_admissible_iid=n_max_admissible_iid_val,
+        n_max_admissible_serial=n_max_admissible_serial_val,
+        dsr_iid=dsr_iid_val,
+        dsr_serial=dsr_serial_val,
+        t_eff=t_eff_val,
+        vif_source=vif_res.source,
+        vif_n_series_used=vif_res.n_series_used,
     )
     registry.log_event("gate1_verdict", family, {
         "strategy": strategy, "overall": overall,
