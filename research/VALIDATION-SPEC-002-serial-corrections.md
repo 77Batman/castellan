@@ -826,11 +826,578 @@ is what keeps the ruling out of I-029(d) territory.*
 > MinBTL and the corrected DSR are the graded figures from the moment they merge. The i.i.d.
 > figures are reported permanently — not for a transition, but because **a report that hides
 > the size of its own correction cannot be audited.**
-## 6. What survives of RULING-004's numbers
-## 7. What this does to PREREG-002
-## 8. Mechanical vs. routed-back
-## 9. Leakage audit
-## 10. Relation to existing rulings
-## 11. Test inventory and the intended red state
-## 12. Issues filed
-## 13. Addressed to the Principal
+## 6. WHAT SURVIVES OF RULING-004's NUMBERS
+
+*Every number in Ruling 004 §2 was computed under the uncorrected treatment. This section
+goes through them one at a time. Two survive verbatim, one survives as an upper bound, one
+is inverted, and one conclusion collapses much faster than anyone has assumed.*
+
+### 6.1 §2.1 — "MinBTL is frequency-invariant" · **the algebra survives; the conclusion was false and is restored only by the correction**
+
+§2.1 proves `MinBTL_years = E[max Z_N]²/SR_ann²`, that `ppy` cancels exactly, and concludes:
+*"a family cannot buy length by sampling more finely, and a seat that proposes hourly bars
+to 'get more observations' should be shown this line"* [cited].
+
+**The algebra is correct and unchanged. The conclusion drawn from it was wrong, and it was
+wrong in the permissive direction.** `ppy` cancels, but `SR_ann` is **not** frequency-
+invariant when returns are autocorrelated — the `√ppy` annualization overstates the Sharpe at
+fine bars by exactly the factor the VIF removes. On one AR(1) series, ρ = 0.83, N = 86
+[measured — R-16]:
+
+| Bars | `SR_ann` | `MinBTL_iid` | `MinBTL_serial` |
+|---|---:|---:|---:|
+| daily | 2.97 | **0.70 y** | 7.36 y |
+| 5-bar | 1.55 | 2.54 y | 8.62 y |
+| 7-bar | 1.39 | 3.18 y | 7.63 y |
+
+**Under the uncorrected statistic, moving from weekly to daily bars cuts the required
+backtest length by 4.5× on the same data — the exact evasion §2.1 declared impossible.**
+Under the correction the requirement varies by 17%. §2.1's *conclusion* is therefore not
+something that survives the correction; it is something the correction **creates**. Filed as
+**I-061**, and it is the strongest single argument for this specification: the correction
+does not merely tighten a number, it restores a property the firm believed it already had.
+
+### 6.2 §2.2 — the `N` = 109 headline and the admissible-search table · **survives only as the `ρ = 0` row, and is now an upper bound**
+
+`MinBTL(109, 1.0) ≤ 6.571 < MinBTL(110, 1.0)` is reproduced exactly this session
+[measured]. **The arithmetic stands. Its status changes.**
+
+109 is `max_admissible_trials(6.571, 1.0, vif=1.0)` — the ceiling **under an assumption the
+firm has now formally acknowledged its own data violates**. Under M-5 the binding figure is
+`N_max = min(109, ceiling at ρ̂)`, and the second term is below the first at every ρ̂ > 0
+[measured — the ceiling falls below 109 at ρ̂ > 0.001]:
+
+| ρ̂ | VIF | `N_max` | vs. 109 |
+|---:|---:|---:|---|
+| 0.00 | 1.000 | **109** | — |
+| 0.02 | 1.041 | 95 | −13% |
+| 0.034 | 1.070 | 86 | −21% |
+| 0.05 | 1.105 | 77 | −29% |
+| 0.10 | 1.222 | 55 | −50% |
+| 0.20 | 1.500 | 31 | −72% |
+| 0.30 | 1.857 | 19 | −83% |
+| 0.493 | 2.945 | 8 | −93% |
+| 0.829 | 10.696 | 2 | −98% |
+
+[measured — reproduces SPEC-001 §4.2 exactly, which is what M-13(1) requires]
+
+**The whole of §2.2's table — every span × Sharpe cell — is now the `VIF = 1` row of a
+three-dimensional surface.** Ruling 004 §2.2's second reading ("on the firm's best data
+surface the entire admissible search space at the Gate 1 Sharpe floor is 109") must be read
+as **"is at most 109."** `[cited — the Principal's own qualification, adopted verbatim: "the
+ceiling is a function of an unmeasured quantity, below 109 at every ρ > 0."]`
+
+§2.2's **third** reading — that MinBTL is weak precisely against a large search that produced
+a high in-sample Sharpe, because the ceiling explodes with realized Sharpe, and that DSR is
+what bites there through σ_SR — **survives intact and unweakened.** The VIF multiplies
+MinBTL at every Sharpe, so it shifts the explosion without removing it. That finding is still
+correct and is still the reason ML-16 exists.
+
+### 6.3 §2.3 — the additive term 0.642 · **the number moves; the finding it supports survives verbatim**
+
+§2.3's closed form is `required SR_ann ≈ E[max Z_N]·σ_SR_ann + 0.642`, the additive term
+being `1.645·√(365/(T−1))` at `T = 2,398` [cited]. Under D-2 the `√(T−1)` becomes
+`√((T−1)/VIF)`, so **the additive term is multiplied by `√VIF` and nothing else is touched**
+[measured]:
+
+| ρ̂ | 0.0 | 0.1 | 0.2 | 0.3 | 0.5 | 0.829 |
+|---|---:|---:|---:|---:|---:|---:|
+| additive term | **0.642** | 0.710 | 0.786 | 0.875 | 1.112 | **2.099** |
+
+**Ruling 004 §2.3's entire table shifts upward by `0.642(√VIF − 1)`** — by 0.07 Sharpe at
+ρ̂ = 0.1, by 1.46 at ρ̂ = 0.829. Every cell in it is the `ρ = 0` row. The 2.099 figure quoted
+in the dispatch is confirmed [measured].
+
+**But §2.3's actual finding survives verbatim, and this is worth stating precisely because
+it is the load-bearing conclusion of the whole ruling.** §2.3 concludes that *"σ_SR is
+roughly three times more load-bearing than `N` over the ranges an ML family will actually
+occupy."* That comparison is between an `N`-sweep (0.56 Sharpe from N = 10 to 100,000 at
+σ_SR = 0.20) and a σ_SR-sweep (1.96 Sharpe from 0.20 to 0.80 at N = 1,000). **The serial
+correction multiplies only the additive term, which appears in neither difference — it
+cancels out of both sweeps exactly.** The 0.56-vs-1.96 comparison is unchanged at every VIF.
+**ML-16 and the dispersion sample rest on a finding the correction does not touch.**
+
+### 6.4 §2.4 — the `m ≥ 32` dispersion floor · **arithmetically unaffected, and now in direct collision with the ceiling**
+
+§2.4's relative-standard-error table (`1/√(2(m−1))`: 12.7% at m = 32) contains no serial
+content and is unaffected. **The collision is new and it is severe.**
+
+The dispersion sample is *mandatory* under ML-16 and costs 32 trials of the ceiling. At net
+SR 1.0 on 6.571 years:
+
+- **at ρ̂ > 0.197 the ceiling falls below 32** [measured — crossing at 0.1969], so **the
+  mandatory dispersion sample alone exceeds the entire admissible search space.** The family
+  is inadmissible before it searches once.
+- The full ML-3 obligation stack — dispersion 32, ±50% grid 25, seed ensemble 10,
+  walk-forward 10, falsifier legs 2–3, **total ≈ 79.5** [cited — Ruling 004 ML-3] — exceeds
+  the ceiling at **ρ̂ > 0.045** [measured].
+
+Neither number moves in response. **A family that cannot afford its own diagnostics has not
+discovered a problem with the diagnostics; it has discovered that this firm's data cannot
+support a fitted family at that persistence.** Filed as **I-060**.
+
+### 6.5 ML-3 — "roughly thirty configurations of genuine search" · **survives only at ρ̂ = 0, and reaches zero at ρ̂ ≈ 0.045**
+
+This is the conclusion the dispatch names and it is the one that collapses fastest
+[measured, obligations = 79.5]:
+
+| ρ̂ | `N_max` | Remaining for genuine search |
+|---:|---:|---:|
+| 0.00 | 109 | **≈ 30** *(Ruling 004's headline)* |
+| 0.02 | 95 | ≈ 16 |
+| 0.034 | 86 | ≈ 7 |
+| **0.045** | **80** | **0** |
+| 0.10 | 55 | **−25 — the obligations alone are inadmissible** |
+| 0.20 | 31 | −49 |
+
+> **"Roughly thirty configurations" is a `ρ̂ = 0` statement. The honest restatement is: at
+> most thirty, reaching zero at a net-return autocorrelation of 0.045 — a level far below
+> anything this firm has measured on any related series.**
+
+Ruling 004's own framing — *"Not thirty thousand. Not three hundred. Thirty."* — needs one
+more clause: **and quite possibly none.** ML-4's foreclosure of large-space ML methods is
+strengthened, not weakened; ML-3's *enforcement* blocker (no ML family may be sealed as
+Gate-1-eligible until `n_declared_fits` reaches the denominator) remains in force and now has
+a second, independent reason to remain in force.
+
+### 6.6 Summary table
+
+| Ruling 004 item | Status |
+|---|---|
+| §2.1 algebra (`ppy` cancels) | **Survives exactly** |
+| §2.1 conclusion (cannot buy length by sampling finely) | **Was false under the uncorrected statistic; created by this correction** (I-061) |
+| §2.2 `N` = 109 | **Survives as `max_admissible_trials(6.571, 1.0, vif=1.0)`; is an upper bound, not a budget** |
+| §2.2 full span × Sharpe table | **Survives as the `VIF = 1` slice** |
+| §2.2 third reading (MinBTL weak at high SR; DSR bites via σ_SR) | **Survives intact** |
+| §2.3 additive term 0.642 | **Becomes `0.642·√VIF`; 2.099 at ρ̂ = 0.829 confirmed** |
+| §2.3 finding (σ_SR ≈ 3× more load-bearing than `N`) | **Survives verbatim — the correction cancels out of both sweeps** |
+| §2.4 `m ≥ 32` and its RSE table | **Unaffected arithmetically; collides with the ceiling at ρ̂ > 0.197** (I-060) |
+| ML-3 "≈ 30 configurations" | **`ρ̂ = 0` statement only; reaches zero at ρ̂ ≈ 0.045** |
+| ML-4 foreclosure of large-space ML | **Strengthened** |
+| §2.2 reconciliation with PREREG-002 §10.4's 110 → 109 | **Unaffected; both are `VIF = 1` figures** |
+
+**No clause of Ruling 004 is amended by this document.** Five numbers in it are re-scoped as
+`VIF = 1` special cases, one conclusion (§2.1) is corrected, and the two findings the ruling
+is actually built on — §2.2's third reading and §2.3's σ_SR result — survive untouched.
+## 7. WHAT THIS DOES TO PREREG-002
+
+*I was explicitly not asked for a specification that lets this family survive. It probably
+does not. Here is the arithmetic, and here is the number the Principal's own stated trigger
+gets wrong.*
+
+### 7.1 The seal, in the form the Principal ruled it
+
+PREREG-002 §10.4 seals, per the ruling recorded at §0.2:
+
+```
+N_max  =  min( 109 ,  max_admissible_trials(span, SR_realized, ppy, vif = VIF_gate(ρ̂)) )
+```
+
+with `VIF_gate` measured by `stats.family_variance_inflation` (R-6) from
+`TrialRegistry.trial_returns(F-002)` and the graded candidate series, at every
+`evaluate_gate1` call (V-1). **`109` is not a constant in that expression that happens to
+bind; it is `max_admissible_trials(6.571, 1.0, vif=1.0)` and it is the first argument of a
+`min` that M-5 makes explicit in code precisely so the seal and the source agree** (M-4, M-5).
+
+The declared `N` = 86 [cited — PREREG-002 §10.4] is graded against `N_max` through Charter
+§4.4's length criterion, not against 109 directly.
+
+### 7.2 **The Principal's stated trigger is not tight enough. The binding threshold is ρ̂ ≈ 0.034, not 0.1.**
+
+> *"if ρ̂ measures ≥ 0.1, the admissible ceiling falls below the declared `N` = 86…"*
+
+That is true but it understates the tightness by roughly **3×**. The exact arithmetic
+[measured]:
+
+```
+MinBTL(86, 1.0)                    =  6.1359 years
+available span                     =  6.571 years          [cited — PREREG-002 §8]
+maximum admissible VIF             =  6.571 / 6.1359  =  1.0709
+binding AR(1) ρ̂                    =  (1.0709 − 1)/(1.0709 + 1)  =  0.0342
+```
+
+> **PREREG-002 survives Gate 1's length criterion only if the family's measured net-return
+> VIF is at most 1.071 — an AR(1) autocorrelation of 0.034. Not 0.1. At ρ̂ = 0.1 the ceiling
+> is 55 and the family is 31 trials over, not marginally over.**
+
+I am reporting this because a ruling's stated consequence will be relied on, and this one is
+loose in the permissive direction. **It moves the trigger toward tightening, which is within
+my authority to correct without a Principal act, and I am recording it rather than exercising
+it silently.** §13 addresses it to him.
+
+### 7.3 What survival would require — the four routes, priced
+
+The margin is 0.435 years (6.571 − 6.136), or 7.1% of the required length. Priced against
+`ρ̂` [measured]:
+
+| ρ̂ | VIF | Span needed at `N` = 86, SR 1.0 | Extra span | Or: net `SR_ann` needed on 6.571 y |
+|---:|---:|---:|---:|---:|
+| 0.034 | 1.071 | 6.568 y | — | 1.000 |
+| 0.05 | 1.105 | 6.782 y | +0.21 y | 1.016 |
+| 0.10 | 1.222 | 7.499 y | **+0.93 y** | 1.068 |
+| 0.15 | 1.353 | 8.302 y | +1.73 y | 1.124 |
+| 0.20 | 1.500 | 9.204 y | +2.63 y | 1.184 |
+| 0.30 | 1.857 | 11.395 y | +4.82 y | 1.317 |
+| 0.50 | 3.000 | 18.408 y | +11.84 y | 1.674 |
+
+**Reading the two right-hand columns is the whole of "what would have to be true to pass."**
+
+1. **More calendar span.** At ρ̂ = 0.10 the family needs **11 more months** of history. That
+   is the only honest remedy (V-5) and it is *reachable by waiting* — which makes ρ̂ ≤ ~0.15 a
+   PARK, not a kill. **Below ρ̂ ≈ 0.3 this family is a waiting problem, not a dead one.**
+2. **A higher realized net Sharpe.** At ρ̂ = 0.10 a realized net `SR_ann ≥ 1.068` clears it on
+   the span already held. **This is a genuine route and it is the one I expect a sponsor to
+   reach for — and it is trapped.** Raising the realized Sharpe by searching raises `N`,
+   which raises `MinBTL`, which raises the Sharpe required. It works only if the Sharpe rises
+   without new trials, i.e. on data not yet seen, which is route 1 wearing a hat (V-5).
+3. **Reduce `N` below 86.** Not available. Trials are spent and the registry is append-only.
+4. **A successor family.** Not available. `n_inherited` carries the count forward transitively
+   and `InheritedCountDoubleCountError` refuses the declaration that would hide it
+   [measured — `registry.py:294–308`].
+
+### 7.4 The verdict shape, pre-committed here so it is not negotiated later
+
+Pre-committing the verdict rule before the measurement exists is Ruling 001 §4.4's own
+device, and it is used here for the same reason.
+
+| Measured ρ̂ (or VIF) | `N_max` | Verdict on the length criterion, pre-committed |
+|---:|---:|---|
+| ρ̂ ≤ 0.034 (VIF ≤ 1.071) | ≥ 86 | **PASS**, if every other §4.4 criterion passes |
+| 0.034 < ρ̂ ≤ 0.15 | 41–85 | **FAIL on length.** Remedy is calendar span; ≤ 11 months at ρ̂ = 0.1. **PARK, re-evaluate on more history** |
+| 0.15 < ρ̂ ≤ 0.30 | 19–41 | **FAIL on length.** Remedy is 1.7–4.8 more years. PARK is nominal; this is a kill in practice |
+| ρ̂ > 0.30 | ≤ 19 | **FAIL on length. Kill.** The family spent 86 trials into a space that admits fewer than 19 |
+| \|ρ̂\| ≥ 0.97, or `n_logged` = 0, or R-9's exclusion rate | — | **INSUFFICIENT-DATA**, escalated to me. **Never PASS** |
+
+**None of these is a malfunction and I will not describe any of them as one.** The Principal
+has already ruled the frame: *"a PARK or kill on measured ρ is a terminal verdict under §1,
+not a malfunction."*
+
+### 7.5 The one thing that is genuinely unknown, stated so it is not read as a prediction
+
+**Nothing above is a forecast of PREREG-002's fate, because ρ̂ has never been measured for
+this family and cannot be until it logs trials.** The autocorrelations of 0.829 / 0.802 /
+0.493 are **funding** autocorrelations [cited — Ruling 003 §3.2], and R-15 forbids quoting
+them as ρ̂. A net series is `gross + carry − costs`; its price-return component is close to
+serially independent and its carry component is not, so the realized ρ̂ depends on the
+position-weighted mix and lies somewhere below the funding figure. **It could plausibly land
+anywhere in [0.0, 0.5].** Half that interval is a PASS-or-park and half is a kill.
+
+**The honest summary is the Principal's own sentence, and I have nothing to add to it: the
+ceiling is a function of an unmeasured quantity, below 109 at every ρ > 0.** What this
+document adds is that the quantity is now **measurable, measured automatically, and measured
+at the moment it grades** — and that PREREG-002's margin against it is **0.435 years, 7.1%,
+and an AR(1) ρ̂ of 0.034.**
+
+### 7.6 Effect on the seal itself
+
+**No binding field of PREREG-002 is amended by this document, and none needs to be.**
+`n_inherited`, `trial_budget` and the declared `N` = 86 are unchanged; the seal's
+`prereg_sha256` is untouched. What changes is that §10.4's ceiling is sealed **as a function
+rather than as the integer 109**, exactly as ruled — and a function whose every argument can
+only tighten (§4) is not an amendment to the sealed field set. **`verify_prereg(F-002)`
+returns `match = True` before and after this specification.**
+## 8. WHAT SEAT 9 IMPLEMENTS MECHANICALLY VS. WHAT IT ROUTES BACK
+
+The Charter gives Seat 9 "how to implement a stated requirement" and gives Validation "what
+counts as correct." Drawn clause by clause so it is not negotiated at implementation time.
+
+### 8.1 Mechanical — implement as written, no consultation
+
+| Clause | Why it is mechanical |
+|---|---|
+| **M-1 / D-1** | A prohibition and one pinned pure extraction. `test_dsr_02` is the pin. |
+| **M-2 / M-4 / M-5** | Closed-form arithmetic and a bisection with stated brackets. |
+| **M-3** | One squaring. Named as the most likely error in the document; `test_mbs_04` pins it. |
+| **M-6 / M-7** | One criterion rename, one substitution, one new INSUFFICIENT-DATA branch with the note given verbatim. |
+| **M-9 / M-11 / V-8 / V-9** | Statements of fact; nothing to build. |
+| **M-10** | Eight report fields plus a render block whose shape is given verbatim. **Not `Criterion` rows.** |
+| **D-2 / D-3a / D-8 / D-9** | Closed-form arithmetic, one guard, one rename, one reported diagnostic. |
+| **D-6** | One `min`. |
+| **R-1 / R-2 / R-3 / R-4** | A frozen dataclass and `max` of two stated terms against a stated floor. |
+| **R-5** | **Import** SPEC-001's E-6/E-7/E-9 guards. Do not re-implement, do not re-tune. |
+| **R-6 / R-7 / R-8** | `median`, then `max`, in the stated order, with the floor applied per series first. |
+| **R-10** | One new registry accessor, transitive in the same way `returns_matrix` already is. |
+| **R-11 / R-12 / R-13** | Stated branches with stated `source` strings and stated verdicts. |
+| **C-1 … C-3, C-5** | The guards are M-2, D-6, R-2, R-7 — already listed. Nothing further to build. |
+| **V-1 / V-2 / V-3** | Recompute per call; do not cache. |
+| **V-6** | One render string, given verbatim. |
+
+**Everything in `harness/castellan/` that this dispatch will touch, named exhaustively:**
+`stats.py` (one private extraction, four new functions, one new dataclass — no behavioural
+edit to any existing function), `registry.py` (one new accessor), `gates.py` (two criterion
+renames, one substitution, one new INSUFFICIENT-DATA branch, eight report fields, one render
+block). **No other file, and no Charter §4.2 constant anywhere.**
+
+### 8.2 Judgment calls — route back to me before implementing
+
+| Clause | The judgment, and the trigger that would make Seat 9 route it |
+|---|---|
+| **M-13** — the estimator choice `max(1.0, VIF_HAC, VIF_AR1)` | `[inferred]`, mine, argued in M-12/M-13 against the prewhitened alternative with measurements. **Route back if a real family's HAC and AR(1) terms diverge by more than 1.5× and the Gate verdict turns on the gap** (M-14). That is a finding about the family's label structure, not about the construction, and I want to see it. Do not switch estimators to make something pass. |
+| **M-14** — the `1.5` divergence-disclosure threshold | `[inferred]`. Route back rather than adjust. Adjusting it to suppress a disclosure is the Appendix B item 4 failure in its purest form. |
+| **D-4** — omitting the serial correction to `denom` | The omission is permissive by ≤ 2.5% of `z` where verdicts turn and up to 19% at VIF = 11 (measured, D-4). **Route back if a family clears the corrected length criterion, is materially non-normal, and lands within 3% of `DSR_MIN`.** I will compute option (b) by hand for that family, on the record. |
+| **R-9** — the `0.25` exclusion-rate refusal | `[inferred]`. **Route back if an honest family trips it**; the fix is the family's trial lengths, not the constant. |
+| **R-12** — `m_min = 8` | `[inferred]`, and deliberately not Ruling 004 §2.4's 32; the reasoning for the difference is in R-12. **Route back if any test or example the firm actually runs is made `"candidate-only"` by it.** Do not adjust it to change a `source` string. |
+| **R-16** — the 20% aggregation band in `test_mbs_12` | `[inferred]`, set from the measured 17% spread plus margin. **If a correct implementation misses it, escalate in writing before touching the test** — that is I-058's lesson and it binds Seat 9 and me equally. |
+| **R-10** — `trial_returns` semantics | I have specified transitive-across-the-chain, full length per series. **If making it transitive is expensive, route back — it is not optional, and I would rather rule on the cost than have it silently scoped to one family.** |
+| **V-6 / V-7** — Gate 0's intake ceiling and the non-binding planning ρ | The render string is mechanical. **The decision that the planning ρ grades nothing is mine and is not to be made binding by implementation convenience.** A sealed planning ρ would be a threshold set by the sponsor. |
+
+### 8.3 The standing term, restated because it binds me too
+
+Ruling 004 §11's term — *Seat 9 implements against pre-authored tests and escalates rather
+than amends* — binds the author as hard as the implementer. **§11.4 of this document is me
+discharging it against my own defective test, `test_hac_t17`, which Seat 9 correctly refused
+to touch and filed as I-070 instead.** That refusal is the term working, and it is the second
+time this sprint the escalation route has caught a Validation-authored test rather than an
+implementation (I-058 was the first).
+
+---
+
+## 9. LEAKAGE AUDIT
+
+Run in full, as required on every Validation output. There is no strategy under evaluation
+here; the audit's subject is this specification and its tests.
+
+| # | Question | Finding |
+|---|---|---|
+| 1 | Any field filtering on `event_time` rather than `knowledge_time`? | **N/A.** No field is queried, no data source touched. |
+| 2 | Restated fundamentals? | **N/A**, and unchanged: the firm has no PIT fundamentals and cross-sectional fundamental equity work still cannot pass Gate 1 [cited — `CONSTRAINTS.md`]. Nothing here alters that. |
+| 3 | Survivorship-contaminated universe? | **N/A.** No universe is constructed. |
+| 4 | Retroactive split/dividend adjustment? | **N/A.** No price series is read. A4 untouched. |
+| 5 | Same-bar fill? | **N/A.** The engine's `SameBarFillError` guard is not on any path this dispatch modifies. |
+| 6 | Standard k-fold where purged k-fold with a 1% embargo was required? | **Closed this sprint, not by this document.** I-051 is closed; `test_cv_purge_embargo.py` is 11/11 [measured, this session]. **This document consumes the same serial-dependence fact from the other side:** the embargo makes folds serially clean, and the VIF makes the *length requirement* serially honest. Both halves of the defect are now addressed. |
+| 7 | Parameter chosen at an argmax rather than a plateau centroid? | **No parameter is chosen from a surface here.** The constants I set (`m_min = 8`, the `0.25` exclusion rate, the `1.5` divergence threshold, the 20% aggregation band) are `[inferred]` judgments stated **in advance of any family's result**, not selections off a computed surface. `L` is selected by SPEC-001 E-5's published mechanical rule via a **one-sided `max`** a caller can raise and never lower — the structural opposite of an argmax selection. **`VIF_gate` is itself a `max`, not an argmax: it selects the most conservative of two estimators, not the one that produces the best outcome.** |
+| 8 | Was the holdout consulted, in any form, before this evaluation? | **No.** `HoldoutVault.open_once` was not invoked. No vault under `book/vaults/` was read, listed, or decrypted. No passphrase was requested, supplied, or held. This seat holds no holdout plaintext. **Holdout status: LOCKED, unopened, unretired.** |
+
+**Registry state, before and after this dispatch [measured]:** `book/registry.db` — **0
+hypotheses, 0 trials, 1 event.** No `open_hypothesis`, no `run_backtest`, no trial logged.
+Every registry used by the new tests is `tmp_path`-scoped, as every existing test's is.
+
+**A2 compliance.** No path around `run_backtest` is created. Both items change how a number
+the engine already produced is *evaluated*; neither produces a number; neither adds an input
+the engine does not already carry. **R-10's `trial_returns` reads trials the engine wrote and
+creates no route to write one.**
+
+---
+
+## 10. RELATION TO EXISTING RULINGS, PRE-REGISTRATIONS AND AMENDMENTS
+
+Checked item by item.
+
+| Document | Interaction |
+|---|---|
+| **Charter §4.2 constants** | **None moved.** `DSR_MIN = 0.95`, `T_STAT_HURDLE = 3.0`, `MIN_YEARS = 4`, `EMBARGO_FRACTION`, `CSCV_PARTITIONS_S` imported, never redefined, and none appears as a parameter. |
+| **Charter §4.4, "≥ MinBTL(N)"** | **Now actually enforces what it says.** The criterion text is unchanged; the function evaluated at Gate 1 now takes a measured ρ̂ where it took a silent assumption of zero. |
+| **Charter §4.4, DSR ≥ 0.95** | **Threshold unchanged; the statistic compared against it now measures what it claimed to measure.** Precedent and phrasing: the Principal's I-050 ruling. |
+| **Charter §4.5 (Gate 2)** | **D-10.** "DSR recomputed with final N" uses the serial construction at the Gate 2 VIF. Reintroducing the i.i.d. DSR at the point real capital is authorized would be the worst placement of the defect. |
+| **Amendment A1** | **Strengthened.** `evaluate_gate1` remains the only source of a Validation Report and now embeds eight further fields that cannot be narrated. |
+| **Amendment A2 / A4** | **No path around either created** (§9). |
+| **Ruling 001 §3.3 F4 / `predecessor_family`** | **Load-bearing here and not amended.** It is what closes V-5's successor-family escape from a spent `N`. |
+| **Ruling 001 §4.4** (pre-committed verdict rule) | **Precedent followed.** §7.4 pre-commits PREREG-002's length verdict by measured ρ̂ band, before the measurement exists, for the reason §4.4 gives. |
+| **Ruling 002 R1** (required HISTORICAL sentence) | **Precedent followed, not amended.** M-10's and V-6's required sentences are built on R1's logic: a report that omits the limit of its own control will be read as though the control had none. |
+| **Ruling 003 §3.2** (funding autocorrelations) | **Cited as evidence that ρ > 0 in this firm's data; explicitly NOT used as ρ̂** (R-15). |
+| **Ruling 003 / I-037** (bisection-artifact repair) | **Extended.** M-4's bisection over `N` is monotone by construction because `MinBTL` is monotone in `N`; the fixed-lag discipline E-13 established is inherited wherever a VIF enters a sweep. |
+| **Ruling 004 §2.1 – §2.4, ML-3** | **Re-scoped, not amended — §6.** One conclusion (§2.1) corrected; two findings survive verbatim. |
+| **Ruling 004 §11 standing term** | **Discharged against my own test** — §8.3, §11.4. |
+| **Ruling 004 ML-16 / §2.4** | **Not amended, and now in collision with the ceiling at ρ̂ > 0.197** (I-060). Neither number moves in response. |
+| **Ruling 004 ML-26** (overlapping labels, effective sample size) | **Partially mechanised.** ML-26 asked for an effective-sample-size treatment for overlapping labels; `T_eff = (T−1)/VIF + 1` (D-9) is that quantity, computed rather than asserted, and the E-5 lag floor at `label_span − 1` is what makes the VIF see the overlap. |
+| **VALIDATION-SPEC-001 (I-050, I-051)** | **Hard dependency, not amendment — M-0.** This document consumes E-2, E-3, E-5, E-6, E-7, E-8, E-9 and re-implements none of them. I-051 is closed; I-050 closes when `test_hac_t17` greens (§11.4). |
+| **PREREG-002** | **No binding field amended; `prereg_sha256` untouched; `verify_prereg` returns `match = True` before and after** (§7.6). §10.4's ceiling is sealed as a function per the Principal's ruling. |
+| **I-052 / I-053** | **Not touched, not blocked, not resolved.** `label_span` reaches R-2 through SPEC-001 E-11's keyword, deliberately not through a registry field, for E-11's stated reason. When I-052 lands the keyword becomes a fallback — a later dispatch, not specified here. |
+| **I-029(d)** | **Explicitly distinguished — C-5.** The distinction is mechanical, not rhetorical. |
+
+**Nothing in this specification contradicts any existing ruling or pre-registration.** One
+conclusion within a prior Validation artifact of my own is corrected (Ruling 004 §2.1, filed
+as I-061) and one of my own acceptance tests is repaired (`test_hac_t17`, §11.4).
+## 11. TEST INVENTORY AND THE INTENDED RED STATE
+
+### 11.1 Counts
+
+**Baseline at the start of this dispatch: 1 failed, 187 passed of 188** [measured] — Seat 9
+having implemented SPEC-001 in full, with the single red test being mine (§11.4).
+
+**After this dispatch: 42 failed, 192 passed of 234** [measured]. **46 tests added, all in
+new files.**
+
+| File | Tests | Red today | Green today | Drives |
+|---|---:|---:|---:|---|
+| `harness/tests/test_minbtl_serial.py` | 13 | 11 | 2 | M-1 … M-14, R-15, R-16 |
+| `harness/tests/test_vif_estimator.py` | 16 | 15 | 1 | R-1 … R-16 |
+| `harness/tests/test_dsr_serial.py` | 10 | 9 | 1 | D-1 … D-10 |
+| `harness/tests/test_monotone_conservatism.py` | 7 | 7 | 0 | **C-1 … C-6** |
+| **Total added** | **46** | **42** | **4** | |
+
+**The four green-today tests are guards, not drivers, and must still pass afterwards:**
+
+| Test | Guards |
+|---|---|
+| `test_mbs_05_min_backtest_length_years_is_not_edited` | M-1 — the correction must not mutate the existing function |
+| `test_mbs_13_prereg002_binding_rho_is_0034_not_0100` | §7.2 — pins the arithmetic that corrects the Principal's stated trigger, so it cannot drift back |
+| `test_vif_16_returns_matrix_truncation_is_the_defect_r10_avoids` | I-062 — documents the pre-existing truncation defect deliberately, so R-10's reason survives |
+| `test_dsr_02_published_dsr_is_unchanged_by_the_extraction` | D-1 — pins `deflated_sharpe_ratio` against an independent restatement across 200 randomized inputs, so the authorized extraction cannot change behaviour |
+
+### 11.2 The floor
+
+**The floor rises from 187 to 188 immediately (§11.4 closes the outstanding red), and to
+234 once this specification is implemented.** `188 + 46 = 234`. **No existing test may be
+deleted, weakened, or re-scoped.** The only edit to an existing file authorized by this
+document is the `test_hac_t17` fixture and bracket repair in §11.4, which adds assertions and
+removes none.
+
+**Reproduction:**
+
+```
+python3 -m pytest harness/tests -q
+# expect: 42 failed, 192 passed
+
+python3 -m pytest harness/tests/test_minbtl_serial.py harness/tests/test_vif_estimator.py \
+                  harness/tests/test_dsr_serial.py harness/tests/test_monotone_conservatism.py -q
+# expect: 42 failed, 4 passed
+```
+
+Every missing capability is probed through a helper that calls `pytest.fail` naming the
+clause it waits on, so each failure states its own clause rather than producing an
+import-time collection error. All four files are importable today and stay importable.
+
+### 11.3 Partition — the files are independently closeable
+
+| File green | Consequence |
+|---|---|
+| `test_minbtl_serial.py` + `test_vif_estimator.py` | **I-057 Item 1 (MinBTL) closes** |
+| `test_dsr_serial.py` | **I-057 Item 2 (DSR) closes** |
+| `test_monotone_conservatism.py` | **Neither closes without it.** C-4 is the property that makes the Principal's ruling sound; a MinBTL correction that ships without it has shipped the number and not the guarantee |
+| `test_vif_estimator.py` alone | **I-062 does not close** — R-10 routes the VIF around the truncation defect; it does not repair PBO |
+
+**`test_monotone_conservatism.py` is not partitionable and not optional.** If Seat 9's
+dispatch greens the arithmetic and not the property tests, **I-057 stays open** and I will say
+so.
+
+### 11.4 Corrections to my own pre-authored tests — the standing term, discharged twice
+
+Ruling 004 §11's term is that Seat 9 implements against pre-authored tests and **escalates
+rather than amends**. It binds the author as hard as the implementer. It fired twice this
+dispatch, once in each direction, and both are recorded here rather than fixed silently.
+
+**(a) `test_hac_t17` — escalated by Seat 9 as I-070, repaired by me. I-070 CLOSES.**
+
+The defect was mine. The draft reused `test_hac_t16`'s `mu = 0.0035, sd = 0.01` fixture
+against the **production default bracket** `(0, 2000)` bps/yr. A 2000 bps/yr shift is
+`5.48e-4` per bar against a mean of `3.5e-3`: it moves the corrected `t` from 6.488 to 5.788
+and the uncorrected `t` from 18.870 to 16.835 [measured]. **Neither crosses 3.0**, so
+`carry_breakeven_bps_annual` returned its bracket ceiling through the documented
+`t_hi >= hurdle → return hi` branch and the assertion compared 5.788 against 3.0.
+**Seat 9 is right that no correct estimator could have satisfied it.**
+
+Repaired with two changes, and **the second is the actual repair**:
+
+1. `sd = 0.002, mu = 0.0004, seed = 6` puts both breakevens strictly inside the bracket —
+   corrected **686** bps/yr, uncorrected **1808** [measured].
+2. An explicit `bracket=(0, 3000)` **plus interiority assertions on both returned values.**
+   A bisection that returns a bracket endpoint has measured nothing, and **the absence of
+   that check is what let the defect through silently.** The fixture change makes this test
+   pass; the interiority assertion is what stops the next one failing the same way.
+
+`test_tstat_hac.py` is now **17/17** [measured]. **I-070 closes, and I-050 closes with it.**
+
+**(b) `test_vif_04` — caught by me, pre-implementation, at zero cost.**
+
+The draft asserted `vif_hac > 1.5` on a constructed `x_t = e_t + e_{t−2}` series (true
+VIF = 2.0) at `label_span = 3`. **A correct implementation recovers 1.4256 there** [measured
+against a reference implementation of R-2 built this session]. At `label_span = 3` the E-5
+lag floor is 2 and the Bartlett weight on the lag-2 autocovariance is only `1 − 2/4 = 0.5`;
+the kernel cannot reach 2.0 at that truncation. **This is I-058's defect exactly, and the
+dangerous branch is the same one:** the cheapest route to green would have been for Seat 9 to
+abandon the Bartlett kernel. Corrected pre-implementation to `label_span = 8`, where a
+correct implementation recovers **1.6847** [measured], and the reason is written into the
+test's own docstring so it cannot be reverted by someone re-reading only the clause.
+
+**The process commitment I made at I-058 — that this seat numerically verifies every
+pre-authored tolerance in the session that authors it — was honoured.** Every tolerance in all
+46 tests was checked against a reference implementation of R-2/R-6 and against reference
+constructions of M-2, M-4, D-2 before this document was finalized; the two property tests
+were additionally verified to have **zero violations across 2,000 draws each** and to run in
+4.1 s and 2.4 s [measured]. **One tolerance failed that check. It was the one above.**
+## 12. ISSUES FILED
+
+Numbered from the range allocated to this seat, **I-060 – I-069**. Five taken; five unspent.
+
+| # | Severity | Subject | Interrupt? |
+|---|---|---|---|
+| **I-060** | **HIGH** | Ruling 004 ML-16's mandatory 32-trial dispersion sample and the corrected MinBTL ceiling are **mutually unsatisfiable at ρ̂ > 0.197**; the full ML-3 obligation stack (≈79.5 trials) exceeds the ceiling at **ρ̂ > 0.045**, so "roughly thirty configurations of genuine search" reaches **zero** there. Neither number moves in response. | **Yes — §6.4, §6.5** |
+| **I-061** | MEDIUM | Ruling 004 §2.1's conclusion that a family "cannot buy length by sampling more finely" is **false under the uncorrected statistic** and in the permissive direction: on one ρ = 0.83 series the required length is **0.70 y at daily bars against 3.18 y at weekly**, a 4.5× understatement [measured]. The correction restores the property the firm believed it already had. | No |
+| **I-062** | MEDIUM | `TrialRegistry.returns_matrix` truncates every column to the shortest common length, so **one 20-bar logged trial collapses the entire family's return matrix to 20 bars** — silently degrading PBO/CSCV, a Charter §4.4 graded criterion. R-10 routes the VIF around it via a new `trial_returns` accessor; **PBO is left unrepaired by this document.** | No |
+| **I-063** | MEDIUM | Gate 0's intake ceiling (Ruling 004 ML-3) is **necessarily** computed at `VIF = 1`, because no trial has a return series at intake. A family can therefore be ADMITTED against a ceiling it cannot meet at Gate 1. **Structural and not closeable**; the only remedy is disclosure, specified as a mandatory render string in V-6. | No |
+| **I-064** | LOW | The Principal's stated I-057 consequence — *"if ρ̂ measures ≥ 0.1, the admissible ceiling falls below the declared `N` = 86"* — **understates the tightness by ~3×.** The binding threshold is **ρ̂ ≈ 0.034** (max admissible VIF 1.0709) [measured]. Corrected in the tightening direction, which is within this seat's authority; recorded rather than exercised silently. | **Addressed to the Principal, §13** |
+
+**I-070 is Seat 9's and closes on this dispatch** (§11.4a) — recorded here because the repair
+is mine, not because the number is.
+
+**No numbering collision this dispatch.** The allocated range worked: the high-water mark was
+I-058 at authoring, Seat 9 took I-070 from its own range concurrently, and neither seat had to
+re-read the log before appending. **This is the sixth dispatch of the sprint and the first
+without a collision** — the structural fix is doing what I-054 said was needed, and I record
+that as evidence for keeping it.
+
+---
+
+## 13. ADDRESSED TO THE PRINCIPAL
+
+Three items. **None of them requires an act from you; two of them you should know before you
+next rely on a number, and the third is a request for nothing.**
+
+### 13.1 Your stated trigger on I-057 is loose, and I have tightened it — ρ̂ ≈ 0.034, not 0.1
+
+You ruled: *"if ρ̂ measures ≥ 0.1, the admissible ceiling falls below the declared `N` = 86."*
+
+That is true, but it is **not the threshold**. The arithmetic [measured, and pinned by
+`test_mbs_13`]:
+
+```
+MinBTL(86, 1.0) = 6.1359 y   ·   available span = 6.571 y
+maximum admissible VIF = 1.0709   ⇒   binding AR(1) ρ̂ = 0.0342
+```
+
+**PREREG-002's margin is 0.435 years, 7.1%, and an AR(1) ρ̂ of 0.034.** At your stated 0.1 the
+ceiling is 55 and the family is **31 trials over, not marginally over.** I have written 0.034
+into the specification and pinned it with a test. This moves the trigger toward tightening,
+which the I-050 asymmetry places within my authority, so **I have made the change rather than
+requesting it** — but a ruling's stated consequence gets relied on, and this one was loose in
+the permissive direction. You should know the number you ruled with is not the number that
+binds.
+
+### 13.2 This specification probably kills the firm's only family, and I specified it anyway
+
+You said you were not asking for a specification that lets PREREG-002 survive. It does not
+obviously let it survive. **The honest position is that nobody knows, because ρ̂ has never been
+measured for this family and cannot be until it logs trials** — and R-15 forbids substituting
+the 0.829 / 0.802 / 0.493 funding figures for it, because those are the autocorrelation of an
+*input*, not of a net return series.
+
+What I can tell you is the shape of the outcome, pre-committed at §7.4 before the measurement
+exists:
+
+- **ρ̂ ≤ 0.034** → the length criterion passes.
+- **0.034 < ρ̂ ≤ 0.15** → fails on length; the remedy is **calendar span, ≤ 11 months at
+  ρ̂ = 0.1**. This is a **PARK**, not a kill.
+- **ρ̂ > 0.30** → fails on length; the remedy is 4.8+ more years. **Kill.**
+
+**Half the plausible interval for ρ̂ is a park and half is a kill.** I want to be explicit that
+I have not built in any margin to avoid the second outcome, and that where I had a genuine
+choice of estimator (M-12, M-13) I chose the one that reproduces the numbers you ruled on
+rather than the one most favourable to the family — and recorded the measurements for both.
+
+### 13.3 Two floors that only you can remove, and I am not asking you to
+
+R-3 (the firm takes no credit for negative autocorrelation) and D-6 (`DSR_gate = min(serial,
+iid)`) are **deliberate one-sided biases**. Each has a case where it is arguably too
+conservative: a genuinely mean-reverting family gets no benefit from that fact.
+
+Removing either is an estimator change that **loosens**, which your I-050 asymmetry places
+outside my authority. **I do not recommend removing them and I am not requesting it.** They
+are named here only so that a future seat proposing to remove one cannot present it as a
+technical correction — **it is a §2 threshold matter and it interrupts you.**
+
+---
+
+*End of specification. `DSR_MIN = 0.95` has not moved. `T_STAT_HURDLE = 3.0` has not moved.
+`MIN_YEARS = 4` has not moved. The registry reads 0 hypotheses / 0 trials. The holdout is
+LOCKED, unopened, unretired. — Head of Quantitative Validation, 2026-08-04.*

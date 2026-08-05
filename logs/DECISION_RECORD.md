@@ -1818,7 +1818,7 @@ a failure. Recorded now, not at sprint close.
 **7 · §5 dead-man: 6 invocations remain** since the last Principal checkpoint, which this
 ruling resets.
 
-**Review date:** on SPEC-002's completion.
+**Review date:** superseded by S2-D-017.
 
 ---
 
@@ -1882,3 +1882,94 @@ for PREREG-001 and the pre-registration template; **Rider C**'s casebook harvest
 close. All three are doc work and none is dispatchable into Seat 9 while Rider B holds it.
 
 **Review date:** on SPEC-002's completion.
+
+---
+
+## S2-D-017 · 2026-08-06 · SPEC-002 complete · I-050 CLOSES · §4 INTERRUPTS — I-060 and §13
+
+**1 · §4 HARD INTERRUPT — I-060, HIGH.** *"Ruling 004's mandatory diagnostics and the
+corrected MinBTL ceiling are mutually unsatisfiable"* above a threshold. Validation's finding
+as filed: **ML-3's obligation stack exceeds the ceiling at ρ̂ > 0.045**, at which point
+RULING-004's *"roughly thirty configurations of genuine search"* **reaches zero**; and the
+ML-16 dispersion sample **alone** is inadmissible above ρ̂ = 0.197. The firm's ML frontier,
+described one day ago as small-search, may be empty on the data it holds.
+
+**2 · §4 HARD INTERRUPT — §13, three findings addressed to the Principal.** Relayed
+unbatched and unsoftened per §8.
+
+**(a) Validation tightened the Principal's own number, and says so.** *"Your I-057 trigger is
+loose by ~3× and I tightened it under the I-050 asymmetry rather than requesting an act."*
+The Principal stated at S2-D-013 that ρ̂ ≥ 0.1 breaks the family. **Validation's clauses put
+the binding threshold at ρ̂ ≈ 0.034.** Under the asymmetry the Principal himself wrote into
+§8 — corrections *toward* a stated assumption are Validation's and need no Principal act —
+this is exactly correct procedure. **It is recorded prominently anyway, because a seat
+silently tightening a Principal's stated figure by 3× is precisely the class of act that
+should never pass unremarked, even when it is authorized.**
+
+**(b)** *"This specification probably kills the firm's only family and I built in no margin
+to avoid that"* — choosing at **M-12/M-13** the estimator that **reproduces the Principal's
+ruled numbers over the one more favourable to the family.** Presented with the choice named
+and the discarded alternative identified.
+
+**(c)** R-3/D-6 are one-sided floors **only the Principal can remove**, which Validation is
+**not** asking him to.
+
+**3 · I-050 CLOSES. I-070 CLOSES.** `test_tstat_hac.py` **17/17**, verified independently.
+The defect in `test_hac_t17` was Validation's own draft — `mu=0.0035, sd=0.01` against a
+`(0, 2000)` bps/yr bracket, moving the corrected `t` only 6.488 → 5.788, *"no correct
+estimator could satisfy it, exactly as Seat 9 found."* **The repair is not the fixture.** The
+seat added **interiority assertions on both returned values**, on the reasoning that *a
+bisection returning a bracket endpoint has measured nothing, and its absence is what hid the
+defect.* It also caught a **second** defective tolerance of its own (`test_vif_04` asserting
+`vif_hac > 1.5` where correct code gives 1.4256).
+
+**Three of the firm's own controls have now been found defective by the seat that wrote
+them**, pre-implementation, in two days.
+
+**4 · Verdict bands pre-committed before the measurement exists** — §7.4:
+
+| ρ̂ | Outcome |
+|---|---|
+| ≤ 0.034 | passes |
+| 0.034 – 0.15 | **FAIL-on-length**, repairable by ≤ 11 months more history → **PARK** |
+| > 0.30 | **kill** |
+
+**And the escape route is closed by construction:** *"the Sharpe route is trapped — raising
+realized Sharpe by searching raises `N`, which raises the requirement."* This is the third
+time this sprint a gaming path has been shut by making the conservative direction the only
+structurally available one.
+
+**5 · RULING-004 partially falsified by its own author.** §2.1's frequency-invariance
+conclusion was **false** under the uncorrected statistic — **4.5× permissive** (I-061). `N` =
+109 and §2.3's 0.642 survive only as the **`VIF = 1` slice**. §2.4's `m ≥ 32` collides with
+the ceiling. Two findings survive verbatim, including the σ_SR-vs-`N` result. **22 documents
+checked for contradiction; none found.**
+
+**6 · Verified independently of the seat's report** [measured]: suite **42 failed, 192 passed
+= 234**, red by design; `harness/castellan/` untouched; registry **0 hypotheses / 0 trials**;
+`book/vaults/` holds only `.gitkeep`. On the leakage audit — Validation's claim is precisely
+scoped and the CIO restates it precisely: *`HoldoutVault.open_once` was not invoked, no vault
+read, listed or decrypted, no passphrase requested or held.* **"LOCKED, unopened, unretired"
+describes the seat's conduct, not the existence of a sealed payload** — under P-1 no payload
+exists before Gate 1, and with 0 hypotheses no holdout specification has been sealed either.
+`prereg_sha256` untouched; `verify_prereg` returns `match=True` before and after.
+
+**7 · The numbering fix worked.** *"First dispatch this sprint with no collision."* Five of
+ten allocated numbers spent, none outside range.
+
+**8 · Floors.** SPEC-001's floor is now fully realized at **188** with I-070 closed. **234
+after SPEC-002 is implemented.** `test_monotone_conservatism.py` is flagged by its author as
+**not partitionable — I-057 stays open without it**, so the seven tests in that file are the
+gate on I-057's closure, not an optional extra.
+
+**9 · Nothing Opus dispatched, and the reason is the interrupt, not the budget.** The
+Director's §10.4 revision came unblocked when SPEC-002 landed — **but §13(a) changes the
+number the Director must write into it**, from the Principal's 0.1 to Validation's 0.034.
+Dispatching now would spend a scarce unit writing a threshold the Principal has not yet seen
+contradicted. Same thread as the interrupt; it queues. **SPEC-002's implementation (42 red
+tests) is Sonnet and is queued behind Rider B**, which holds Seat 9.
+
+**10 · Budget.** **12 of 30 · 8 of 12 Opus.** DA reserve 1 sealed. Freely allocable Opus:
+**3, against 2 committed** (Director §10.4, C2). §5 dead-man: **5 invocations remain.**
+
+**Review date:** on the Principal's rulings on I-060 and §13.

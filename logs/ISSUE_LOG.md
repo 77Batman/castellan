@@ -2181,3 +2181,198 @@ implementer's, per the standing term.
 
 **Resolution:** open. Left red by design; not touched.
 **Pattern tag:** `pre-authored-test-unverified` · `test-fixture-scale-mismatch`
+
+---
+
+## I-060 · 2026-08-04 · Ruling 004's mandatory diagnostics and the corrected MinBTL ceiling are mutually unsatisfiable above rho_hat = 0.045 · Severity: HIGH · Owner: quant-validation
+
+*Filed under `research/VALIDATION-SPEC-002-serial-corrections.md` §6.4–§6.5.*
+
+**Description [measured].** Ruling 004 ML-16 makes a 32-trial dispersion sample mandatory,
+and ML-3's full obligation stack (dispersion 32 · ±50% grid 25 · seed ensemble 10 ·
+walk-forward 10 · falsifier legs 2–3) totals **≈79.5 trials** before a single configuration
+of genuine search is spent [cited — Ruling 004 ML-3]. Against the corrected ceiling
+`N_max(6.571 y, SR 1.0, VIF)`:
+
+| rho_hat | N_max | Remaining for genuine search |
+|---:|---:|---:|
+| 0.00 | 109 | ≈ 30 *(Ruling 004's headline)* |
+| 0.034 | 86 | ≈ 7 |
+| **0.045** | **80** | **0** |
+| 0.10 | 55 | **−25 — the obligations alone are inadmissible** |
+| 0.197 | 31 | −49 — **the dispersion sample alone exceeds the ceiling** |
+
+**Two crossings, both measured.** The ML-3 genuine-search budget reaches zero at
+**rho_hat > 0.045**; the mandatory dispersion sample alone becomes inadmissible at
+**rho_hat > 0.197**.
+
+**Why HIGH.** Ruling 004's headline conclusion — *"a fitted family may search roughly thirty
+configurations"* — is a `rho = 0` statement, and rho = 0 is the assumption I-057 exists to
+remove. The honest restatement is **at most thirty, reaching zero at a net-return
+autocorrelation of 0.045**, a level far below anything this firm has measured on any related
+series. A sponsor planning an ML family against "thirty" is planning against the loosest
+version of a constraint that is now measured.
+
+**Neither number moves in response, and that is the finding.** ML-16's 32 is set by the
+relative standard error of sigma_SR [cited — Ruling 004 §2.4] and has no serial content;
+the ceiling is set by measured persistence. **A family that cannot afford its own diagnostics
+has not discovered a problem with the diagnostics — it has discovered that this firm's data
+cannot support a fitted family at that persistence.**
+
+**Repair.** None available and none attempted. This is a disclosure and a planning
+constraint, not a defect. It is binding on every future ML intake under ML-3.
+
+**Resolution:** open.
+**Pattern tag:** `constraint-collision-under-corrected-assumption` · `headline-number-was-a-special-case`
+
+---
+
+## I-061 · 2026-08-04 · Ruling 004 §2.1's "cannot buy length by sampling more finely" is false under the uncorrected statistic, by 4.5x · Severity: MEDIUM · Owner: quant-validation
+
+*Filed under `research/VALIDATION-SPEC-002-serial-corrections.md` §6.1. Filed by Validation
+against its own prior artifact.*
+
+**Description [measured].** Ruling 004 §2.1 proves `MinBTL_years = E[max Z_N]²/SR_ann²`, that
+`ppy` cancels exactly, and concludes: *"a family cannot buy length by sampling more finely,
+and a seat that proposes hourly bars to 'get more observations' should be shown this line"*
+[cited].
+
+**The algebra is correct. The conclusion drawn from it is false whenever returns are
+autocorrelated, and it fails permissively.** `ppy` cancels, but `SR_ann` is not
+frequency-invariant under serial dependence — the `sqrt(ppy)` annualization overstates the
+Sharpe at fine bars by exactly the factor the variance inflation removes. On one AR(1)
+series, rho = 0.83, T = 2,398, N = 86:
+
+| Bars | SR_ann | MinBTL (uncorrected) | MinBTL (serial-corrected) |
+|---|---:|---:|---:|
+| daily | 2.97 | **0.70 y** | 7.36 y |
+| 5-bar | 1.55 | 2.54 y | 8.62 y |
+| 7-bar | 1.39 | 3.18 y | 7.63 y |
+
+**Under the uncorrected statistic, moving from weekly to daily bars cuts the required backtest
+length by 4.5x on the same data — the exact evasion §2.1 declared impossible.** Under the
+correction the requirement varies by 17%; the pattern holds across rho in {0.3, 0.5, 0.83}
+and three seeds each.
+
+**Why MEDIUM and not HIGH.** No family has exploited it, because the firm holds zero trials.
+It is the *reasoning* that was wrong, not a number in a graded criterion — but the reasoning
+was cited as a defence against a specific evasion, and a defence that does not work is worse
+than no defence, because a seat proposing hourly bars would have been shown a line that does
+not hold.
+
+**Repair.** `VALIDATION-SPEC-002` R-16 specifies the corrected construction and
+`test_mbs_12_corrected_minbtl_is_approximately_frequency_invariant` asserts a 20% band across
+1/5/7-bar aggregation, plus the strictly-stronger condition that the corrected spread is
+below the uncorrected one. **§2.1's conclusion is not something that survives the correction;
+it is something the correction creates.**
+
+**Resolution:** open — closes when `test_mbs_12` is green.
+**Pattern tag:** `correct-algebra-wrong-conclusion` · `defence-that-did-not-hold`
+
+---
+
+## I-062 · 2026-08-04 · `returns_matrix` truncates every trial series to the shortest common length, silently degrading PBO/CSCV · Severity: MEDIUM · Owner: head-of-data-infra
+
+*Filed under `research/VALIDATION-SPEC-002-serial-corrections.md` R-10. Discovered while
+specifying the family-level rho_hat estimator; not repaired by that document.*
+
+**Description [measured].** `TrialRegistry.returns_matrix` truncates all columns to the
+shortest common length from the end [measured — `registry.py:555–577`]. **One 20-bar logged
+trial collapses the entire family's return matrix to 20 bars**, verified:
+`registry.returns_matrix("F")` returns shape `(20, 3)` for a family with 2000-, 1500- and
+20-bar trials.
+
+**Consequence, in two places.**
+
+1. **PBO/CSCV** consumes this matrix [measured — `gates.py:275–277`] and is a Charter §4.4
+   graded criterion. `probability_backtest_overfitting` raises below `S*2 = 32` bars, so a
+   short trial converts PBO to INSUFFICIENT-DATA rather than a wrong number — **not
+   permissive, but a Charter criterion that any single trial can disable.**
+2. **The family-level variance inflation factor** would have consumed it. Every series would
+   drop below the `T >= 32` eligibility floor, the family term would evaporate, and the graded
+   VIF would fall back to the candidate alone. **That is a one-line attack on the clause that
+   makes the trial ceiling non-gameable**, and `VALIDATION-SPEC-002` R-10 routes around it by
+   requiring a new `TrialRegistry.trial_returns(family)` accessor returning each series at its
+   own full length.
+
+**Repair.** R-10's accessor is specified and `test_vif_15` drives it.
+`test_vif_16_returns_matrix_truncation_is_the_defect_r10_avoids` is a deliberate green guard
+documenting the existing behaviour so the reason for R-10 cannot be lost. **PBO's own exposure
+is NOT repaired by that work and this issue stays open for it.**
+
+**Resolution:** open (PBO leg).
+**Pattern tag:** `shared-accessor-with-a-silent-truncation` · `one-trial-can-disable-a-criterion`
+
+---
+
+## I-063 · 2026-08-04 · Gate 0's intake ceiling is necessarily computed at the permissive assumption, and cannot be otherwise · Severity: MEDIUM · Owner: quant-validation
+
+*Filed under `research/VALIDATION-SPEC-002-serial-corrections.md` V-6.*
+
+**Description.** Ruling 004 ML-3 runs an admissible-`N` ceiling check at intake. Under I-057's
+correction that ceiling is a function of the family's measured net-return autocorrelation —
+**and at intake no trial has a return series, so the quantity is unmeasurable at exactly the
+moment the ceiling is quoted.** The intake ceiling therefore runs at `VIF = 1`, the permissive
+assumption, necessarily.
+
+**Consequence.** A family can be ADMITTED at Gate 0 against a ceiling of 109, spend 86 trials
+against it, and fail Gate 1's length criterion because the measured ceiling is 55. **The
+trials cannot be unspent** (V-5: reducing `N` is unavailable, and `n_inherited` closes the
+successor-family route). The sponsor is not at fault and neither is the machinery.
+
+**This is structural and is not closeable.** No construction can measure a family's serial
+dependence before it has produced a return series.
+
+**Repair — disclosure only, and it is mandatory.** V-6 specifies a required render string on
+every intake ceiling: the figure is labelled an **UPPER BOUND** that will be re-evaluated at
+Gate 1 and **can only fall**, and explicitly **"not a budget."** V-7 adds a declared,
+non-binding planning rho so a sponsor who plans at rho = 0 has done so in writing, in advance,
+and cannot describe the Gate 1 outcome as a surprise.
+
+**Why MEDIUM rather than HIGH.** It cannot produce a wrong PASS — the Gate 1 criterion is
+evaluated on measured quantities and fails correctly. It produces **wasted research and a
+false sense of budget**, which is expensive but is not an inference error.
+
+**Resolution:** open — closes when V-6's render string ships.
+**Pattern tag:** `unmeasurable-at-the-moment-it-is-quoted` · `disclosure-is-the-only-remedy`
+
+---
+
+## I-064 · 2026-08-04 · The Principal's stated I-057 consequence understates the binding threshold by ~3x · Severity: LOW · Owner: quant-validation
+
+*Filed under `research/VALIDATION-SPEC-002-serial-corrections.md` §7.2 and §13.1.
+**Addressed to the Principal.***
+
+**Description [measured].** The Principal's I-057 ruling states the consequence for
+PREREG-002 as: *"if rho_hat measures >= 0.1, the admissible ceiling falls below the declared
+N = 86 and this family cannot clear Gate 1's length criterion on the data we hold."*
+
+That is true but it is not the threshold:
+
+```
+MinBTL(86, 1.0)          =  6.1359 years
+available span           =  6.571 years          [cited — PREREG-002 §8]
+max admissible VIF       =  6.571 / 6.1359  =  1.0709
+binding AR(1) rho_hat    =  (1.0709 − 1)/(1.0709 + 1)  =  0.0342
+```
+
+**The binding threshold is rho_hat ≈ 0.034, not 0.1.** At the stated 0.1 the ceiling is 55 and
+the family is **31 trials over, not marginally over**. PREREG-002's true margin is **0.435
+years, 7.1% of the required length.**
+
+**Why this is filed rather than silently corrected.** The correction moves the trigger toward
+**tightening**, which the Principal's I-050 asymmetry places within Validation's authority, so
+the change is made in `VALIDATION-SPEC-002` §7.2 without an act. **But a ruling's stated
+consequence gets relied on, and this one was loose in the permissive direction** — a seat
+reading the ruling would conclude the family had roughly 3x more headroom than it has.
+
+**Why LOW.** It has fired on nothing: zero trials logged, no rho_hat measured, no decision
+taken against the loose figure. Caught before reliance.
+
+**Repair, already done.** `VALIDATION-SPEC-002` §7.2 carries the corrected arithmetic, §7.4
+pre-commits the verdict bands against it, and
+`test_mbs_13_prereg002_binding_rho_is_0034_not_0100` pins it as a green guard so it cannot
+drift back.
+
+**Resolution:** closed on filing — corrected in the specification and pinned by a test.
+**Pattern tag:** `stated-consequence-looser-than-the-arithmetic` · `caught-before-reliance`

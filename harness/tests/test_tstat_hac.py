@@ -469,23 +469,58 @@ def test_hac_t17_carry_breakeven_is_corrected(registry):
     [measured — carry.py:97,100,105]. Carry is precisely the autocorrelated
     P&L component I-050 is about; leaving this path uncorrected leaves the
     defect where it is largest.
+
+    FIXTURE AND BRACKET REPAIRED BY VALIDATION, 2026-08-04, under
+    VALIDATION-SPEC-002 section 11.4, closing I-070 (filed by Seat 9, which
+    correctly escalated rather than amending -- Ruling 004 section 11).
+
+    The defect was mine. The draft reused test_hac_t16's `mu=0.0035, sd=0.01`
+    fixture with the PRODUCTION DEFAULT bracket (0, 2000) bps/yr. A shift of
+    2000 bps/yr is 5.48e-4 per bar against a mean of 3.5e-3 -- it moves the
+    corrected t from 6.488 to 5.788 and the uncorrected t from 18.870 to
+    16.835 [measured]. NEITHER crosses the hurdle, so `carry_breakeven_bps_
+    annual` returned its bracket ceiling via the documented `t_hi >= hurdle
+    -> return hi` branch, and the assertion compared 5.788 against 3.0.
+    **No correct estimator could have satisfied it** -- exactly Seat 9's
+    finding.
+
+    Two changes, and the second is the one that matters:
+      1. `sd=0.002, mu=0.0004, seed=6` puts both breakevens strictly inside
+         the bracket (corrected 686 bps/yr, uncorrected 1808) [measured].
+      2. An explicit bracket plus INTERIORITY assertions. A bisection that
+         returns a bracket endpoint has measured nothing, and the absence of
+         that check is what let the original defect through silently. The
+         interiority assertion, not the fixture, is the actual repair.
     """
     fn = carry_mod.carry_breakeven_bps_annual
-    r = _ar1(4000, 0.8, 0.0035, 5)
+    r = _ar1(4000, 0.8, 0.0004, 6, sd=0.002)
     lag = _ref_andrews_lag(r)[0]
     ppy = 365
+    bracket = (0.0, 3000.0)
 
     def at_shift(delta_bps):
         return r - delta_bps * 1e-4 / ppy
 
+    # fixture sanity: both statistics must actually CROSS inside the bracket
+    assert _ref_nw_t(r, lag) > T_STAT_HURDLE > _ref_nw_t(at_shift(bracket[1]), lag)
+    assert _ref_nw_t(r, 0) > T_STAT_HURDLE > _ref_nw_t(at_shift(bracket[1]), 0)
+
     try:
-        be = fn(at_shift, ppy, lag=lag)
+        be = fn(at_shift, ppy, bracket=bracket, lag=lag)
     except TypeError as exc:
         pytest.fail(
             "NOT IMPLEMENTED: carry_breakeven_bps_annual does not accept "
             f"`lag` (VALIDATION-SPEC-001 E-14). {exc}")
 
+    be_uncorrected = fn(at_shift, ppy, bracket=bracket, lag=0)
+
+    # I-070: a returned bracket endpoint is not a measurement
+    for name, val in (("corrected", be), ("uncorrected", be_uncorrected)):
+        assert bracket[0] < val < bracket[1], (
+            f"I-070: the {name} breakeven returned {val}, a bracket "
+            f"endpoint of {bracket}. The bisection did not converge on a "
+            "crossing and the assertion below would be vacuous.")
+
     assert _ref_nw_t(at_shift(be), lag) == pytest.approx(T_STAT_HURDLE, abs=0.05)
-    be_uncorrected = fn(at_shift, ppy, lag=0)
     assert be < be_uncorrected, \
         "E-14: the corrected carry breakeven must be strictly tighter"
