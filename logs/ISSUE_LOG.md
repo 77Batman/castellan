@@ -3058,3 +3058,32 @@ invocation explicitly rather than naming the file. Cheap, and it would have caug
 mechanism yet distinguishes a runbook step that has been executed from one that has only been
 written.
 **Pattern tag:** `runbook-untestable-by-its-author` · `found-only-in-execution`
+
+---
+
+## I-091 · 2026-08-05 · Rider A runbook step 8 invokes the system interpreter for a package installed only in the VPS venv · Severity: LOW · Owner: CIO → head-of-data-infra
+
+**Description.** `install.sh` installs the harness into **`/opt/castellan/venv`** only [measured —
+`/opt/castellan/venv/bin/pip install --quiet -e "${REPO_HARNESS}"`, line 57]. `DATA-INFRA-002` §7
+**step 8** invokes:
+
+```
+ssh root@<droplet-ip> python3 /opt/castellan/repo/harness/scripts/report_polymarket_coverage.py ...
+```
+
+Bare `python3` is the system interpreter and **does not have `castellan` importable.** The step
+fails. Corrected form uses `/opt/castellan/venv/bin/python3` — recorded at S2-D-025 §5.
+
+**Severity LOW and the reasoning is on the record**, per §8's ban on rating for convenience: it
+produces an immediate, loud `ModuleNotFoundError` at a step whose only function is reporting. **It
+cannot corrupt data, cannot produce a wrong number, and cannot be mistaken for success.** It is
+third in a series only because the series is what matters.
+
+**How it was found is the finding.** I-059 and I-090 were found by *executing* runbooks. **This one
+was found by writing down how to verify a step** — the `reference/TEMPLATES.md` §7.9 convention
+adopted the same day forced the question *"which interpreter?"*, which the runbook had never
+answered. **The convention paid for itself before its first live use.**
+
+**Resolution:** open — corrected command recorded at S2-D-025 §5; the runbook itself is amended by
+its owning seat at next dispatch.
+**Pattern tag:** `runbook-untestable-by-its-author` · `found-by-writing-the-check`

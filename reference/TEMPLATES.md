@@ -43,3 +43,49 @@ Performance (paper): month, QTD, ITD, gross and net, by pod · attribution decom
 Owned by the CRO. **Anything that goes wrong is entered**: data incident, reconciliation break, missed falsifier, blown assumption, process failure, model error. Each entry: date, description, severity, owner, resolution, and pattern tag. Reviewed quarterly for recurring patterns. The log is a filter — by examining what it catches and where it came from, the firm eliminates the source.
 
 ---
+
+---
+
+### 7.9 Runbook — the `[PRINCIPAL]` step convention
+
+*Principal-endorsed 2026-08-05. Recorded here rather than only in Standing Order 001, because
+that order **expires with the sprint** (§7) and this convention is meant to outlive it. A
+durable rule filed only in an expiring document is a rule the firm loses on schedule.*
+
+**Every `[PRINCIPAL]` step ships with its own verification command. A step is closed only when
+the Principal's pasted output is attached to the record. A `[PRINCIPAL]` step without attached
+output is `written`, never `executed`.**
+
+**This is the Principal-side analogue of red-first.** Red-first exists because a test that has
+never failed proves nothing; this exists because a runbook step that has never run proves
+nothing. **Both refuse to accept an assertion where an execution is available.**
+
+**Why the convention exists — the evidence, both instances measured.**
+
+| | Rider | Defect | Found |
+|---|---|---|---|
+| **I-059** | A — VPS | unexecutable in two places: missing `/opt/castellan` parents before transfer; `scp -r` without `/*` nesting the installer one directory too deep | first execution |
+| **I-090** | B — snapshots | executable but wrong: step 3 named the *file*, which invokes two scripts, so the health checker supervised a directory nothing writes to | first execution |
+
+**Both were written by seats that could not run them.** `[PRINCIPAL]` steps are the only steps
+in this firm that **no seat can test** — which is precisely why they are the steps most likely
+to be wrong, and were.
+
+**Rules that follow, and are binding on every runbook this firm writes:**
+
+1. **Each `[PRINCIPAL]` step carries a verification command of its own** — not a downstream
+   check that happens to subsume it.
+2. **A step naming a file that contains multiple invocations names each invocation.** I-090
+   exists because a step said *"edit the `--dest` argument"* in a file with two of them.
+3. **The expected output is stated before execution**, so the Principal knows what a pass looks
+   like rather than judging it afterwards.
+4. **Pasted output is attached to the decision record**, verbatim, including failures. A failed
+   step that was then fixed is more valuable to the record than a clean one.
+5. **A runbook may not report itself complete** while any `[PRINCIPAL]` step lacks attached
+   output. It reports *written*, with the gap named.
+
+**Retroactive reading, stated rather than glossed.** Rider A's steps 1–4 and Rider B's steps 2–3
+carry no individually attached output. Their execution is nonetheless **evidenced**, because the
+downstream health checks they gate are not obtainable without them — a passing VPS health check
+is impossible without account, droplet, key, and transfer. **That is evidence, not compliance**,
+and the distinction is recorded rather than smoothed. The convention binds prospectively.

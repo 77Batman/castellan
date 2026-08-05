@@ -2490,3 +2490,81 @@ capture-store coverage question (I-074), both "at leisure."
 invocation. Three §4 interrupts remain open: **I-065**, **RULING-005 §9**, **I-022**.
 
 **Review date:** 2026-08-07T23:30Z, parallel-run close.
+
+---
+
+## S2-D-025 · 2026-08-05 · Runbook `[PRINCIPAL]` convention adopted · a third defect found by applying it
+
+**1 · Retention asymmetry RESOLVED — no discrepancy existed.** The extra `pit` copy is the
+Principal's **manual 2026-08-03 snapshot**, which predates the regime and covered `pit` only. The
+invocations are consistent. **The Data & Infra look is spared.**
+
+Worth one line for the §7 audit: the flag was correct to raise — an unexplained asymmetry in a
+control's first output is exactly what should be raised — **and its resolution required knowledge
+that exists nowhere in the repository.** No amount of seat diligence would have produced it. That
+is the honest boundary of what this firm can verify for itself.
+
+**2 · STANDING CONVENTION ADOPTED, and filed where it survives.**
+
+> **Every `[PRINCIPAL]` step ships with its own verification command. A step is closed only when
+> the Principal's pasted output is attached to the record. A `[PRINCIPAL]` step without attached
+> output is *written*, never *executed*.**
+
+**Filed at `reference/TEMPLATES.md` §7.9, not in Standing Order 001.** The order **expires with
+the sprint** by its own §7. **A durable rule filed only in an expiring document is a rule the firm
+loses on schedule** — the same reasoning that put the §8 estimator asymmetry *into* the order, run
+in the opposite direction because the destination differs.
+
+The Principal's framing is recorded as the rule's rationale: **this is the Principal-side analogue
+of red-first.** Red-first exists because a test that has never failed proves nothing. This exists
+because a runbook step that has never run proves nothing. **Both refuse an assertion where an
+execution is available.**
+
+**3 · I-090's pattern leg CLOSES.** It was left open because *"no mechanism yet distinguishes a
+runbook step that has been executed from one that has only been written."* **This convention is
+that mechanism.**
+
+**4 · Applying it immediately produced a third defect — I-091, and the manner of finding is the
+point.** Writing the verification command for Rider A step 8 forced the question *which
+interpreter does this run under*, and the answer is wrong.
+
+`install.sh` installs the harness into **`/opt/castellan/venv`** only [measured — `pip install -e`
+at line 57]. **Step 8 invokes bare `python3`**, which is the system interpreter and does not have
+`castellan` on its path. **The step fails on import.**
+
+**This was found by reading, not by execution — because the convention forced a question the
+runbook had not answered.** Two defects were found by running runbooks; this one was found by
+writing down how to check them. That is the convention paying for itself before its first use.
+
+**5 · Retrofitted verification commands for every remaining open `[PRINCIPAL]` step.** These are
+the CIO's, pending the owning seat amending its own runbook.
+
+**Rider A step 8** — coverage comparison, corrected interpreter, run at parallel-run close:
+```
+ssh root@$DROPLET '/opt/castellan/venv/bin/python3 /opt/castellan/repo/harness/scripts/report_polymarket_coverage.py --pit-db /opt/castellan/book/pit_capture.db'
+python3 harness/scripts/report_polymarket_coverage.py
+```
+*Expected:* both report a span covering the same window; **VPS coverage materially higher than the
+laptop's 8.6% baseline.** A VPS figure at or below the laptop's is a finding, not a retry.
+
+**Rider A step 9 `[PRINCIPAL]`** — pull, then verify the pulled file is a real store:
+```
+rsync -avz root@$DROPLET:/opt/castellan/book/pit_capture.db /tmp/pit_capture_pull.db
+python3 -c "import sqlite3,os; c=sqlite3.connect('/tmp/pit_capture_pull.db'); print(round(os.path.getsize('/tmp/pit_capture_pull.db')/1e6,2),'MB', {t: c.execute(f'select count(*) from \"{t}\"').fetchone()[0] for (t,) in c.execute(\"select name from sqlite_master where type='table'\")})"
+```
+*Expected:* nonzero `observations` and `documents`, roughly consistent with step 8's poll count.
+
+**Before step 10's merge** — take the snapshot the regime now makes possible:
+```
+python3 harness/scripts/check_snapshot_health.py --dest "$HOME/Library/Mobile Documents/com~apple~CloudDocs/castellan-backups"
+```
+*Expected:* `pit`/`registry`/`book` all `OK`, `last good` under 24h. **A stale or failed snapshot
+stops the merge** — the store about to be written to is the one that cannot be reconstructed.
+
+**Rider B steps 8 and 9** remain decisions rather than executions, and take no verification command
+until a decision is made.
+
+**6 · Budget.** **15 of 30 · 10 of 12 Opus**, unchanged. Three §4 interrupts open before the
+Principal: **I-065**, **RULING-005 §9**, **I-022**.
+
+**Review date:** 2026-08-07T23:30Z, parallel-run close.
