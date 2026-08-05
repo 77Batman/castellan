@@ -2984,3 +2984,40 @@ declared `rho_plan = 0.10` is set on that reasoning.
 
 **Resolution:** open.
 **Pattern tag:** `correct-clause-misleading-gloss` · `illustration-points-away-from-the-conditional` · `runs-in-the-sponsors-favour`
+
+---
+
+### I-022 · ESCALATED TO HIGH · 2026-08-06 · by the CIO · the broken latch is now load-bearing
+
+**Severity: MEDIUM → HIGH. Escalated by the CIO under §8** (the interrupt set may be widened by
+any seat). **This is a §4 hard interrupt and is filed to the Principal.**
+
+**What changed.** Nothing about I-022 itself: the trial-count criterion still passes a literal
+`True`, so **an over-budget family reads PASS**. What changed is that **R-003 made that
+criterion load-bearing.** PREREG-002 now carries a **two-stage trial budget** — Stage 1 of 47
+authorized, Stage 2 of ≤32 **declared but not authorized**, unlocked only by measured ρ̂. The
+Director's own words: *"a two-stage budget is a budget with a door in it; the key is the
+harness's (`VIF_gate` computed inside `evaluate_gate1`), but the latch is I-022 and it is
+broken."*
+
+**Why HIGH now, against the firm's own severity line.** The Director rated its three R-003
+issues deliberately low *"because none can produce a wrong PASS."* **I-022 can produce a wrong
+PASS**, and it is the single control standing between a parked family and the trial burn that
+would make its own remedy unreachable. It is the same defect class as **I-053** — a rule the
+harness does not enforce, decorative until something depends on it. **Something now depends on
+it.**
+
+**What the CIO is NOT claiming.** Nothing is live: the registry holds 0 hypotheses and 0 trials,
+and the seal is independently blocked by C2, C3, C7, C8, C11, so **this cannot be frozen by
+accident this sprint.** The escalation is not an emergency. It is a re-rating to stop a
+known-broken control being sealed under a document that now relies on it.
+
+**Recorded because the record should show who did what.** The Director **saw this and did not
+escalate** — it raised C10's weight and flagged the dependency, which was within its scope and
+was the correct disposal from where it sat. **The escalation is the CIO's, and the CIO may be
+wrong about it**; the substantive severity call belongs to Validation, which owns the harness's
+correctness, and the Principal may return it there.
+
+**Resolution:** open — **HIGH, before the Principal.** Blocks: sealing any document whose trial
+budget the harness is expected to enforce.
+**Pattern tag:** `harness-correctness-latent` · `decorative-until-depended-on`

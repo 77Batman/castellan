@@ -623,3 +623,103 @@ R-001 was occasioned by a defect in the family's own data (I-045). **R-002 is oc
 
 *Director of Research · Castellan Capital · 2026-08-04 · **addendum §7 added 2026-08-05 for revision R-002***
 *Reasoning memo for revisions R-001 and R-002 of `research/PREREG-002-crypto-funding-basis.md`. No hypothesis was opened, no trial was run, no vault was sealed, and `book/` was not touched.*
+
+---
+
+# ADDENDUM — REVISION R-003 · 2026-08-06 · PRE-SEAL
+
+**Occasion:** `research/VALIDATION-SPEC-002-serial-corrections.md` (Validation, 2026-08-04, 57 binding clauses) and `research/DATA-IMPL-006-serial-corrections.md` (Seat 9, 2026-08-05) · Issue Log **I-057, I-060, I-061, I-063, I-064** · dispatch **S2-D-020**.
+**Trial budget for this revision: ZERO.** `book/registry.db` reads **0 hypotheses / 0 trials / 1 event** [measured, this session]. **No number was computed.** Every `N_max` figure is `[cited]` from `VALIDATION-SPEC-002` §6.2's measured table; the only arithmetic performed is integer summation of line items already declared at PREREG-002 §10.5.
+
+---
+
+## 8. WHAT R-003 CHANGED IN `PREREG-002`, AND WHY
+
+### 8.1 R13 — the ceiling is sealed as a FUNCTION, and the defence is preserved rather than re-argued
+
+The Principal ruled that §10.4 does not seal a constant. The sealed form, in one line:
+
+```
+N_max  =  min( 109 ,  max_admissible_trials(span, SR_realized, ppy, vif = VIF_gate(ρ̂)) )
+```
+
+`109` is `max_admissible_trials(6.571, 1.0, vif = 1.0)` — the first argument of a `min`, not a constant that happens to bind. `ρ̂` is the family's **net-return** autocorrelation, measured by the harness from logged trials at every `evaluate_gate1` call.
+
+**This memo deliberately does not re-derive the admissibility argument.** The Principal's own defence is adopted verbatim: the construction is **monotone-conservative** — measurement can only tighten, never loosen — so **it is not the I-029(d) operation; it is the `min(t_NW, t_raw)` construction extended to `N`.** I-029(d) moves a constant in the permissive direction *after seeing an outcome*; this seals a function *in advance* whose every argument moves the requirement only toward tightening.
+
+**What R-003 adds is that the property is now demonstrated rather than specified.** Seat 9 swept it directly [measured — `DATA-IMPL-006` §2]: **145 draws for `N_max` and 900 for DSR across ρ ∈ [−0.6, +0.8], using real measured VIFs from `variance_inflation` rather than adversarially injected ones — zero violations.** That distinction matters: the measured-VIF path is the one that governs every live Gate 1 evaluation of this family. **A sponsor benefits from believing the assurance, so this document records the demonstration.**
+
+**The rejected alternative, stated because the memo's job is to record what was not done.** The obvious alternative was to leave 109 as a sealed constant and disclose the correction in a footnote. It was rejected for the reason R-001 rejected the same move: a footnote does not change what the harness grades against, and §10.4's number is graded. Sealing 109 as a constant would have sealed a figure the harness would then decline to use.
+
+### 8.2 R14 — writing the document against 0.034, and why a sponsor adopts a tightening that came from below
+
+`MinBTL(86, 1.0) = 6.1359 y` against 6.571 y available gives a maximum admissible VIF of 1.0709 and a binding AR(1) `ρ̂` of **0.0342** [all cited — `VALIDATION-SPEC-002` §7.2; I-064]. The Principal's stated figure was 0.1; at 0.1 the ceiling is 55 and `N` = 86 is **31 trials over, not marginally over**.
+
+**The governance point is the one worth recording.** Validation tightened a figure the Principal had stated, **without requesting an act**, under the §8 asymmetry that places tightening within Validation's authority — and filed it as I-064 rather than exercising it silently. The Principal countersigned: *"my number was a prediction, Validation's is a derivation."*
+
+**A sponsor quoting the looser figure because it came from higher up is Appendix B failure mode 1 in miniature** — the firm becoming a machine for agreeing upward. PREREG-002 is written against 0.034 throughout from R-003 forward, and `0.10` survives in the document exactly once more, explicitly **not** as a threshold (§8.3).
+
+### 8.3 R15 — the conservative `ρ`, named, and the budget rebuilt against it
+
+**`ρ_plan` = 0.10, declared at §10.5.1, before any measurement of `ρ̂` exists for this family or any other.** `N_max(0.10) = 55` [cited].
+
+**Why a `ρ` had to be named at all.** The budget PREREG-002 carried through R-002 was set against `ρ = 0` — **not by argument but by silence**, because no other assumption existed when it was written. At 7 + 79 = 86 it sat **exactly** at `N_max(0.034) = 86`: **zero trials of margin at its own binding threshold.** That is the self-inflicted wound the Principal named — a budget set against an optimistic `ρ` that the measurement then disallows.
+
+**Why 0.10.** Four reasons, three of them checkable and one of them this seat's judgment, all recorded at §10.5.1: it is the top of `VALIDATION-SPEC-002` §7.4's *repairable* PARK band (≤ 11 months of history); it is the largest `ρ` at which this family can still fund its **Charter-mandatory** work (at `N_max(0.20) = 31` the ±50% grid alone is 25 and the ≥10 walk-forward windows take it to 35, inadmissible before F-002 runs); it is the Principal's own figure re-used in the role where it is valid, since **a number that was permissive as a trigger is conservative as a budget**; and — the judgment — **this family's net series is structurally carry-heavy in a way the generic dilution argument does not cover.**
+
+**That fourth reason cuts against the family and is stated anyway.** `VALIDATION-SPEC-002` §7.5 places `ρ̂` "plausibly anywhere in [0.0, 0.5]" on the reasoning that a net series is `gross + carry − costs` and *"its price-return component is close to serially independent."* **This position is delta-neutral by construction — the price-return component is deliberately hedged out** — so the term that would dilute `ρ̂` toward zero is precisely the term this family removes on purpose. What remains is funding carry (persistent) and a weight `w(t)` that is a closed-form function of a trailing-30-day standardized deviation (persistent by construction). **This family should be expected in the upper half of that interval.** `[inferred — reasoning, not measurement.` The funding autocorrelations 0.829 / 0.802 are **not** `ρ̂` and R-15 forbids quoting them as such; they establish only that the carry term is the persistent one.`]` **It is not a forecast and it does not narrow the cited interval. If `ρ̂` measures 0.4 this family dies on arithmetic, and declaring 0.10 is not a claim that 0.4 is unlikely.**
+
+**Why staged rather than a flat cut — the four reasons, and the third is the real one.**
+
+1. **A flat cut forfeits capability on an assumption; staging forfeits it only on a measurement.** The unlock is contingent on `ρ̂`, which is **not a result** — it is a nuisance parameter of the return series, computed by the harness inside `evaluate_gate1`, printed on the report face, and not suppliable by the sponsor (V-1, V-2, M-10). PREREG-002 §10.4's prohibition — *"expanding a trial budget because early results look good is the overfitting operation wearing a schedule's clothing"* — is not weakened, because `ρ̂` is not a result and it moves the authorization in **whichever direction it measures**.
+2. **The evasions are closed by the correction itself, not by this seat's assurance.** Coarser bars to depress `ρ̂`: closed by R-16, which is the clause that makes the corrected requirement approximately frequency-invariant (17% versus the uncorrected 4.5%). Selective logging: closed by R-6/R-7/R-8's max-then-median with the candidate series as a floor, and R-9's refusal above a 25% exclusion rate.
+3. **STAGING IS WHAT MAKES §7.4's PARK VERDICT OPERATIONAL RATHER THAN NOMINAL.** Under a flat 79-trial budget, a family PARKed at ρ̂ = 0.10 would keep spending its ≤ 22 forward-window regenerations while waiting for the ≤ 11 months of history that is its **only honest remedy** (V-5). **Every one of those trials raises `N`, which raises `MinBTL`, which raises the span required — the parked family digs its own hole while waiting in it.** Stage 2's gate stops that by construction. **A PARK that keeps burning `N` is not a PARK**, and this is the reason that persuaded this seat.
+4. **It is the only remedy a sponsor controls.** Of V-5's four, three do not work. The one that does is calendar span, and the one thing a sponsor can do to help is not spend trials while it accrues.
+
+**The objection, raised here rather than left for C3.** A two-stage budget is a budget with a door in it, and doors get opened under schedule pressure. The key is held by the harness; **the latch is I-022, and it is broken** — `gates.py` hard-codes the trial-count criterion's verdict to the literal `True`. **C10's weight therefore goes up under R-003, not down**, and PREREG-002 §20 records that.
+
+**What it costs, stated first in the revision block and repeated here.** Authorized budget 79 → 47, a **40% cut**; declared ceiling 86 → 54. If `ρ̂` measures ≤ 0.034 the cut will have been unnecessary and Stage 2 restores the family exactly. **The asymmetry is decisive: an unnecessary Stage-1 cut costs a scheduling delay; an unauthorized Stage-2 spend at ρ̂ = 0.10 costs the Gate 1 verdict permanently, because trials cannot be unspent and `InheritedCountDoubleCountError` closes the successor route.**
+
+### 8.4 R16 — recording the verdict bands in the sponsor's own document
+
+`VALIDATION-SPEC-002` §7.4's bands are transcribed at PREREG-002 §10.8: ρ̂ ≤ 0.034 PASS · 0.034–0.15 FAIL-on-length, **PARK**, ≤ 11 months of history repairs it at 0.1 · 0.15–0.30 PARK nominal, kill in practice · **> 0.30 KILL** · `|ρ̂| ≥ 0.97` or `n_logged = 0` **INSUFFICIENT-DATA, never PASS**.
+
+**Why transcribe a Validation clause into a sponsor document at all.** Because the party who will want to renegotiate a near-miss at Gate 1 is the sponsor, and **a band the sponsor pre-registered is one the sponsor cannot renegotiate.** Pre-committing the verdict rule before the measurement exists is Ruling 001 §4.4's own device.
+
+**The Sharpe escape is recorded as closed by construction**, because it is the route this seat would reach for: `MinBTL ∝ 1/SR²`, so a realized net `SR_ann ≥ 1.068` clears the criterion at ρ̂ = 0.10 on the span already held — **but raising the realized Sharpe by searching raises `N`, which raises `MinBTL`, which raises the Sharpe required.** It works only on data not yet seen, which is the calendar-span remedy wearing a hat (V-5). **Any artifact on this family presenting a search-improved Sharpe as relief from the length criterion is defective, with §10.8 as the pre-registered reason.**
+
+### 8.5 R17 — I-063 disclosed rather than implied away
+
+The Gate 0 intake ceiling is **necessarily** computed at `VIF = 1`: at intake no trial has a return series, so `ρ̂` is unmeasurable at exactly the moment the ceiling is quoted. **Structural, not closeable.** V-6's mandatory render string is carried verbatim at §10.4.3 — **UPPER BOUND · re-evaluated at Gate 1 · can only fall · not a budget** — and the exposure is stated against this family by name: it could be ADMITTED against 109, spend 86, and fail because the measured ceiling is 55, with the trials unspendable-back and neither sponsor nor machinery at fault.
+
+**What this seat does not claim: that disclosure removes the exposure.** It does not. Validation rates I-063 MEDIUM because it cannot produce a wrong PASS — it produces **wasted research and a false sense of budget**. §10.5.2 reduces the waste; nothing removes the structure.
+
+### 8.6 R18 — I-060 and I-061 settled, choice by choice
+
+**I-060 — does not bite as a clause; bites harder as arithmetic.** The row-by-row pass is at §10.9(a). ML-16's mandatory 32-trial dispersion sample is inside ML-3–ML-27 and **does not reach a non-fitted family** (§10.7(a) establishes non-fitted row by row, conditional on the plateau-centroid commitment and §10.7(c)'s walk-forward fix). **And the family gets ML-16's statistical content free:** §10.6's 25 grid points plus ≥10 walk-forward refits give **35 series at Stage 1 alone, above Ruling 004 §2.4's `m ≥ 32` floor, at zero incremental `N`**, because they are already budgeted trials. Under the conservative reading the Principal has ruled governs pending Sprint 3 — **diagnostics count toward `N`** — every diagnostic this family will run was **already inside its declared `N` before R-003**, with no exception found on the pass. **This seat looked for one and reports that there is none.**
+
+**But I-060's actual content is not "ML-16 is expensive."** It is: *a family that cannot afford its own diagnostics has not discovered a problem with the diagnostics; it has discovered that this firm's data cannot support that family at that persistence.* **On that reading it reaches PREREG-002 directly and at a tighter threshold than its own headline** — I-060's obligations exhaust the ceiling at ρ̂ > 0.045; this family's declared 86 exhausts it at **ρ̂ > 0.034**. **Not being a fitted family does not exempt it from the collision.** §10.5.2 is the response and it does not repair the collision; nothing does.
+
+**I-061 — nothing in PREREG-002 rested on it.** Checked at §10.9(b) against every clause touching bar frequency: `periods_per_year = 365` (a calendar fact), K6's daily bars and the R4 aggregation rule (a data-correctness argument from Ruling 003 §3.2), §16.1's intraday problem (instrument resolution), §19.3/§22-row-4's finer-bar successor (resolution, not observation count), and §10.4/§10.5's `MinBTL` arithmetic (`ppy` never varies in this document, so frequency-invariance is never invoked in either direction). **K6 was fixed as a declared conditioning choice with a full menu, before any measurement, for data-correctness and risk-observability reasons — not because this document believed bar choice was free of length consequences.**
+
+**One forward-looking consequence recorded so a future seat does not re-discover it as a remedy:** the successor family at 1h or 8h bars named at §19.3 buys **no** relief on the length criterion by sampling more finely — the `√ppy` annualization overstates `SR_ann` at fine bars by exactly the factor the VIF removes, and the two cancel to within 17% (R-16). **The successor's case is resolution and nothing else.**
+
+### 8.7 Seal-readiness after R-003
+
+**The same five remain open and blocking — C2, C3, C7, C8, C11. R-003 clears none and creates no sixth.** C13 is extended by two items folded into C2's intake (the §10.4.1 functional form; the §10.5.2 Stage 2 unlock rule). C10's weight increases.
+
+**R-003 moved seal-readiness in one direction only, and it is the unflattering one.** It cut authorized `N` by 40% on a named assumption, replaced a constant this document had defended twice with a function whose value is unknown and can only fall, recorded the bands under which the sponsor loses, and disclosed that the 109 quoted since 2026-07-28 **was never a budget and cannot be made into one.** D-015's reading holds: *"the ceiling binding at the seal is the control functioning."*
+
+### 8.8 What R-003 did not do
+
+- **No seal, no vault, no registry write, no commit.** `book/registry.db` unchanged at 0/0/1.
+- **No `harness/` file touched, no test run, no suite state reported** — Validation is adjudicating those concurrently and they are not this dispatch's.
+- **No `VALIDATION-*` document touched.**
+- **I-045 not closed** — `quant-validation`'s, unchanged.
+- **No declared menu edited and no selection moved.** `N_conditioning` remains **7**. R-003 moves a ceiling's *form*, a budget's *size and authorization structure*, and adds three disclosures.
+- **No number computed.** Every `N_max` is `[cited]` from `VALIDATION-SPEC-002` §6.2. The arithmetic performed is `2+3+7+25+10 = 47`, `47+22+10 = 79`, `7+47 = 54`, `7+79 = 86` — integer sums of already-declared line items, of the same class as R-002's `109 − 86 = 23`.
+
+---
+
+*Director of Research · Castellan Capital · **addendum §8 added 2026-08-06 for revision R-003***
+*Reasoning memo for revisions R-001, R-002 and R-003 of `research/PREREG-002-crypto-funding-basis.md`. No hypothesis was opened, no trial was run, no vault was sealed, `harness/` was not touched, and `book/` was not written to.*

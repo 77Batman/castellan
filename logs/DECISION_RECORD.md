@@ -2298,3 +2298,75 @@ sealed DA reserve. Zero slack**, as ruled. Sonnet remains available. §5 dead-ma
 invocations remain.**
 
 **Review date:** on the Principal's ruling on I-065 and §9.
+
+---
+
+## S2-D-022 · 2026-08-06 · R-003 delivered · §4 INTERRUPT — I-022 escalated by the CIO
+
+**1 · R-003 delivered. No HIGH filed by the Director** — I-080, I-081 MEDIUM, I-082 LOW,
+verified on disk. Registry **0 hypotheses / 0 trials**; **no `harness/` file touched by the
+Director**; PREREG-002 now 2,545 lines.
+
+**The functional form as sealed:**
+`N_max = min(109, max_admissible_trials(span, SR_realized, ppy, vif = VIF_gate(ρ̂)))` — and
+**109 is not a constant but `max_admissible_trials(6.571, 1.0, vif = 1.0)`, the first argument
+of a `min`.** Written against **0.034** throughout. `0.10` survives in the document exactly once
+more and **explicitly not as a threshold.**
+
+**2 · The finding the CIO rates highest in this dispatch: R-002's budget was set against ρ = 0
+by silence, and sat at 86 = `N_max(0.034)` — zero trials of margin at its own binding
+threshold.** Nobody had noticed, because a budget set by silence looks like a budget.
+
+**The Director rebuilt it and took a voluntary 40% cut to authorized `N`:** Stage 1 **47
+authorized**; Stage 2 **≤32 declared and NOT authorized**, unlocked only by measured ρ̂ read from
+a cited table, reaching the old 79/86 only at ρ̂ ≤ 0.034.
+
+The decisive argument for staging over a flat cut, recorded because it generalizes: **"a PARK
+that keeps burning `N` is not a PARK."** Under a flat budget, a family parked at ρ̂ = 0.10 would
+spend 22 forward-window trials while waiting for the ≤11 months of history that is its only
+remedy — **raising `N`, raising MinBTL, digging its own hole while waiting in it.**
+
+**3 · The conservative ρ, and the reason stated against the family.** `ρ_plan = 0.10`,
+`N_max = 55`. Four reasons at §10.5.1, of which the fourth is the Director's own judgment marked
+`[inferred]` and pointed against its own family: **this position is delta-neutral by
+construction, so the near-independent price-return component SPEC-002 §7.5 relies on to dilute
+ρ̂ is exactly the component this family hedges out on purpose.** ρ̂ should therefore be expected
+in the **upper half** of the cited [0.0, 0.5] interval. *"That is reasoning, not measurement, and
+it does not narrow the interval."*
+
+**4 · I-060 checked choice by choice, and the answer is two-part.** As a **clause** it does not
+bite — ML-16 sits inside ML-3–ML-27, which reach only fitted families. The family also gets
+ML-16's statistical content **free**: 25 grid points + ≥10 walk-forward refits = **35 series at
+Stage 1**, above Ruling 004 §2.4's `m ≥ 32` floor, at **zero incremental `N`.**
+
+**But its *content* reaches PREREG-002 at ρ̂ > 0.034 — one notch tighter than I-060's own
+0.045.** *"Not being fitted does not exempt it."* The Director looked for an exception and
+reported there is none.
+
+**5 · §4 HARD INTERRUPT — I-022 escalated MEDIUM → HIGH by the CIO under §8.** The trial-count
+criterion **passes a literal `True`, so an over-budget family reads PASS.** That was tolerable
+while nothing depended on it. **R-003 made it load-bearing**: the two-stage budget is the control
+standing between a parked family and the trial burn that would make its own remedy unreachable.
+
+The Director rated its own issues low *"because none can produce a wrong PASS."* **I-022 can.**
+Same defect class as I-053 — a rule the harness does not enforce, decorative until something
+depends on it.
+
+**The CIO records the provenance honestly: the Director saw this and did not escalate**, raising
+C10's weight instead, which was correct from where it sat. **The escalation is the CIO's, the
+CIO may be wrong, and the substantive call belongs to Validation.** Nothing is live — registry
+0/0, seal independently blocked — so this is a re-rating, not an emergency.
+
+**6 · I-080 is firm-wide and larger than its rating suggests.** *"Every trial budget this firm
+has written was set against an unstated ρ = 0."* Nothing requires a budget to state its serial
+assumption. **I-081** extends it: the Charter §4.4 stack (grid 25 + WF 10 = 35) collides at
+ρ̂ ≈ 0.20 for **every** family, and *"non-fitted sponsors are the population least warned."*
+
+**7 · Seal-readiness unchanged. C2, C3, C7, C8, C11 open and blocking. R-003 clears none and
+creates no sixth.** C13 extended by two items into C2's intake. **I-045 still not closed** —
+the Director declined for the third time, correctly.
+
+**8 · Budget.** **15 of 30 · 10 of 12 Opus.** Remaining Opus: **2 — C2 and the sealed DA
+reserve. Zero slack.** Sonnet available. §5 dead-man: **8 invocations remain.**
+
+**Review date:** on the Principal's rulings on I-065, RULING-005 §9, and I-022.
