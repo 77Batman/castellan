@@ -84,25 +84,38 @@ def carry_breakeven_bps_annual(
     bracket: tuple[float, float] = (0.0, 2000.0),
     hurdle: float = 3.0,
     iters: int = 40,
+    label_span: int = 1,
+    lag: int | None = None,
 ) -> float:
     """Bisect the adverse carry shift (bps/yr) at which the net return's
-    t-statistic falls below ``hurdle`` (Ruling 003 section 3.6's
-    ``carry_breakeven_bps_annual``). Monotone by construction of
-    :func:`shift_carry_panel` — unlike a multiplier applied to a receipt,
-    which is not (I-037; T-18).
+    HAC-corrected t-statistic falls below ``hurdle`` (Ruling 003 section
+    3.6's ``carry_breakeven_bps_annual``, corrected per VALIDATION-SPEC-001
+    E-13/E-14). Monotone by construction of :func:`shift_carry_panel` —
+    unlike a multiplier applied to a receipt, which is not (I-037; T-18).
 
     ``net_returns_at_shift`` : callable ``delta_bps_annual -> net returns``.
+
+    ``lag`` (E-13): the lag is selected ONCE and held fixed across the
+    whole bisection — re-selecting it at every step would make the
+    statistic a step function of the swept parameter and destroy the
+    monotonicity the bisection relies on (I-037 / Ruling 003). If
+    ``lag`` is not given, it is selected once on
+    ``net_returns_at_shift(bracket[0])`` and held for every subsequent
+    evaluation.
     """
     lo, hi = bracket
-    t_lo = stats.sr_tstat(np.asarray(net_returns_at_shift(lo)))
+    base_returns = np.asarray(net_returns_at_shift(lo))
+    if lag is None:
+        lag = stats.sr_tstat_corrected(base_returns, label_span=label_span).lag
+    t_lo = stats.sr_tstat_nw(base_returns, lag)
     if t_lo < hurdle:
         return lo
-    t_hi = stats.sr_tstat(np.asarray(net_returns_at_shift(hi)))
+    t_hi = stats.sr_tstat_nw(np.asarray(net_returns_at_shift(hi)), lag)
     if t_hi >= hurdle:
         return hi
     for _ in range(iters):
         mid = 0.5 * (lo + hi)
-        tm = stats.sr_tstat(np.asarray(net_returns_at_shift(mid)))
+        tm = stats.sr_tstat_nw(np.asarray(net_returns_at_shift(mid)), lag)
         if tm >= hurdle:
             lo = mid
         else:

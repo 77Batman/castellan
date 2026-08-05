@@ -151,7 +151,7 @@ def test_pbo_high_on_noise_low_on_real_edge():
 
 
 def test_purged_kfold_no_overlap_and_embargo():
-    for train, test in purged_kfold_splits(1000, 5, 0.01):
+    for train, test in purged_kfold_splits(1000, 5, 0.01, feature_lookback=0):
         assert len(np.intersect1d(train, test)) == 0
         # embargo: the 10 bars after the test fold are not in train
         after = np.arange(test[-1] + 1, min(1000, test[-1] + 11))
@@ -159,7 +159,7 @@ def test_purged_kfold_no_overlap_and_embargo():
 
 
 def test_walk_forward_windows_cover_and_order():
-    windows = list(walk_forward_windows(1000, 10))
+    windows = list(walk_forward_windows(1000, 10, label_span=1, feature_lookback=0))
     assert len(windows) == 10
     for train, test in windows:
         assert train[-1] < test[0]  # strictly out of sample

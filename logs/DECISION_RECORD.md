@@ -1691,3 +1691,68 @@ units it lost went to I-049's terminations.
 **10 · §5 dead-man: 6 invocations remain** since the last Principal checkpoint.
 
 **Review date:** on the return of SPEC-002 and the SPEC-001 implementation.
+
+---
+
+## S2-D-014 · 2026-08-05 · SPEC-001 implemented, I-051 closes · §4 INTERRUPT — I-049 → HIGH
+
+**1 · §4 HARD INTERRUPT FILED. Trigger: *"any issue filed HIGH."*** **I-049 escalates
+MEDIUM → HIGH on its own pre-committed trigger.** Third termination: `VALIDATION-SPEC-002`
+died on `API Error: Response stalled mid-stream` after the seat reported *"Now §6 and §7."*
+
+**The CIO declines the argument it would have been easiest to make.** The incremental-write
+mitigation **worked** — 817 lines of clauses survived where the first two terminations
+preserved nothing — and that is a live argument for a cheap resume and for leaving the
+severity alone. **The trigger was written unconditionally on 2026-08-04 precisely so that the
+third occurrence could not be argued down by whoever was mid-sprint and inconvenienced.** It
+is reported as evidence, not as a severity argument.
+
+**And HIGH is substantively right, not merely procedurally right.** Under §2, three failures
+and two resumes = **5 Opus units for 2 complete artifacts and 1 partial**, against a tier of
+12. **Freely allocable Opus is 4; committed remaining work is exactly 3** — the Director's
+§10.4 revision, C2, C3. **A fourth termination puts the sprint into §2 budget exhaustion,
+itself a §4 trigger.** The failure has stopped costing slack and started costing objectives.
+
+**2 · What survived, measured.** §0–§5 complete: **M-1…M-14** (corrected MinBTL), **D-1…D-10**
+(the DSR serial term — the specification choice the Principal funded), **R-1…** (ρ̂ and the
+variance inflation factor), plus monotone-conservatism and evaluation-time semantics. **Lost:
+§6–§13** — what survives of RULING-004's numbers, the consequence for PREREG-002, routing,
+leakage audit, test inventory, issues, and whatever was addressed to the Principal. **No
+clause lost. No test written** — SPEC-002's red-first tests do not exist.
+
+**3 · Remedy proposed, not executed, because the interrupt is open.** Resume SPEC-002 **once**
+to finish §6–§13 and author the tests, since 817 lines are on disk and a re-dispatch would
+repay a read already bought. Then a standing design change for every subsequent Opus
+dispatch: **split analysis and artifact-authoring into separate invocations**, the analysis
+unit writing findings to disk before any synthesis begins. **The CIO does not implement this
+while the interrupt is open.**
+
+**4 · SPEC-001 IMPLEMENTED. I-051 CLOSES.** Seat 9 delivered against the red-first tests.
+Verified independently [measured]: **1 failed, 187 passed = 188 total**, matching SPEC-001
+§9's projection exactly. `test_cv_purge_embargo.py` **11/11 — I-051 closed.**
+`test_tstat_hac.py` 16/17.
+
+**Both guard tests still green** — `test_hac_t13`, `test_hac_t14`.
+
+**Both inviolable properties verified by the seat directly, not inferred:** `t_gate =
+min(t_nw, t_raw)` never violated across ρ ∈ {−0.6 … +0.8}, floor binding correctly on
+negative ρ per E-8; the one-sided lag floor confirmed — a stated lag below the Andrews lag
+cannot lower it, above it raises it. **The Principal's asymmetry is now mechanically true in
+the harness, not merely specified.**
+
+**5 · The single remaining failure is a test defect and Seat 9 did the right thing with it.**
+`test_hac_t17`'s default bracket `(0, 2000)` bps/yr cannot reach its own assertion for **any**
+correct estimator — both corrected and uncorrected hit the bracket ceiling. Seat 9 **filed it
+(I-070, MEDIUM), left the test red, and did not route around it.** It was told the tests are
+not its to change; it obeyed under the one circumstance where disobeying would have looked
+like success. **None of the six named judgment-call clauses required routing back.** Registry
+0/0 before and after.
+
+**6 · Suite floor.** Baseline 160 → **188 total, 187 passing**, with one red pending
+Validation's fix to its own fixture. **The floor does not rise to 188 until I-070 closes**;
+the CIO records 187 as the operative floor in the interim rather than claiming the full rise.
+
+**7 · Budget.** **10 of 30 · 7 of 12 Opus.** DA reserve 1. **Freely allocable Opus: 4, against
+3 committed.** §5 dead-man: **6 invocations remain.**
+
+**Review date:** on the Principal's ruling on I-049.

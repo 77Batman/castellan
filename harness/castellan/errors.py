@@ -82,3 +82,17 @@ class HoldoutSchemaMismatchError(HoldoutError):
 class HoldoutCeilingError(RuntimeError):
     """PITStore refused an ingest batch (or a ceiling mutation) that would
     cross, or bypass, a sealed holdout cutoff (Ruling 001 D2 / B3 / B5)."""
+
+
+class CVSpecificationError(ValueError):
+    """A CV splitter was called without stating a required leakage
+    parameter (VALIDATION-SPEC-001 W-1 / W-5, I-051).
+
+    ``purged_kfold_splits`` requires ``feature_lookback`` and
+    ``walk_forward_windows`` requires both ``label_span`` and
+    ``feature_lookback``, stated explicitly. Subclasses ``ValueError`` so
+    no existing ``except ValueError`` handler is broken. ``0`` is a
+    legitimate, explicit statement ("this family's features use no
+    trailing window"); ``None`` (silence) and negative values are not,
+    and both raise this.
+    """

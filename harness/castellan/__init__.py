@@ -14,6 +14,7 @@ from .errors import (
     HoldoutRetryUnauthorizedError, HoldoutAcquisitionFailedError,
     HoldoutAcquisitionOverlapError,
     HoldoutSchemaMismatchError, HoldoutCeilingError,
+    CVSpecificationError,
 )
 from .registry import (
     TrialRegistry, PreRegistrationError, PreRegistrationAmendedError,
@@ -46,6 +47,7 @@ __all__ = [
     "HoldoutAcquisitionFailedError", "HoldoutAcquisitionOverlapError",
     "HoldoutSchemaMismatchError",
     "HoldoutCeilingError",
+    "CVSpecificationError",
     "run_backtest", "SameBarFillError", "FundingCoverageError",
     "BacktestResult", "CostModel", "US_EQUITY_LARGE", "US_EQUITY_SHORT",
     "CRYPTO_PERP_TAKER", "CRYPTO_SPOT_TAKER", "POLYMARKET",

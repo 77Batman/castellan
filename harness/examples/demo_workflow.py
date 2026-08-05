@@ -120,7 +120,7 @@ full_w = tsmom_weights(prices, CHOSEN_LOOKBACK, 0.9)
 full = run_backtest(prices, full_w, US_EQUITY_LARGE, reg, "etf-tsmom",
                     {"lookback": CHOSEN_LOOKBACK, "phase": "wfe"})
 r_all = full.net_returns.values
-for train, test in walk_forward_windows(len(r_all), 10):
+for train, test in walk_forward_windows(len(r_all), 10, label_span=1, feature_lookback=0):
     wfe_pairs.append((stats.sharpe_period(r_all[train]),
                       stats.sharpe_period(r_all[test])))
 

@@ -1556,6 +1556,56 @@ unmet. Recorded as `[assumed]`, not `[measured]`.
 **Resolution:** open — monitoring, with the escalation trigger above.
 **Pattern tag:** `dispatch-dies-at-read-write-transition`
 
+### I-049 · ESCALATED TO HIGH · 2026-08-05 · third occurrence · the pre-committed trigger fires
+
+**Severity: MEDIUM → HIGH.** The trigger written into this entry on 2026-08-04 was
+unconditional: *"A third occurrence makes this HIGH."* It has occurred. **`VALIDATION-SPEC-002`
+terminated on `API Error: Response stalled mid-stream`,** immediately after the seat reported
+*"Now §6 and §7."* **This entry is now a §4 hard interrupt and is filed to the Principal.**
+
+**The mitigation demonstrably worked, and that does not change the severity.** Measured
+[measured]:
+
+| Termination | Artifact preserved |
+|---|---|
+| 1 · Director, PREREG-002 restatement | **0 lines** |
+| 2 · Validation, RULING-004 | **0 lines** |
+| 3 · Validation, SPEC-002, under incremental-write instruction | **817 lines — §0–§5 complete, clauses M-1…M-14, D-1…D-10, R-1…** |
+
+Lost: §6–§13 — what survives of RULING-004's numbers, the consequence for PREREG-002,
+mechanical-vs-routed-back, the leakage audit, the test inventory, issues, and whatever was
+addressed to the Principal. **No clause was lost. No test was ever written** — the red-first
+tests SPEC-002 requires do not exist.
+
+**The CIO records the temptation and declines it.** The mitigation working is an argument for
+a cheap resume, and a cheap resume is an argument for leaving this MEDIUM. **That reasoning
+is exactly what §8 forbids** — the trigger was pre-committed precisely so that the third
+occurrence would not be argued down by whoever was mid-sprint and inconvenienced. The
+evidence that the mitigation works is reported to the Principal as evidence, not as a
+severity argument.
+
+**Why HIGH is substantively right and not merely procedurally right.** Under §2 failed
+invocations count as spent. The tally is now **three failures and two resumes = 5 Opus units
+consumed to produce 2 complete artifacts and 1 partial**, against a tier of 12. **Freely
+allocable Opus after this failure is 4, and the remaining committed work — the Director's
+§10.4 revision, C2's intake verdict, C3's Red-Team memo — is exactly 3.** A fourth
+termination puts the sprint into **§2 budget exhaustion, which is itself a §4 hard
+interrupt.** The failure mode is no longer costing slack; it is costing the sprint's stated
+objectives.
+
+**Remedy is the Principal's, per this entry's own pre-commitment** — *"the correct response
+is not another resume but a dispatch-design change."* The CIO's proposal, offered but not
+executed: resume SPEC-002 **once** to complete §6–§13 and author the tests, since 817 lines of
+clauses are on disk and re-dispatching would repay a read the firm has already bought; and
+apply a standing design change to every subsequent Opus dispatch — **split the brief so that
+analysis and artifact-authoring are separate invocations**, with the analysis unit writing its
+findings to disk before any synthesis begins. The CIO does not implement this while the
+interrupt is open.
+
+**Resolution:** open — **HIGH, before the Principal.** Blocks its own thread (SPEC-002 and
+everything sequenced behind it: the Director's §10.4 revision, therefore the seal).
+**Pattern tag:** `dispatch-dies-at-read-write-transition` · `pre-committed-trigger-fired`
+
 ---
 
 ## I-050 · 2026-08-04 · The Gate 1 t-statistic assumes serial independence and nothing corrects it — the firm's own data holds a measured case where it inflates `t` ≈ 3.3× · Severity: HIGH · Owner: quant-validation → head-of-data-infra
@@ -2058,3 +2108,76 @@ that authors it, and states in the ruling that it has.
 **Resolution:** closed on filing — both corrections are in
 `research/VALIDATION-SPEC-001-estimator-corrections.md` §5 and in the executable tests.
 **Pattern tag:** `pre-authored-test-unverified` · `control-that-would-have-pressured-correct-code`
+
+---
+
+## I-070 · 2026-08-04 · `test_hac_t17_carry_breakeven_is_corrected`'s default bracket cannot reach its own assertion, for any correct estimator · Severity: MEDIUM · Owner: head-of-data-infra · Escalated to: quant-validation
+
+**Filed by the implementer under S2-D-013, per VALIDATION-SPEC-001 §3.3's standing
+term ("a test Seat 9 believes is wrong is escalated to Validation in writing before
+it is changed"). The test is NOT modified by this filing or by this dispatch.**
+
+**Description [measured].** `test_hac_t17_carry_breakeven_is_corrected` reuses the
+fixture `r = _ar1(4000, 0.8, 0.0035, 5)` from `test_hac_t16` — the same series used
+for the gates.py cost-multiplier breakeven test — and calls
+`carry_breakeven_bps_annual(at_shift, ppy, lag=lag)` with **no bracket override**,
+so the default `bracket=(0.0, 2000.0)` (0–20%/yr) applies. It then asserts
+`_ref_nw_t(at_shift(be), lag) == pytest.approx(T_STAT_HURDLE, abs=0.05)` — i.e.
+that the bisection actually finds a crossing inside the bracket.
+
+**It cannot, for either estimator.** `r`'s realized per-bar mean is ≈0.0035
+(≈127%/yr annualized under this fixture's construction), while the maximum shift
+the default bracket can apply is 2000 bps/yr = 0.000548/bar — about 16% of the
+mean it would need to offset. Measured at every point in the bracket:
+
+| delta (bps/yr) | t (HAC, lag=50) | t (uncorrected, lag=0) |
+|---:|---:|---:|
+| 0 | 6.49 | 18.87 |
+| 2000 (bracket ceiling) | 5.79 | 16.83 |
+
+Both remain far above `T_STAT_HURDLE = 3.0` at the bracket's ceiling, so both
+`carry_breakeven_bps_annual(..., lag=lag)` and `carry_breakeven_bps_annual(...,
+lag=0)` hit the function's own documented, **unchanged-by-spec** degenerate branch
+("`t_hi >= hurdle → return hi`", VALIDATION-SPEC-001 E-14) and both return the
+bracket ceiling, 2000.0. The first assertion then fails because `t` at 2000 is
+5.79, not 3.0. **This is a fixture/bracket scale mismatch, not an estimator
+defect** — `carry_breakeven_bps_annual(at_shift, ppy, lag=lag)` would need a
+bracket of roughly 6,000–11,000 bps/yr to bisect on this fixture at all, for
+either estimator.
+
+**Why this is not an implementation defect, and how that was checked.** The same
+Newey–West construction is independently pinned bit-exact against the reference
+formula in `test_hac_t2` (6 seeds), the Andrews lag rule in `test_hac_t5` (4
+seeds), and the analogous fixed-lag bisection in `test_hac_t16` (gates.py's
+cost-multiplier breakeven, same underlying `r`, a wider practical perturbation
+range) converges correctly and demonstrates the E-13/E-14 properties (fixed lag
+across the sweep; corrected breakeven strictly below the uncorrected one). 26 of
+27 other tests across both files pass, including every other assertion inside
+`test_hac_t17` up to this one.
+
+**Disposition taken.** The test is left red. It is not one of the six clauses
+VALIDATION-SPEC-001 §3.2 names for routing back, but it is squarely the shape
+Ruling 004 §11 / VALIDATION-SPEC-001 §3.3 describe: a correct implementation is
+under real pressure from a defective pre-authored test, and the standing term is
+to escalate rather than amend the test or fudge the implementation to chase it.
+This is the same class of defect Validation found and self-corrected in I-058
+(ML-T-12's unsatisfiable tolerance) — I-058 rated the analogous situation LOW only
+because it was caught **before** implementation; its own text states the
+identical defect surviving to implementation "would have been MEDIUM, because by
+then a correct implementation would have been under pressure from it." That is
+this dispatch's situation exactly, which sets the severity here.
+
+**Why MEDIUM, not HIGH.** No firm decision, live capital, or data path is
+affected — the registry holds 0 hypotheses / 0 trials before and after this
+dispatch, and no Gate has been evaluated against this function. It blocks a
+literal 28/28 green claim on `test_tstat_hac.py` (16/17 in that file; 27/28
+combined with `test_cv_purge_embargo.py`) but not the underlying I-050
+correction, which is independently verified elsewhere in the same suite.
+
+**What would resolve it.** Either widen `test_hac_t17`'s bracket (e.g. pass
+`bracket=(0.0, 12000.0)` explicitly) or change the fixture's `mu` to a magnitude
+the default bracket can actually bisect — Validation's call, not the
+implementer's, per the standing term.
+
+**Resolution:** open. Left red by design; not touched.
+**Pattern tag:** `pre-authored-test-unverified` · `test-fixture-scale-mismatch`

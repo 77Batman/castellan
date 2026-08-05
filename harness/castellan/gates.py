@@ -93,6 +93,15 @@ class ValidationReport:
     # original bare rendering is used unchanged (H-13).
     n_inherited: int = 0
     n_logged: int | None = None
+    # E-10 (VALIDATION-SPEC-001, I-050): report fields, NOT Criterion rows
+    # (test_hac_t14 guards this). t_stat_hac is the same figure graded by
+    # the "t-statistic (net, HAC-corrected)" criterion (t_gate);
+    # t_stat_uncorrected is reported for continuity and is never graded.
+    t_stat_uncorrected: float | None = None
+    t_stat_hac: float | None = None
+    hac_lag: int | None = None
+    hac_lag_rule: str | None = None
+    hac_rho_hat: float | None = None
 
     def to_json(self) -> str:
         d = asdict(self)
@@ -144,6 +153,15 @@ class ValidationReport:
                 v = f"{v:.4g}"
             lines.append(f"| {c.name} | {v} | {c.threshold} | **{c.verdict}**"
                          + (f" — {c.note}" if c.note else "") + " |")
+        if self.t_stat_hac is not None:
+            lines.append("")
+            lines.append(
+                f"t-statistic: HAC-corrected **{self.t_stat_hac:.3f}** at lag "
+                f"{self.hac_lag} ({self.hac_lag_rule}, ρ̂ = {self.hac_rho_hat:+.3f}) "
+                f"· uncorrected {self.t_stat_uncorrected:.3f} — **the uncorrected "
+                "figure assumes serial independence, is reported for continuity, "
+                "and is NOT graded.**"
+            )
         if self.breakeven_cost_multiplier is not None:
             lines.append("")
             lines.append(
@@ -179,6 +197,7 @@ def evaluate_gate1(
     corr_to_live_book: float | None = None,
     red_team_memo_present: bool = False,
     kill_condition: str | None = None,
+    label_span: int = 1,
 ) -> ValidationReport:
     """Evaluate Gate 1. One non-PASS criterion fails the Gate.
 
@@ -210,6 +229,11 @@ def evaluate_gate1(
     capacity_multiple : estimated capacity / intended allocation.
     corr_to_live_book : correlation of strategy returns to any live pod
         strategy (max absolute).
+    label_span : bars over which each observation's label is realized
+        (VALIDATION-SPEC-001 E-11). Floors the HAC lag at
+        ``label_span - 1``; NOT read from the registry (I-052 would add
+        that field; the Andrews floor means an undeclared label span
+        degrades to the data-driven lag, never to zero).
     """
     r = np.asarray(oos_net_returns, dtype=float)
     r = r[~np.isnan(r)]
@@ -257,9 +281,24 @@ def evaluate_gate1(
     criteria.append(_crit("Net Sharpe (OOS, annualized)", sr_ann,
                           f">= {NET_SHARPE_MIN}", sr_ann >= NET_SHARPE_MIN))
 
-    t = stats.sr_tstat(r)
-    criteria.append(_crit("t-statistic (net)", t, f">= {T_STAT_HURDLE}",
-                          t >= T_STAT_HURDLE))
+    # -- t-statistic, HAC-corrected (VALIDATION-SPEC-001 E-11, I-050) ---
+    # E-11: the graded criterion is the corrected estimator's t_gate =
+    # min(t_nw, t_raw) (E-8's non-permissive floor). The uncorrected
+    # figure is reported (E-10) but is NEVER a Criterion row (E-10 /
+    # guarded by test_hac_t14).
+    hac = stats.sr_tstat_corrected(r, label_span=label_span)
+    hac_note_base = f"uncorrected t = {hac.t_raw:.3f}, inflation {hac.inflation:.2f}×"
+    hac_note = (f"{hac.note}; {hac_note_base}" if (not hac.eligible and hac.note)
+                else hac_note_base)
+    if not hac.eligible:
+        t_verdict = INSUFF
+    elif hac.t_gate >= T_STAT_HURDLE:
+        t_verdict = PASS
+    else:
+        t_verdict = FAIL
+    criteria.append(Criterion(
+        "t-statistic (net, HAC-corrected)", hac.t_gate, f">= {T_STAT_HURDLE}",
+        t_verdict, hac_note))
 
     # -- DSR -----------------------------------------------------------
     if n_ok and fam.n_trials >= 2:
@@ -507,29 +546,36 @@ def evaluate_gate1(
                                   f">= {PARAM_SURFACE_MIN_PROFITABLE:.0%} of ±50% grid",
                                   INSUFF))
 
-    # -- cost robustness & breakeven ------------------------------------
+    # -- cost robustness & breakeven, HAC-corrected (E-12/E-13/E-14) ----
+    # The lag is selected ONCE, on the base OOS series (`hac.lag`, from
+    # the criterion above), and held fixed across both the 2x-costs
+    # criterion and the breakeven bisection. Re-selecting it at every
+    # sweep point would make t a step function of the swept parameter
+    # and destroy the monotonicity the bisection relies on (I-037 /
+    # Ruling 003) — the exact failure E-13 exists to prevent.
     breakeven = None
     if net_returns_at_cost_multiplier is not None:
         r2 = np.asarray(net_returns_at_cost_multiplier(2.0), dtype=float)
-        t2 = stats.sr_tstat(r2[~np.isnan(r2)])
-        criteria.append(_crit("t-stat at 2× costs", t2, f">= {T_STAT_HURDLE}",
-                              t2 >= T_STAT_HURDLE))
-        # bisect the breakeven multiplier in [1, 32]
+        t2 = stats.sr_tstat_nw(r2[~np.isnan(r2)], hac.lag)
+        criteria.append(_crit(
+            "t-stat at 2× costs (HAC-corrected)", t2, f">= {T_STAT_HURDLE}",
+            t2 >= T_STAT_HURDLE))
+        # bisect the breakeven multiplier in [1, 32] on the HAC statistic
         lo, hi = 1.0, 32.0
-        t_lo = stats.sr_tstat(np.asarray(net_returns_at_cost_multiplier(lo)))
+        t_lo = stats.sr_tstat_nw(np.asarray(net_returns_at_cost_multiplier(lo)), hac.lag)
         if t_lo < T_STAT_HURDLE:
             breakeven = lo
         else:
             for _ in range(24):
                 mid = 0.5 * (lo + hi)
-                tm = stats.sr_tstat(np.asarray(net_returns_at_cost_multiplier(mid)))
+                tm = stats.sr_tstat_nw(np.asarray(net_returns_at_cost_multiplier(mid)), hac.lag)
                 if tm >= T_STAT_HURDLE:
                     lo = mid
                 else:
                     hi = mid
             breakeven = lo
     else:
-        criteria.append(Criterion("t-stat at 2× costs", None,
+        criteria.append(Criterion("t-stat at 2× costs (HAC-corrected)", None,
                                   f">= {T_STAT_HURDLE}", INSUFF,
                                   "Provide a cost-multiplier rerun callable"))
 
@@ -576,6 +622,11 @@ def evaluate_gate1(
         holdout_classification=holdout_classification,
         prereg_sha256=prereg_sha256,
         predecessor_prereg_sha256=predecessor_prereg_sha256 or None,
+        t_stat_uncorrected=hac.t_raw,
+        t_stat_hac=hac.t_nw,
+        hac_lag=hac.lag,
+        hac_lag_rule=hac.lag_rule,
+        hac_rho_hat=hac.rho_hat,
         n_inherited=fam.n_inherited,
         n_logged=fam.n_logged,
     )
