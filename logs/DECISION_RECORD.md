@@ -1819,3 +1819,66 @@ a failure. Recorded now, not at sprint close.
 ruling resets.
 
 **Review date:** on SPEC-002's completion.
+
+---
+
+## S2-D-016 · 2026-08-06 · Headroom control replaced with readable signals · Rider B dispatched
+
+**1 · The unimplementable control is retracted and replaced.** The Principal retracted the
+`/usage` headroom check as specified and confirmed the CIO was right to file it
+unimplementable rather than report it adopted. **The replacement uses signals each party can
+actually read**, which is the correct fix for a control that failed because it assumed a
+capability nobody checked for.
+
+**2 · Principal-supplied headroom, in force.** Every Principal message now opens with
+`[usage: session X% · weekly-opus Y%]`, read from `/usage` at send time. **First reading,
+2026-08-06: `session 24% · weekly-opus 12%`.** Recorded with the message it arrived on,
+because the whole point of the signal is that it is timestamped.
+
+**3 · Staleness rule, in force.** A headroom note **older than ~2 hours**, or **any
+termination since it arrived**, means headroom is **unknown**, and the conservative posture
+applies: pre-split (already in force), incremental writes (already in force), and **no second
+long Opus dispatch inside the same window after a termination** — queued for the Principal's
+next contact instead.
+
+**Current status against the rule: headroom is KNOWN and healthy.** The note is minutes old,
+and the third termination occurred *before* it arrived, not since. The conservative posture is
+therefore **not** triggered — and the CIO records that reading explicitly rather than
+silently, because the rule's two clauses could be read to strand the firm permanently after
+any termination, and they do not.
+
+**4 · No Opus dispatch was launched anyway, for a different reason.** Both remaining Opus
+items are **dependency-blocked, not budget-blocked**: the Director's §10.4 revision waits on
+SPEC-002's completion by the Principal's own sequencing, and C2 waits behind that so
+Validation does not rule on a document carrying a superseded ceiling form. **Healthy headroom
+does not create work that the sequence does not yet permit**, and the CIO is not going to
+spend a scarce Opus unit early merely because the window is open.
+
+**5 · Rider B dispatched instead — Sonnet, and therefore untouched by the constrained tier.**
+It has been outstanding since S2-D-001 and is the firm's **largest un-actioned data-loss
+exposure**: `book/pit.db` at 61.1 MB / 710 documents / 365,465 observations, holding the
+Polymarket capture that **cannot be reproduced after the fact**, with a backup regime that is
+*currently manual to iCloud* — which is to say, dependent on somebody remembering.
+
+Four requirements, of which the CIO judges two decisive: **a snapshot must be restore-verified
+as routine**, because a backup nobody has restored is a hypothesis rather than a backup; and
+**failure must surface loudly within a week**, because silent backup failure is worse than no
+backup — it buys false confidence. The brief also requires the seat to **re-derive the growth
+rate rather than trust the CIO's restatement of its own earlier figure.**
+
+**D-003's policy binds the design**: `crontab` and `launchctl` are denied, so the seat
+**cannot install a schedule** and is told not to route around it. It delivers scripts and a
+`[PRINCIPAL]`-marked runbook. **Rider A's approved $6.00/month VPS cutover also remains
+unexecuted**, so the brief requires the snapshot regime's interaction with that migration to
+be stated rather than discovered.
+
+**6 · Budget.** **12 of 30 · 8 of 12 Opus** — Rider B is Sonnet. DA reserve 1 sealed. Freely
+allocable Opus: **3, against 2 committed.** §5 dead-man: 6 invocations remain since this
+checkpoint.
+
+**7 · Still queued, not forgotten:** the standing principle *"inheritance is computed, never
+re-declared"* into `reference/GATES.md` and `reference/TEMPLATES.md`; **I-056**'s ML-2 block
+for PREREG-001 and the pre-registration template; **Rider C**'s casebook harvest at sprint
+close. All three are doc work and none is dispatchable into Seat 9 while Rider B holds it.
+
+**Review date:** on SPEC-002's completion.
