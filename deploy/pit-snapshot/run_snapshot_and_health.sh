@@ -18,10 +18,10 @@ PYTHON3="/Library/Frameworks/Python.framework/Versions/3.13/bin/python3"
 
 cd "${REPO_ROOT}" || exit 1
 
-"${PYTHON3}" harness/scripts/snapshot_book.py
+"${PYTHON3}" harness/scripts/snapshot_book.py --dest "$HOME/Library/Mobile Documents/com~apple~CloudDocs/castellan-backups"
 SNAP_STATUS=$?
 
-"${PYTHON3}" harness/scripts/check_snapshot_health.py
+"${PYTHON3}" harness/scripts/check_snapshot_health.py --dest "$HOME/Library/Mobile Documents/com~apple~CloudDocs/castellan-backups"
 HEALTH_STATUS=$?
 
 if [[ "${SNAP_STATUS}" -ne 0 || "${HEALTH_STATUS}" -ne 0 ]]; then
