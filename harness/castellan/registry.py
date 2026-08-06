@@ -600,6 +600,24 @@ class TrialRegistry:
             for (blob,) in cur.fetchall()
         ]
 
+    def own_trial_times(self, family: str) -> list[float]:
+        """VALIDATION-SPEC-003 B-28. ``created_utc`` of trials whose
+        ``family`` column is EXACTLY ``family``, ascending. NOT transitive
+        across ``predecessor_family`` -- B-1: the trial budget grades this
+        family's own post-seal search; the predecessor chain's spend is
+        priced by N (:meth:`family_stats`, which IS transitive), not by
+        the budget criterion. Ties (identical ``created_utc``) are broken
+        by ``trial_id`` insertion order, which is also the order
+        ``log_trial`` assigns them, so the ordering this returns is the
+        order the trials actually happened in even when the system
+        clock's resolution cannot distinguish two calls."""
+        cur = self.conn.execute(
+            "SELECT created_utc FROM trials WHERE family=? "
+            "ORDER BY created_utc, trial_id",
+            (family,),
+        )
+        return [row[0] for row in cur.fetchall()]
+
     # -- events / verdicts --------------------------------------------
 
     def log_event(self, kind: str, family: str | None, detail: dict) -> int:

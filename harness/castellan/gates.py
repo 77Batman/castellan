@@ -120,6 +120,19 @@ class ValidationReport:
     # required by any test, but needed to render the block's own shape.
     vif_source: str | None = None
     vif_n_series_used: int | None = None
+    # VALIDATION-SPEC-003 B-27: report fields, NOT Criterion rows (M-10 /
+    # E-10's precedent, guarded by test_hac_t14). `trial_budget` above is
+    # unchanged and stays the sealed figure (B-2); `trial_budget_sealed`
+    # is the same number under B-27's own name, `trial_budget_effective`
+    # is the sealed budget plus every ADMITTED/CAPPED extension's
+    # admitted increment, `n_own_logged` is this family's own (NOT
+    # chain-summed) logged trial count, and `budget_extensions` lists
+    # EVERY trial_budget_extension event for this family, including
+    # every refused one, with its issuer, countersigner, and status.
+    trial_budget_sealed: int | None = None
+    trial_budget_effective: int | None = None
+    n_own_logged: int | None = None
+    budget_extensions: list | None = None
 
     def to_json(self) -> str:
         d = asdict(self)
@@ -242,6 +255,389 @@ def _crit(name, value, threshold, ok: bool | None, note="") -> Criterion:
     return Criterion(name, value, threshold, PASS if ok else FAIL, note)
 
 
+# ======================================================================
+# VALIDATION-SPEC-003 (B-1 .. B-31, RULING 003-A) -- the trial-budget
+# criterion. I-022's substantive fix: `over` was computed and used only
+# to write a note; the verdict argument was the literal `True`. This
+# section replaces that with a graded, per-trial, prospective-only walk
+# against an effective budget that only a countersigned (discretionary)
+# or recomputed (contingent) extension event can raise -- never an
+# aggregate comparison, which legalises spend-first-authorize-after
+# (B-9: "a budget is not a receipt").
+# ======================================================================
+
+_EXTENSION_MODES = frozenset({"DISCRETIONARY", "CONTINGENT"})
+_DISCRETIONARY_SELF_ISSUERS = frozenset({"director-of-research", "principal"})
+_VALID_COUNTERSIGNERS = frozenset({"quant-validation", "principal"})
+_CONTINGENT_PREDICATE_NAME = "n_max_admits_declared_ceiling"
+
+_STATUS_ADMITTED = "ADMITTED"
+_STATUS_CAPPED = "CAPPED"
+_STATUS_WITHDRAWN = "WITHDRAWN"
+_STATUS_REFUSED_MALFORMED = "REFUSED-MALFORMED"
+_STATUS_REFUSED_UNCOUNTERSIGNED = "REFUSED-UNCOUNTERSIGNED"
+_STATUS_REFUSED_SELF_ISSUED = "REFUSED-SELF-ISSUED"
+_STATUS_REFUSED_PREDICATE = "REFUSED-PREDICATE"
+
+
+def contingent_increment_allowed(
+    n_max: int | None, declared_ceiling_base: int, declared_increment: int
+) -> int:
+    """B-18 / B-28. Pure and unit-testable without a Gate fixture
+    (`test_tbe_15` grades this directly).
+
+    ``clamp(n_max - declared_ceiling_base, 0, declared_increment)``.
+    Returns ``0`` where ``n_max`` is ``None`` (B-19: unevaluable is never
+    a permissive default). The clamp is two-sided: it never exceeds what
+    was declared and never goes negative. Reused, with a running
+    ``declared_ceiling_base`` offset, to consume B-20's aggregate cap
+    across multiple contingent events in creation order -- event *i*'s
+    allowance is this same function called with the base raised by every
+    earlier event's own admitted amount.
+    """
+    if n_max is None:
+        return 0
+    allowed = n_max - declared_ceiling_base
+    if allowed < 0:
+        allowed = 0
+    if allowed > declared_increment:
+        allowed = declared_increment
+    return int(allowed)
+
+
+def _validate_extension_schema(detail: dict) -> str | None:
+    """B-13 (common schema) + B-17 (the CONTINGENT predicate vocabulary).
+    Schema-only: returns a malformation reason string, or ``None`` if
+    well-formed. Does not consult the registry and does not decide
+    admissibility -- B-21's cross-check (which needs the registry) is
+    the caller's job."""
+    mode = detail.get("mode")
+    if mode not in _EXTENSION_MODES:
+        return f"mode {mode!r} not in {{'DISCRETIONARY', 'CONTINGENT'}}"
+    inc = detail.get("increment")
+    if isinstance(inc, bool) or not isinstance(inc, int):
+        return f"increment {inc!r} is not an int (a bool is not an int here, H-2)"
+    if inc <= 0:
+        return f"increment {inc!r} is not > 0"
+    for key in ("issuer", "reason", "authorization_ref"):
+        val = detail.get(key)
+        if not isinstance(val, str) or not val.strip():
+            return f"{key!r} must be a non-empty, non-blank string, got {val!r}"
+    n_at_issue = detail.get("n_logged_at_issue")
+    if (isinstance(n_at_issue, bool) or not isinstance(n_at_issue, int)
+            or n_at_issue < 0):
+        return f"n_logged_at_issue {n_at_issue!r} must be an int >= 0"
+    predicate = detail.get("predicate")
+    if mode == "CONTINGENT":
+        if not isinstance(predicate, dict):
+            return "CONTINGENT extension requires a 'predicate' dict"
+        if predicate.get("name") != _CONTINGENT_PREDICATE_NAME:
+            return f"unknown predicate.name {predicate.get('name')!r} (B-17: closed vocabulary)"
+        params = predicate.get("params")
+        if params != {}:
+            return f"predicate.params must be empty, got {params!r} (B-17)"
+    elif predicate is not None:
+        return "DISCRETIONARY extension must not carry a 'predicate'"
+    return None
+
+
+def _admissible_ceiling(oos_index, fam, sr_ann, periods_per_year, vif_res) -> int | None:
+    """B-18/B-19's N_max = min(n_max_admissible_iid, n_max_admissible_serial)
+    -- the SAME figure the length criterion computes further down
+    (M-4/M-5), consumed here for the CONTINGENT admissibility arithmetic
+    before the length criterion itself runs. No new statistic (B-18): the
+    inputs and the formula are identical to the length block's; only the
+    call site is earlier, per B-29's requirement that the budget criterion
+    stay first in the report.
+
+    Unevaluable (``None``) under any of B-19's four conditions: no
+    calendar evidence, no logged trial anywhere in the chain, VIF
+    ineligible, or SR <= 0. ``None`` here means B-19's REFUSED-PREDICATE
+    branch, never a permissive default.
+    """
+    if oos_index is None or len(oos_index) < 2:
+        return None
+    if fam.n_logged == 0:
+        return None
+    if not vif_res.eligible:
+        return None
+    if not (sr_ann > 0):
+        return None
+    idx = pd.to_datetime(oos_index)
+    years_calendar = (idx.max() - idx.min()).days / 365.25
+    if years_calendar <= 0:
+        return None
+    n_max_iid = stats.max_admissible_trials(
+        years_calendar, sr_ann, periods_per_year, vif=1.0)
+    n_max_serial = stats.max_admissible_trials(
+        years_calendar, sr_ann, periods_per_year, vif=vif_res.vif_gate)
+    return min(n_max_iid, n_max_serial)
+
+
+def _budget_extension_ledger(registry, family, own_times, n_max, declared_ceiling_base):
+    """Processes every ``trial_budget_extension`` event logged for
+    ``family`` into an admissibility ledger.
+
+    Returns ``(ledger, malformed)``: ``ledger`` is a list of dicts, one
+    per extension event in creation order, carrying B-27's report shape
+    plus ``effective_from`` (B-12, ``None`` where never admitted) and
+    ``increment_admitted``. ``malformed`` is the ``(event_id, reason)``
+    list for events that FAIL the criterion outright (B-23), in event
+    order.
+
+    The claimed timestamp inside ``detail`` (``issued_utc`` / ``as_of`` /
+    ``dated``, or any other caller-supplied field) is NEVER read here --
+    only ``created_utc``, which ``TrialRegistry.log_event`` stamps from
+    the system clock and which the API exposes no parameter to override
+    (section 7.1's back-dating answer, B-9).
+    """
+    exts = registry.events(kind="trial_budget_extension", family=family)
+    withdrawals = registry.events(
+        kind="trial_budget_extension_withdrawn", family=family)
+    countersigns = registry.events(
+        kind="trial_budget_extension_countersigned", family=family)
+
+    withdrawn_ids = {w["detail"].get("extension_event_id") for w in withdrawals}
+
+    ledger: list[dict] = []
+    malformed: list[tuple[int, str]] = []
+    seen_refs: dict[str, int] = {}  # authorization_ref -> admitting event_id (B-26)
+    contingent_queue: list[dict] = []
+
+    for e in exts:
+        eid = e["event_id"]
+        detail = e["detail"]
+        created = e["created_utc"]
+        mode = detail.get("mode")
+        row = {
+            "event_id": eid, "mode": mode,
+            "issuer": detail.get("issuer"), "countersigner": None,
+            "increment_declared": detail.get("increment"),
+            "increment_admitted": 0, "status": None,
+            "effective_from": None, "created_utc": created,
+            "authorization_ref": detail.get("authorization_ref"),
+        }
+
+        if eid in withdrawn_ids:
+            # B-24: append-only repair. Inert -- no increment, no
+            # malformation FAIL, regardless of what the event contained.
+            row["status"] = _STATUS_WITHDRAWN
+            ledger.append(row)
+            continue
+
+        reason = _validate_extension_schema(detail)
+        if reason is None:
+            # B-21: the events-table analogue of the hypothesis shadow
+            # copy. A back-dated `created_utc` must also make the trial
+            # ledger agree with a count the event declared about itself.
+            n_before = sum(1 for t in own_times if t < created)
+            declared_n = detail.get("n_logged_at_issue")
+            if n_before != declared_n:
+                reason = (
+                    f"n_logged_at_issue cross-check failed: declared "
+                    f"{declared_n}, actual own trials logged before this "
+                    f"event's created_utc = {n_before} (B-21)"
+                )
+        if reason is not None:
+            row["status"] = _STATUS_REFUSED_MALFORMED
+            ledger.append(row)
+            malformed.append((eid, reason))
+            continue
+
+        ref = row["authorization_ref"]
+        if ref in seen_refs:
+            malformed.append((eid, (
+                f"authorization_ref {ref!r} already spent by extension "
+                f"event_id {seen_refs[ref]} (B-26: one authorization "
+                "artifact, one increment)"
+            )))
+            row["status"] = _STATUS_REFUSED_MALFORMED
+            ledger.append(row)
+            continue
+
+        if mode == "DISCRETIONARY":
+            issuer = detail.get("issuer")
+            if issuer == "principal":
+                # B-15: the Principal issues alone; no countersignature.
+                row["status"] = _STATUS_ADMITTED
+                row["increment_admitted"] = detail["increment"]
+                row["effective_from"] = created
+                seen_refs[ref] = eid
+            elif issuer == "director-of-research":
+                # B-14: a distinct-seat countersignature is required.
+                own_counters = [
+                    c for c in countersigns
+                    if c["detail"].get("extension_event_id") == eid
+                ]
+                valid = [
+                    c for c in own_counters
+                    if c["detail"].get("countersigner") in _VALID_COUNTERSIGNERS
+                    and c["detail"].get("countersigner") != issuer
+                    and c["created_utc"] >= created
+                ]
+                if valid:
+                    earliest = min(valid, key=lambda c: c["created_utc"])
+                    row["status"] = _STATUS_ADMITTED
+                    row["increment_admitted"] = detail["increment"]
+                    row["countersigner"] = earliest["detail"].get("countersigner")
+                    row["effective_from"] = max(created, earliest["created_utc"])
+                    seen_refs[ref] = eid
+                elif any(c["detail"].get("countersigner") == issuer for c in own_counters):
+                    row["status"] = _STATUS_REFUSED_SELF_ISSUED
+                else:
+                    row["status"] = _STATUS_REFUSED_UNCOUNTERSIGNED
+            else:
+                # B-14's allow-list is exhaustive: an issuer that is
+                # neither the Director nor the Principal has no route to
+                # admission -- refusal, never a schema MALFORMED (B-4:
+                # this can only tighten, so it is disclosed, not failed).
+                row["status"] = _STATUS_REFUSED_UNCOUNTERSIGNED
+        else:  # CONTINGENT
+            # B-16: authorized by a recomputation, never by the event's
+            # own claim -- self-issuance is harmless by construction, so
+            # no countersignature is required or consulted.
+            row["effective_from"] = created
+            seen_refs[ref] = eid
+            contingent_queue.append(row)
+
+        ledger.append(row)
+
+    # B-20: the aggregate cap on CONTINGENT increments, consumed in
+    # creation order -- reusing `contingent_increment_allowed` with a
+    # running base is exactly B-18's clamp applied to "what remains".
+    cumulative = 0
+    for row in contingent_queue:
+        if n_max is None:
+            # B-19: unevaluable is never permissive.
+            row["status"] = _STATUS_REFUSED_PREDICATE
+            row["increment_admitted"] = 0
+            continue
+        admitted = contingent_increment_allowed(
+            n_max, declared_ceiling_base + cumulative, row["increment_declared"])
+        row["increment_admitted"] = admitted
+        cumulative += admitted
+        row["status"] = (
+            _STATUS_ADMITTED if admitted == row["increment_declared"] and admitted > 0
+            else _STATUS_CAPPED
+        )
+
+    return ledger, malformed
+
+
+def _trial_budget_criterion(fam, registry, family, sr_ann, periods_per_year,
+                            vif_res, oos_index):
+    """VALIDATION-SPEC-003 B-1 .. B-31, RULING 003-A -- the trial-count
+    criterion. Returns ``(Criterion, report_fields)`` where
+    ``report_fields`` is B-27's dict of NEW ``ValidationReport`` fields
+    (``trial_budget_sealed`` / ``trial_budget_effective`` / ``n_own_logged``
+    / ``budget_extensions``) -- report fields, not Criterion rows
+    (M-10 / E-10's precedent, guarded by ``test_hac_t14``).
+    """
+    name = "Trial count N (registry)"
+
+    if fam.n_logged == 0:
+        # B-8, first sentence: UNCHANGED (H-10/H-11), keyed on the
+        # chain-summed figure -- this branch predates this document and
+        # is not touched by it.
+        if fam.n_inherited:
+            note = (
+                f"No trials logged for this family (logged=0); "
+                f"n_inherited={fam.n_inherited} is a declared seed, not "
+                "a substitute for a real, run trial — seeding must not "
+                "paper over a family that has run nothing (H-11)."
+            )
+        else:
+            note = ("No trials logged for this family. If N is "
+                    "unreconstructable, the verdict is "
+                    "INSUFFICIENT-DATA, never PASS.")
+        crit = Criterion(name, fam.n_trials, ">= 1 logged trial", INSUFF, note)
+        fields = dict(
+            trial_budget_sealed=fam.trial_budget,
+            trial_budget_effective=fam.trial_budget,
+            n_own_logged=0, budget_extensions=[])
+        return crit, fields
+
+    own_times = sorted(registry.own_trial_times(family))
+    m = len(own_times)
+    sealed = fam.trial_budget
+
+    n_max = _admissible_ceiling(oos_index, fam, sr_ann, periods_per_year, vif_res)
+    declared_ceiling_base = fam.n_inherited + sealed
+    ledger, malformed = _budget_extension_ledger(
+        registry, family, own_times, n_max, declared_ceiling_base)
+
+    total_admitted = sum(row["increment_admitted"] for row in ledger)
+    eff_final = sealed + total_admitted
+
+    threshold = f"own-family logged <= effective budget {eff_final} (sealed {sealed}"
+    threshold += f" + {total_admitted} extension)" if total_admitted else ")"
+
+    chain_suffix = f"chain-summed logged {fam.n_logged}" if fam.n_logged != m else ""
+
+    def _finish(verdict: str, note: str) -> Criterion:
+        if chain_suffix:
+            # B-25: the disclosed residual (I-101) -- visible on every
+            # report where the predecessor chain out-spent the successor,
+            # rather than tracked only in a memo.
+            note = (note + "; " if note else "") + chain_suffix
+        return Criterion(name, fam.n_trials, threshold, verdict, note)
+
+    if malformed:
+        # B-23: absolute, even where comfortably inside the sealed
+        # budget -- checked ahead of B-7/B-8/B-9, all of which describe a
+        # WELL-FORMED registry state.
+        detail_str = "; ".join(f"event_id {eid}: {reason}" for eid, reason in malformed)
+        crit = _finish(FAIL, f"MALFORMED AUTHORIZATION: {detail_str}")
+    elif m == 0:
+        # B-8, second sentence: the chain has logged trials but this
+        # family has none of its own -- vacuously within budget.
+        crit = _finish(PASS, "")
+    elif sealed <= 0:
+        # B-7 / I-100: the `and` short-circuit this replaces disabled
+        # this branch entirely. Unconditional -- no extension buys a
+        # family out of "pre-registered no authorization."
+        crit = _finish(FAIL, (
+            f"NO AUTHORIZED BUDGET: sealed trial_budget={sealed} with "
+            f"{m} own logged trial(s)."
+        ))
+    else:
+        # B-9: the ordering walk, per trial, not per aggregate.
+        violation_k = violation_eff = None
+        for k, t_k in enumerate(own_times, start=1):
+            eff_tk = sealed + sum(
+                row["increment_admitted"] for row in ledger
+                if row["effective_from"] is not None and row["effective_from"] <= t_k
+            )
+            if k > eff_tk:
+                violation_k, violation_eff = k, eff_tk
+                break
+        if violation_k is not None:
+            crit = _finish(FAIL, (
+                f"OVER BUDGET: trial {violation_k} of {m} was logged when "
+                f"the effective budget was {violation_eff} (sealed {sealed})"
+            ))
+        else:
+            crit = _finish(PASS, "")
+
+    fields = dict(
+        trial_budget_sealed=sealed,
+        trial_budget_effective=eff_final,
+        n_own_logged=m,
+        budget_extensions=[
+            {
+                "event_id": row["event_id"], "mode": row["mode"],
+                "issuer": row["issuer"], "countersigner": row["countersigner"],
+                "increment_declared": row["increment_declared"],
+                "increment_admitted": row["increment_admitted"],
+                "status": row["status"], "created_utc": row["created_utc"],
+                "authorization_ref": row["authorization_ref"],
+            }
+            for row in ledger
+        ],
+    )
+    return crit, fields
+
+
 def evaluate_gate1(
     strategy: str,
     family: str,
@@ -303,42 +699,51 @@ def evaluate_gate1(
     fam = registry.family_stats(family)
     criteria: list[Criterion] = []
 
-    # -- multiple-testing inputs from the registry --------------------
-    # H-10 / H-11 (Gate 0 001 §3, F-3/F-4): both guards below key on
-    # `n_logged` — the real, run-trial count — not `n_trials`, which
-    # after seeding (H1-H2) includes the declared `n_inherited` and no
-    # longer means "trials this family has actually run." Keying on
-    # n_trials here would make (a) every seeded family read OVER BUDGET
-    # on seeding alone (the budget governs the firm's post-seal search;
-    # inherited trials are not post-seal search), and (b) a seeded
-    # family with zero logged trials never reach the "run nothing"
-    # guard, silently converting "this family has never run anything"
-    # into a fully populated denominator (I-014's shape).
-    n_ok = fam.n_logged >= 1 and fam.sr_period_std is not None
+    # -- performance/VIF, HOISTED (VALIDATION-SPEC-003 B-29) -----------
+    # `sr_ann` and `vif_res` are computed here, ahead of their original
+    # position further down, because the trial-budget criterion's
+    # CONTINGENT-extension arithmetic (B-16 .. B-20) needs both to
+    # recompute N_max BEFORE it can grade -- and B-29 requires that
+    # criterion to remain FIRST in `report.criteria` (a Gate report is
+    # read budget-first, since N is the denominator of everything below
+    # it). This is a hoist, not a duplicate: the "core performance" and
+    # "VIF, measured once" sections below now just APPEND using these
+    # same values -- the formula and its inputs are computed exactly
+    # once each.
+    sr_ann = stats.sharpe_annual(r, periods_per_year)
+    # M-7 / R-11: n_logged == 0 means no logged trial carries a return
+    # series, so the family's serial dependence is unmeasurable. There
+    # is no fallback to VIF=1 -- the permissive assumption this document
+    # exists to remove -- so the candidate is deliberately withheld too,
+    # forcing the "unmeasurable" branch rather than a candidate-only
+    # measurement for a family that has run nothing.
     if fam.n_logged == 0:
-        if fam.n_inherited:
-            note = (
-                f"No trials logged for this family (logged=0); "
-                f"n_inherited={fam.n_inherited} is a declared seed, not "
-                "a substitute for a real, run trial — seeding must not "
-                "paper over a family that has run nothing (H-11)."
-            )
-        else:
-            note = ("No trials logged for this family. If N is "
-                    "unreconstructable, the verdict is "
-                    "INSUFFICIENT-DATA, never PASS.")
-        criteria.append(Criterion(
-            "Trial count N (registry)", fam.n_trials, ">= 1 logged trial",
-            INSUFF, note))
+        vif_res = stats.family_variance_inflation([], None, label_span=label_span)
     else:
-        over = fam.trial_budget and fam.n_logged > fam.trial_budget
-        criteria.append(_crit(
-            "Trial count N (registry)", fam.n_trials,
-            f"logged; budget {fam.trial_budget}", True,
-            "OVER BUDGET — flagged to Director of Research" if over else ""))
+        vif_res = stats.family_variance_inflation(
+            registry.trial_returns(family), r, label_span=label_span)
+
+    # -- multiple-testing inputs from the registry --------------------
+    # H-10 / H-11 (Gate 0 001 §3, F-3/F-4): the fam.n_logged == 0 branch
+    # inside `_trial_budget_criterion` keys on `n_logged` — the real,
+    # run-trial count — not `n_trials`, which after seeding (H1-H2)
+    # includes the declared `n_inherited` and no longer means "trials
+    # this family has actually run." Keying on n_trials there would make
+    # (a) every seeded family read OVER BUDGET on seeding alone (the
+    # budget governs the firm's post-seal search; inherited trials are
+    # not post-seal search), and (b) a seeded family with zero logged
+    # trials never reach the "run nothing" guard, silently converting
+    # "this family has never run anything" into a fully populated
+    # denominator (I-014's shape). VALIDATION-SPEC-003 B-1 .. B-31,
+    # RULING 003-A: I-022's substantive fix. `over` used to be computed
+    # and used only to write a note; the verdict argument was the
+    # literal `True`.
+    n_ok = fam.n_logged >= 1 and fam.sr_period_std is not None
+    trial_budget_crit, trial_budget_fields = _trial_budget_criterion(
+        fam, registry, family, sr_ann, periods_per_year, vif_res, oos_index)
+    criteria.append(trial_budget_crit)
 
     # -- core performance ---------------------------------------------
-    sr_ann = stats.sharpe_annual(r, periods_per_year)
     criteria.append(_crit("Net Sharpe (OOS, annualized)", sr_ann,
                           f">= {NET_SHARPE_MIN}", sr_ann >= NET_SHARPE_MIN))
 
@@ -363,18 +768,8 @@ def evaluate_gate1(
 
     # -- VIF, measured once (VALIDATION-SPEC-002 D-7: one VIF, three
     # consumers -- the t-statistic above via hac.inflation, DSR below,
-    # and the length criterion further down). --------------------------
-    # M-7 / R-11: n_logged == 0 means no logged trial carries a return
-    # series, so the family's serial dependence is unmeasurable. There
-    # is no fallback to VIF=1 -- the permissive assumption this document
-    # exists to remove -- so the candidate is deliberately withheld too,
-    # forcing the "unmeasurable" branch rather than a candidate-only
-    # measurement for a family that has run nothing.
-    if fam.n_logged == 0:
-        vif_res = stats.family_variance_inflation([], None, label_span=label_span)
-    else:
-        vif_res = stats.family_variance_inflation(
-            registry.trial_returns(family), r, label_span=label_span)
+    # and the length criterion further down). Computed above, hoisted
+    # ahead of the trial-budget criterion (VALIDATION-SPEC-003 B-29). --
 
     # -- DSR (VALIDATION-SPEC-002 D-1 .. D-10) --------------------------
     dsr_iid_val: float | None = None
@@ -792,6 +1187,10 @@ def evaluate_gate1(
         t_eff=t_eff_val,
         vif_source=vif_res.source,
         vif_n_series_used=vif_res.n_series_used,
+        trial_budget_sealed=trial_budget_fields["trial_budget_sealed"],
+        trial_budget_effective=trial_budget_fields["trial_budget_effective"],
+        n_own_logged=trial_budget_fields["n_own_logged"],
+        budget_extensions=trial_budget_fields["budget_extensions"],
     )
     registry.log_event("gate1_verdict", family, {
         "strategy": strategy, "overall": overall,

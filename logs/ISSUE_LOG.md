@@ -3325,3 +3325,176 @@ and — outside the harness entirely — **I-105, HIGH** (PREREG-002's Stage 2 l
 the document *registers* Stage 1 as its sealed `trial_budget`).
 
 **Resolution:** open — **HIGH.** Unchanged until the implementation is green.
+
+---
+
+### I-022 · STATUS · 2026-08-06 · by head-of-data-infra · implementation landed, all 19 acceptance tests (27 collected items) green — closure is Validation's/CIO's to record
+
+`harness/castellan/gates.py` and `harness/castellan/registry.py` now implement
+VALIDATION-SPEC-003 B-1 … B-31 and RULING 003-A per `research/DATA-IMPL-007-budget-enforcement.md`.
+**Measured, this session:** `harness/tests/test_trial_budget_enforcement.py` — **27/27 items
+green**; whole-suite — **271 passed / 4 failed / 275**, the 4 failures identical in both
+identity and failure reason to the pre-existing baseline (`test_G2`, `test_mbs_12`, `test_h7`,
+`test_h8` — none touched, none mine). `test_tbe_17` (B-22 genericity) is still green, checked
+directly against the post-implementation source. `book/registry.db` unchanged at 0 hypotheses /
+0 trials; `book/vaults/` untouched.
+
+**Red-for-the-right-reason verified per clause** (mirroring RULING 005-A's method: revert the
+specific protection on a scratch copy, confirm the naming test(s) go red, confirm siblings that
+should be unaffected stay green) for B-1, B-6, B-7, B-9 (both the ordering-vs-aggregate defect
+and the root-level back-dating read), B-14, B-15, B-16, B-17, B-18/B-20, B-21 (isolated to the
+single `test_tbe_12` parametrization it names, the other 8 stayed green), B-23, B-24, and B-4/C-6.
+Full detail and the one nuance found (`test_tbe_09`, filed as **I-113**) are in
+`research/DATA-IMPL-007-budget-enforcement.md` §"Red-for-the-right-reason verification".
+
+**Per SPEC-003 §8's own closure clause** ("I-022 closes on Seat 9's implementation of B-1 … B-31
+with all 19 tests green — not before") the closure condition is met on the numbers above. I do
+not close this issue myself — I do not own the Issue Log and this is Validation's issue — I
+report the measured state for the CIO/Validation to record the disposition.
+
+**Resolution:** **implementation complete, closure recommended** — pending Validation/CIO
+record. Owner unchanged (quant-validation authored the spec; head-of-data-infra implemented).
+
+---
+
+## I-110 · 2026-08-06 · B-26 (duplicate `authorization_ref` salami-slicing) is implemented but has no dedicated acceptance test · Severity: LOW · Owner: quant-validation
+
+**Description.** VALIDATION-SPEC-003 B-26 requires that two admitted extensions sharing an
+`authorization_ref` be malformed from the second onward, closing "salami-slicing a single
+written approval into ten increments." Implemented in `_budget_extension_ledger` (`gates.py`,
+`seen_refs` tracking). **No test in `test_trial_budget_enforcement.py`'s §8 clause-to-test table
+names B-26**, and none of the 27 collected items exercises two extensions sharing a ref. The
+implementation is present and I am confident in it by inspection and by the general
+red-for-the-right-reason discipline applied to its neighbours, but it has not been red-then-green
+verified the way every named clause has, because there is nothing to revert against.
+
+**Not filed as a defect** — this is a coverage gap in the acceptance suite, not a defect in the
+harness, and I am not permitted to write the test that would close it. Flagged because an
+unswept branch is exactly the shape I-058/I-070/I-106 have each turned out to be.
+
+**Resolution:** open — **LOW.** Routed to Validation as the test file's owner.
+**Pattern tag:** `nominally-in-range-practically-unswept` (I-106's tag, same shape)
+
+---
+
+## I-111 · 2026-08-06 · B-8's second sentence (vacuous PASS when a family's own logged count is zero but its predecessor chain's is not) is implemented but has no dedicated acceptance test · Severity: LOW · Owner: quant-validation
+
+**Description.** B-8: "Where the chain has logged trials but this family has none
+(`n_own_logged == 0`, `fam.n_logged >= 1`), the family is vacuously within budget and the budget
+dimension is PASS." Implemented in `_trial_budget_criterion` (the `elif m == 0:` branch). No
+test in the file constructs this scenario (`test_tbe_18` is the nearest, but grades the case
+`n_own_logged == 3`, chain `== 43` — B-1's clause, not B-8's second sentence). Same disposition
+as I-110.
+
+**Resolution:** open — **LOW.**
+**Pattern tag:** `nominally-in-range-practically-unswept`
+
+---
+
+## I-112 · 2026-08-06 · B-27's four new `ValidationReport` fields are populated but read by no test · Severity: LOW · Owner: quant-validation
+
+**Description.** `trial_budget_sealed`, `trial_budget_effective`, `n_own_logged`, and
+`budget_extensions` (with every extension's status, including every refused one, per B-27) are
+populated on every `ValidationReport` `evaluate_gate1` returns [measured — manual construction,
+see `research/DATA-IMPL-007-budget-enforcement.md`]. No assertion in
+`test_trial_budget_enforcement.py` reads any of the four directly; every test instead reads the
+threshold string's `effective budget (\d+)` / `sealed (\d+)` regex pair (B-25). The fields are
+therefore implemented and exercised transitively (their values feed the threshold string that
+IS tested) but never asserted on directly.
+
+**Resolution:** open — **LOW.**
+**Pattern tag:** `nominally-in-range-practically-unswept`
+
+---
+
+## I-113 · 2026-08-06 · `test_tbe_09`'s named protection (a `detail`-embedded date is never read for ordering) is not uniquely discriminated by the test as written — a second, independent protection (B-12's `max()` combination with the countersignature's own timestamp) produces the same PASS/FAIL outcome either way, in the fixture's specific scenario · Severity: LOW · Owner: quant-validation
+
+**Description.** Following the dispatch's instruction to confirm each test is red for the reason
+its clause names, I reverted `test_tbe_09`'s named protection specifically — patched
+`_budget_extension_ledger` so `created` is read from `detail.get("issued_utc", ...)` instead of
+`e["created_utc"]` at the point the loop extracts it (the most direct possible removal of "never
+read a claimed date for ordering") — and re-ran `test_tbe_08` and `test_tbe_09` on the scratch
+copy. **Both stayed green.**
+
+Root cause: in the DISCRETIONARY + valid-countersignature scenario both tests use, `effective_from
+= max(created, countersignature.created_utc)` (B-12). Backdating `created` alone cannot move
+`effective_from` earlier than the countersignature's own (real, un-forgeable-by-this-vector)
+timestamp — which in this fixture is still logged after all 8 trials. So the walk still finds the
+same OVER BUDGET violation at trial 6 via the *second* protection (B-12's max-combination), and
+`test_tbe_09` — which asserts only `verdict == FAIL`, not the note's content — cannot tell the two
+apart. (`test_tbe_08` does check the note's "OVER BUDGET" / "trial 6" substrings, but wasn't the
+one built to isolate the back-dating vector, so this doesn't close the gap either.)
+
+**This is not a defect in the shipped implementation.** `gates.py`'s real code has no code path
+that reads `detail.get("issued_utc"/"as_of"/"dated"/...)` anywhere — `created = e["created_utc"]`
+unconditionally, confirmed by inspection and by the fact I had to *add* a line to manufacture the
+vulnerability I then found the test didn't uniquely catch. It is a finding about the test's
+discriminating power, not about the harness: a PRINCIPAL-issued or CONTINGENT extension (B-12:
+`effective_from = created` directly, no `max()` rescue) would not have this second layer, and I
+did not have a test to check that path against because none exists for it either.
+
+**Resolution:** open — **LOW.** Not something I can close by editing the test. Flagged for
+Validation because it is exactly the "test that passes both before and after a protection exists"
+shape the dispatch named, one level removed: here the protection exists and IS what the real code
+relies on, but a second, unrelated protection means the specific test cannot prove that on its
+own for this fixture.
+**Pattern tag:** `overlapping-protections-mask-a-narrow-test` · `authors-own-test-inventory`
+
+---
+
+## I-114 · 2026-08-06 · The B-25 threshold contract regex `sealed (\d+)` cannot match a negative sealed budget, and no test exercises the combination · Severity: LOW · Owner: head-of-data-infra
+
+**Description.** B-25 requires the criterion's `threshold` string to satisfy both
+`effective budget (\d+)` and `sealed (\d+)`. Where the sealed `trial_budget` is negative (B-7's
+own worked example, `test_tbe_04`, uses `-1`), `_trial_budget_criterion` still renders
+`f"... (sealed {sealed}"` literally, i.e. `sealed -1` — and `\d+` does not match a leading `-`,
+so `re.search(r"sealed (\d+)", ...)` fails to extract it. **No test calls `_sealed_budget()` or
+`_effective_budget()` on a negative-budget fixture** (`test_tbe_04` only checks `verdict == FAIL`
+and the `"NO AUTHORIZED BUDGET"` note substring), so this is unexercised, not failing. Filed
+because B-25 states the regex contract as a general property of the row, and it is not one for
+this input. I did not invent a rendering convention for a negative integer without a rule to
+follow (a negative sealed budget is already the terminal, unconditional FAIL case per B-7 — no
+report consumer needs to recover its exact magnitude the way it needs the effective budget when
+a family is genuinely operating). Routing rather than silently choosing a display format.
+
+**Resolution:** open — **LOW.** §6.2 judgment-call material if Validation wants a specific
+rendering rule; I have not picked one.
+**Pattern tag:** `regex-contract-edge-case` · `unexercised-not-failing`
+
+---
+
+### I-022 · CLOSED · 2026-08-06 · on the Principal's stated condition — green, not specification
+
+**Closed by the CIO on the condition the Principal set explicitly: *"I-022 closes on green, not on
+this ruling."*** Green is measured, not reported.
+
+**Verified independently by the CIO** [measured]: `test_trial_budget_enforcement.py` **27/27**;
+whole suite **271 passed / 4 failed / 275**, matching SPEC-003's implemented floor **exactly**;
+`test_tbe_17` — the guard that the criterion reads no single document's fields — **still green**;
+`book/registry.db` 0 hypotheses / 0 trials.
+
+**The defect is gone.** `over` is no longer computed and used only to write a note: over-budget
+produces **FAIL**. The three defects that would have survived the obvious `True → not over` change
+are closed with it — the zero-budget short-circuit (I-100), the chain-summed comparison quantity
+that would have made every successor born over budget (I-101), and the aggregate-only comparison
+that legalised authorize-after-the-fact.
+
+**Why the CIO is closing an issue it refused to close three times for I-045, and the distinction
+matters.** I-045's closure required a **judgment** about whether a remedy sufficed — that belongs
+to the owning seat and the CIO declined it three times. **I-022's closure condition was set by the
+Principal as a mechanical test**: green. Recording that a measured condition is met is not a
+judgment. **Validation owns this issue and may reverse this closure without argument** — Seat 9
+was right to decline to close it itself.
+
+**What this closure does NOT do.** **C10 does not discharge**, per S2-D-029: the latch now works,
+but PREREG-002's two-stage budget is enforced only if the document *registers* Stage 1 as its
+sealed `trial_budget = 47` — **I-105, still open, still HIGH, and unfunded this sprint.** A working
+latch on a door nobody registered is still an open door.
+
+**Provenance retained:** the hardcoded `True` was the Principal's own line, written at the
+harness's creation, disclosed at `DATA-IMPL-002` §13 and never logged. **The finding-within-the-
+finding stands as casebook material: a disclosed defect that reaches no log is functionally
+undisclosed.**
+
+**Resolution:** **CLOSED.** Reversible by Validation.
+**Pattern tag:** `harness-correctness-latent` · `decorative-until-depended-on` · `closed-on-green`

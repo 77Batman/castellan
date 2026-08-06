@@ -2947,3 +2947,85 @@ around.
 invocations remain.**
 
 **Review date:** on SPEC-003's implementation returning.
+
+---
+
+## S2-D-031 · 2026-08-06 · SPEC-003 implemented · I-022 CLOSES · floor met exactly · nothing left to dispatch
+
+**1 · 27/27 green, floor met exactly.** Verified independently [measured]:
+`test_trial_budget_enforcement.py` **27/27**; whole suite **271 passed / 4 failed / 275** —
+**exactly** SPEC-003's stated floor, not approximately; `test_tbe_17` still green; registry 0/0;
+`book/vaults/` `.gitkeep` only. **Five issues filed, all LOW.** No §4 trigger.
+
+**2 · I-022 CLOSES**, on the Principal's own mechanical condition — *"closes on green, not on this
+ruling."* The CIO records the distinction from I-045, which it refused to close three times:
+**I-045 needed a judgment about sufficiency and belongs to its seat; I-022's condition was a
+measured test.** Recording that a measured condition is met is not a judgment. **Validation may
+reverse it without argument.**
+
+**Seat 9 declined to close it itself** — *"I don't own the Issue Log and it's Validation's
+issue"* — filing the measured state instead. Third time this seat has stopped at the edge of its
+own authority when going further would have looked like completeness.
+
+**3 · The Principal's `test_mono_08` standard was applied and it caught something.** Seat 9
+reverted each clause on a scratch copy and confirmed the naming test went red while siblings
+stayed green — B-1, B-6, B-7, B-9, B-14, B-15, B-16, B-17, B-18/B-20, B-21, B-23, B-24, B-4/C-6,
+and the extension mechanism itself. **B-21's revert isolated to exactly the one `test_tbe_12`
+parametrization that names it; the other eight stayed green.**
+
+**Two clauses did not go red on revert, and both were filed rather than fixed:**
+- Loosening B-4's exact `kind` match left `test_tbe_19` green — the bogus events are rejected as
+  **malformed by a different path**, same FAIL outcome. No live defect.
+- **`test_tbe_09` is not uniquely discriminating (I-113):** reverting its named back-dating
+  protection left it green, because **B-12's independent `effective_from = max(...)` catches the
+  same attack in that fixture.** No live defect — but the test does not prove what its name
+  claims.
+
+**That second finding is precisely what the standard exists to surface**, and it would have been
+invisible to any check that only asked *"is it green?"* **A test can be green, correct, and still
+not be testing what it says it tests.**
+
+**No test turned green without its clause's mechanism actually being implemented.**
+
+**4 · §6.2 judgment calls hit: none** — every trigger requires a real family, and the registry
+held 0 hypotheses throughout.
+
+**5 · Three of the five LOW issues are honest coverage gaps in Validation's own suite** —
+B-26, B-8's second sentence, and B-27's four report fields are **implemented but untested**
+(I-110, I-111, I-112). **The implementer audited the specification's test coverage and reported
+where it was thin.** I-114 records that B-25's `sealed (\d+)` regex cannot match a negative
+sealed budget — **unexercised, and routed rather than silently rendered.**
+
+**6 · The four remaining reds cannot be fixed this sprint, and the reason is budget, not
+difficulty.** `test_G2`, `test_h7`, `test_h8` need Validation-owned fixture edits; `test_mbs_12`
+is I-076, which Validation **deliberately declined to adjudicate** rather than widen a band to fit
+an observed miss. **All four require Validation. Validation has no Opus.** The floor stands at
+**271/4/275** for the remainder of Sprint 2.
+
+**7 · NOTHING LEFT TO DISPATCH, and the CIO is not inventing work to fill the tier.**
+- **Opus: zero free.** C2, the I-105 repair, the four red fixtures, and I-076's adjudication all
+  need Opus and all carry to Sprint 3.
+- **Sonnet: available, and the only scheduled item is Rider C's casebook harvest — which is a
+  *sprint-close* line-item.** Sprint 2 closes **2026-08-11**; the parallel run closes **08-07**.
+  **Harvesting the casebook now would omit everything between.** Held deliberately.
+
+**8 · Standing Order §1, honestly against the objectives** — recorded now rather than assembled at
+close:
+
+| §1 objective | Status |
+|---|---|
+| PREREG-002 sealed and executing, forward-ledger entry recorded | **NOT MET.** Slips to Sprint 3 — ruled, not failed |
+| ML trial-accounting ruling landed | **MET.** `VALIDATION-RULING-004`, 27 clauses, plus SPEC-002 and SPEC-003 which it precipitated |
+| Two hypotheses to terminal verdicts | **NOT MET. Zero.** No family reached a verdict; none was registered |
+| Σα ledger and origin-ratio maintained and reported | **Σα = 0.000, ledger NIL** — unchanged, because nothing traded |
+
+**Two of four. The sprint's output was not verdicts — it was the machinery that will make future
+verdicts admissible**, and the honest reading is that the firm spent Sprint 2 discovering that
+several of its controls did not work: I-022, I-050, I-051, I-053, I-057, I-065, I-105. **That is
+worth more than a verdict produced by machinery nobody had checked. It is still not what §1
+asked for.**
+
+**9 · Budget.** **18 of 30 · 11 of 12 Opus.** Freely allocable Opus **zero**; DA reserve sealed.
+§5 dead-man: **8 invocations remain.**
+
+**Review date:** parallel-run close, 2026-08-07T23:30Z.
