@@ -2568,3 +2568,86 @@ until a decision is made.
 Principal: **I-065**, **RULING-005 §9**, **I-022**.
 
 **Review date:** 2026-08-07T23:30Z, parallel-run close.
+
+---
+
+## S2-D-026 · 2026-08-06 · Three interrupts ruled · C2 SACRIFICED to the latch · seal slips
+
+**Headroom at ruling: `session 49% · weekly-opus 17%`** — session climbing steeply from 19%.
+Fresh note, no termination since; conservative posture not triggered.
+
+**1 · I-065 — RULING 005-A APPROVED as filed, within Validation's authority.** The Principal
+applied his own §8 asymmetry test and found it satisfied on the evidence: **bit-identical on
+every input the estimator can produce** (`vif ≥ 1` per R-7's floor, max difference `0.000e+00`
+over 200,000 draws), so **no live Gate number or verdict changes, ever.** His characterization is
+the one that matters for precedent: *"a correction restoring the spec's own stated invariant
+C-1(iv) on an unreachable branch, not a loosening of any reachable quantity."*
+
+**Closure requires both conditions, and he restated the second in binding terms:** `test_mono_03`
+green on the one-liner **AND** `test_mono_05`'s (iv) sweep extended to the DSR side below
+`vif = 1` — *"so the branch that hid this defect is never unswept again."* **A fix that closes the
+defect without closing the blind spot that hid it is half a fix.**
+
+**2 · RULING-005 §9 — acknowledged, no act, and item (2) COUNTERSIGNED EXPLICITLY.**
+
+> *"Validation held the authority and a respectable rationale to retire the single test that
+> detects its own specification error, declined, and recorded that the option existed. That
+> record is the strongest integrity datum of the sprint."*
+
+Goes to the §7 audit in the favourable direction. The Principal also settled why a no-act finding
+fires a trigger at all: **"§4.4 buys visibility, not decisions."**
+
+**3 · I-022 — escalation SUSTAINED at HIGH, and the authorship is the Principal's own.**
+
+> *"The hardcoded `True` in the trial-count criterion is the Principal's own line, written into
+> `gates.py` at the harness's creation, disclosed at `DATA-IMPL-002` §13 and never logged."*
+
+He adopted the finding-within-the-finding **verbatim** — *"a disclosed defect that reaches no log
+is functionally undisclosed"* — and marked it **casebook material** for Rider C.
+
+**The CIO's escalation logic endorsed:** the defect did not change, **its load-bearing status
+did**, and re-rating on dependency *"is exactly what 'decorative until depended on' demands."*
+The Director's non-escalation is recorded **without fault**, as is the CIO's stated willingness
+to be wrong.
+
+**Substantive fix belongs to Validation** as owner of harness correctness. Spec shape offered
+**non-binding**: over-budget must produce **FAIL, not an annotation**; continuation solely via a
+**registry-logged Director budget-extension event the criterion reads** — *"an authorization
+edge, computed never narrated"*; and the criterion must be **stage-aware**, so Stage 2's ≤32
+stays locked until the measured-ρ̂ unlock event exists.
+
+**4 · THE SPRINT'S LAST RESOURCE DECISION, ruled by the Principal and executed by the CIO: C2 IS
+UNFUNDED.**
+
+> *"If the remaining budget cannot fund both this fix and C2, the latch outranks the intake — an
+> intake verdict on a document whose budget enforcement is broken would need re-ruling anyway."*
+
+The last freely allocable Opus unit went to the I-022 specification. **The Gate 0 intake verdict
+on PREREG-002 does not happen this sprint.** The Opus tier now holds exactly one unit: **the
+sealed DA reserve, which may not be spent on anything else.**
+
+**5 · THE SEAL SLIPS TO SPRINT 3. Recorded as the ruled outcome, not as a failure.** *"The seal
+remains blocked until the fix's tests are green, and per the standing contingency that may mean
+Sprint 3; the schedule yields, the enforcement does not."* The CIO's S2-D-015 §6 assessment —
+*"more likely to slip to Sprint 3 than to land"* — is now realized. **Standing Order §1's first
+objective will not be met, and the machinery that prevented it is the machinery working.**
+
+**6 · Two dispatches, parallel.** Validation (Opus, the last free unit) — `VALIDATION-SPEC-003`,
+the budget-enforcement criterion red-first, **plus** RULING 005-A's sweep extension. Seat 9
+(Sonnet) — the one-line `stats.py` amendment.
+
+**The CIO added three questions to Validation's brief that nobody had asked**, each a way the
+criterion could be gamed later: what happens when a budget-extension event is **malformed,
+back-dated, or self-issued**; whether a family **already over budget when the fix lands** is
+retroactively FAIL; and whether the criterion is **generic or reads a field PREREG-002 alone
+declares** — **a criterion that only understands one document is a criterion that silently passes
+every other.**
+
+**Seat 9's brief opens by telling it, in the CIO's own words, that its refusal to adopt the
+construction unilaterally was correct and is recorded as correct.** It had a change that would
+have turned 46 tests green, it was right, and it filed an issue instead.
+
+**7 · Budget.** **17 of 30 · 11 of 12 Opus.** Remaining Opus: **1, the sealed DA reserve.**
+Sonnet remains available. §5 dead-man: **8 invocations remain.**
+
+**Review date:** on the return of SPEC-003 and the RULING 005-A implementation.
