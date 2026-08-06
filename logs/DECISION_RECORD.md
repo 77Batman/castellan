@@ -2891,3 +2891,59 @@ that is asserted rather than computed is not a control.**
 §5 dead-man: **8 invocations remain.**
 
 **Review date:** on SPEC-003's implementation returning.
+
+---
+
+## S2-D-030 · 2026-08-05 · D-003 v2 verified · one runbook step silently reclassified
+
+**1 · Verified before acceptance, per this session's standing practice** [measured]. `548fdc3` is
+in `HEAD`, Principal-authored, and `.claude/settings.json` matches the description exactly:
+`defaultMode: acceptEdits`; `additionalDirectories: ["../castellan-worktrees"]`; `Bash(cd:*)` plus
+ten utilities added (`sed`, `awk`, `diff`, `sort`, `uniq`, `touch`, `source`, `which`, `date`,
+`sleep`); **`ssh`, `scp` and `rsync` moved to `deny`.** **This one is real.**
+
+**2 · The self-restraint is now mechanical, which is the point.** Throughout Rider A the CIO
+declined to run `ssh`/`rsync`/`scp` on the grounds that transmitting firm files to an external
+host is `[PRINCIPAL]` by scope limit and §4-reserved regardless. **That was a seat choosing not to
+do something it could do.** It is now a thing the seat cannot do. **A control that depends on the
+controlled party's restraint is not a control** — the sprint's own recurring finding, applied to
+the CIO.
+
+**3 · CONSEQUENCE THE RULING DID NOT NAME: Rider A's step 8 is now Principal-only in fact, though
+the runbook does not mark it.** `DATA-INFRA-002` §7 step 8 is *"confirm the VPS's own coverage is
+materially higher… `ssh root@<droplet-ip> …report_polymarket_coverage.py`"* — **not** marked
+`[PRINCIPAL]`, because when it was written no seat was barred from `ssh`. **It now is.**
+
+**The runbook's own count of "7 of 14 steps are [PRINCIPAL]" is therefore stale — it is 8**, and
+step 8 joins step 9 as a Principal act. Under `TEMPLATES.md` §7.9 each `[PRINCIPAL]` step needs a
+verification command; **step 8's already exists**, written at S2-D-025 §5 with the interpreter
+corrected for I-091. **No work is lost — the classification changed, not the command.**
+
+Recorded rather than left implicit because the alternative is discovering at the parallel-run
+close that the step nobody marked cannot be run by the party who was expected to run it.
+
+**4 · Worktree convention noted, and an honest disclosure attached.** `~/projects/castellan-worktrees/`
+is pre-authorized and a prompt from elsewhere is the signal the convention was missed.
+**The CIO has not been using worktree isolation for any dispatch this sprint** — every seat has
+run in the main tree, which is why concurrency has been managed by instruction: named-path
+staging, per-file verification, and baselines re-measured immediately before dispatch.
+
+**That choice produced two of this sprint's own defects — I-054** (`git add -A` capturing a
+concurrent seat's in-progress work) **and I-072** (a stale baseline quoted into a brief). **Both
+would have been structurally impossible under worktree isolation.**
+
+**The CIO is not adopting worktrees blanket, and states the tradeoff rather than the conclusion:**
+isolation is right for parallel dispatches writing to disjoint areas, and **wrong for sequential
+ones that must read what the previous seat just landed** — several dispatches this sprint depended
+on exactly that, including Seat 9 reading Validation's freshly-written tests. **Worktrees where the
+collision risk is real; the main tree where the dependency is real.** `[would-have-asked]`.
+
+**5 · SPEC-003's implementation was dispatched before this change and runs in the main tree.**
+It uses no denied command. **Any permission prompt it hits will be filed with the exact command
+text**, per the Principal's instruction, and treated as an out-of-scope signal rather than routed
+around.
+
+**6 · Budget.** **18 of 30 · 11 of 12 Opus.** Freely allocable Opus **zero**. §5 dead-man: **8
+invocations remain.**
+
+**Review date:** on SPEC-003's implementation returning.
