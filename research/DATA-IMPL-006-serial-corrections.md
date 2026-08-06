@@ -203,5 +203,63 @@ target files to 46/46 and let I-057 close on both items.
 
 ---
 
+---
+
+## 8. Addendum, 2026-08-05 — RULING 005-A landed (S2-D-026)
+
+**One-line change made, exactly as specified, `harness/castellan/stats.py::deflated_sharpe_ratio_serial`:**
+
+```
+- z_serial = z_iid / math.sqrt(vif)
++ z_serial = z_iid / math.sqrt(max(vif, 1.0))   # VALIDATION-RULING-005-A
+```
+
+Docstring updated in the same edit to describe the amended construction, the C-1(iv) defect it
+fixes, and that the outer `min` (D-6) and the `ValueError` guards are unchanged. No other line
+in `stats.py` touched. No test file touched or created.
+
+**Result.** `test_mono_03` is **green**. Per-file: `test_monotone_conservatism.py` **7/7**
+(was 6/7); `test_dsr_serial.py` **10/10** (was 9/10, from I-075's family-retarget fix already
+landed by Validation). Whole-suite: **242 passed / 4 failed / 246** (was 241/5), **caveat:
+Validation is concurrently extending `test_mono_05` and writing new I-022 tests in a separate
+file; the whole-suite number reflects only that this session's one-line change is what moved
+it off 241/5, not that the suite is otherwise static.** Remaining 4 reds
+(`test_G2`, `test_mbs_12`, `test_h7`, `test_h8`) are unrelated to this change — three are
+Validation-owned fixture edits (005-C/D/E) not yet landed in files this dispatch may not touch,
+and `test_mbs_12` (I-076) is unadjudicated.
+
+**Independent verification, run before accepting Validation's figures rather than trusting
+them:**
+
+1. **Bit-identical for `vif >= 1`** — 200,000 draws, `z ~ U(-12,12)`, `vif ~ U(1,200)`:
+   `max|DSR_literal - DSR_clamped| = 0.000e+00`. Confirms the amendment changes no reachable
+   Gate number (R-7 floors every estimator-produced `vif_gate` at 1.0).
+2. **C-1(iv) non-increasing in `vif`, direct construction check** — 200,000 draws,
+   `z ~ U(-8,8)`, `vif1, vif2 ~ U(0.001, 50]` compared pairwise (lo, hi): literal formula
+   **3,428 violations** (this run's seed; Validation's independent run measured 3,848 — same
+   defect, same order of magnitude, different RNG draw), clamped formula **0 violations**.
+3. **Reproduced Validation's cited violating draw exactly**, through the actual library
+   arithmetic: `z = -0.0500`, `vif: 0.591 -> 12.376`. Literal: `DSR 0.474071 -> 0.480061`
+   (increases — the exact defect). Clamped: `DSR 0.480061 -> 0.480061` (flat, no increase).
+4. **End-to-end through `deflated_sharpe_ratio_serial` itself**, real returns, `z_iid =
+   2.0650`, swept `vif` from `0.05` to `200`: `DSR_serial` is exactly flat and equal to
+   `DSR_iid` (`0.9805370509`) for every `vif in (0, 1]`, then strictly decreasing for
+   `vif > 1` down to `0.5580` at `vif=200`. Non-increasing holds across the full sweep
+   including `vif < 1`, and `DSR_serial <= DSR_iid` holds everywhere.
+
+**C-1(iv) non-increasing-in-`vif`: holds, confirmed by direct check, not accepted on
+Validation's report.** No violation found in any of the four checks above.
+
+**Nothing escalated from this dispatch — implementation only, ruling already adjudicated.**
+`book/registry.db` re-confirmed **0 hypotheses / 0 trials** before and after [measured].
+`book/vaults/` not opened, listed, or read (`ls` shows only `.gitkeep`). No test file
+modified or created — confirmed by `git status`/`git diff --stat` showing only
+`harness/castellan/stats.py` changed under `harness/`. No commit made this session, per
+dispatch constraint (`python3` used throughout, `python` not on PATH).
+
+*Addendum by Head of Data & Infrastructure, 2026-08-05, per dispatch S2-D-026. Not committed.*
+
+---
+
 *Implemented by Head of Data & Infrastructure, 2026-08-05. Not committed — per dispatch
 constraint, no commit was made this session.*

@@ -2651,3 +2651,53 @@ have turned 46 tests green, it was right, and it filed an issue instead.
 Sonnet remains available. §5 dead-man: **8 invocations remain.**
 
 **Review date:** on the return of SPEC-003 and the RULING 005-A implementation.
+
+---
+
+## S2-D-027 · 2026-08-06 · RULING 005-A implemented · I-065 half-closed · no issues filed
+
+**1 · The one-line amendment landed and verified** [measured]:
+`stats.py:372` — `z_serial = z_iid / math.sqrt(max(vif, 1.0))   # VALIDATION-RULING-005-A`.
+Docstring updated to record the amendment and the C-1(iv) defect it closes. Outer `min` (D-6)
+and `ValueError` guards unchanged. **`harness/castellan/gates.py` untouched**, as instructed —
+the I-022 criterion is a separate dispatch and Validation is still specifying it.
+
+**`test_mono_03` is GREEN.** Named files **17/17** (`test_monotone_conservatism.py` 7/7, was
+6/7; `test_dsr_serial.py` 10/10, was 9/10). Whole suite **242 passed / 4 failed / 246**, from
+241/5. Registry **0 hypotheses / 0 trials**.
+
+**2 · Seat 9 verified before accepting, not after — and the brief asked for exactly that.** Four
+independent checks, run against Validation's figures rather than on them:
+
+| Check | Result |
+|---|---|
+| Bit-identical for `vif ≥ 1` | 200,000 draws, `vif ~ U(1,200)` → **max difference `0.000e+00`** |
+| C-1(iv) non-increasing, direct construction | literal: **3,428 violations** on its own seed; clamped: **0** |
+| Validation's cited violating draw, reproduced through real arithmetic | literal `0.474071 → 0.480061` (rises); clamped `0.480061 → 0.480061` (flat) |
+| End-to-end through the library on real returns, `vif` 0.05 → 200 | flat and **exactly equal** to `DSR_iid` for all `vif ≤ 1`, strictly decreasing above 1, `DSR_serial ≤ DSR_iid` everywhere |
+
+**3,428 against Validation's 3,848 on a different draw is independent confirmation, not
+agreement** — same defect class, same order of magnitude, arrived at separately. **A seat that
+reproduces a figure exactly has checked its arithmetic; a seat that reproduces the phenomenon
+on its own draw has checked the claim.**
+
+**3 · I-065 is HALF-CLOSED, and the CIO is not recording it as closed.** The Principal's closure
+condition was **both** — the one-liner **and** `test_mono_05`'s (iv) sweep extended to the DSR
+side below `vif = 1`, *"so the branch that hid this defect is never unswept again."* **The
+sweep extension is Validation's and is still in flight.** The defect is fixed; the blind spot
+that hid it is not yet swept. **Half a fix reported as half a fix.**
+
+**4 · Zero issues filed, and the range left unused.** Nothing surfaced. The CIO records this
+plainly because the sprint's pattern has been that every dispatch returns findings, and a
+dispatch that honestly returns none is not thereby a weaker dispatch. **The seat did not
+manufacture a finding to justify its unit.**
+
+**5 · Four reds remain, none of them Seat 9's and none of them new**: `test_G2`, `test_h7`,
+`test_h8` await Validation-owned fixture edits (005-C/D/E) **that Seat 9 is not permitted to
+make**, and `test_mbs_12` (I-076) is the entry Validation **deliberately declined to adjudicate**
+rather than widen a band to fit an observed miss.
+
+**6 · Budget.** **17 of 30 · 11 of 12 Opus**, unchanged — both dispatches already counted. Only
+the sealed DA reserve remains in the Opus tier. §5 dead-man: **8 invocations remain.**
+
+**Review date:** on SPEC-003's return.

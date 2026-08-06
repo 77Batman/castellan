@@ -337,29 +337,42 @@ def deflated_sharpe_ratio_serial(
     *,
     vif: float,
 ) -> float:
-    """VALIDATION-SPEC-002 D-2 -- the serial-corrected DSR.
+    """VALIDATION-SPEC-002 D-2 -- the serial-corrected DSR, as amended by
+    VALIDATION-RULING-005-A.
 
-    ``z_serial = z_iid / sqrt(vif)`` -- an effective-sample-size
+    ``z_serial = z_iid / sqrt(max(vif, 1.0))`` -- an effective-sample-size
     substitution on the ``sqrt(T-1)`` factor, leaving the published
-    non-normality ``denom`` byte-for-byte untouched (D-4/D-5).
+    non-normality ``denom`` byte-for-byte untouched (D-4/D-5). The divisor
+    clamp is the direct analogue of M-2's ``max(mb_iid, mb_iid*vif)``: D-2's
+    literal (unclamped) form violates C-1(iv) (``DSR_serial`` must be
+    non-increasing in ``vif``) on the ``vif < 1``, ``z < 0`` branch -- an
+    estimator-unreachable input (R-2/R-7 floor ``vif_gate`` at 1.0), but one
+    the consumer-layer guarantee must not depend on being unable to
+    receive (C-2). RULING 005-A: the two constructions are bit-identical
+    for every ``vif >= 1``, so this changes no live Gate number, ever.
     ``DSR = min(Phi(z_serial), Phi(z_iid))`` -- D-6's non-permissive
-    floor, taken unconditionally (no sign condition on z), so an
-    estimator change can never raise the graded DSR: dividing a
-    NEGATIVE z by sqrt(vif) > 1 moves it toward zero and would otherwise
-    raise DSR, which is exactly the case this statistic exists to catch.
+    floor, taken unconditionally (no sign condition on z), and is
+    UNCHANGED and NOT removable: C-2 requires both enforcements
+    independently, same as the divisor clamp does not make the outer
+    ``min`` redundant.
 
     ``vif`` is a required keyword-only float; no default -- a default of
     1.0 would let a caller obtain the uncorrected figure from the
     corrected function by omission (same shape as M-2). Non-finite or
-    ``vif <= 0`` raises ``ValueError``; there is no path on which an
-    unmeasurable VIF silently behaves as 1.0 (D-3a).
+    ``vif <= 0`` raises ``ValueError``, unchanged; there is no path on
+    which an unmeasurable VIF silently behaves as 1.0 (D-3a) -- the clamp
+    is not a licence to accept a garbage VIF, only a guarantee about what
+    happens once a valid one arrives.
     """
     if not math.isfinite(vif) or vif <= 0:
         raise ValueError(f"vif must be finite and > 0, got {vif!r}")
     z_iid = _dsr_z(returns, n_trials, trial_sr_std_period)
     if math.isnan(z_iid):
         return float("nan")
-    z_serial = z_iid / math.sqrt(vif)
+    z_serial = z_iid / math.sqrt(max(vif, 1.0))   # VALIDATION-RULING-005-A (D-2 as amended):
+                                                   # the divisor clamp is the direct analogue of
+                                                   # M-2's max(vif, 1.0); C-1(iv) fails without it
+                                                   # at vif < 1, z < 0. The outer min (D-6) stays.
     dsr_iid = float(norm.cdf(z_iid))
     dsr_serial = float(norm.cdf(z_serial))
     return float(min(dsr_serial, dsr_iid))
