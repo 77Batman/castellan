@@ -109,3 +109,65 @@ Everything in Gate 1, **tightened**, plus a live paper record. The firm may **re
 - **Prefer the plateau centroid to the argmax.** Selecting the peak of a parameter surface *is* the overfitting operation.
 
 ---
+
+---
+
+### 4.7 Standing doctrines — Principal-ruled, binding on every family
+
+*Recorded here rather than only in the decision record or Standing Order 001. The order **expires
+with the sprint** by its own §7; a doctrine filed only there is a doctrine the firm loses on
+schedule. Both entries below were ruled by the Principal in Sprint 2 and bind prospectively.*
+
+---
+
+#### 4.7.1 · Inheritance is computed, never re-declared
+
+**Ruled 2026-08-05 (S2-D-013), standing for all kill conditions.**
+
+> One counting path, owned by the registry's transitive summation, with
+> `InheritedCountDoubleCountError` enforcing what prose previously asserted.
+
+A successor family declares `predecessor_family` and **its own new search only**. It does **not**
+re-declare the predecessor's count in `n_inherited`: `family_stats` already sums the chain
+transitively across `predecessor_chain`, so re-declaring double-counts, which the harness refuses.
+
+**The rule this replaces was written four separate times** — PREREG-002 §7.2, KC-002 clause 3,
+§19.3's successor, and `VALIDATION-RULING-004` ML-17, which copied the error citing PREREG-002 as
+source (I-055). **The firm's requirement that a restatement cannot escape its predecessor's trial
+count is delivered better by the harness than by any of the four sentences that tried to state
+it.**
+
+**Test for any new pre-registration:** if a clause tells a sponsor to *declare* a quantity the
+registry already computes, it is this defect.
+
+---
+
+#### 4.7.2 · A registration act, not a prose act
+
+**Ruled 2026-08-06 (S2-D-029), standing doctrine for every two-stage or contingent construction.**
+
+> **A control exists where the harness reads it, and nowhere else.**
+
+A pre-registration that *describes* a staged budget, a contingent unlock, or any conditional
+limit **has not created one**. The control exists only if the value the harness reads is the
+staged value. **PREREG-002 is the worked example (I-105):** its two-stage budget is enforced only
+if the document registers Stage 1 as its sealed `trial_budget = 47`. Sealed at the flat 79, the
+harness enforces 79, **no predicate is ever evaluated**, and the document's own §10.5.2 describes
+a gate that does not exist.
+
+**The Principal's disposition, which generalizes:** such language **survives only as the
+description of a registered unlock event**, or it is **struck from the document before sealing.**
+
+**Why it is not a filing convention.** A frozen document describing a nonexistent gate is
+**I-046's costume on the research side** — an asserted control that is not there — and **P7 makes
+it permanent.** The repair is always pre-seal and never after.
+
+**Test for any new pre-registration:** for every limit the document claims, name the field the
+harness reads to enforce it. **If there is no such field, there is no limit.**
+
+---
+
+*Both doctrines share one shape, and it is the sprint's most reusable finding: **a control that
+is asserted rather than computed is not a control.** I-022 (a criterion that annotated instead of
+failing), I-053 (an escalation rule the registry refuses), I-105 (a stage the harness never
+reads), and 4.7.1's four-times-written inheritance rule are the same defect wearing four costumes.*

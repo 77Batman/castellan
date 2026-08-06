@@ -2808,3 +2808,86 @@ judgment was made without evidence and could as easily have been wrong.
 tier. Sonnet available. §5 dead-man: **8 invocations remain.**
 
 **Review date:** on the Principal's rulings on I-105 and SPEC-003 §12.
+
+---
+
+## S2-D-029 · 2026-08-06 · B-14 adopted over the Principal's own shape · SPEC-003 dispatched · the Opus tier is exhausted
+
+**1 · I-105 SUSTAINED. "A registration act, not a prose act" is now standing doctrine** for every
+two-stage or contingent construction: **a control exists where the harness reads it, and nowhere
+else.**
+
+**Disposition, which follows mechanically:** PREREG-002 seals with **`trial_budget = 47`** as the
+registered Stage 1, and §10.5.2's Stage 2 language **survives only as the description of a
+registered unlock event under SPEC-003's contingent form, or it is struck before sealing.** The
+Principal's reason generalizes and is recorded for it: **"a frozen document describing a
+nonexistent gate is I-046's costume on the research side, and P7 makes it permanent."**
+
+**The Director repairs it pre-seal — and there is no Opus unit left to dispatch the Director.**
+See §5.
+
+**2 · B-14 — Validation's construction ADOPTED OVER THE PRINCIPAL'S OWN.** His shape gave the
+Director sole authority over budget extensions; Validation struck it on the Charter's asymmetry
+that **brakes are unilateral, accelerators are collective, and a budget extension is an
+accelerator by definition.**
+
+His ruling on his own input is the line worth keeping: **"that my non-binding input named the seat
+does not vest the seat — the same no-grandfather logic the spec applies to defects applies to my
+suggestions."**
+
+**Countersigner as ruled:** **Validation** for discretionary extensions, since it owns `N`'s
+integrity and the extension's entire risk is `N`; **the Principal as fallback when Validation is
+the requesting party.** The prospective-only edge and the contingent-stage construction are both
+countersigned as written, and **"a budget is not a receipt" enters the record verbatim.**
+
+**3 · The self-issuance limit accepted as stated, not papered over.** *"Auditable, not
+unforgeable — the harness cannot authenticate anyone."* The Principal: **authentication beyond
+two-names-visibly is not purchasable at this architecture, and pretending otherwise would be the
+carve-out that gets used.** A seat describing the exact boundary of what its own mechanism
+achieves, and the Principal declining to overstate it, is the pair of behaviours this firm exists
+to produce.
+
+**4 · SPEC-003 dispatched — Sonnet, floor 271/4/275.** The brief carries the Principal's
+additional standard in the only form an implementer can honour it: **for each budget test turned
+green, verify it was red for the reason its clause names.** Validation did the mirror for RULING
+005-A by reverting the clamp on a scratch copy. **Any test that turns green without its protection
+having been implemented is a finding to file, not a convenience to accept** — *a test that passes
+both before and after a protection exists is not testing the protection.*
+
+**5 · THE OPUS TIER IS EXHAUSTED, AND ONE LINE OF THE RULING DOES NOT SURVIVE THE ARITHMETIC.**
+
+> *"Priority unchanged: latch before intake; **if green lands within budget, C2 follows.**"*
+
+**It cannot.** Opus stands at **11 of 12 spent**. The single remaining unit is the **sealed DA
+reserve**, which is submission-gating and which the Principal has protected four times.
+**Freely allocable Opus: zero.**
+
+Therefore, stated plainly rather than left to be discovered at sprint close:
+- **C2 — the Gate 0 intake verdict — does not happen this sprint**, whether or not green lands.
+- **The I-105 repair does not happen this sprint either.** It is a Director act, the Director is
+  Opus-tier, and there is no unit. It carries to Sprint 3 with the seal.
+- **The seal slips to Sprint 3**, as already ruled at S2-D-026 and now arithmetically certain
+  rather than probable.
+
+**What remains executable in Sprint 2 is Sonnet-tier only:** SPEC-003's implementation (running),
+Rider C's casebook harvest, and the documentation queue.
+
+**6 · Two standing doctrines propagated to `reference/GATES.md` §4.7 by the CIO** — no seat, no
+budget. **4.7.1** inheritance is computed never re-declared; **4.7.2** a registration act not a
+prose act. Both were previously recorded only in the decision record and Standing Order 001,
+**which expires with the sprint by its own §7** — the same reasoning that placed the
+`[PRINCIPAL]`-step convention in `TEMPLATES.md` §7.9.
+
+Each carries a **test for any new pre-registration**: for 4.7.1, *if a clause tells a sponsor to
+declare a quantity the registry already computes, it is this defect*; for 4.7.2, **for every limit
+the document claims, name the field the harness reads to enforce it — if there is no such field,
+there is no limit.**
+
+**And the connection the CIO records as the sprint's most reusable finding: I-022, I-053, I-105
+and 4.7.1's four-times-written inheritance rule are one defect wearing four costumes — a control
+that is asserted rather than computed is not a control.**
+
+**7 · Budget.** **18 of 30 · 11 of 12 Opus.** Freely allocable Opus **zero**; DA reserve sealed.
+§5 dead-man: **8 invocations remain.**
+
+**Review date:** on SPEC-003's implementation returning.
