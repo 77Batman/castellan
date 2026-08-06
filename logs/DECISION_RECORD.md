@@ -2701,3 +2701,110 @@ rather than widen a band to fit an observed miss.
 the sealed DA reserve remains in the Opus tier. §5 dead-man: **8 invocations remain.**
 
 **Review date:** on SPEC-003's return.
+
+---
+
+## S2-D-028 · 2026-08-06 · SPEC-003 lands · I-065 CLOSES · §4 INTERRUPT — I-105 and §12
+
+**1 · §4 HARD INTERRUPT. Two triggers: *"any issue filed HIGH"* (I-105) and *"any finding by
+Validation addressed to the Principal"* (SPEC-003 §12, four items).**
+
+**I-105 · HIGH — the fix the Principal funded this unit for works, and it does not work by
+itself.** PREREG-002's two-stage budget is enforced **only if the document registers Stage 1 as
+its sealed `trial_budget = 47`.** Sealed at the flat **79**, the harness enforces 79, **no
+predicate is ever evaluated**, and §10.5.2 describes — *in a frozen document, permanently* — **a
+gate that does not exist.**
+
+Validation's framing, which the CIO judges the most important sentence in the dispatch: **"the
+two-stage construction is a registration act, not a prose act."** It is **I-022's own defect one
+layer up** — a control that reads correct and enforces nothing — and it means **C10 does not
+discharge on I-022's closure alone.**
+
+**2 · The departure the seat put to the Principal by name — B-14.** The Principal's non-binding
+shape had the **Director** issuing budget-extension events. Validation **adopted the mechanism
+and departed on the authority**: the Director alone cannot issue one; **a distinct countersigner
+is required**, on the Charter's own asymmetry that *accelerators are collective*. **This takes
+authority from a seat the Principal named**, and the seat says so rather than burying it.
+
+Two further departures: the edge is **prospective only**, per-trial timestamp ordering, because
+*"an aggregate check legalises spend-first-authorize-after, which is not a budget, it is a
+receipt"*; and stage-awareness is **outcome adopted, construction replaced** — no stage concept
+was built, because *a stage is a contingent increment whose unlock is a measured quantity.*
+
+**3 · Four defects live in those five lines, and three survive the obvious fix.** This is why a
+specification was the right instrument and a patch was not: `fam.trial_budget and …`
+**short-circuits at 0**, so a zero-budget family reads PASS with unbounded trials (I-100);
+`fam.n_logged` is **chain-summed**, so a working criterion would make every successor **born over
+budget** and turn an honest `predecessor_family` declaration into a penalty (I-101); and an
+aggregate-only comparison legalises authorize-after-the-fact (B-9).
+
+**4 · The three gaming questions the CIO added, answered — and the third answered
+uncomfortably.** *Malformed*: the increment does not count **and** the criterion FAILs, repair
+only by append-only withdrawal, **no "harmless typo" carve-out — "the carve-out is the thing that
+gets used."** *Back-dated*: `created_utc` comes from the clock, no API parameter sets it, dates
+inside `detail` are claims never read for ordering, and B-21 cross-checks against trials actually
+preceding the recorded timestamp — **so a forgery must move a row and make an independent count
+agree.** Residual filed (I-102). *Self-issued*: harmless by construction for the **contingent**
+form, since authorization is a recomputation and never the event's claim — **but for the
+discretionary form it is the whole risk, and the harness cannot authenticate anyone (I-103).**
+What was built makes self-issuance *"impossible to take without a second name and impossible to
+take invisibly. It does not make it impossible to forge and I do not describe it as though it
+did."*
+
+**5 · Retroactivity: yes, no grandfather clause.** *"A PASS issued by the hardcoded `True` was a
+harness defect, not a grant of authorization, and a defect does not vest; a grandfather clause
+protects precisely the population that benefited from the defect."* **It costs nothing today at
+0 trials — and the seat wrote into the clause that it would rule the same at non-zero cost, so
+it cannot later be called cheap.** The CIO records that construction as reusable: **a ruling
+that pre-commits against its own future convenience.**
+
+**6 · I-065 CLOSES — both of the Principal's conditions met**, verified on disk.
+`test_monotone_conservatism.py` **9/9**.
+
+**The sweep extension is worth more than the fix it completes.** The old draw `U(0.001, 50)` put
+**~2% of its mass below 1** — *"the arithmetic reason the branch was nominally in range and
+practically unswept."* The new draw puts **64% below 1** (1,283 of 2,000; 1,254 at `z < 0`), and
+it **asserts its own coverage** (`n_sub_one > 800`) **so a future narrowing goes red rather than
+quiet.** The MinBTL block is bit-identical and the DSR side draws from an independent generator,
+*"precisely so existing coverage is not re-rolled."*
+
+**`test_mono_08` is a sentinel**: it reconstructs the pre-amendment literal D-2 locally and
+**requires the sweep's own distribution to produce violations against it** — 112 measured, zero
+at `vif ≥ 1`, independently confirming I-065's localisation. **"A regression test that cannot
+fail on the defect it was written for is decoration."**
+
+**7 · Two closures refused, both stated in advance.** **I-057 does NOT close** — §11.3's
+partition is unchanged and `test_mbs_12` (I-076, Validation's own, deliberately unadjudicated)
+blocks Item 1 independently. **I-022 does NOT close** — *"it closes on green, not on
+specification"*; the HIGH stands. The seat said it would report this rather than let a partial
+close look like a close, and did.
+
+**8 · Generic, proved rather than asserted.** No PREREG-002 field, token, or constant;
+`test_tbe_17` asserts it against `inspect.getsource` and `evaluate_gate1`'s signature, and is
+**green by construction and required to stay green.** PREREG-002 gets its lock **as a plain
+instance**: seal 47, log one contingent extension of 32, and the clamp reproduces §10.5.2's table
+**exactly on all four rows (86→32, 77→23, 55→1, 31→0) without knowing the document exists.**
+
+Integer literals deliberately **not** banned — `gates.py` legitimately holds `32.0` as a
+breakeven bracket, and *"a test that cannot tell that from a smuggled constant gets deleted the
+first time it fires."*
+
+**9 · Verified independently** [measured]: suite **245 passed / 30 failed / 275**. **26 of the 30
+reds are deliberate**; 4 are pre-existing. Implemented floor **271/4/275**. `harness/castellan/`
+**untouched**; registry **0 hypotheses / 0 trials**; `book/vaults/` `.gitkeep` only.
+
+**10 · NOTHING DISPATCHED, and the reason is B-14.** SPEC-003's implementation is Sonnet and the
+tier is available. **But B-14 is a substantive clause the seat itself referred to the Principal
+because it removes authority from a seat he named.** Implementing it before he rules risks
+building the disputed half. **This is the same line the CIO drew for the Director's §10.4
+revision — implementing binding clauses is one thing, building a clause its own author has put
+in front of the Principal is another.** `[would-have-asked]`.
+
+**11 · The CIO's under-800-line judgment held** — the seat confirms it was *"one criterion
+specification plus one sweep extension, done properly, not truncated."* Recorded because the
+judgment was made without evidence and could as easily have been wrong.
+
+**12 · Budget.** **17 of 30 · 11 of 12 Opus.** Only the sealed DA reserve remains in the Opus
+tier. Sonnet available. §5 dead-man: **8 invocations remain.**
+
+**Review date:** on the Principal's rulings on I-105 and SPEC-003 §12.

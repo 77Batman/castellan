@@ -3087,3 +3087,241 @@ answered. **The convention paid for itself before its first live use.**
 **Resolution:** open — corrected command recorded at S2-D-025 §5; the runbook itself is amended by
 its owning seat at next dispatch.
 **Pattern tag:** `runbook-untestable-by-its-author` · `found-by-writing-the-check`
+
+---
+
+> **Validation issue-number range declared: I-100 – I-109** (dispatch S2-D-026). **I-100 through
+> I-106 taken; I-107–I-109 unused.** Filed by the Head of Quantitative Validation, 2026-08-06,
+> alongside `research/VALIDATION-SPEC-003-budget-enforcement.md` (I-022's substantive fix) and
+> the extension of `test_mono_05`'s C-4 sweep (RULING 005-A's second closure condition).
+
+---
+
+## I-100 · 2026-08-06 · `trial_budget` is unvalidated at registration, and a zero budget disables the trial-count check entirely — the defect that SURVIVES the obvious fix to I-022 · Severity: MEDIUM · Owner: head-of-data-infra
+
+**Description.** Two halves, and the second is why this is filed separately from I-022.
+
+**(a) No validation at registration.** `TrialRegistry.open_hypothesis` writes
+`int(trial_budget)` with no check whatsoever [measured — `registry.py:334`], while its
+*adjacent binding sibling* `n_inherited` is validated three ways in the same function (H-2:
+non-int refused, `bool` refused explicitly, negative refused). A budget of `0`, a negative
+budget, a `True`, or a silently-truncated `3.7` all seal, hash into `prereg_sha256`, and freeze.
+
+**(b) A zero budget disables the check.** `gates.py:334` reads
+`over = fam.trial_budget and fam.n_logged > fam.trial_budget`. **The `and` short-circuits to a
+falsy `0` when the budget is zero and the comparison is never evaluated.** Changing the
+hard-coded `True` to `not over` — the obvious one-line fix to I-022 — leaves a zero-budget
+family reading PASS with unbounded trials.
+
+**Why this matters more than the arithmetic suggests.** A family that pre-registered no
+authorization and then spent trials is the *purest* case the criterion exists for, and the
+current construction is the only one under which it passes. Fails permissively, same direction
+as I-010 and I-022.
+
+**Resolution:** open — specified at `VALIDATION-SPEC-003` **B-7**; closes on
+`test_tbe_03` / `test_tbe_04`.
+**Pattern tag:** `harness-correctness-latent` · `survives-the-obvious-fix` · `asymmetric-validation-on-adjacent-fields`
+
+---
+
+## I-101 · 2026-08-06 · The trial-count criterion's comparison quantity was never specified, and the existing code picks the one that would punish an honest predecessor declaration · Severity: MEDIUM · Owner: quant-validation
+
+**Description.** `gates.py` compares `fam.n_logged` — which `family_stats` sums **transitively
+across `predecessor_family`** — against the successor's own `trial_budget`. Under today's
+hard-coded `True` this is inert. **Under a working criterion it inverts an anti-gaming
+control:** every successor whose predecessor chain out-spends its own budget would be over
+budget with zero acts of its own, so declaring a predecessor — the thing Ruling 001 §3.3 F4
+built to close the "abandon and re-pre-register" loophole — becomes the expensive option.
+
+**Ruled** at `VALIDATION-SPEC-003` **B-1**: the budget grades the family's **own** post-seal
+logged trials. The chain's spend is priced where it belongs, in `N`, which reaches MinBTL,
+`N_max` and DSR transitively already. **The residual is disclosed rather than capped:** a
+sponsor can chain successors for fresh budgets, each of which is itself a sealed
+Director-authored declaration, and **B-25 requires the chain-summed total on the face of every
+report** so the pattern is visible rather than tracked in a memo.
+
+**Recorded because the conclusion is the one that loosens.** Own-only is more permissive than
+chain-summed, and the test I applied is RULING 005-B's: does it move a *graded* quantity in the
+permissive direction relative to a working alternative? It does, and I adopted it anyway,
+because the alternative penalises the declaration this firm most wants made. The reasoning is
+at B-1 rather than only the conclusion.
+
+**Resolution:** open — closes on `test_tbe_18`.
+**Pattern tag:** `unspecified-comparison-quantity` · `control-inverted-by-its-own-fix`
+
+---
+
+## I-102 · 2026-08-06 · The `events` table has no integrity control — every authorization edge in this harness rests on "no seat writes raw SQL" · Severity: MEDIUM · Owner: quant-validation → head-of-data-infra
+
+**Description.** `hypotheses` rows are protected by P1/P4: `hypothesis_sealed` carries a **full
+shadow copy** of the binding fields plus their hash, so an out-of-band `UPDATE` is detected by
+`verify_prereg`. **`events` has no equivalent.** Any row in it — `holdout_acquired`,
+`gate1_verdict`, and now `trial_budget_extension` — can be inserted, altered or back-dated by
+raw SQL with nothing to detect it.
+
+`VALIDATION-SPEC-003` **B-21** mitigates the specific case by requiring each extension event to
+declare `n_logged_at_issue` and cross-checking it against the number of the family's own trials
+that actually precede the event's recorded `created_utc`: a forger must now move a row *and*
+make an independently-recorded count agree with it. **That is a mitigation, not a closure, and
+it is stated as one.**
+
+**Not urgent, and the reason is not comfort.** The registry holds 0 hypotheses and 0 trials, so
+nothing rests on it today. It is filed now because the correct moment to notice that an
+append-only log is only append-only by convention is *before* the first authorization is
+written to it.
+
+**Resolution:** open — structural, disclosed, not solved.
+**Pattern tag:** `harness-correctness-latent` · `protection-asymmetric-between-adjacent-tables`
+
+---
+
+## I-103 · 2026-08-06 · The harness has no principal identity: every authorization in this firm is attributable by declaration, not by proof · Severity: MEDIUM · Owner: quant-validation → Principal (disclosure only)
+
+**Description.** There is no authentication anywhere in `registry.py`. Any seat holding a
+registry handle can write any event with any `issuer` string, including `"principal"`.
+`VALIDATION-SPEC-003` B-14 requires a discretionary budget extension to be countersigned by a
+**distinct** seat from a narrow allow-list — but `issuer` and `countersigner` are both strings a
+seat writes about itself, and **against a determined forger two strings cost exactly what one
+costs.**
+
+**What the control does and does not do, stated so nobody later reads it as security.** It
+controls **seat drift** — a seat under schedule pressure taking an action inside its own scope
+that nobody else has to see — by making a single seat's act structurally insufficient and by
+putting every extension, admitted and refused, on the face of the Gate report (B-27). **It does
+not control fraud and is not presented as doing so.**
+
+**The Charter grounding for requiring two seats at all:** Seat 4's asymmetry — *brakes are
+unilateral, accelerators are collective.* A budget extension is an accelerator.
+
+**Resolution:** open — disclosed to the Principal at `VALIDATION-SPEC-003` §12(2). **No fix is
+requested;** this seat does not think it is worth building identity at this firm's scale, and
+says so rather than leaving an open issue implying a pending remedy.
+**Pattern tag:** `structural-limit-disclosed` · `control-weaker-than-it-reads`
+
+---
+
+## I-104 · 2026-08-06 · PREREG-002 §10.5.2's Stage 2 unlock rule is unimplementable as written — a table lookup with no interpolation is undefined between its rungs · Severity: MEDIUM · Owner: director-of-research
+
+**Description.** §10.5.2 pre-commits that Stage 2 trials may be spent only while the declared
+ceiling stays at or below *"the `N_max` implied by the most recently measured `ρ̂` … read from
+the cited table at `VALIDATION-SPEC-002` §6.2 and **never interpolated** by this seat."*
+
+The cited table has nine rows. **`ρ̂` is continuous.** A lookup that forbids interpolation has
+no defined value at, say, `ρ̂ = 0.07`. The harness meanwhile holds `stats.max_admissible_trials`,
+which is the continuous function of which those nine rows are printed evaluations.
+
+**Ruled** at `VALIDATION-SPEC-003` §7.3 (RULING 003-A): **the function governs.** Where the two
+appear to disagree they do not — the table is a rendering. The practical effect is that a family
+measuring `ρ̂ = 0.07` receives the allowance its own `ρ̂` earns rather than the next rung down,
+which is more accurate in both directions and is what V-1 requires anyway.
+
+**Filed to the Director rather than resolved silently** because PREREG-002 is unsealed: this is
+cheaper to conform now than to reconcile against a frozen document later. The sponsor's
+intent — *no Stage 2 trial spent on an unmeasured or stale `ρ̂`* — is preserved exactly.
+
+**Resolution:** open — conform §10.5.2's wording pre-seal.
+**Pattern tag:** `sealed-clause-unimplementable-as-written` · `cheaper-before-the-freeze`
+
+---
+
+## I-105 · 2026-08-06 · PREREG-002's Stage 2 lock exists only if the document REGISTERS Stage 1 as its sealed `trial_budget`; sealed at the flat 79 the prose describes a gate that does not exist · Severity: HIGH · Owner: director-of-research
+
+**Description.** `VALIDATION-SPEC-003` makes the two-stage budget enforceable by the harness:
+the sealed `trial_budget` is the **authorized** budget, and Stage 2 is a CONTINGENT extension
+event whose unlock predicate the criterion **recomputes** at evaluation time and never takes on
+the event's word. B-18's arithmetic reproduces §10.5.2's own unlock table exactly and with no
+PREREG-002-specific code —
+
+| `ρ̂` | `N_max` [cited] | admitted increment | §10.5.2 says |
+|---:|---:|---:|---|
+| ≤ 0.034 | 86 | 32 | "the whole of Stage 2" |
+| ≈ 0.05 | 77 | 23 | "≤ 23 of the 32" |
+| ≈ 0.10 | 55 | 1 | "≤ 1 of the 32" |
+| ≥ 0.20 | 31 | 0 | "NONE" |
+
+— **but only if the document seals `trial_budget = 47`.** Sealed at the flat `79`, the harness
+enforces 79, no contingent predicate is ever evaluated, Stage 2's gate does not exist, and
+§10.5.2 reads — **in a frozen document, permanently** — as though it did.
+
+**The two-stage construction is a registration act, not a prose act.** This is the one finding
+in this dispatch that can still produce a wrong PASS *after* I-022 is fixed, which is why it is
+HIGH and not MEDIUM: it is the same class as I-022 itself — a control that is decorative until
+something depends on it — one layer up.
+
+**Bears on:** PREREG-002 **C10** (which does not discharge on I-022's closure alone) and **C13**.
+
+**Resolution:** open — **HIGH.** Blocks discharge of C10.
+**Pattern tag:** `decorative-until-depended-on` · `prose-control-without-a-registration` · `harness-correctness-latent`
+
+---
+
+## I-106 · 2026-08-06 · My own I-065 root cause named one test; there were two · Severity: LOW · Owner: quant-validation
+
+**Description.** I-065 records the C-1(iv) gap as living in `test_mono_05`, whose sweep carried
+the assertion only on the MinBTL side. **`test_mono_04` — the file's *dedicated* sub-1 sweep,
+whose docstring reads verbatim "C-3: no loosening at any vif < 1" — tested
+`min_backtest_length_years_serial` and `max_admissible_trials` and never called
+`deflated_sharpe_ratio_serial` at all.** Two tests whose names promised the sub-1 branch,
+neither of which reached DSR there.
+
+A third, quantitative face of the same gap: `test_mono_05` drew `vif ~ U(0.001, 50)`, which puts
+**~2% of its mass below 1** — the branch was nominally in range and practically unswept. The
+extension draws log-uniformly, putting ~64% below 1 [measured: 1,283 of 2,000 draws, 1,254 of
+them at `z < 0`].
+
+**Closed in the same change** as I-065: `test_mono_09` is the dense deterministic sub-1 grid for
+DSR, and `test_mono_08` is a sentinel that reconstructs the pre-RULING-005-A construction and
+**requires the sweep's own draw distribution to produce violations against it** (112 measured,
+zero of them at `vif ≥ 1`) — a regression test that cannot fail on the defect it was written for
+is decoration.
+
+**Recorded because a root cause that under-counts its own instances is a root cause that closes
+early.** This is the second time this sprint a Validation-authored test inventory has been the
+defect rather than the implementation (siblings: I-058, I-070).
+
+**Resolution:** **closed** — `harness/tests/test_monotone_conservatism.py`, 9/9 green [measured].
+**Pattern tag:** `authors-own-test-inventory` · `nominally-in-range-practically-unswept`
+
+---
+
+### I-065 · CLOSED · 2026-08-06 · by quant-validation · both of the Principal's closure conditions are met
+
+**The Principal's condition was BOTH halves.** (1) `test_mono_03` green on Seat 9's one-line D-2
+clamp — landed and committed at **`b065039`**, green [measured]. (2) `test_mono_05`'s C-1(iv)
+sweep extended to the DSR side below `vif = 1`, *"so the branch that hid this defect is never
+unswept again"* — done, plus two new tests, in
+`harness/tests/test_monotone_conservatism.py`, **9/9 green** [measured].
+
+**What the extended sweep now covers, in one line:** C-1(iii) and **both sides** of C-1(iv) on a
+log-uniform `vif` draw that puts 64% of its mass below 1 (1,283 of 2,000 draws, 1,254 at
+`z < 0`), the (iii)+(iv)+D-5 **equality theorem** on `(0, 1]`, a **sentinel** that requires the
+sweep's own distribution to produce 112 violations against the pre-RULING-005-A construction and
+**zero** at `vif ≥ 1`, and a dense deterministic sub-1 grid.
+
+**Verified red-first retrospectively:** against a scratch copy of `stats.py` with the clamp
+reverted, `test_mono_05`, `test_mono_08` and `test_mono_09` all fail alongside `test_mono_03`
+[measured, this session]. The extension is not a test that happens to pass.
+
+**Filed alongside, not folded in: I-106** — the root cause named one test and there were two.
+
+**Resolution:** **CLOSED.** **I-057 does NOT close** — §11.3's partition is unchanged and
+`test_minbtl_serial.py` is still red on `test_mbs_12` (I-076), which blocks I-057 Item 1
+independently. I committed in advance to reporting that rather than letting a partial close look
+like a close.
+
+---
+
+### I-022 · STATUS · 2026-08-06 · by quant-validation · the substantive fix is SPECIFIED, not landed; the HIGH rating stands
+
+The escalation was sustained and the fix routed to Validation as owner of harness correctness.
+**`research/VALIDATION-SPEC-003-budget-enforcement.md` specifies clauses B-1 … B-31**, with 19
+pre-authored acceptance tests (27 collected items) in
+`harness/tests/test_trial_budget_enforcement.py` — **26 red, 1 green-by-construction**
+[measured]. Seat 9 implements; **I-022 closes on green, not on specification.**
+
+**Three defects beyond I-022 itself survive the obvious one-line fix** and are filed separately:
+**I-100** (zero budget short-circuits the check), **I-101** (chain-summed comparison quantity),
+and — outside the harness entirely — **I-105, HIGH** (PREREG-002's Stage 2 lock exists only if
+the document *registers* Stage 1 as its sealed `trial_budget`).
+
+**Resolution:** open — **HIGH.** Unchanged until the implementation is green.
