@@ -3498,3 +3498,46 @@ undisclosed.**
 
 **Resolution:** **CLOSED.** Reversible by Validation.
 **Pattern tag:** `harness-correctness-latent` · `decorative-until-depended-on` · `closed-on-green`
+
+---
+
+## I-092 · 2026-08-07 · Issue-Log closures were recorded in the decision record and never written into the Issue Log — the firm's own tracker overstates its open HIGH count · Severity: MEDIUM · Owner: CIO
+
+**Description.** Preparing the Friday Research Review, the CIO queried the Issue Log for open HIGH
+entries and got a list that **does not match the firm's actual state** [measured].
+
+**I-050, I-075, I-077 and I-078 were adjudicated by Validation** — I-050 closed with
+`test_tstat_hac.py` at 17/17; I-075's family retarget authorized and executed; I-077 ruled a
+required guarantee rather than an overreach; I-078 ruled per test under the F2 mechanism. **All
+four rulings are recorded in `logs/DECISION_RECORD.md` and in the seats' returns. None of them was
+written into `logs/ISSUE_LOG.md`.** Each still carries its original `**Resolution:** open` line.
+
+**Consequently a reader — or a script — checking the Issue Log for open HIGHs is misled**, and the
+CIO was, this morning, by its own record.
+
+**Why this is the same finding the firm already made about itself.** I-022's
+finding-within-the-finding, which the Principal adopted verbatim and marked casebook material, was
+**"a disclosed defect that reaches no log is functionally undisclosed."** This is its mirror:
+**a closure that reaches no log is functionally not closed.** The firm found the defect in one
+direction and then committed it in the other, inside the same sprint, in the same file.
+
+**Mechanism, and it is the CIO's.** Closures have been recorded as **appended `###` sub-blocks**
+(I-046, I-065, I-022) rather than by amending the original `**Resolution:**` line — which is
+correct under A3's no-rewrite discipline for *history*, but the entry header and resolution line
+are **status fields, not history**, and leaving them stale defeats the only query anyone runs. For
+I-050, I-075, I-077 and I-078 **not even the sub-block was written.**
+
+**What the CIO is NOT doing.** Not closing the four entries. **I-078's disposition is ruled but one
+leg is outstanding** — `test_h7` requires rebuilding and has not been rebuilt — so it is not closed
+in fact. **I-050's original condition names ML-T-12 and ML-T-13**, which the CIO has not verified
+exist as named tests. **Transcribing a seat's ruling is one thing; deciding that a multi-part
+condition is satisfied is another**, and the second belongs to the owning seat. Reconciliation is a
+Sprint 3 item requiring Validation.
+
+**Interim rule, effective now:** every ruling that disposes of an Issue Log entry is written into
+`logs/ISSUE_LOG.md` **in the same commit** that records it in the decision record. The decision
+record is the narrative; **the Issue Log is the index, and an index that is not maintained is worse
+than none because it is consulted.**
+
+**Resolution:** open — the interim rule is in force; the four stale entries need Validation.
+**Pattern tag:** `closure-not-propagated-to-the-index` · `disclosed-but-never-logged` *(mirror of I-022)*
