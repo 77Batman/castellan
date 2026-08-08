@@ -3578,3 +3578,130 @@ report both units. Either is a one-line change and neither is worth an invocatio
 **Resolution:** open — cosmetic, no data impact, no recomputation required. The parallel-run
 figures stand as reported.
 **Pattern tag:** `label-does-not-mean-what-it-says`
+
+---
+
+> **Execution & Operations issue-number range declared: I-120 – I-129** (dispatch S2-D-033,
+> Rider C). **I-120 taken; I-121–I-129 unused.** Filed by the Execution & Operations seat,
+> 2026-08-08, in the course of the Sprint 2 casebook harvest — no `harness/`, `book/`,
+> `research/`, or `PREREG-*`/`VALIDATION-*` document touched; no entry closed.
+
+---
+
+## I-120 · 2026-08-08 · `I-059` is cited by number from inside two live Issue Log entries and was described as "filed" in the decision record, but no `I-059` entry exists in `logs/ISSUE_LOG.md` · Severity: MEDIUM · Owner: fable-5-cio
+
+*Filed by Execution & Operations while sweeping the Issue Log for Rider C's casebook harvest —
+not a defect this seat can close; entered per the interim rule at I-092 ("every ruling that
+disposes of an Issue Log entry is written into the Issue Log in the same commit"), extended here
+to filings as well as closures.*
+
+**Description.** `logs/DECISION_RECORD.md` S2-D-023 item 7 states plainly, **"I-059 filed"** —
+describing a runbook step unexecutable in two places (missing parent directories before
+transfer; `scp -r` nesting the install files one level too deep) — and S2-D-024 item 3 repeats
+the number in a comparison against I-090. **`logs/ISSUE_LOG.md` itself then cites `I-059` twice
+more**, from inside the live `I-090` and `I-091` entries ("Why this is the same finding as
+I-059, one rider apart"; "I-059 and I-090 were found by *executing* runbooks"). **A heading-level
+search of the Issue Log for `I-059` returns nothing** [measured — `grep -n "^## I-" logs/ISSUE_LOG.md`
+lists 96 headings running `I-001`…`I-114`, with `I-059` absent alongside intentionally-unused
+reserved numbers (`I-069`, `I-079`, `I-083`–`I-089`, `I-094`–`I-099`, `I-107`–`I-109`) — but those
+are declared-and-unused ranges, stated as such at filing. `I-059` is neither: it is narrated as
+filed and then cited by number as a resolvable reference, twice, from inside the index itself.**
+
+**Why this is a third instance of the firm's own named pattern, not a new one.** I-092 states the
+rule in one direction — *"a closure that reaches no log is functionally not closed"* — as the
+mirror of I-022's *"a disclosed defect that reaches no log is functionally undisclosed."* This is
+the same defect at the **filing** step rather than the closure step, and it is worse in one
+specific way neither predecessor was: **the Issue Log's own text now contains two dangling
+cross-references to an entry number that does not resolve inside it**, which a reader — or a
+script — following the citation from I-090 or I-091 will not find.
+
+**No data or verdict impact.** The substance I-059 describes is not lost — it is fully narrated
+in I-090's own text ("Rider A's runbook was unexecutable in two places") and in
+`logs/DECISION_RECORD.md` S2-D-023. This is an index-integrity break, not a content loss.
+
+**Resolution:** open — for the CIO (or the CRO, as the log's owner) to either (a) write the
+missing `I-059` entry from the S2-D-023 §7 narrative, backdated to its filing date, or (b) correct
+the two citing references in `I-090`/`I-091` if `I-059` was in fact folded into `I-090` without a
+standalone entry ever being intended. This seat does not decide which — that is a judgment about
+what was meant to exist, not a mechanical check. Not corrected in place, per A3.
+**Pattern tag:** `disclosed-but-never-logged` *(mirror of I-022, third instance)* · `dangling-index-citation`
+
+---
+
+---
+
+## I-059 · BACKFILLED 2026-08-08 · Rider A's cutover runbook step 4 was unexecutable as written, in two places · Severity: LOW · Owner: CIO → head-of-data-infra
+
+> **PROVENANCE, STATED RATHER THAN DISGUISED.** The defect was found **2026-08-05** and narrated
+> at `S2-D-023` §7 as *"Filed as I-059."* **It was never written into this log.** This entry is
+> **written on 2026-08-08** and is **not backdated.** Seat 10's remedy option (a) offered
+> backdating "to its filing date"; the CIO **declines that half explicitly.** An entry dated to a
+> day on which it did not exist is fabricated provenance — the defect this firm spent Sprint 2
+> refusing (I-044, I-046). **The gap is part of the record, not something to paper over.** Found by
+> Execution & Operations during the Rider C harvest and filed as **I-120**.
+
+**Description.** `research/DATA-INFRA-002` §7 step 4 could not be executed as written, in two
+independent places [measured, both confirmed by reading before the Principal ran the step]:
+
+1. **Missing parent directories.** `rsync -avz --delete ./harness/ root@<ip>:/opt/castellan/repo/harness/`
+   and `scp -r ./deploy/polymarket-capture-vps root@<ip>:/opt/castellan/install` both target paths
+   under `/opt/castellan/`, which **nothing creates before the transfer.** `install.sh` performs
+   the `mkdir -p`, but runs *after*, and **refuses to start unless the harness is already
+   present** — a chicken-and-egg the runbook does not resolve. Fixed by inserting
+   `ssh root@$DROPLET 'mkdir -p /opt/castellan/repo /opt/castellan/install'` before step 4.
+2. **`scp -r` without a trailing `/*`** nests the installer one directory deeper than step 5's
+   invocation path expects, so `bash /opt/castellan/install/install.sh` would not resolve.
+
+**Neither was caught because nobody had run it.** Both were found by the CIO reading the runbook
+immediately before the Principal executed it.
+
+**Sibling instances, and the pattern they establish:** **I-090** (Rider B's step 3 named a *file*
+that invoked two scripts, so the health checker supervised a directory nothing wrote to) and
+**I-091** (found not by executing but by *writing the verification command*, which forced the
+question "which interpreter?"). **`[PRINCIPAL]` steps are the only steps in this firm no seat can
+test, and are therefore the ones most likely to be wrong.**
+
+**Remedy adopted firm-wide:** `reference/TEMPLATES.md` §7.9 — every `[PRINCIPAL]` step ships its own
+verification command, and **a step without pasted output is `written`, never `executed`.** The
+Principal-side analogue of red-first.
+
+**Resolution:** the defects are **closed** — both corrected at S2-D-025 §5 and the corrected
+commands executed successfully at the parallel-run close. **The bookkeeping failure that produced
+this backfill is I-120's, and is open.**
+**Pattern tag:** `runbook-untestable-by-its-author` · `found-only-in-execution` · `narrated-but-never-logged`
+
+---
+
+## I-094 · 2026-08-08 · The casebook harvest reads only the Issue Log, so findings recorded in the decision record are structurally unharvestable — the sprint's most valuable discovery was rejected for exactly this reason · Severity: MEDIUM · Owner: CIO
+
+**Description.** Rider C's harvest **correctly rejected** the CIO's strongest candidate seam — the
+**932 cross-host agreements with zero disagreements** discovered at the parallel-run close — on the
+ground that it *"lives only in `logs/DECISION_RECORD.md` (S2-D-032, S2-D-033); no Issue Log entry
+traces the by-product-agreement finding itself."* The dispatch required every case to cite a real
+Issue Log entry, and **the seat obeyed the constraint instead of inventing a citation.** That was
+the right call and the CIO endorses it without reservation.
+
+**But the consequence is structural.** The harvest's input is the Issue Log. **A finding recorded
+anywhere else is invisible to it, permanently.** The same rejection also forced CIO items 3 and 4
+to be merged, because the *"option that was available and declined"* — which the Principal called
+**the strongest integrity datum of the sprint** — likewise exists only in the decision record.
+
+**So the two things this sprint produced that a stranger would most want to read are the two
+things the harvest could not reach.**
+
+**Why this is I-092's pattern in a third direction.** I-092: closures recorded in the decision
+record and never propagated to the index. I-120: a defect narrated as filed and never written.
+**I-094: findings that were never issues at all, and therefore have no index entry to propagate
+to.** The Issue Log is an index of *defects*; the firm has been using it as an index of
+*learnings*, and those sets are not the same. **A positive finding — a control discovered by
+accident, an option declined — has no natural home in a defect log and therefore no home at all.**
+
+**Not remedied here, and the CIO is deliberately not inventing a mechanism at sprint close.**
+Options a future session should weigh: a `FINDINGS` section in the Issue Log for non-defect
+learnings; a harvest that reads the decision record as a second source; or accepting the boundary
+and having the CIO file a defect-shaped stub for any finding it wants harvestable — **which is the
+cheapest and also the most likely to be forgotten.**
+
+**Resolution:** open — Sprint 3, and it should be settled before the next harvest rather than
+discovered by it again.
+**Pattern tag:** `index-scoped-narrower-than-its-use` · `learnings-are-not-defects`
