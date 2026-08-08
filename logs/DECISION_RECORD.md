@@ -3109,3 +3109,66 @@ invocations remain.** Sprint 2 closes **2026-08-11**; Rider C's casebook harvest
 scheduled item left and is a close-day task.
 
 **Review date:** sprint close, 2026-08-11.
+
+---
+
+## S2-D-033 · 2026-08-08 · Rider A CLOSES · laptop reclassified as integrity witness · Rider C dispatched
+
+**1 · Retirement declined; both hosts continue.** The CIO's recommendation adopted with its
+reasoning. The Principal's own summary of the decisive point: **"932 cross-host agreements, zero
+disagreements, is a control we didn't know we had until tonight, and a single host reading 98%
+while its content rots is exactly the failure class nothing else would catch."**
+
+**2 · RECLASSIFICATION — the laptop's role changes from primary capture to INTEGRITY WITNESS.**
+This is more than a label and the consequences are recorded so no future session re-litigates them:
+
+- **The laptop's coverage percentage is no longer a monitored quantity or a finding.** Only its
+  **overlap sample and agreement rate** are.
+- **Host-sleep gaps on the witness are expected behaviour, not incidents.** The `pmset` regime
+  continues best-effort.
+
+**The CIO notes what this retires along with the metric:** the 5.5% figure that opened this sprint,
+the 8.6% that corrected it, and the 37.14% that corrected *that* were all measuring the laptop
+against a standard it is **no longer being held to.** Coverage was the right question for a primary
+capture host and is the wrong question for a witness. **A metric that outlives its purpose is a
+metric that will eventually be defended for its own sake.**
+
+**3 · Cadence, so the control is computed rather than asserted.** The pull-and-merge becomes a
+**weekly `[PRINCIPAL]` ritual — Fridays, alongside the Research Review** — with the merge summary
+(**new / unchanged / RESTATED / exit code**) pasted to the record per `TEMPLATES.md` §7.9.
+**A skipped week is a skipped verification and gets logged as such.**
+
+**4 · Sprint 3 item, Sonnet-scope, adopted from the CIO's own suggestion:** promote the merge's
+`unchanged`/`RESTATED` counts into the **snapshot-health-check pattern** — a status file with a
+staleness threshold, **so an unrun verification fails loud instead of silently aging.** The CIO had
+proposed making `unchanged` a monitored quantity; the Principal's improvement is the staleness
+threshold, which is what converts *monitored* into *cannot-be-quietly-skipped.*
+
+**5 · Revisit trigger stands: condition, not date** — VPS ≥ 30 days clean **and** an independent
+content-integrity check in place. **Neither exists today.**
+
+**6 · I-093 noted with approval of the family assignment** — *"a same-named field meaning different
+units at the decision moment is the label-that-lies defect class, fifth member."*
+
+**7 · RIDER A CLOSES.** Its record is the parallel run's evidence, the merge, and this ruling.
+Delivered against a $6.00/month approved spend: **coverage 37.14% → 98.43%**, every gap eliminated,
+and a data-integrity control **nobody designed and nobody asked for.**
+
+**8 · Rider C dispatched — Execution & Operations, Sonnet.** The casebook harvest, against the
+casebook's own bar: *"a case must teach a rule that applies outside the system that produced it."*
+
+**The CIO's brief states plainly that Sprint 2 filed nearly fifty issues and did not produce fifty
+cases, and that a harvest which turns the issue log into a longer issue log has failed** — four to
+eight expected, three accepted if only three can be defended. **The seat is asked to report what it
+rejected and why, because that judgment is the deliverable as much as the cases are.**
+
+Seven candidate seams offered as input rather than conclusion, of which the CIO judges two the
+sprint's real yield: **"a control that is asserted rather than computed is not a control"** — four
+costumes, now standing doctrine at `GATES.md` §4.7.2 — and **the implementer who held a correct
+one-line fix for 46 red tests and filed an issue instead**, which is the pre-authored test regime
+converting an author's error into a filed defect rather than a permissive statistic in a live gate.
+
+**9 · Budget.** **19 of 30 · 11 of 12 Opus.** Freely allocable Opus **zero**; DA reserve sealed and
+never spent — **by design, not by omission.** §5 dead-man: **8 invocations remain.**
+
+**Review date:** sprint close, 2026-08-11.
