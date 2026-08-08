@@ -3541,3 +3541,40 @@ than none because it is consulted.**
 
 **Resolution:** open — the interim rule is in force; the four stale entries need Validation.
 **Pattern tag:** `closure-not-propagated-to-the-index` · `disclosed-but-never-logged` *(mirror of I-022)*
+
+---
+
+## I-093 · 2026-08-07 · `merge_polymarket_capture.py`'s dry run and its real merge both report "rounds" and count different things — 191 vs 3,820 for the same data · Severity: LOW · Owner: CIO → head-of-data-infra
+
+**Description.** At the parallel-run close the same merge reported, minutes apart [measured]:
+
+```
+dry run: 191 round(s), 4011 document(s) pending merge (watermark=0.0)
+merged 3820 round(s): 175796 new obs, 932 unchanged, 0 RESTATED
+```
+
+**Both numbers are correct and neither is wrong data.** The dry run counts **distinct
+`knowledge_time`** — poll rounds. The real merge counts `(source, symbol, knowledge_time)` groups
+in `capture_merge.py`'s `rounds_merged` — **one per token per poll.**
+
+**`3820 / 191 = 20.0`, and the capture writes exactly 20 token books per round** [measured — every
+successful log line reads `captured 20/20 token books across 10 markets`]. The two figures
+reconcile exactly and describe different units under one word.
+
+**Why it is filed despite being cosmetic.** A reader comparing a dry run to its own execution sees
+a **20× discrepancy in a field with the same name** and has no way to tell a unit mismatch from a
+data fault — at precisely the moment the operator is deciding whether a merge behaved. The CIO
+stopped to reconcile it before recording the parallel-run close, which is the cost this defect
+imposes every time.
+
+**It is the sprint's own recurring shape in miniature**: a label that does not mean what it says.
+`over` that annotated instead of failing (I-022), a `t` that claimed independence it did not have
+(I-050), a stage described but never registered (I-105), a test named for a protection it does not
+uniquely test (I-113). **This one is harmless and belongs in the same family.**
+
+**Remedy, not actioned:** rename `rounds_merged` to `token_rounds_merged`, or have the dry run
+report both units. Either is a one-line change and neither is worth an invocation this sprint.
+
+**Resolution:** open — cosmetic, no data impact, no recomputation required. The parallel-run
+figures stand as reported.
+**Pattern tag:** `label-does-not-mean-what-it-says`
