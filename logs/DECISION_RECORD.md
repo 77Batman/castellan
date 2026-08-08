@@ -3029,3 +3029,83 @@ asked for.**
 §5 dead-man: **8 invocations remain.**
 
 **Review date:** parallel-run close, 2026-08-07T23:30Z.
+
+---
+
+## S2-D-032 · 2026-08-07 · Parallel run closes · VPS 98.43% vs laptop 37.14% · merge clean · retirement NOT recommended
+
+**1 · Steps 8–10 executed and verified end-to-end.** All `[PRINCIPAL]` outputs attached to the
+record per `TEMPLATES.md` §7.9. **Steps close.**
+
+| | VPS | Laptop |
+|---|---:|---:|
+| Span | 47.5h | 47.8h |
+| Expected polls | 190.0 | 191.2 |
+| Successful | **187** | **71** |
+| **Coverage** | **98.43%** | **37.14%** |
+| Gaps ≥ 1h | **0** | **3** — 16.4h, 11.0h, 3.0h |
+| Heartbeat attempts / failed | 187 / **0** | 71 / **0** |
+
+**Rider A's premise is confirmed on measured head-to-head evidence: 2.65× the coverage, and every
+gap eliminated.** The comparator used was **37.14%, not the historical 8.6%** — the contaminated
+figure the CIO warned against at S2-D-023 and again at the Research Review.
+
+**All three laptop gaps are host-sleep, and the firm can now say so rather than assume it.**
+Heartbeat records **71 attempts, 0 failed** — polls that fired all succeeded, so the missing rounds
+are *not-polled*, not *no-quote*. **That distinction did not exist before 2026-08-04T16:53:16Z
+(I-048), and this is its first load-bearing use.**
+
+**2 · Merge clean. 0 RESTATED, exit 0, watermark advanced.** Verified in the real store [measured]:
+`book/pit.db` now holds **629,147 observations**, of which **291,618 Polymarket** across **330
+distinct rounds**. Snapshot gate passed before the merge — `pit`/`registry`/`book` all OK at 9.0h.
+
+**3 · THE 932 "UNCHANGED" ARE THE MOST VALUABLE NUMBER IN THIS OUTPUT, AND NOTHING IN THE RUNBOOK
+SAYS SO.** They are observations both hosts independently captured where **the values agreed
+exactly.** Two independent machines, on two networks, polling the same public API, produced **932
+overlapping observations and zero disagreements.**
+
+**That is a data-integrity control the firm has never had before**, and it exists only while both
+hosts run. It is also why A4's restatement machinery reported 0 rather than nothing: **there was
+something to disagree about, and it didn't.**
+
+**4 · I-093 filed — the dry run and the real merge both say "rounds" and count different things**,
+191 vs 3,820. Reconciled exactly: `3820 / 191 = 20.0`, and the capture writes 20 token books per
+round. **No data impact; the figures stand.** Filed because a reader comparing a dry run to its own
+execution sees a 20× discrepancy in a same-named field **at the moment they are deciding whether a
+merge behaved** — the CIO stopped to reconcile it before recording this entry, which is the cost it
+imposes every time. Same family as I-022, I-050, I-105, I-113: **a label that does not mean what it
+says.**
+
+**5 · LAPTOP RETIREMENT — the CIO recommends AGAINST, and the reason is not sentiment about
+redundancy.**
+
+The coverage case for retirement is strong and the CIO does not dispute it: the laptop contributes
+37% where the VPS delivers 98%, and it is the source of every gap. **The coverage argument is
+already banked — the merge captured it.**
+
+**What retirement costs is the 932.** Cross-host agreement is obtainable **only while two hosts
+run**. Retire the laptop and the firm converts a two-host system with **mutual verification** into
+a **single-host system with no independent check** — and it does so two days into the VPS's track
+record, against a laptop with months of it.
+
+**The failure mode that argues loudest:** if the VPS begins returning subtly wrong data — a stale
+cache, a changed endpoint, a partial book — **a single host cannot detect it.** Coverage would read
+98% while the content rotted. The laptop is currently the only instrument that would catch that,
+and it catches it for free on hardware already running.
+
+**Recommendation: keep both. Make the merge's `unchanged` count a monitored quantity rather than a
+line of output** — a nonzero `RESTATED` between two independent readers of the same public API
+would be a serious finding, and today the firm would notice it only by reading a merge log.
+
+**Revisit on a condition, not a date:** when the VPS has ≥ 30 days of clean operation **and** the
+firm has an alternative integrity check on capture content. **Neither is true today.** The
+runbook's own step 13 says retirement is *"not recommended on any particular timeline"* — the CIO
+agrees and now has evidence for why.
+
+**This is the Principal's call under step 13.** The CIO recommends and does not decide.
+
+**6 · Budget.** **18 of 30 · 11 of 12 Opus.** Freely allocable Opus **zero**. §5 dead-man: **8
+invocations remain.** Sprint 2 closes **2026-08-11**; Rider C's casebook harvest is the only
+scheduled item left and is a close-day task.
+
+**Review date:** sprint close, 2026-08-11.
