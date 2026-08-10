@@ -723,3 +723,290 @@ The Gate 0 intake ceiling is **necessarily** computed at `VIF = 1`: at intake no
 
 *Director of Research · Castellan Capital · **addendum §8 added 2026-08-06 for revision R-003***
 *Reasoning memo for revisions R-001, R-002 and R-003 of `research/PREREG-002-crypto-funding-basis.md`. No hypothesis was opened, no trial was run, no vault was sealed, `harness/` was not touched, and `book/` was not written to.*
+
+---
+
+## 9. THE §4.7.2 AUDIT — every limit `PREREG-002` claims, against the field that enforces it
+
+**Added 2026-08-10 for revision R-004.** Dispatch S3-D-001, Task 1. **Trial budget: ZERO. No number
+computed.** Every harness fact below is `[measured — read from source this session]` at the named file
+and line; every figure about this family is `[cited]` from `PREREG-002`, `VALIDATION-SPEC-002/003`, or
+`VALIDATION-RULING-004/005`, carried forward with its source.
+
+### 9.0 The test, and why it is applied to sixteen fields and not to a document
+
+`GATES.md` §4.7.2, ruled 2026-08-06 (S2-D-029):
+
+> **For every limit the document claims, name the field the harness reads to enforce it. If there is
+> no such field, there is no limit.**
+
+The binding field set is enumerated at `harness/castellan/registry.py:82`, `_BINDING_FIELDS`
+[measured]. **Sixteen fields.** Anything not in that list is not sealed, whatever the document says
+about it. And — the distinction this audit turns on and which §4.7.2's own wording does not force —
+**being in that list means a field is *hashed*, not that it is *read*.** `prereg_sha256` gives
+tamper-evidence. Tamper-evidence is not enforcement. **A field can be sealed, shadow-copied, and
+hash-verified at every Gate 1 call, and still have no consumer anywhere in the harness.** Nine of the
+sixteen are in exactly that state, and that is §9.2's finding.
+
+**The verification method, so it is reproducible rather than asserted.** For each of the sixteen
+field names, `grep -rn <field> harness/castellan/ | grep -v registry.py` [measured]. Every field with
+zero non-`registry.py` hits is read by nothing outside the module that stores it; every field with
+hits was then read at each call site to establish whether the read *enforces* or merely *renders*.
+
+### 9.1 What each of the sixteen binding fields actually does
+
+| # | Field | What reads it, beyond being hashed into `prereg_sha256` | Enforces a limit? |
+|---:|---|---|---|
+| 1 | `family` | `hypotheses` PK; `trials.family` FK; `log_trial`'s registration check (`registry.py:485`); `predecessor_chain`; every `evaluate_gate1` lookup | **Yes** — A2's whole mechanism |
+| 2 | `statement` | `open_hypothesis`'s non-empty check (`registry.py:~250`). Nothing else, anywhere | Presence only |
+| 3 | `mechanism` | Same non-empty check. Nothing else | Presence only |
+| 4 | `falsifier` | Same non-empty check. Nothing else | Presence only |
+| 5 | `universe` | **Nothing.** Zero non-`registry.py` hits [measured] | **No** |
+| 6 | `horizon` | **Nothing.** Zero hits [measured] | **No** |
+| 7 | `success_criteria` | **Nothing.** Zero hits [measured] | **No** |
+| 8 | `trial_budget` | `gates._trial_budget_criterion` — `sealed = fam.trial_budget` (`gates.py:562`), B-7's zero-budget branch, B-9's per-trial ordering walk, `declared_ceiling_base` (`gates.py:565`), `trial_budget_sealed`/`_effective` on the report face | **YES — the only binding field that enforces a numeric limit** |
+| 9 | `predecessor_family` | Validated at registration (must itself be registered); `predecessor_chain`; `family_stats`' transitive sum; `returns_matrix`; `InheritedCountDoubleCountError`'s guard | **Yes** |
+| 10 | `holdout_classification` | Validated at registration against `{FORWARD, HISTORICAL}`; gates `HISTORICAL` into the R3 presence check; rendered on the report face (`gates.py:1055`, `:165`) | Partly — a domain check and a render |
+| 11 | `forward_window_start` | **Presence check iff `holdout_classification == "HISTORICAL"`.** This family is FORWARD, so **nothing reads it at all.** Zero non-`registry.py` hits [measured] | **No, for this family** |
+| 12 | `forward_window_min_length` | Same. **Nothing, for a FORWARD family.** No code anywhere compares it to an elapsed span, and no code knows its unit | **No** |
+| 13 | `forward_kill_condition` | Same. **Nothing, for a FORWARD family.** No harness path evaluates a kill condition, on any date, for any family | **No** |
+| 14 | `model_prior_provenance` | **Nothing.** Zero hits [measured] | **No** |
+| 15 | `published_signal_haircut_applied` | **Nothing.** Zero hits [measured]. No code path applies a haircut to a return series, a Sharpe, or an alpha | **No** |
+| 16 | `n_inherited` | `family_stats.n_trials = n_inherited + n_logged`, summed transitively; **DSR's `N`** (`gates.py:779`, `:788`); **MinBTL's `N`** (`gates.py:856`); `declared_ceiling_base` for the contingent-extension arithmetic (`gates.py:565`); PBO's H-9 disclosure note; the H-11 note on the zero-logged branch | **Yes — four consumers** |
+
+### 9.2 CATEGORY (c) — the limits nothing reads. **This is the deliverable.**
+
+Every entry below is a limit `PREREG-002` states in operative, binding language, for which the answer
+to §4.7.2's question is **there is no such field, and therefore no limit.** Ordered by how much the
+document leans on it.
+
+| # | The limit, as the document states it | Where | Why nothing reads it |
+|---:|---|---|---|
+| **c1** | **`published_signal_haircut_applied = 0.50`** — §11.6: *"The presumption is accepted. No exemption is sought,"* and §5.4 derives the family's entire Gate 1 burden (`t(α) ≈ 6.0` pre-haircut) from it | §11.6, §5.4, §21 | **The field is stored and hashed and read by no code, anywhere** [measured — zero non-`registry.py` hits]. There is no haircut computation in `gates.py`, `stats.py`, `engine.py` or `costs.py`. §11.6 already cites I-019 for *"schema and no computation attached"*; **this audit sizes it: the largest single acknowledged hurdle this family faces is a number in a column** |
+| **c2** | **`forward_kill_condition` = KC-002 in full**, including *"SILENCE IS A KILL — if the computation is not performed … for ANY reason … the family is killed by default"* | §14, §11.4, §21 | **No harness path evaluates a kill condition on any date.** For a FORWARD classification the field is not even presence-checked. **KC-002 — the document's most emphatic control, whose clause 5 exists precisely to defeat non-execution — is enforced by the calendar and by seats, and by nothing in the engine.** The clause that says a kill condition defeatable by not running it is not a kill condition is itself defeatable by not running it |
+| **c3** | **`forward_window_min_length = 12.0` MONTHS** — Charter §4.4's holdout floor | §11.4, §21 | Nothing reads it, and **the schema stores it as an unlabelled `REAL`** — the document's own I-033(5) note. Days, months and years are indistinguishable in the column, and no consumer exists to be confused, which is the only reason the ambiguity has not yet cost anything |
+| **c4** | **`forward_window_start`** | §11.4, §21 | Same. Inert for FORWARD. The P7 sequencing rule it exists to support — *seal on or before the UTC day of `C`* — is checked by `verify_prereg`'s `sealed_created_utc` against the **vault**, not against this field |
+| **c5** | **The §7.2 escalation rule and its hard stop** — *"A post-result revision of any of K1–K7 TERMINATES THE LINE"* | §7.2, §14 clause 2, §21 `universe` | The rule lives in `universe`, **which nothing reads.** What the harness *does* enforce is narrower and different: `PreRegistrationAmendedError` refuses re-registration of a changed binding field, and `InheritedCountDoubleCountError` refuses the successor. **The hard stop is real but it is an emergent property of two guards, not a reading of this clause.** A revision that changed *only* prose inside `universe` would be refused as an amendment — which is the correct outcome reached for an unrelated reason |
+| **c6** | **`N_conditioning = 7`, the declared `N` floor** | §7.2, §10.1, §21 | **No field carries it, and the document knows this** (§10.3, I-027). **It is deliverable — see §9.4, which is the finding that reverses it** |
+| **c7** | **Every methodological limit stated in `universe`, `horizon` or `success_criteria`**: K3 = "exclude nothing"; "NO WINSORIZATION, OUTLIER REMOVAL OR RETURN CLIPPING anywhere at any stage"; `w_max = 1.0` / never long perp; the capacity screen at 20 × `P_notional`; the ≤5% ADV participation cap; `periods_per_year = 365`; the ML-2 non-fitted assertion; "only `plateau_centroid_params` advances"; the walk-forward fixed-centroid clause; F-002's E2 "evaluated ONCE"; all eleven mandatory per-artifact disclosure lines | §6, §7.4, §10.5, §10.7, §18, §21 | **Three fields, zero consumers.** Every one of these is enforced by the seat that writes the loop. Two have *adjacent* harness protections that must not be mistaken for enforcement of the clause: `execution_lag < 1` raises `SameBarFillError` (`engine.py`), and `grid_from_center` raises above 200 points (`grid.py:27`). **Neither reads the sealed text; both would fire identically for a family that declared the opposite** |
+| **c8** | **"No Stage 2 trial is spent on an unmeasured or a stale `ρ̂`"** | §10.5.2 | **`log_trial` reads no budget** [measured — `registry.py:477–502`: the only precondition is that the family is registered]. The budget is enforced **retrospectively**, at `evaluate_gate1`, by B-9's ordering walk over `own_trial_times`. **Nothing prevents the spend; the spend fails the gate afterwards, and trials cannot be unspent** (V-5). This is a real control and it is not the control the sentence describes |
+| **c9** | **"the trial budget remains 79 … ceiling `N` remains 86"** as an authorization | §10.7(d), §21, §10.5.3 | Superseded by R-003 as an authorization but **still present verbatim in the `success_criteria` string**, i.e. inside a field nothing reads, next to the R-003 note that supersedes it. Harmless only because no consumer exists to be misled |
+
+**The pattern, stated once.** Eight of these nine are the same shape: **the limit is written into
+`universe`, `horizon` or `success_criteria` — the three binding fields with zero consumers in the
+entire harness.** Those three fields are where a pre-registration puts its methodology, and they are
+precisely where the harness does not look. **The seal makes them immutable; it does not make them
+operative.** A sponsor reading `_BINDING_FIELDS` and concluding "my methodology is enforced because it
+is binding" has made the I-046 error on the research side, which is what §4.7.2 says in the abstract
+and what this table says with line numbers.
+
+**What this does NOT mean, said plainly so the finding is not over-claimed.** Category (c) is not a
+list of defects to repair. Most of these belong in a sealed document and could not sensibly be
+mechanised — no harness will ever check "no winsorization was applied." **The finding is not that they
+should be enforced; it is that the document must stop describing them as though they were, and that
+the two that CAN be mechanised (c1's haircut, c6's `N` floor) are the ones worth acting on.** c6 is
+acted on in R-004. c1 is filed and is not this seat's.
+
+### 9.3 CATEGORY (a) and (b) — the limits that are real
+
+| The limit | The field, or the code path | Note |
+|---|---|---|
+| **Trial budget 47 (Stage 1)** | **(a)** `trial_budget`, `gates.py:562` → B-7 / B-9 / `declared_ceiling_base` | **Only if 47 is what is sealed.** This is I-105 |
+| **Stage 2 ≤ 32, contingent on measured `ρ̂`** | **(b)** `gates.contingent_increment_allowed` + `_budget_extension_ledger`, against a `trial_budget_extension` event of `mode="CONTINGENT"` | **Only if the event is written.** No document can write it; it is a post-seal registry act |
+| **`N` = `n_inherited` + logged, transitively summed** | **(a)** `n_inherited`, `predecessor_family` → `family_stats` | Four consumers: DSR, MinBTL, `declared_ceiling_base`, PBO's disclosure |
+| **`N_max` ceiling as a function** | **(b)** `_admissible_ceiling` (`gates.py:344`) = `min(n_max_admissible_iid, n_max_admissible_serial)`, recomputed at every call | R13's functional form is real and is computed, not declared |
+| **Pre-registration immutability after seal** | **(a)** all sixteen, via `prereg_sha256` + `PreRegistrationAmendedError` + `verify_prereg`'s shadow copy | Tamper-**evidence** across all sixteen; tamper-**prevention** on none |
+| **Successor cannot escape the chain's count** | **(a)** `predecessor_family` + `InheritedCountDoubleCountError` | §4.7.1's doctrine, mechanised |
+| **A2 — no unregistered run** | **(a)** `family` → `log_trial`'s `PreRegistrationError` | The firm's strongest single control |
+| **Minimum one-bar lag** | **(b)** `SameBarFillError`, `engine.py` | Reads no sealed field; unconditional |
+| **Grid cardinality ≤ 200** | **(b)** `grid.py:27` `ValueError` | Reads no sealed field; unconditional |
+
+### 9.4 THE FINDING THAT CHANGES THE PAYLOAD — `n_inherited` must be **7**, not 0
+
+**§10.3's premise is stale and its consequence runs permissive.** The document states, at §10.3
+[cited — `PREREG-002` §10.3]:
+
+> *"[measured — `registry.py`, `open_hypothesis` signature] There is no `n_inherited` parameter and
+> no `n_inherited` column."*
+
+**That was true when it was written and is false now** [measured — `registry.py:83` declares
+`n_inherited INTEGER NOT NULL DEFAULT 0` in `SCHEMA`; `_migrate` ALTERs it onto pre-existing DBs;
+`open_hypothesis`'s signature carries `n_inherited: int = 0`; and it is the sixteenth entry of
+`_BINDING_FIELDS`]. **I-018 / I-027 / C-001 §3.0 shipped the column this document says does not
+exist.** Sealing §10.3 as written freezes a false statement of fact about the harness, permanently,
+under P7 — and freezes with it the §21 disclosure line *"the 7-trial conditioning floor is declared
+and unenforced (I-027)"*, which would then be false on the face of every Validation Report.
+
+**The consequence is not cosmetic, and it runs against the firm.** `gates.py:565`:
+
+```
+declared_ceiling_base = fam.n_inherited + sealed
+```
+
+and B-18's contingent predicate is `allowed = clamp(N_max − declared_ceiling_base, 0, increment)`.
+`VALIDATION-SPEC-003`'s own `test_tbe_15` fixes `base, inc = 54, 32` and reproduces §10.5.2's four
+rungs exactly [cited — `harness/tests/test_trial_budget_enforcement.py:497–518`]. **54 = 7 + 47.**
+At `n_inherited = 0` the base is 47, and §10.5.2's own table does not hold:
+
+| Measured `ρ̂` | `N_max` [cited — SPEC-002 §6.2] | §10.5.2 declares | At `n_inherited = 7` (base 54) | **At `n_inherited = 0` (base 47)** |
+|---:|---:|---:|---:|---:|
+| ≤ 0.034 | 86 | "the whole of Stage 2" — 32 | 32 ✓ | 32 ✓ |
+| ≈ 0.05 | 77 | "≤ 23 of the 32" | 23 ✓ | **30 — seven more than declared** |
+| ≈ 0.10 | 55 | "≤ 1 of the 32" | 1 ✓ | **8 — eight times the declared allowance** |
+| ≥ 0.20 | 31 | "NONE" | 0 ✓ | 0 ✓ |
+
+*(All four `N_max` figures `[cited]`; the four right-hand columns are `clamp(N_max − base, 0, 32)`
+evaluated by hand on already-cited integers — the same treatment §7.3 gives its counterfactual
+product. **No harness call was made and no test was run.**)*
+
+**The error runs PERMISSIVE at exactly the two rungs where the family is in trouble**, which is the
+direction §10.5.2's whole staged construction exists to close. **A document that seals
+`n_inherited = 0` describes a Stage 2 gate tighter than the one the harness would open** — I-105's
+defect, one field over, and it would survive I-105's own repair. **Filed I-130, HIGH.**
+
+**Why declaring 7 is not the §4.7.1 defect, addressed because a reader will raise it.** GATES.md
+§4.7.1's test is: *"if a clause tells a sponsor to declare a quantity the registry already computes,
+it is this defect."* **The registry does not compute `N_conditioning`.** It has no knowledge of
+conditioning choices, menus, or pre-commitment discounts; it cannot derive 7 from anything it holds.
+§4.7.1 governs *inheritance from a predecessor chain*, which `family_stats` does compute — and this
+family's `predecessor_family` is `None`, so there is no chain, no transitive sum, and nothing to
+double-count. `InheritedCountDoubleCountError`'s guard is explicitly conditioned on
+`predecessor_family is not None` [measured — `registry.py`] and does not fire. **`n_inherited = 7` is
+the field's documented purpose used for its documented purpose**: the docstring reads *"the prior
+search attributable to THIS family and not already carried by its predecessor chain — declared,
+phantom, no return series."* Seven menu-declared pre-measurement choices with no return series is
+that quantity exactly.
+
+**What it costs this family, stated because it is a cost and it is taken deliberately.** The
+registry-enforced `N` at a full Stage 1 spend rises from 47 to **54**, and at full Stage 2 from 79 to
+**86**. DSR is deflated against 86 rather than 79; MinBTL is evaluated at 86 rather than 79. **The
+0.13-year I-027 residual §10.3 quantifies as this family's cost of the unenforced floor is not
+mitigated — it is paid.** `MinBTL(86, SR 1.0) = 6.14 yr` against 6.571 available, margin 0.43 yr
+[cited — §10.4, unchanged and already measured]. **This is the document's own "honest" row (§10.3)
+becoming the enforced one, and no new number is required to say so** — both readings were already on
+that table. §10.3's *"Registry as it will read"* row is what R-004 strikes.
+
+**And it repairs c6.** `N_conditioning = 7` moves from category (c) — a floor nothing reads — to
+category (a): a sealed field with four consumers. **That is §4.7.2's doctrine turned on this document
+and producing an act rather than a disclosure**, which is the outcome the doctrine is for.
+
+### 9.5 I-105 — the disposition chosen, and the argument for it
+
+**The Principal offered two: register Stage 1 at 47 with §10.5.2's Stage 2 language surviving as the
+description of a registered unlock event under SPEC-003's contingent form, or strike it before
+sealing. This seat chooses the FIRST, and does not regard it as close.**
+
+**Why not strike.** Striking makes the sealed budget 47 flat, with no route above it that does not
+require a discretionary extension — which under B-14 needs a countersignature from a distinct seat,
+which is a *person's* authorization rather than *arithmetic's*. **That is strictly worse on the axis
+the firm cares about.** B-16: *"A contingent extension is authorized by a computation, not by a
+person, and is therefore safe to self-issue… Forging the event buys nothing, because the number that
+governs is recomputed."* Striking Stage 2 would replace an arithmetic gate with a human one and
+would, on the way, forfeit the §10.5.2 argument that makes a PARK operational (a parked family that
+keeps regenerating its forward window digs its own hole while waiting in it).
+
+**Why the contingent form is not a favour to this family.** It is not a door the sponsor opens. The
+predicate is `n_max_admits_declared_ceiling`, `params` empty and required-empty (B-17); the criterion
+**recomputes** `N_max` at evaluation time and never trusts the event's assertion (B-16); the
+aggregate cap is `max(0, N_max − declared_ceiling_base)` regardless of how many events are written
+(B-20); unevaluable `N_max` gives `allowed = 0` and a FAIL, not INSUFFICIENT-DATA (B-19); and a
+malformed event FAILS the criterion even where the family is comfortably inside its sealed budget
+(B-23). **Every one of those runs against the sponsor.**
+
+**The Stage 2 clause must be written as a plain instance of the generic mechanism, not as this
+family's special construction.** `test_tbe_15` already reproduces §10.5.2's four rungs **without
+knowing this document exists**, and B-22 makes genericity a tested property — `gates.py`'s source may
+not contain `PREREG-002`, `rho_plan`, `0.034`, `stage_2`, or `crypto-funding`. **The document has no
+standing to describe the mechanism; it may only declare an instance of it.** R-004 rewrites §10.5.2's
+unlock rule accordingly, and I-104 is conformed in the same edit: the nine-row table is a rendering,
+`stats.max_admissible_trials` is the function of which those rows are printed evaluations, and
+**RULING 003-A rules that the function governs.** *"Never interpolated"* is struck; it described a
+lookup with no defined value between its rungs.
+
+### 9.6 What the four remaining suite reds do to this family's registration
+
+`test_G2`, `test_h7`, `test_h8`, `test_mbs_12` are Validation-owned and were not touched, not run, and
+not reported on. **Read only, to answer one question: does any of them bear on the registration act?**
+
+| Red | What it grades | Bears on registration? |
+|---|---|---|
+| `test_G2` | `oos_index` calendar span is used and reported by the **length criterion** (`evaluate_gate1`) | **No.** Gate 1 evaluation. `open_hypothesis` has no calendar input |
+| `test_mbs_12` | Corrected `MinBTL` is approximately frequency-invariant across bar aggregations | **No.** A property of `stats.min_backtest_length_years_serial`. §10.9(b) already establishes nothing in this document rests on frequency invariance in either direction |
+| `test_h7` | DSR consumes the **seeded** denominator — `famU` at `n_inherited=0` PASSes, `famS` at 31,250 FAILs | **Not on the act. On what the act is worth.** `open_hypothesis(..., n_inherited=7)` executes today; `gates.py:779/:788` passes `fam.n_trials` (= 7 + logged) to `deflated_sharpe_ratio` [measured]. **Whether the 7 arrives intact at the DSR verdict is what h7 grades, and it is red** |
+| `test_h8` | `MinBTL` consumes the seeded denominator and fails a short backtest | **Same.** `gates.py:856` passes `fam.n_trials` to `min_backtest_length_years` [measured] |
+
+**The honest statement, and it is a change from what this seat would have written before R-004.** At
+`n_inherited = 0` the answer was a clean "none of the four bears on registration," because a zero
+seed makes h7/h8 inert for this family. **At `n_inherited = 7` that is no longer true.** h7 and h8 do
+not block the act — nothing in them touches `open_hypothesis`, and the registration is mechanical and
+executable today — **but they are exactly the two tests that determine whether the 7 this family is
+about to seal is consumed by DSR and by MinBTL or is merely displayed on the report face.** This seat
+does not own them, has not touched them, and states the dependency rather than assuming the code
+paths it read are the ones under test. **Raised to Validation as a consequence of R-004, not as a
+request.**
+
+### 9.7 Issues filed by this audit
+
+| # | Severity | Finding | Owner | Disposition |
+|---|---|---|---|---|
+| **I-130** | **HIGH** | `n_inherited = 0` makes §10.5.2's own unlock table permissive by 7 and by 8 trials at the two rungs that bind. `declared_ceiling_base = n_inherited + sealed` and SPEC-003's `test_tbe_15` fixes the base at 54 | director-of-research | **Discharged by R-004** — payload seals `n_inherited = 7` |
+| **I-131** | MEDIUM | §10.3's *"there is no `n_inherited` parameter and no column"* is stale; sealing it freezes a false statement of harness fact, and with it a §21 disclosure line that would be false on every Validation Report | director-of-research | **Discharged by R-004** |
+| **I-132** | MEDIUM | `log_trial` reads no budget. The trial budget is enforced retrospectively at `evaluate_gate1` and never at spend time; *"no Stage 2 trial is spent on an unmeasured `ρ̂`"* has no spend-time control, and trials cannot be unspent | quant-validation → head-of-data-infra | Open; disclosed on the face of §10.5.2 by R-004 |
+| **I-133** | MEDIUM | Nine of the sixteen binding fields are sealed and read by nothing. The three fields a pre-registration puts its methodology in — `universe`, `horizon`, `success_criteria` — have **zero** consumers in the harness | quant-validation | Open — disclosure; not a repair request |
+| **I-134** | MEDIUM | `published_signal_haircut_applied = 0.50` is applied by no code path. I-019 named it; this sizes it against this family, whose §5.4 derives a `t(α) ≈ 6.0` burden from a number nothing reads | quant-validation | Open |
+| **I-135** | LOW | `forward_window_start`, `forward_window_min_length` and `forward_kill_condition` are inert for a FORWARD classification — presence-checked only when `HISTORICAL`. KC-002's *"silence is a kill"* has no harness trigger | quant-validation | Open |
+| **I-136** | MEDIUM | §15's step table sums to **83** against a declared 79: diagnostics 8 (steps 4+5) vs §10.5.3's ≤7, and `N_forward` ≤25 (step 8) vs ≤22. R3/R6/R15's conforming passes did not reach §15's arithmetic — the same defect class R8(c) repaired | director-of-research | **Discharged by R-004** |
+
+### 9.8 What §9 did not do
+
+- **No seal, no registration, no registry write.** `book/registry.db` reads **0 hypotheses / 0 trials /
+  1 event** [measured — read-only `SELECT COUNT(*)`, this session; the single event is `book_open`].
+- **No `harness/` file touched, no test run, no suite state produced.** Every harness fact is a read.
+- **No `VALIDATION-*` document touched. No `book/` write.**
+- **I-045 not closed.** See §10.
+- **No number computed.** Every `N_max`, `MinBTL` and `ρ̂` figure is `[cited]`. The arithmetic performed
+  is `clamp` on already-cited integers and `2+1+2+2+6+25+20+25 = 83`, of the same class as R-002's
+  `109 − 86 = 23`.
+
+---
+
+## 10. I-045 — DECLINED, FOR THE FOURTH TIME, AND WHAT C2 NEEDS IN ORDER TO RULE ON IT
+
+**I-045's owner line reads `director-of-research → quant-validation` [cited — `logs/ISSUE_LOG.md`
+I-045]. Closure is Validation's. This seat declines to close it, as it declined at R-001, R-002 and
+R-003, and the reason has not changed and is not modesty.**
+
+**What this seat has discharged is a different object.** R-001 removed SOL from the universe (R3) and
+declared K7 (R5); R-002 discharged C12 (R12); R-004 changes neither. **C12 is a condition in this
+seat's own document and C12 is discharged. I-045 is an Issue Log entry recording a data-homogeneity
+defect, and discharging the remedy is not the same act as ruling the remedy sufficient.** A sponsor
+closing an issue on the strength of its own repair is the structure the independent line exists to
+prevent.
+
+**What C2 needs in order to rule, stated as three answerable questions rather than as a request:**
+
+1. **Is dropping SOL a sufficient remedy, or a scope reduction that leaves the finding live?** I-045's
+   substance is that *a funding series can be regenerated by different formula parameters mid-sample
+   without announcement*. **Removing the one symbol on which the firm caught it does not remove the
+   exposure** — it removes the instance. R12 says so in the sealed text: `DATA-VERIFY-002`'s clean
+   4,802 symbol-days verify the **cadence** dimension only, and the documented 2025-09-18 formula
+   change shows 3 prints on both BTC and ETH, so **a cadence sweep is structurally blind to the
+   parameter dimension** [cited]. Validation must rule whether K7's declaration is an adequate
+   substitute for an instrument the firm does not have.
+2. **Does K7 option (1) — 30 days at benchmark weight from a documented change date — cover the
+   residual?** §17 risk #12 records the residual explicitly: *"an unnoticed change is still possible,
+   since detection depends on Seat 9 observing it."* **C12's clean result does not narrow that
+   residual by one day.** Validation must rule on a control whose trigger is a vendor announcement
+   nobody is contractually obliged to make.
+3. **Does I-045 close at Gate 0 intake, or does it survive the seal as a standing disclosure?** This
+   seat's view, offered and not decisive: **it survives.** The defect is a property of the venue, not
+   of the document, and a family whose forward window runs to `C + 187 days` carries it forward.
+
+**All three are answerable inside C2's intake verdict and none of them requires a separate
+dispatch.** C13 is the mechanism and R-004 adds a fourth item to it (§20).
+
+---
+
+*Director of Research · Castellan Capital · **addendum §9–§10 added 2026-08-10 for revision R-004***
+*Dispatch S3-D-001. Trial budget ZERO. No hypothesis opened, no trial run, no vault sealed, `harness/`
+not touched, `book/` not written to, no test executed, no suite state reported.*

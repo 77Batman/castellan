@@ -3705,3 +3705,186 @@ cheapest and also the most likely to be forgotten.**
 **Resolution:** open — Sprint 3, and it should be settled before the next harvest rather than
 discovered by it again.
 **Pattern tag:** `index-scoped-narrower-than-its-use` · `learnings-are-not-defects`
+
+---
+
+## I-130 · 2026-08-10 · `PREREG-002` sealing `n_inherited = 0` makes its own Stage 2 unlock table PERMISSIVE by up to eight trials at the two rungs that bind · Severity: HIGH · Owner: director-of-research
+
+**Description.** `VALIDATION-SPEC-003` B-18 admits a contingent increment of
+`clamp(N_max − declared_ceiling_base, 0, increment)`, and `gates.py:565` computes
+`declared_ceiling_base = fam.n_inherited + sealed` [measured]. **SPEC-003's own `test_tbe_15` fixes
+`base, inc = 54, 32` and reproduces `PREREG-002` §10.5.2's four unlock rungs exactly** [cited —
+`harness/tests/test_trial_budget_enforcement.py:497–518`]. **54 = 7 + 47.**
+
+`PREREG-002` declares `N_conditioning = 7` in prose and `n_inherited = 0` in the seal block. At
+`n_inherited = 0` the base is **47**, and the same mechanism admits:
+
+| `ρ̂` | `N_max` [cited] | §10.5.2 declares | at base 54 | **at base 47** |
+|---:|---:|---:|---:|---:|
+| ≤ 0.034 | 86 | 32 | 32 | 32 |
+| ≈ 0.05 | 77 | 23 | 23 | **30** |
+| ≈ 0.10 | 55 | 1 | 1 | **8** |
+| ≥ 0.20 | 31 | 0 | 0 | 0 |
+
+**The error runs PERMISSIVE at exactly the two rungs where the family is in trouble** — the direction
+§10.5.2's whole staged construction exists to close. **It is I-105's defect one field over, and it
+would survive I-105's own repair**: sealing `trial_budget = 47` without also sealing `n_inherited = 7`
+produces a Stage 2 gate looser than the document that describes it.
+
+**Not the GATES.md §4.7.1 defect.** §4.7.1 forbids re-declaring a quantity the registry already
+computes. **The registry cannot compute `N_conditioning`** — it holds no knowledge of menus, choices
+or the pre-commitment discount — and `predecessor_family = None` means there is no chain summation to
+duplicate and `InheritedCountDoubleCountError`'s guard is never entered [measured].
+
+**Resolution:** **DISCHARGED at `PREREG-002` R-004 (R19).** The payload seals `n_inherited = 7`.
+Put to Validation at C13(e) for the contrary ruling, with the consequence of that ruling stated.
+**Pattern tag:** `prose-control-without-a-registration` · `permissive-in-the-direction-the-control-exists-to-close` · `decorative-until-depended-on`
+
+---
+
+## I-131 · 2026-08-10 · `PREREG-002` §10.3 asserts a harness fact that has become false, and sealing it would freeze a Validation Report disclosure line that is false on its face · Severity: MEDIUM · Owner: director-of-research
+
+**Description.** §10.3 reads: *"[measured — `registry.py`, `open_hypothesis` signature] There is no
+`n_inherited` parameter and no `n_inherited` column."* **True when written; false now** [measured —
+`n_inherited INTEGER NOT NULL DEFAULT 0` is in `SCHEMA`, `_migrate` ALTERs it onto pre-existing DBs
+and names `book/registry.db` in its own docstring, the signature carries `n_inherited: int = 0`, and
+it is the **sixteenth entry of `_BINDING_FIELDS`**]. I-018 / I-027 / C-001 §3.0 shipped it.
+
+**The consequence is not the stale sentence.** §21's `success_criteria` mandates a disclosure line on
+every Validation Report: *"declared N = 86; registry-enforced N = &lt;count&gt;; the 7-trial
+conditioning floor is declared and unenforced (I-027)."* **Once the 7 is registered that line is false
+in a sealed field**, and P7 makes it permanent — the sharpest available illustration of why the
+correction could not wait for a post-seal artifact.
+
+**Resolution:** **DISCHARGED at `PREREG-002` R-004 (R19(b)).** §10.3's premise struck; the disclosure
+line struck and replaced.
+**Pattern tag:** `stale-harness-fact-in-a-freezing-document` · `cheaper-before-the-freeze`
+
+---
+
+## I-132 · 2026-08-10 · `log_trial` reads no budget — the trial budget has no spend-time control in any stage, only a retrospective one · Severity: MEDIUM · Owner: quant-validation → head-of-data-infra
+
+**Description.** `TrialRegistry.log_trial`'s only precondition is that the family is registered; it
+raises `PreRegistrationError` and nothing else [measured — `registry.py:477–502`]. **The trial budget
+is enforced entirely retrospectively**, at `evaluate_gate1`, by `VALIDATION-SPEC-003` B-9's ordering
+walk over `own_trial_times`.
+
+**Nothing prevents an over-budget spend. The spend fails the gate afterwards, and trials cannot be
+unspent** [cited — `VALIDATION-SPEC-002` V-5]. Consequences:
+
+- `PREREG-002` §10.5.2's pre-commitment *"No Stage 2 trial is spent on an unmeasured or a stale
+  `ρ̂`"* has **no spend-time control**; it is a discipline on the seat that writes the loop.
+- §18's family exit — *"budget exhausted → this seat halts the family"* — is likewise a discipline,
+  not a mechanism.
+- It **compounds I-022 rather than duplicating it**: I-022 is a broken latch on the retrospective
+  check; this is the absence of any check at the moment of the act. **C10 does not discharge on
+  I-022's closure alone.**
+
+**Not necessarily a defect to repair.** A budget check inside `log_trial` would refuse a run rather
+than fail a gate, which is a design choice with real costs (an exploratory run that cannot be logged
+is an unlogged run, which is worse). **Filed so the firm chooses rather than discovers.**
+
+**Resolution:** open. Disclosed on the face of `PREREG-002` §10.5.2, §18 and §21 by R-004.
+**Pattern tag:** `retrospective-not-preventive` · `asserted-rather-than-computed`
+
+---
+
+## I-133 · 2026-08-10 · Nine of the sixteen binding pre-registration fields are sealed and read by nothing — including all three fields a pre-registration puts its methodology in · Severity: MEDIUM · Owner: quant-validation
+
+**Description.** `GATES.md` §4.7.2 applied to the binding field set itself. **Being in
+`_BINDING_FIELDS` means a field is HASHED, not that it is READ.** `prereg_sha256` gives
+tamper-evidence; enforcement is a different code path.
+
+**Zero non-`registry.py` consumers** [measured, `grep -rn <field> harness/castellan/`]: `universe`,
+`horizon`, `success_criteria`, `model_prior_provenance`, `published_signal_haircut_applied`,
+`forward_window_start`, `forward_window_min_length`, `forward_kill_condition`. `statement`,
+`mechanism` and `falsifier` are non-empty-checked at registration and nothing more.
+
+**The finding: `universe`, `horizon` and `success_criteria` — where every pre-registration puts its
+methodology — have zero consumers in the entire harness.** For `PREREG-002` that is K3's "exclude
+nothing," the no-winsorization clause, `w_max = 1.0`, the capacity screen, the 5% ADV cap,
+`periods_per_year = 365`, the ML-2 non-fitted assertion, the plateau-centroid commitment, the
+fixed-centroid walk-forward clause, F-002's E2 "evaluated ONCE," §7.2's escalation rule, and eleven
+mandatory disclosure lines — **all enforced by the seat that writes the loop.**
+
+**Two adjacent protections must not be mistaken for enforcement:** `SameBarFillError` (`engine.py`)
+and `grid_from_center`'s 200-point `ValueError` (`grid.py:27`) are real, and **neither reads a sealed
+field; both fire identically for a family declaring the opposite.**
+
+**NOT A REPAIR REQUEST.** Most of the nine could not sensibly be mechanised — no harness will ever
+check that no winsorization was applied — and §4.7.2 asks that the field be named or its absence
+stated, not that one be built. **The defect is documents describing prose as though it were a
+control.** Filed so the next pre-registration is written knowing which of its fields are watched.
+
+**Resolution:** open — disclosure. Recorded in `PREREG-002` §10.10 and §21 by R-004.
+**Pattern tag:** `sealed-is-not-enforced` · `asserted-rather-than-computed`
+
+---
+
+## I-134 · 2026-08-10 · `published_signal_haircut_applied` is applied by no code path — the 50% haircut from which `PREREG-002` derives its largest acknowledged hurdle is a number in a column · Severity: MEDIUM · Owner: quant-validation
+
+**Description.** I-019 records that Ruling 002's R4(a)/(b) have *"schema and no computation
+attached."* **This sizes it against a live family.** `published_signal_haircut_applied` has zero
+non-`registry.py` consumers [measured]; there is **no haircut computation anywhere** in `gates.py`,
+`stats.py`, `engine.py` or `costs.py`.
+
+`PREREG-002` §11.6 accepts the presumption in full and calls it *"the largest single hurdle this
+family faces"*; §5.4 derives from it the requirement that Gate 1 clearance needs a **pre-haircut
+`t(α) ≈ 6.0`**, and §19.3's pre-registered expectation of PARK-WITH-TRIGGER composes that factor with
+I-050's estimator correction to reach an order-20 uncorrected `t`. **Every one of those figures rests
+on a deduction the harness does not perform.**
+
+**§4.6 also leaves the point of application unspecified** — halve the return series, the Sharpe, or
+the alpha — which `PREREG-002` §5.4 escalates as C5 and which no code resolves either. **The two gaps
+compound: an unspecified operation that is also not implemented.**
+
+**Resolution:** open. Bears on C5 and is put to C2's intake at C13(h).
+**Pattern tag:** `sealed-is-not-enforced` · `schema-without-computation`
+
+---
+
+## I-135 · 2026-08-10 · No harness path evaluates a kill condition on any date, for any family — and for a FORWARD classification `forward_kill_condition` is not even presence-checked · Severity: LOW · Owner: quant-validation
+
+**Description.** `forward_kill_condition`, `forward_window_start` and `forward_window_min_length` are
+presence-checked **only** when `holdout_classification == "HISTORICAL"` [measured — `registry.py`].
+`PREREG-002` is **FORWARD**, so all three are stored, hashed, shadow-copied, and read by nothing
+thereafter. **No code anywhere evaluates a kill condition on a wall-clock date.**
+
+**The consequence, stated without softening.** KC-002 clause 5 reads: *"SILENCE IS A KILL — if the
+computation is not performed on the observation date for ANY reason … the family is killed by
+default. A kill condition that can be defeated by not running it is not a kill condition."* **That
+clause is itself defeatable by not running it.** KC-002 is enforced by the calendar, by Validation,
+and by the seats bound to it, and by no line of code.
+
+**Separately: `forward_window_min_length` is a unitless `REAL` (I-033(5)) with no consumer**, so days,
+months and years remain indistinguishable in the column and nothing exists to be confused by it yet.
+
+**Rated LOW, not MEDIUM, and the reason is stated rather than assumed.** It cannot produce a wrong
+PASS. It can produce a family that quietly outlives its own kill condition, which is a governance
+exposure rather than a statistical one — but it is exactly the exposure clause 5 was written to close.
+
+**Resolution:** open — disclosure. Recorded on KC-002's own face in `PREREG-002` §21 by R-004.
+**Pattern tag:** `sealed-is-not-enforced` · `the-clause-that-guards-against-its-own-failure-mode`
+
+---
+
+## I-136 · 2026-08-10 · `PREREG-002` §15's step table sums to 83 against a declared budget of 79 — three conforming revisions moved §10.5 and none reached §15's arithmetic · Severity: MEDIUM · Owner: director-of-research
+
+**Description.** §15 is the sequenced method section a researcher reads before running anything. Its
+per-step trial column summed to `2 + 1 + 2 + 2 + 6 + 25 + 20 + 25 = 83` against §10.5's declared **79**
+[integer arithmetic on already-declared line items]. Two discrepancies, both against the firm:
+
+| Item | §15 read | §10.5 declares |
+|---|---:|---:|
+| Pre-grid diagnostics (step 4 capacity ≤2 + step 5 ≤6) | **8** | ≤ 7 |
+| `N_forward` (step 8) | **≤ 25** | ≤ 22 |
+
+**R3, R6 and R15 each conformed §10.5 and none of them reached §15.** This is the same defect class
+R8(c) repaired for the three surviving instances of the superseded budget of 80 — **an internal
+contradiction between a document's method section and its own budget, which P7 would freeze
+permanently and which no later artifact could reconcile.**
+
+**Resolution:** **DISCHARGED at `PREREG-002` R-004 (R22).** Conformed to
+`2 + 1 + 2 + 2 + 5 + 25 + 20 + 22 = 79`, with the Stage 1 / Stage 2 split now carried in §15 as well
+as in §10.5.2, because §15 is what gets read before a run.
+**Pattern tag:** `conforming-pass-did-not-reach-every-instance` · `cheaper-before-the-freeze`

@@ -3223,3 +3223,97 @@ way or the seal waits again.
 **2 of 2 intact**; DA reserve sealed. §5 dead-man: **9 invocations remain** since sign-off.
 
 **Review date:** on R-004's return.
+
+---
+
+## S3-D-002 · 2026-08-10 · R-004 lands · §4 INTERRUPT — I-130 · the §4.7.2 audit is the sprint's first real finding
+
+**1 · §4 HARD INTERRUPT. Trigger: *"any issue filed HIGH."***
+
+**I-130 · HIGH — sealing `n_inherited = 0` would have made PREREG-002's own Stage 2 unlock table
+permissive by up to eight trials, at exactly the two rungs where the family is in trouble.**
+`gates.py:565` computes `declared_ceiling_base = n_inherited + sealed`, and SPEC-003's own
+`test_tbe_15` fixes `base = 54 = 7 + 47`. At `n_inherited = 0` the base is 47, and §10.5.2's table
+**admits 30 where it declares 23, and 8 where it declares 1.**
+
+**The Director's own characterization, and it is exact: "It is I-105's defect one field over, and
+would have survived I-105's own repair."** The sprint's first objective was to discharge I-105;
+discharging it correctly surfaced a second instance of the same defect in a neighbouring field.
+
+**Discharged in the same revision — the payload carries `n_inherited = 7`.** The seat **reversed
+its own earlier position** (`N_conditioning` had been the one field it judged uncarried) and took
+the cost deliberately: **enforced `N` becomes 54/86**, feeding DSR and MinBTL, so **§10.3's
+0.13-year I-027 residual is paid rather than mitigated.** A seat tightening its own family's
+constraint, against its own prior reasoning, before anyone asked.
+
+**2 · THE §4.7.2 AUDIT IS LARGER THAN THE INTERRUPT, AND THE CIO RATES IT THE FIRM'S MOST
+IMPORTANT FINDING TO DATE.**
+
+> **Nine of the sixteen binding fields are sealed and read by nothing.** Being in `_BINDING_FIELDS`
+> means a field is **hashed**, not **read**. `prereg_sha256` is tamper-evidence; **enforcement is a
+> different code path, and for these fields it does not exist.**
+
+**Two claims the CIO verified independently rather than relaying** [measured]:
+
+- **`universe`, `horizon` and `success_criteria` have zero consumers anywhere in
+  `harness/castellan/` outside `registry.py`.** Those three fields are **where a pre-registration
+  puts its methodology** — K3's "exclude nothing", no-winsorization, `w_max`, the capacity screen,
+  5% ADV, `ppy`, the ML-2 assertion, plateau-centroid-only, F-002's "evaluated ONCE", all eleven
+  disclosure lines. **They are precisely where the harness does not look.**
+- **`published_signal_haircut_applied` appears only as schema, signature and hash input. No code
+  path applies it.** And §5.4 derives the family's **entire `t(α) ≈ 6.0` burden** from that number
+  — the thing §11.6 calls ***"the largest single hurdle this family faces."***
+
+**And the one that should be read twice:** no harness path evaluates a **kill condition** on any
+date, for any family. KC-002 — the binding kill condition, signature-required, with an absolute
+2027-01-31 observation date — is enforced by nothing. The seat's sentence: **"Clause 5's 'silence
+is a kill' is itself defeatable by not running it."**
+
+**This is `GATES.md` §4.7.2 turned on the firm's own first family and answering honestly.** The
+doctrine says *a control exists where the harness reads it, and nowhere else.* Applied here, most
+of what PREREG-002 calls a control is prose. **The seat states the correct conclusion and the CIO
+endorses it: most of these cannot be mechanised and should still be written down — what must stop
+is the document describing them as controls.**
+
+**I-133 is rated MEDIUM by the Director as a disclosure finding. The CIO does not re-rate it** —
+unlike I-022, no specific new dependency makes it produce a wrong PASS — **but records that its
+severity reflects its class and not its scope**, and surfaces it to the Principal on that basis.
+
+**3 · I-105 discharged, and the disposition was chosen rather than defaulted.** **Stage 1 at 47
+with Stage 2 as a registered CONTINGENT unlock event**, not struck. The reasoning is the sharp
+part: striking would leave 47 flat with no route above it **but a DISCRETIONARY extension, which
+under B-14 requires a person's countersignature rather than arithmetic's** — and **"replacing an
+arithmetic gate with a human one is strictly worse."** Stage 2 is written as a plain instance of
+SPEC-003's generic mechanism, self-issued and **safe to self-issue because B-16 recomputes and
+never trusts the event.** I-104 conformed in the same edit.
+
+**4 · Two of the four suite reds now bear on this family, and did not before.** `test_h7` and
+`test_h8` grade whether a **seeded denominator reaches DSR and MinBTL** — inert at
+`n_inherited = 0`, **live at 7.** They are Validation-owned, still red, and **Validation has no
+Opus in Sprint 2's closed budget and one unspent unit's worth of Sprint 3 attention not yet
+allocated.** Raised by the seat as a consequence of its own revision, not as a request.
+
+**5 · I-045 declined a fourth time, correctly, with the three rulings C2 needs named:** whether
+dropping SOL is a remedy or a scope reduction — *"removing the one symbol the firm caught it on
+removes the instance, not the exposure"*; whether K7 option (1) covers the residual given that
+`DATA-VERIFY-002` verified the **cadence** dimension only; and whether I-045 closes at intake or
+**survives the seal as a standing disclosure** — the seat's own view, offered as not decisive,
+being that it survives.
+
+**6 · Blocking set unchanged: C2, C3, C7, C8, C11.** R-004 clears none and creates no sixth. C13
+extended by four. **C10's weight rises again** — I-132 compounds I-022: the latch is fixed, and
+`log_trial` still reads no budget, so **the door is only inspected after the fact.**
+
+**7 · Verified independently** [measured]: `book/registry.db` **0 hypotheses / 0 trials** — nothing
+was registered, nothing sealed, exactly as instructed. `harness/` untouched. Payload delivered at
+360 lines with `trial_budget = 47` and `n_inherited = 7`.
+
+**8 · C2 NOT dispatched.** I-130 changed a sealed-payload value the Principal has not seen —
+`n_inherited` 0 → 7 — and C2 would rule on that payload. **Sending Validation to issue an intake
+verdict on a figure under an open interrupt repeats the error the CIO avoided twice in Sprint 2.**
+It goes on the ruling.
+
+**9 · Budget.** **2 of 30 · 1 of 12 Opus.** Insurance 2 of 2 intact; DA reserve sealed. §5
+dead-man: **8 invocations remain.**
+
+**Review date:** on the Principal's ruling on I-130.
