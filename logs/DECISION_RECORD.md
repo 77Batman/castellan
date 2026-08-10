@@ -3172,3 +3172,54 @@ converting an author's error into a filed defect rather than a permissive statis
 never spent — **by design, not by omission.** §5 dead-man: **8 invocations remain.**
 
 **Review date:** sprint close, 2026-08-11.
+
+---
+
+# ═══ SPRINT 3 ═══ Standing Order 002 in force from 2026-08-10
+
+## S3-D-001 · 2026-08-10 · Sprint 3 opens · the registration act dispatched
+
+**1 · Standing Order 002 SIGNED and in force**, `ops/STANDING-ORDER-002.md`, commit
+`6e671d8b5a942b6b6379ab4836cdcd67eab0b08d`. Audit citation corrected at filing: the
+*decided differently* finding attaches to **entry 14**, not entry 3.
+
+**2 · THE HARNESS FACT THAT DEFINES THE WHOLE SEQUENCE, verified before dispatching rather than
+assumed.** `TrialRegistry.open_hypothesis` **is the seal** — *"P1: on first registration, computes
+`prereg_sha256`"* [measured, `registry.py`]. **Registration and sealing are one operation.**
+
+**Consequence:** the registration act **cannot precede C2 and C3 — it is the thing they gate.** The
+Principal's instruction to *"register Stage 1 at 47… and take PREREG-002 to its seal through C2, C3,
+and the blocking set"* is therefore executed in that order and not in the order the sentence reads.
+**Had the CIO taken "register" as a first step, it would have fired a §4 seal interrupt on Sprint
+3's opening dispatch and frozen a document whose blocking set is still five items long.**
+
+**3 · First dispatch — Director of Research, Opus, and it registers nothing.** Three tasks:
+
+- **`GATES.md` §4.7.2 applied to the firm's own first family**, limit by limit, not sampled. Each
+  limit resolves to a named binding field, a harness code path, or **"nothing reads this — it is
+  prose."** The brief states that **category (c) is the deliverable, not a failure** — the doctrine
+  was written by this seat and is now turned on its own document.
+- **I-105 discharged** — Stage 1 registered at 47, with §10.5.2's Stage 2 language surviving only as
+  a registered contingent-extension event under SPEC-003's generic form, **or struck before
+  sealing.** SPEC-003's `test_tbe_15` already reproduces §10.5.2's table exactly **without knowing
+  the document exists**, so Stage 2 is written as a plain instance of a generic mechanism.
+- **The registration payload** — all sixteen binding fields with final values, as a separate
+  artifact. **This is I-105's lesson in its operative form: prose is not registration, and a payload
+  the Principal can execute without interpreting is the only thing that discharges it.** Where prose
+  and payload could diverge, the payload governs and the seat says so.
+
+**4 · What the CIO forbade explicitly, and why it needed saying.** **Do not call
+`open_hypothesis`. Do not register. Do not seal.** `book/registry.db` must still read 0/0 on
+return. The temptation is real — the sprint's first objective is *the registration act*, the
+Principal has authorized the number, and a seat could reasonably read its dispatch as licence to
+perform it. **It is not.** C2, C3, C7, C8, C11 remain blocking.
+
+**5 · Sequence to the seal.** R-004 → **C2** Gate 0 intake verdict (Validation, Opus) → **C3**
+Red-Team memo (Devil's Advocate, the sealed §2 reserve, **submission-gating and not skippable**) →
+**the seal itself, which is a §4 interrupt and the Principal's act.** C7, C8, C11 resolve along the
+way or the seal waits again.
+
+**6 · Budget, Sprint 3.** **1 of 30 · 1 of 12 Opus** — drawn from the 9 freely allocable. Insurance
+**2 of 2 intact**; DA reserve sealed. §5 dead-man: **9 invocations remain** since sign-off.
+
+**Review date:** on R-004's return.
