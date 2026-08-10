@@ -1,6 +1,6 @@
 # STANDING ORDER 002 — PRINCIPAL DELEGATION PROTOCOL, SPRINT 3
 
-**DRAFT — prepared by the CIO 2026-08-10 for the Principal's signature. Unsigned, and not in force until signed.**
+**SIGNED AND IN FORCE — 2026-08-10.**
 
 *Issued by the Principal · Effective at Sprint 3 open · Calibration mode, second sprint · Supplements Charter Part IX; amends nothing*
 
@@ -137,6 +137,8 @@ This order does not modify the independence of **Seats 2, 6, and 7**, whose repo
 
 ---
 
-*Signed: the Principal. The Principal has the last say — this order changes where the say is exercised, not who holds it.*
+*Signed: the Principal, 2026-08-10. The Principal has the last say — this order changes where the say is exercised, not who holds it.*
 
-**Signature block — unsigned. Draft prepared by the CIO, 2026-08-10.**
+> **Countersigned amendments, 2026-08-10.** §1's Σα demotion approved — *"it reports; it doesn't count."* §2 held at 12 with the CIO's reasoning adopted over the Principal's looser wording: *"a ceiling that moves when it binds is not a ceiling — D-015, and also the `min(t_NW, t_raw)` doctrine applied to budgets: repairs make costs explicit; they don't enlarge the allowance."* The 9/2/1 composition stands with its arithmetic stated in the order, **so overruling it later requires engaging the arithmetic rather than forgetting it.** §3.1, §4.1, §7.1 and §7.3 countersigned as drafted.
+>
+> **Audit citation, corrected at filing.** The §7 audit's *decided differently* finding attaches to **entry 14** (concurrent Opus at zero slack). **Entry 3** (the Rider B hold) is **clean as graded.** The mis-citation was the Principal's, caught at filing.
