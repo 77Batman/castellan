@@ -3384,3 +3384,69 @@ going live at `n = 7` joins Validation's queue with the four reds.
 sealed. §5 dead-man: **8 invocations remain.**
 
 **Review date:** on R-005's return.
+
+---
+
+## S3-D-004 · 2026-08-10 · Watchtower cycle 1 · a Charter clause decreed under §2 · two items queued
+
+**1 · CHARTER CLAUSE DECREED UNDER §2, recorded verbatim:**
+
+> **Paper is a property of credentials and network, never of an instruction — while the book is
+> paper, no credential with trade scope exists.**
+
+**The CIO records what this is, because it is larger than an operational note.** It is
+`GATES.md` §4.7.2 — *a control exists where the harness reads it, and nowhere else* — applied to
+**the firm's single most important safety property.**
+
+Paper-by-instruction is a **class-(c) declared commitment**: binding as a matter of record,
+enforced by audit and by every seat's willingness to obey a sentence. **Paper-by-absence-of-
+credentials is class (a)**: enforced by the environment, and unaffected by what any instruction
+says, any seat believes, or any future session forgets. **The decree converts the property from
+the weakest enforcement class to the strongest**, and does so on the one property where a
+class-(c) failure is unrecoverable.
+
+**It also closes a route this sprint's own findings imply.** The firm has spent two sprints
+discovering that asserted controls are not controls — I-022's annotation, I-053's decorative rule,
+I-105's unregistered stage, I-133's nine unread fields. **"Do not trade real capital" was, until
+this decree, an instruction of exactly that class.**
+
+**Verified on the firm's side, within scope** [measured]. The decree governs credentials and
+network, which the CIO cannot inspect — `~/.ssh/**` and `~/.aws/**` are denied under D-003 and the
+CIO will not route around a deny to confirm good news. **What is checkable is the code**, and it
+holds:
+
+- **No order-placement path exists in `harness/castellan/`** — zero matches for
+  `create_order`/`place_order`/`submit_order`/`createOrder`/`.buy(`/`.sell(`.
+- **No key handling** — zero matches for `api_key`/`apiKey`/`api_secret`.
+- **The ccxt surface is fetch-only** — `fetch_ohlcv` and `fetch_funding_rate_history`, nothing else.
+- **`PaperBook` is the only book class.**
+
+**So the property is defended twice**: by the absence of credentials, which the Principal
+guarantees, and by the absence of any code that could use one, which the CIO has verified.
+**Neither depends on an instruction.**
+
+**Placement — NOT actioned, and the CIO wants one word before acting.** This is a Charter clause
+and it currently lives **only in this decision record**, which is precisely the failure §7.3's
+promotion path and I-094 exist to name. **The CIO has deliberately not edited `FUND_CHARTER.md`**:
+§4 reserves any Charter amendment to the Principal, he decreed the clause rather than instructing
+its placement, and the binding document is not one to amend on inference. **Say the word and it
+goes into the Charter with its provenance; otherwise it stays here and is flagged at every close
+until it moves.**
+
+**2 · `.claude/settings.json` hardening pass — expected 08-12, hash to follow.** Auto-mode default
+plus cross-session messaging, changelog-verified. **The CIO will verify it against `HEAD` on
+receipt of the hash and not before**, per this firm's standing practice: **two of the three
+artifacts asserted as committed in Sprint 2 were not there.** Nothing is assumed in force until the
+hash resolves.
+
+**3 · Leakage-sentinel spec request queued for Validation, sequenced after the seal path** — i.e.
+after **C2 → C3 → registration-as-seal**. Not dispatched. **Opus impact stated now so the sprint's
+arithmetic stays honest:** the free tier is 9, two are spent, and the committed path already claims
+**C2**, the **KC evaluator spec**, and now the **leakage sentinel** — three of the remaining seven,
+before any contingency and before Gate 1 evaluation work that objectives 2 and 3 will require.
+
+**4 · Budget.** **3 of 30 · 2 of 12 Opus**, unchanged — this entry consumed no invocation.
+Insurance 2 of 2 intact; DA reserve sealed. §5 dead-man: **8 invocations remain.** R-005 is in
+flight.
+
+**Review date:** on R-005's return, and on the settings hash.
