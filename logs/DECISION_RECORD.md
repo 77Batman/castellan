@@ -3541,3 +3541,99 @@ are not firm seats and draw on no seat tier. Insurance 2 of 2 intact; DA reserve
 dead-man: **8 invocations remain.**
 
 **Review date:** on the settings hash, and at Watchtower cycle 2 (2026-08-17) for gap G-1.
+
+---
+
+## S3-D-005 · 2026-08-10 · R-005 lands · §4 INTERRUPT — I-140, HIGH and DATED TO TOMORROW
+
+**1 · §4 HARD INTERRUPT. Trigger: *"any issue filed HIGH."* This one has a deadline of 2026-08-11
+— tomorrow — and the CIO leads with it for that reason.**
+
+**I-140 · HIGH — `I-034` / condition precedent **C1** is IMPLEMENTED, and PREREG-002 describes the
+pre-repair cost model at six sites.** One of those sites is §14's condition precedent, which reads:
+*"implemented by sprint close, **2026-08-11**. If unresolved by that date, the family is
+**ADMITTED-AS-EXPLORATORY only**"* — and ADMITTED-AS-EXPLORATORY is *"pre-declared ineligible for
+Gate 1."*
+
+**The repair landed on 2026-07-29, twelve days ago.** **The family would have been downgraded
+tomorrow, permanently, under P7, on a false premise** — not because the work was undone but
+because the document never learned it was done.
+
+**Verified independently by the CIO before recording** [measured]: `costs.py` carries
+**`CRYPTO_PERP_TAKER`** (line 120, no funding term) and **`CRYPTO_SPOT_TAKER`** (line 137, D-013
+§1); `carry.py` exposes **`carry_breakeven_bps_annual`**; **25 carry tests pass.** The claim holds
+at source.
+
+**Residual, correctly retained:** defect (d) — no `CostModel` field for liquidation risk — stands
+as **class (c) C-25**. And the breakeven is now **unstated, not unstateable**: `carry_breakeven_bps_annual`
+exists, and **one trial inside Stage 1's 47 discharges house rule 5.**
+
+**2 · The relabeling: 61 limits classified — 20 (a) · 7 (b) · 34 (c)**, and the register sits **in
+the sealed document at §10.11**, not in a memo about it. The seat's reason is the right one: *"the
+next reader needs the class beside the limit, not a pointer to it."*
+
+**3 · THE FIELD PARTITION IS SHARPER THAN THE ORIGINAL FINDING, AND WORSE.** Corrected to
+**5 (a) / 11 (c)** of sixteen — and the mechanism is the part to keep:
+
+> **`statement`, `mechanism` and `falsifier` are (a) on *existence* and (c) on *content*.**
+> `registry.py:262–268` raises on the empty string **and reads no further.**
+
+**So F-002's four legs, `α = 0.0013`, the 1,800-bar floor and the 1.3×10⁻⁴ joint survival rate all
+sit in a field the harness guarantees only to be non-empty.** The seal proves something was
+written. It proves nothing about what.
+
+**4 · No (a) claim failed — and the findings ran the other way, which the CIO did not anticipate.**
+The seat re-read every call site including the one it expected to fail (`verify_prereg` is invoked
+*by* `evaluate_gate1`, so integrity is (a), not (b)). **Both surprises were limits the document
+said were NOT enforced and which ARE** — I-034 above, and **I-022, repaired in code and open in the
+log.**
+
+**On I-022 the seat corrected itself against its own interest and said so:** C10's weight was
+raised at R-003 **and again at R-004, both after the repair shipped on 2026-08-05**, and *"it should
+never have been raised the second time."* The correction **runs in the family's favour**, and the
+seat — which built the two-stage budget and would benefit from overstating its protection — **states
+it for that reason rather than in spite of it.** The precise position is retained: **prevention
+none; detection and refusal automatic, per trial, with the offending trial named** (I-132 stands).
+
+**5 · A wrong count propagated into the CIO's own dispatch.** §10.10's *"nine zero-consumer fields"*
+is **eight** — the 9 was §9.2's count of category-(c) **limits** transplanted into a column counting
+**fields.** Two denominators, one number. **It had already reached S3-D-003's mandate, which
+directed the relabeling of "all nine zero-consumer binding fields."** The CIO repeated a figure it
+had not checked against its own roster. **I-141, MEDIUM — third instance of the class, and not LOW
+precisely because it propagated.**
+
+**6 · The haircut is class (c), explicitly, at the points of reliance and not only at the point of
+declaration.** The gap is **exactly 2×**: `evaluate_gate1` computes `t_gate ≥ 3.0` on un-haircut
+returns while §4.6 sets the equivalent of 6.0. **§19.3's order-20 composite is one class-(a)
+multiplier × one class-(c) multiplier** — the 3.3× I-050 correction is shipped and unavoidable at
+`stats.py:153`; the 2× haircut has no code path and an unruled **C5**.
+
+**7 · §19.3's point estimate does not move. Its failure mode does, against the firm.**
+
+> **If C5 is never ruled and no seat applies §4.6 by hand, this family can be reported PROCEED at
+> half the Charter's bar.**
+
+**That branch was always there. The document could not see it while it described prose as a
+control.** The CIO records this as the labeling mandate's first substantive yield: relabeling
+found a *permissive path*, not merely a vocabulary problem.
+
+**8 · The payload is unchanged, and the seat's reason for not changing it is the entry to keep.**
+It went looking for a change, found the candidate — rewriting `published_signal_haircut_applied` to
+match what the harness actually does — and rejected it: **"adjusting a declaration to match the
+enforcement is the I-046 error inverted."** `trial_budget = 47`, `n_inherited = 7`, unchanged.
+
+**9 · Two promotions attempted and demoted, which is the (b) guard working:** F-002's E2 *"evaluated
+ONCE"* (*"the ledger is produced by the act being limited, not by any check on it"*) and §12.8's
+*"no hand-rolled number"* (nothing refuses a literal). **Both are (c).**
+
+**10 · Verified** [measured]: registry **0 hypotheses / 0 trials**; `harness/` untouched; no seal,
+no registration, no vault, no issue closed, `test_h7`/`h8` untouched.
+
+**11 · C2 NOT dispatched. I-140 must be ruled first, and it is dated to tomorrow.** C1 is a
+condition precedent *on the intake verdict C2 would issue*; sending Validation to rule while C1's
+status is contested and its deadline is 24 hours out would produce a verdict needing re-ruling.
+
+**12 · Budget.** **4 of 30 · 3 of 12 Opus** (3rd of 9 free). Insurance 2 of 2 intact; DA reserve
+sealed. §5 dead-man: **7 invocations remain.**
+
+**Review date:** on the Principal's ruling on I-140 — **before 2026-08-11.**

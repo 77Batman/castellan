@@ -250,6 +250,36 @@ and its closing `"` in that block — and requires no judgment at any point.
 **No declared menu was edited. No selection moved. `N_conditioning` remains 7 and every K1–K7 menu
 string is untouched.**
 
+### 3.2 What R-005 changed inside the §21 block **[added 2026-08-10 · dispatch S3-D-003]**
+
+> ### **NO LITERAL IN §1's TABLE OF SIXTEEN CHANGES. `trial_budget` = 47. `n_inherited` = 7.**
+>
+> **R-005 is a labelling revision — every limit `PREREG-002` claims now carries its class, per the
+> Principal's adoption of I-133's conclusion. Nothing was made enforceable that was not.** Three prose
+> fields receive conforming inserts, by the same mechanism §3.1 records for R-004.
+
+| Field | Changed? | The delta |
+|---|---|---|
+| `statement` · `mechanism` · `falsifier` · `universe` · `horizon` | **No** | Byte-identical to R-004 |
+| `success_criteria` | **Yes — three inserts** | (i) the **class register** pointer and its counts — **20 (a) / 7 (b) / 34 (c), sixty-one limits**, at `PREREG-002` §10.11; (ii) **correction 1 (R25)**: the §4.7.2 audit said **nine** zero-consumer fields and there are **eight** — the 9 was a count of category-(c) *limits* transplanted into a column counting *fields*; the corrected partition is **5 (a) / 11 (c)**, with `statement`/`mechanism`/`falsifier` class (a) on **existence only**; (iii) **correction 2 (R28)**: the 50% haircut carries class (c) **at the point of reliance**, the gap is **2× at Gate 1's t-criterion**, and §19.3's composite is one class-(a) multiplier (I-050, `stats.py:153`) times one class-(c) multiplier |
+| `forward_kill_condition` | **Yes — two inserts. KC-002 unchanged in every clause, threshold and date.** | (i) **KC-002 is class (b) with its three fields named**: executor **the Principal**, cadence **the weekly Friday ritual alongside the pull-and-merge**, artifact **the pasted evaluation per `TEMPLATES.md` §7.9** — reverting to class **(a)** when Validation's harness kill-condition evaluator lands, **specced this sprint, not yet dispatched**; (ii) **the C1 condition precedent is satisfied** — clause (i)'s *"`CRYPTO_PERP_TAKER` as repaired per C1"* is correct as written, the preset **is** as repaired, and the ADMITTED-AS-EXPLORATORY downgrade **must not fire on 2026-08-11** |
+| `model_prior_provenance` | **Yes — one insert** | R-005's origination recorded, including that **the three classes and KC-002's three (b) fields are the Principal's, not this seat's**, and that **two of R-005's four findings run in this family's favour** |
+
+**Where R-005's corrections bear on §2 of this payload:** **§2.7's note stands and is sharpened.**
+`published_signal_haircut_applied = 0.50` remains **0.50** — the value is a declaration of which
+presumption the sponsor accepted, and the presumption was accepted in full. **A field being unread is
+not a reason to write a different number into it; that would be adjusting the declaration to match the
+enforcement rather than adjusting the description of the enforcement to match the truth.** What
+changes is the sentence about what it does: **class (c), no code path, and a 2× permissive gap at
+Gate 1's t-criterion that only a C5 ruling closes** (I-143).
+
+**And §4's two disclosed defects both move.** **I-022 is repaired and passing** since 2026-08-05
+(`DATA-IMPL-007` §5, *"all 19 test functions green"*); `gates.py:527–640` FAILs on B-7, on B-9's
+per-trial ordering walk, and on B-23 [measured]. **The literal `True` §4 quotes does not exist in
+`gates.py`.** **I-132 is unchanged and is the residual that matters:** `log_trial` reads no budget, so
+**prevention: none; detection and refusal: automatic, per trial, with the offending trial named.**
+Filed **I-142**.
+
 ---
 
 ## 4. STAGE 2 — NOT A FIELD. A SEPARATE, POST-SEAL REGISTRY ACT.

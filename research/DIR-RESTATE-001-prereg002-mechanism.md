@@ -1010,3 +1010,432 @@ dispatch.** C13 is the mechanism and R-004 adds a fourth item to it (§20).
 *Director of Research · Castellan Capital · **addendum §9–§10 added 2026-08-10 for revision R-004***
 *Dispatch S3-D-001. Trial budget ZERO. No hypothesis opened, no trial run, no vault sealed, `harness/`
 not touched, `book/` not written to, no test executed, no suite state reported.*
+
+---
+
+# ADDENDUM — REVISION R-005 · 2026-08-10 · PRE-SEAL
+
+## 11. THE CLASS MANDATE — every limit carries its class, or it stops calling itself a control
+
+**Added 2026-08-10 for revision R-005.** Dispatch **S3-D-003**. **Trial budget: ZERO. No number
+computed. `book/registry.db` reads 0 hypotheses / 0 trials.** Every harness fact below is
+`[measured — read from source this session]` at the named file and line.
+
+### 11.0 The mandate, and the one thing it is not
+
+The Principal adopted this seat's I-133 conclusion verbatim: *"most of these cannot be mechanized and
+should still be written down; what must stop is the document describing them as controls."* Three
+classes, and **no limit may describe itself as a control without carrying its class**:
+
+| Class | Requires |
+|---|---|
+| **(a) harness-enforced** | a **named code path**, and the **named field** it reads where one exists |
+| **(b) procedure-enforced** | a **named executor**, a **named cadence**, and the **named artifact** the execution produces |
+| **(c) declared commitment** | binding **as a matter of record**, enforced by **audit and adversarial review only** |
+
+**This is a labelling mandate, not a mechanization mandate.** Nothing below is made enforceable that
+was not. **A class-(c) label is a full and honourable answer.** This document declares **thirty-four**
+class-(c) commitments and is stronger for saying so than it was implying sixty-one controls and
+holding twenty.
+
+> ### **A TAXONOMY COLLISION THIS SEAT CREATED AT R-004 AND MUST NAME BEFORE IT PROPAGATES.**
+>
+> **§9.3 of this memo already uses the letters (a) and (b), and it does not mean by them what the
+> mandate means.** §9.3's *(a)* = enforced through a **sealed field**; §9.3's *(b)* = enforced by a
+> **code path with no sealed field** (`SameBarFillError`, `grid.py:27`, the contingent-extension
+> ledger). **Under the mandate's taxonomy every one of §9.3's "(b)" entries is class (a)** — they are
+> harness-enforced; they simply read no sealed field.
+>
+> **A reader arriving at §9.3 with the mandate's vocabulary in hand would read "procedure" where there
+> is code, and would conclude that a `ValueError` in `grid.py` depends on somebody remembering to run
+> something.** That is the exact confusion this mandate exists to end, manufactured by the mandate's
+> own letters landing on an earlier table. **§9.3 is therefore superseded as a taxonomy and retained as
+> evidence**, and §11.2 below re-maps every row of it. The register in `PREREG-002` §10.11 uses the
+> mandate's letters and only those.
+
+### 11.1 The sixteen binding fields, reclassified — and §10.10's arithmetic corrected
+
+**Method, reproducible rather than asserted:** for each of the sixteen names in
+`harness/castellan/registry.py:80–91` (`_BINDING_FIELDS`),
+`grep -rn "\b<field>\b" harness/castellan/ --include=*.py | grep -v registry.py`, then every surviving
+hit read at its call site to establish whether it **enforces**, **renders**, or is an unrelated use of
+the same English word [all measured, this session].
+
+| # | Field | Non-`registry.py` hits | Of which real consumers | **Class** | (a): field + code path · (c): why |
+|---:|---|---:|---:|---|---|
+| 1 | `family` | 123 | many | **(a)** | `registry.py:485` `log_trial` → `PreRegistrationError` (A2); `predecessor_chain`; every `evaluate_gate1` lookup |
+| 2 | `statement` | 5 | **0** | **(a)** existence · **(c)** content | `registry.py:262–268` raises on empty. The five hits are the English word in `cv.py`/`errors.py` |
+| 3 | `mechanism` | 4 | **0** | **(a)** existence · **(c)** content | same check. The four hits are prose in `loaders.py`/`coverage.py`/`data.py` |
+| 4 | `falsifier` | **0** | 0 | **(a)** existence · **(c)** content | same check. **F-002's entire specification is (c)** |
+| 5 | `universe` | 3 | **0** | **(c)** | the three hits are the English word in `loaders.py` docstrings |
+| 6 | `horizon` | **0** | 0 | **(c)** | — |
+| 7 | `success_criteria` | **0** | 0 | **(c)** | — |
+| 8 | `trial_budget` | 8 | 8 | **(a)** | `gates.py:562` `sealed = fam.trial_budget`; B-7 `sealed <= 0` → FAIL (`:598`); B-9 ordering walk → FAIL (`:606–620`); `declared_ceiling_base` (`:565`) |
+| 9 | `predecessor_family` | **0** | 0 **outside** `registry.py` — **and enforcing inside it** | **(a)** | `registry.py:269–273` existence check; `:294–308` `InheritedCountDoubleCountError`; `predecessor_chain`; `family_stats`/`returns_matrix` transitive sum |
+| 10 | `holdout_classification` | 5 | 5 | **(a)** | `registry.py:309–313` domain check; `:314–329` HISTORICAL → R3 presence requirement; `gates.py:1055`, `:165`, `:168` |
+| 11 | `forward_window_start` | **0** | 0 | **(c)** for this family | presence-checked **iff** `holdout_classification == "HISTORICAL"` (`registry.py:314`). This family is **FORWARD** |
+| 12 | `forward_window_min_length` | **0** | 0 | **(c)** | same; and the column is an unlabelled `REAL` (I-033(5)) |
+| 13 | `forward_kill_condition` | **0** | 0 | **(c)** *as a field* | same. **The obligation it carries is (b)** — §11.3 B-01 |
+| 14 | `model_prior_provenance` | **0** | 0 | **(c)** | — |
+| 15 | `published_signal_haircut_applied` | **0** | 0 | **(c)** | no haircut computation exists in `gates.py`, `stats.py`, `engine.py` or `costs.py` |
+| 16 | `n_inherited` | 15 | 15 | **(a)** | `registry.py:277–284` validators; `family_stats`; `gates.py:148–152` (H-12 render), `:542`, `:565`, `:779`, `:788`, `:856` |
+
+> ### **THE CORRECTED PARTITION: FIVE (a) AND ELEVEN (c) — NOT 4 / 3 / 9.**
+>
+> **`PREREG-002` §10.10's count cells read 4 / 3 / 9 and its rosters name 4 / 4 / 8.** Both cannot be
+> right and neither is:
+>
+> - the **"Read, but only as a check or a render — 3"** cell names **four** fields (`statement`,
+>   `mechanism`, `falsifier`, *"plus `holdout_classification`"*);
+> - the **"SEALED AND READ BY NOTHING — 9"** cell names **eight** (`universe`, `horizon`,
+>   `success_criteria`, `model_prior_provenance`, `published_signal_haircut_applied`,
+>   `forward_window_start`, `forward_window_min_length`, `forward_kill_condition`).
+>
+> **Where the 9 came from, which is the part worth recording.** It is **§9.2's count of category-(c)
+> *limits* — c1 through c9 — transplanted into a column that counts *fields*.** Two different
+> denominators, one number, in sealed text. **The roster is right and the count is wrong: eight fields
+> have zero consumers, not nine.**
+>
+> **This is R8(c)'s and R22's defect class for the third time** — an internal contradiction between a
+> count and its own roster, which P7 would freeze permanently and which no later artifact could
+> reconcile. Found on this pass, repaired on this pass, disclosed rather than silently conformed.
+> Filed **I-141, MEDIUM**.
+>
+> **The dispatch's own instruction inherits the error and this seat says so rather than executing it
+> silently: S3-D-003 directs the relabelling of *"all nine zero-consumer binding fields."* There are
+> eight. The roster it names is complete; the cardinal is not.**
+
+**Three fields need one further distinction the mandate's letters do not supply, and it is load-bearing.**
+`statement`, `mechanism` and `falsifier` are **(a) on existence and (c) on content.** `registry.py`
+raises `ValueError` if any is empty or whitespace — a real code path, a real refusal. It reads not one
+character further. **F-002 — four legs, three constructed series, α = 0.0013, an 1,800-bar floor, a
+joint false-survival rate of 1.3 × 10⁻⁴ — is stored in a field whose only guarantee is that it is not
+the empty string.** The document has never said otherwise, and it has never said this either.
+
+### 11.2 Class (a) with no sealed field — §9.3's "(b)" re-mapped, and every row verified
+
+**The mandate's question for class (a) is "named field, named code path."** Fourteen of this
+document's real controls have the second and not the first. **They are class (a).** A `ValueError`
+does not become a procedure because no sealed string triggers it.
+
+| Limit as `PREREG-002` states it | Field | Code path [all measured] |
+|---|---|---|
+| No trial may be logged against an unregistered family (A2) | `family` | `registry.py:485` → `PreRegistrationError` |
+| Every backtest routes through the engine; every grid point is a logged trial | — | `castellan.run_backtest`; `grid.run_parameter_grid` |
+| A ±50% grid may not exceed 200 points | — | `grid.py:27` `ValueError` |
+| Never fill at the bar that generated the signal | — | `engine.py` `SameBarFillError` |
+| `N_max` is a recomputed **function**, monotone-conservative (R13) | — | `gates.py:344` `_admissible_ceiling` = `min(n_max_admissible_iid, n_max_admissible_serial)` |
+| Stage 2 admits `clamp(N_max − 54, 0, 32)`, recomputed, never trusting the event (R20) | `n_inherited` + `trial_budget` | `gates.py:565`; `_budget_extension_ledger` `:378–398`; B-16…B-21 |
+| A malformed, un-withdrawn extension FAILs even inside the sealed budget (B-23) | — | `gates.py` B-23 branch, checked ahead of B-7/B-8/B-9 |
+| The live `hypotheses` row must match the sealed shadow copy; a mismatch FAILs (P4) | all sixteen, via `prereg_sha256` | `registry.verify_prereg`, **called automatically at `gates.py:991`** |
+| A re-registration differing on any binding field is refused (P3) | all sixteen | `registry.py:356–369` `PreRegistrationAmendedError` |
+| The seal must not postdate `C` at UTC day granularity (P7) | — | `gates.py` P7 branch, `sealed_created_utc` vs the vault's `holdout_spec_sealed.cutoff` → FAIL |
+| No `hypothesis_sealed` event ⇒ INSUFFICIENT-DATA, never PASS (P6) | — | `gates.py:1003` |
+| The holdout is acquired exactly once | — | `HoldoutVault.acquire_once()`; the "Holdout single-use" criterion |
+| The graded `t` is `min(t_NW, t_raw)` and never the raw figure (I-050 / E-8) | — | `stats.py:153`, `:221`; `gates.py:752` |
+| `\|ρ̂\| ≥ 0.97` or `n_logged = 0` ⇒ INSUFFICIENT-DATA, never PASS (E-9) | — | `stats.py:177–188` |
+| Carry is a signed cash flow; `CostModel.scaled(m)` never multiplies it (T-16) | — | `costs.py:119–128` (no `funding_bps_annual` on `CRYPTO_PERP_TAKER`); `carry.py` |
+| The registry-`N` decomposition is rendered on every report face for a seeded family (H-12) | `n_inherited` **≠ 0** | `gates.py:148–152` |
+| The holdout-classification line is rendered on every report face (R1) | `holdout_classification` | `gates.py:165` |
+
+> **Two of these deserve their disclosure repeated rather than buried.**
+>
+> **`SameBarFillError` and `grid.py:27` read no sealed field and would fire identically for a family
+> that declared the opposite.** They are class (a) and they are **not** enforcement of anything this
+> document says. R-004 said this and it survives the reclassification unchanged.
+>
+> **P3/P4 are tamper-EVIDENCE across all sixteen fields and tamper-PREVENTION on none.** A raw
+> `UPDATE hypotheses SET universe = ...` succeeds. What fails is the next `evaluate_gate1`, because
+> the sealed event carries a **full shadow copy** rather than a pointer to the row that was changed —
+> and because `verify_prereg` is called by the gate rather than by a person. **That last clause is
+> what makes it (a) rather than (b), and this seat checked it rather than assuming it**
+> [measured — `gates.py:991`].
+
+**The last two rows are the mandate's one upgrade, and it is small and real.** Two of the eleven
+mandatory disclosure lines are **written by the engine itself** and cannot be omitted by a seat that
+forgets. One of them — *"registry N = n_inherited 7 … + logged"* — **became class (a) at R19**, because
+`gates.py:148` branches on `if self.n_inherited:` and the branch was dead while the field was 0.
+**R19 was argued as a tightening of the denominator; it also, unnoticed until this pass, moved one
+disclosure line from (c) to (a).** The other nine remain (c).
+
+### 11.3 Class (b) — the strict test, applied strictly
+
+**The CIO's warning is correct and this seat treats it as a filter rather than as advice:** a limit is
+(b) only if all three of executor, cadence and artifact can be named. *"The Director will check"* is
+not a cadence and produces no artifact. **Seven limits pass. Everything that failed the test is in
+(c), including two that this seat would have been tempted to promote.**
+
+| # | Limit | **Executor** | **Cadence** | **Artifact** |
+|---|---|---|---|---|
+| **B-01** | **KC-002 is computed on `C` + 187 days, and silence is a kill** | **the Principal** | **the weekly Friday ritual, alongside the pull-and-merge** | **the pasted evaluation attached to the record, per `TEMPLATES.md` §7.9** |
+| **B-02** | Has any pre-registered falsifier been hit and not acted on (F-002) | **Director of Research** | **Friday 16:00, Weekly Research Review** — Charter §6.3 item 4 | **the weekly pipeline status**: every hypothesis by stage with age, trial count, next action |
+| **B-03** | A Red-Team Memo with a binding named kill condition is present (C3) | **Devil's Advocate** | **every Gate 1 submission and every IC packet** — Charter §6.4: a packet without one is *deferred, not heard* | **the Red-Team Memo** |
+| **B-04** | The Gate 0 intake verdict, and the C13(a)–(h) items ruled with it (C2) | **Head of Quantitative Validation** | **once, at intake, before the seal** | **the Intake Verdict** — ADMITTED / REJECTED / ADMITTED-AS-EXPLORATORY |
+| **B-05** | Sponsor acceptance of KC-002 and the Principal's signature before any capital (C7) | **PM Pod B + the Principal** | **once, before any allocation** | **the signed acceptance in `logs/DECISION_RECORD.md`** |
+| **B-06** | Vault sealed in the same session and UTC day as `open_hypothesis` (C8) | **PM Pod B + the Principal** | **once, at the seal** | **the `holdout_spec_sealed` event and the vault under `book/vaults/`** |
+| **B-07** | Reconciliation breaks are filed verbatim and never repaired | **Execution & Operations** | **every Close & Reconcile, weekdays 17:15** | **the reconciliation note in the Daily Risk & P&L Pack** |
+
+**B-01's transition to (a) is named, because the Principal required it named.** KC-002 reverts to
+class **(a)** when **Validation's harness kill-condition evaluator** lands — **specced this sprint,
+not yet dispatched.** Until it does, *"a kill condition that can be defeated by not running it is not
+a kill condition"* is a clause enforced by a person on a calendar. **This seat wrote that clause,
+defended it, and now labels it (b): "defeatable by not running it" cannot describe a
+signature-required clause, and the honest repair is to name who runs it rather than to hope.**
+
+**B-06 is the execution of a limit that is itself class (a).** The *act* is procedural; its *violation*
+is caught by the P7 branch at `gates.py`. Both are recorded because a reader who saw only the (a) row
+would not know a human has to do something on the day.
+
+> ### **TWO THINGS THIS SEAT DEMOTED TO (c) AFTER TRYING TO MAKE THEM (b). THEY ARE THE WORKED
+> EXAMPLES OF THE CIO'S WARNING.**
+>
+> **F-002's E2 — *"evaluated ONCE. There is no re-run 'with the corrected costs,' no second look, and
+> no 'we also checked.'"*** The three F-002 runs are logged trials, so a second evaluation would be
+> **visible in the ledger afterwards**. It is tempting to call that an artifact and file E2 as (b).
+> **It is not.** The artifact is produced by the act being limited, not by any check on it; **no seat
+> and no cadence is named for asking the question.** E2 is **class (c)** — binding as a matter of
+> record, discoverable by audit, prevented by nothing.
+>
+> **§12.8's *"No hand-rolled number, under any circumstance."*** The presets exist
+> (`CRYPTO_PERP_TAKER`, `CRYPTO_SPOT_TAKER` — D-013 §1) and using them is easy. **Nothing refuses a
+> literal float.** There is no executor, no cadence, no artifact. **Class (c)**, and the Charter's
+> Seat-9 standing rule is a discipline rather than a gate.
+
+### 11.4 THE DISPATCH'S HARDEST QUESTION — does any limit claimed as (a) fail its own test?
+
+**The instruction was to check all sixteen fields and every non-field limit rather than assume §9.2's
+nine were exhaustive, and that "a tenth would be the more valuable finding."**
+
+> ### **ANSWER: NO. ALL TWENTY CLASS-(a) LIMITS VERIFY AT SOURCE. THE TWO FINDINGS RUN THE OTHER WAY,
+> AND ONE OF THEM IS THE MOST CONSEQUENTIAL THING IN THIS REVISION.**
+
+**Every row of §9.3 was re-read at its call site this session and every one holds.** The one this seat
+expected to fail did not: `verify_prereg` is invoked **by `evaluate_gate1` itself** (`gates.py:991`),
+so pre-registration integrity is checked automatically rather than on request. **No limit this
+document claims as harness-enforced turns out not to be.**
+
+**What this audit found instead: two limits the document states are NOT enforced, and which ARE.**
+**That is R19(b)'s defect class exactly — a false statement of harness fact about to be frozen by P7 —
+running in the conservative direction, which is why four revisions passed over it.**
+
+---
+
+#### 11.4.1 · **I-034 / C1 IS IMPLEMENTED. THIS DOCUMENT DESCRIBES THE PRE-REPAIR COST MODEL AT SIX SITES, AND ONE OF THEM DOWNGRADES THE FAMILY TOMORROW.**
+
+`harness/castellan/costs.py`, read this session [measured]:
+
+```python
+CRYPTO_PERP_TAKER = CostModel(
+    name="crypto_perp_taker", commission_bps=5.0, half_spread_bps=1.0,
+    impact_y=1.0, periods_per_year=365,
+    # No funding term (Ruling 003, I-034): funding is a signed cash flow
+    # and is accrued in the engine from the realized `pit_funding_panel`
+    # series, never as a scalar rate here.
+)
+
+CRYPTO_SPOT_TAKER = CostModel(          # D-013 §1, Principal-authorized
+    name="crypto_spot_taker", commission_bps=10.0, half_spread_bps=2.5,
+    impact_y=1.0, periods_per_year=365,
+)
+```
+
+`harness/castellan/carry.py` exists and supplies the sanctioned carry-stress path, with
+`carry_breakeven_bps_annual` monotone in its shift by construction. `DATA-IMPL-004` §5–§6:
+***"All nineteen T-cases … are implemented and pass with the assertions Validation authored"*** [cited].
+`VALIDATION-RULING-003`'s header names its own target: ***"Blocks: PREREG-002 condition precedent
+C1"*** [cited].
+
+**Six sites in `PREREG-002` still describe the world of 2026-07-28:**
+
+| Site | What it says | Status [measured] |
+|---|---|---|
+| **§1 recommendation box, breakeven row** | *"Cannot be stated… charges funding as a cost on gross notional… **−21.9%/yr** where the strategy receives +10.95%. The sign is inverted and the base doubled"* | **False.** The field does not exist on the preset |
+| **§12.1** | quotes the preset **with `funding_bps_annual=1095.0`** | **The quoted object does not exist** |
+| **§12.2 / §12.3 / §12.6** | defects (a) sign inverted, (b) funding is a constant, (e) `scaled(2.0)` stresses the error | **All three repaired.** T-16: `scaled(m)` leaves carry bit-identical |
+| **§16 row 1** | *"Cost robustness at 2× — evaluable but currently meaningless"* | **False.** `carry.py` is the sanctioned path and `scaled` no longer touches carry |
+| **§17 risk #1** | *"Every net number is wrong by 32.85 points/yr… **blocking on every net claim, including the paper book**"* | **False** |
+| **§14, KC-002's condition precedent** | *"the **C1 cost-model repair** is implemented by sprint close, **2026-08-11**. **If unresolved by that date, the family is ADMITTED-AS-EXPLORATORY only**"* | **Resolved.** The downgrade must not fire |
+| **seal-readiness block** | *"C1 · DISCHARGED as a specification; **implementation open as I-034**"* | **The implementation landed on 2026-07-29** |
+
+**Why this is the more valuable finding, stated without inflating it.** It cannot produce a wrong
+PASS — every error runs *against* the family. But **it is one calendar day from producing a real,
+mechanical consequence: KC-002's condition precedent downgrades this family to
+ADMITTED-AS-EXPLORATORY tomorrow, on a premise that is false**, and ADMITTED-AS-EXPLORATORY is
+*"pre-declared ineligible for Gate 1"* (Charter §4.3). **A family that has spent three sprints earning
+an ADMITTED recommendation would lose it to a stale sentence.** And §15's step 0 blocks the whole test
+plan on a condition already met, which is a direct cost in the sprint whose stated objective is *"the
+science or it is nothing."*
+
+**Filed I-140, HIGH.** The HIGH rating is a **Standing Order 002 §4 hard interrupt** and this seat
+records that the interrupt is a **consequence of the severity, not a purpose of the filing**: the
+rating is what a sealed document permanently misstating the firm's cost library, at the clause that
+decides ADMITTED versus ADMITTED-AS-EXPLORATORY, with the deadline tomorrow, honestly is.
+
+**What this seat does NOT do.** **It does not close I-034 and it does not close C1.** I-034's owner
+line routes to `quant-validation → head-of-data-infra`; C1's routes the same way. **This seat records
+the measurement and conforms its own document; the closure is somebody else's act, exactly as R12
+recorded C12's discharge while declining I-045's.** Two residuals survive and are stated so the
+conformance is not read as broader than it is:
+
+1. **§12's defect (d) is NOT repaired.** `CostModel` still has **no field that can charge
+   liquidation or venue-insolvency risk** — the largest risk in the mandate. `VALIDATION-RULING-003`
+   §4 declines to invent a number and says so. **That defect stands, is class (c), and is disclosed.**
+2. **The breakeven cost is still unstated** — but the reason changes, and the change matters.
+   **It is no longer "unstateable because the instrument is broken." It is "unstated because computing
+   it is a trial and this dispatch's budget is ZERO."** `carry.carry_breakeven_bps_annual` is the
+   house-rule-5 instrument and it exists. **House rule 5 is now satisfiable by this family and is not
+   yet satisfied.**
+
+---
+
+#### 11.4.2 · **I-022 IS REPAIRED IN CODE AND OPEN IN THE LOG, AND THREE CLAUSES REST ON IT BEING LIVE**
+
+I-022 as filed [cited — `logs/ISSUE_LOG.md:598`]: `gates.py` built the trial-count criterion with the
+verdict hard-coded to the literal `True`, so *"a family that has blown its pre-registered trial budget
+reports **PASS**."* **Resolution line still reads `open`.**
+
+`gates.py:527–640`, `_trial_budget_criterion`, read this session [measured]. **The literal `True` is
+gone and the code that replaced it fails in three separate ways:**
+
+- **B-7:** `sealed <= 0` with logged trials → **FAIL**, *"NO AUTHORIZED BUDGET"* (`:598`);
+- **B-9:** an ordering walk **per trial, not per aggregate** — the k-th trial logged above the
+  then-effective budget → **FAIL**, naming k (`:606–620`);
+- **B-23:** a malformed, un-withdrawn extension → **FAIL**, *"checked ahead of B-7/B-8/B-9"*.
+
+**Three clauses in this family's own papers rest on the defect being live:**
+
+| Where | What it says | Status |
+|---|---|---|
+| `PREREG-002` §20 **C10** | *"Until then the **47-trial authorized** budget is enforced by this seat and by nothing else"* | **False** |
+| `PREREG-002` §10.5.2, the objection paragraph | *"**I-022** … means the budget is still enforced by this seat and by nothing else"*, and *"the only control against that is that this sentence is in a sealed document"* | **False** |
+| `REGISTRATION-PAYLOAD` §4 | *"**I-022** — `gates.py` hard-codes a trial-count verdict to the literal `True` in one branch"* | **False** |
+
+**The correct statement, which is neither the old one nor a naive repair.** The budget is enforced
+**retrospectively and it FAILs the gate**. **I-132 stands unchanged:** `log_trial` reads no budget
+[measured — `registry.py:477–502`], so nothing *prevents* an over-budget spend and trials cannot be
+unspent. **Prevention: none. Detection and refusal: automatic, per trial, with the offending trial
+named.** §10.5.2's two-stage construction — *"a budget with a door in it, and doors get opened under
+schedule pressure"* — has a **better defence than the document gives it**, and this seat, who built
+the two-stage budget and would benefit from overstating its protection, notes that the correction here
+runs **in this family's favour** and states it for that reason rather than in spite of it.
+
+**Filed I-142, MEDIUM.** Not HIGH: it produces no downgrade, no wrong PASS, and no dated consequence.
+**C10's weight, raised at R-003 and raised again at R-004, now falls** — and the honest reading is that
+it should never have been raised the second time, because the repair had already landed.
+
+### 11.5 THE HAIRCUT — how it is resolved, and whether §19.3's expectation moves
+
+**The Principal's instruction is specific: the `t(α) ≈ 6.0` derivation must name its computing path or
+carry class (c) explicitly, and if nothing computes it the document must say so *where it is relied
+upon*, not only where it is declared.**
+
+> ### **RESOLUTION: CLASS (c), EXPLICITLY, AT ALL THREE POINTS OF RELIANCE. NOTHING COMPUTES IT.**
+>
+> `grep -rn "published_signal_haircut_applied" harness/castellan/ | grep -v registry.py` → **zero
+> hits** [measured]. There is **no haircut computation anywhere** — not in `gates.py`, not in
+> `stats.py`, not in `engine.py`, not in `costs.py`. The field is stored, hashed into
+> `prereg_sha256`, shadow-copied into `hypothesis_sealed`, and **read by nothing**.
+
+**The three points of reliance, and R-005 marks each:**
+
+| Where | What is derived from the 0.50 | Class |
+|---|---|---|
+| **§11.6** | the presumption accepted in full, no exemption sought; *"it bites, and this seat states the cost"* | **(c)** — where it is **declared** (R-004 already marked this) |
+| **§5.4** | *"clearing Gate 1's t-hurdle post-haircut requires a pre-haircut `t(α) ≈ 6.0`, twice F-002's bar"* | **(c)** — R-005 marks it **here, where it is relied upon** |
+| **§19.3** | the order-20 composite, and the pre-registered expectation of **PARK-WITH-TRIGGER** | **(c) composed with (a)** — R-005 marks it |
+
+---
+
+#### **§19.3'S EXPECTATION: THE POINT ESTIMATE DOES NOT MOVE. ITS BASIS SPLITS, AND A NEW BRANCH APPEARS THAT RUNS PERMISSIVE.**
+
+**§19.3's composite is `3.0 × 2 (haircut) × 3.3 (I-050 inflation) ≈ 20`.** Under the class mandate the
+two multipliers are **not the same kind of object**, and until this pass the document treated them as
+though they were:
+
+| Multiplier | Class | Evidence |
+|---|---|---|
+| **3.3× — the I-050 estimator correction** | **(a)** | `t_gate = min(t_NW, t_raw)` is *"the ONLY figure graded (E-8)"* [measured — `stats.py:153`, `:221`; `gates.py:752`]. **Implemented, shipped, and unavoidable** |
+| **2× — the published-signal haircut** | **(c)** | **No code path. Enforced by Validation applying Charter §4.6 by hand — and C5, the ruling on *where* to apply it, is unruled** |
+
+**What follows, stated as arithmetic rather than as concern.** The bar `evaluate_gate1` will actually
+compute is **`t_gate ≥ 3.0` on un-haircut net returns.** The bar Charter §4.6 says this family must
+clear is the equivalent of **`t_gate ≥ 6.0`.** **The gap is exactly 2×, it sits at the family's single
+largest stated hurdle, and it runs in the permissive direction.**
+
+> **Does §19.3's expectation move? This seat's answer, given plainly because a hedged one would be
+> worse than useless:**
+>
+> **No — the expectation of PARK-WITH-TRIGGER does not move, and it is not restated.** It was a
+> judgment about what this payoff can deliver, and it remains one.
+>
+> **What moves is the failure mode attached to it, and it moves against the firm.** Before this pass,
+> §19.3 described **one** way to be wrong: the family clears F-002 and then PARKs. **There is now a
+> second, which the document did not carry: if C5 is never ruled and no seat applies §4.6 by hand,
+> this family can be reported as PROCEED at a bar half the one the Charter sets.** A PARK that should
+> have been a PARK is a correct outcome. **A PROCEED that should have been a PARK is the failure this
+> firm exists to prevent, and it is now a named, reachable branch rather than an unexamined
+> assumption.** R-005 records it at §5.4 and §19.3.
+>
+> **This is the mandate paying for itself in one line.** The relabelling did not weaken the
+> expectation; it exposed a permissive branch that a document describing prose as a control could not
+> have seen.
+
+**Filed I-143, MEDIUM.** Distinct from I-134, which records that nothing applies the haircut. **I-143
+is the sizing and the placement**: the gap is 2× at Gate 1's t-criterion, one of the two multipliers
+building the family's pre-registered expectation is class (a) and the other is class (c), and **C5 is
+the only thing that closes it.** Put to C2's intake at **C13(i)**.
+
+### 11.6 The payload — unchanged, and the sense in which that is true
+
+> ### **NO BINDING FIELD'S VALUE CHANGES. `trial_budget = 47`. `n_inherited = 7`. THE SIXTEEN
+> LITERALS ARE EXACTLY AS `REGISTRATION-PAYLOAD-PREREG-002.md` §1 records them.**
+
+**The relabelling forced no payload change, and this seat states plainly that it went looking for
+one.** The natural candidate was `published_signal_haircut_applied`: if no code applies it, is 0.50
+still the honest value? **Yes, and the reasoning is short.** The field's value is a *declaration of
+which presumption the sponsor accepted*, and the presumption was accepted in full. **A field being
+unread is not a reason to write a different number into it — that would be the I-046 error inverted,
+adjusting a declaration to match the enforcement rather than adjusting the description of the
+enforcement to match the truth.** The number stays; the sentence about what it does changes.
+
+**Three prose fields receive conforming inserts, and this is the R-004 mechanism, not a new one.**
+`success_criteria`, `forward_kill_condition` and `model_prior_provenance` gain text, exactly as
+R-004's own §3.1 table records four such inserts. **The document is UNSEALED**, `book/registry.db`
+holds **0 hypotheses / 0 trials**, and **P7 has not bitten** — so a prose-field edit is a draft edit,
+not an amendment. **This is not a Standing Order 002 §4 interrupt on payload grounds.**
+
+**I-140 IS an interrupt, on its own severity.** The two facts are separate and are stated separately
+so that neither borrows the other's weight.
+
+### 11.7 Issues filed by §11, with the rating reasoning exposed
+
+| # | Finding | Severity | Why that rating and not the one above or below |
+|---|---|---|---|
+| **I-140** | **I-034 / C1 is implemented; `PREREG-002` describes the pre-repair cost model at six sites, one of which downgrades the family to ADMITTED-AS-EXPLORATORY on 2026-08-11 on a false premise** | **HIGH** | Not MEDIUM: it has a **dated, mechanical consequence one day away** that costs the family its Gate 1 eligibility, and P7 would freeze the misstatement permanently. Not higher: every error runs *against* the family and **none can produce a wrong PASS** |
+| **I-141** | **`PREREG-002` §10.10's field-count arithmetic — 4 / 3 / 9 against rosters of 4 / 4 / 8; the 9 is §9.2's count of category-(c) *limits* transplanted into a column counting *fields*** | **MEDIUM** | Same rating as **I-136** for the identical defect class — an internal contradiction between a count and its own roster, which P7 freezes and no later artifact can reconcile. Not LOW: it was propagated **into this dispatch's own instructions** before anyone measured it |
+| **I-142** | **I-022 is repaired and passing (`DATA-IMPL-007`, all 19 green, 2026-08-05) and reads `open` in the log; C10 and two further clauses rest on it being live** | **MEDIUM** | Not HIGH: no downgrade, no dated consequence, no wrong PASS, and the error runs conservative. Not LOW: **C10's weight was raised twice — at R-003 and again at R-004 — after the repair had already shipped**, so the stale entry actively distorted two revisions |
+| **I-143** | **The published-signal haircut's 2× gap at Gate 1's t-criterion: one multiplier of §19.3's expectation is class (a) and the other class (c), and the (c) one runs permissive** | **MEDIUM** | Not a duplicate of **I-134**, which records that nothing applies the haircut. **I-143 sizes it (2×), places it at the two points of reliance, and names the branch it opens — a PROCEED at half the Charter's bar.** Not HIGH: closable by a single C5 ruling already queued at intake |
+
+**No issue is filed for the eight zero-consumer fields themselves.** They are **I-133**, already filed,
+and the mandate's whole point is that a class-(c) label is a full answer rather than a defect report.
+**Filing eight issues to say "prose is prose" would be the theatre this order exists to end.**
+
+### 11.8 What §11 did not do
+
+- **No seal, no registration, no registry write, no vault.** `book/registry.db` reads **0 hypotheses /
+  0 trials** and read 0 / 0 when this section was put down.
+- **No `harness/` file touched, no test run, no suite state reported.** `test_h7` and `test_h8` are
+  Validation's queue and were not approached.
+- **No `VALIDATION-*` document and no `book/` artifact touched.**
+- **No issue closed.** **I-034, I-022, I-045 and C1 are recorded as measured and routed to their
+  owners.** Recording a measurement and closing an issue are different acts and this seat holds only
+  the first.
+- **No declared menu edited. No selection moved. `N_conditioning` remains 7.**
+- **No number computed.** The only arithmetic is `4 + 4 + 8 = 16` and `5 + 11 = 16`, on the sixteen
+  entries of `_BINDING_FIELDS`, and the class counts `20 + 7 + 34 = 61`.
+
+---
+
+*Director of Research · Castellan Capital · **addendum §11 added 2026-08-10 for revision R-005***
+*Dispatch S3-D-003. Trial budget ZERO. No hypothesis opened, no trial run, no vault sealed, `harness/`
+not touched, `book/` not written to, no test executed, no suite state reported.*
