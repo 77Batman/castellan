@@ -3450,3 +3450,94 @@ Insurance 2 of 2 intact; DA reserve sealed. §5 dead-man: **8 invocations remain
 flight.
 
 **Review date:** on R-005's return, and on the settings hash.
+
+---
+
+## S3-D-005 · 2026-08-10 · A5 placed in the Charter · the hardening pass prepared, and four of its own inputs found wrong · CASE-15
+
+**1 · THE WORD CAME. A5 IS IN THE CHARTER.** S3-D-004 §1 held the placement pending one word from
+the Principal; the word was given — *"adopted now as a Charter clause, my §2 authority, effective
+immediately."* `FUND_CHARTER.md` is now **v1.2**, the clause sits in **§3.1** where capital is
+governed, and **Appendix D carries A5** with its provenance.
+
+**The clause text expanded between the decree and the placement, and the later text governs.**
+S3-D-004 recorded: *"Paper is a property of credentials and network, never of an instruction —
+while the book is paper, no credential with trade scope exists."* The placement instruction adds
+**network topology** and a third sentence absent from the decree: *"Any credential grant with trade
+scope is a §2 reserved act requiring a Principal decision record."* **That sentence is the
+operative addition** — the decree described a present state, and this makes the *transition out of
+it* a reserved act. A state can be true and then quietly stop being true; a reserved act cannot be
+performed without a record.
+
+**One refinement recorded rather than absorbed.** S3-D-004 classes paper-by-absence-of-credentials
+as **class (a)**. The placement instruction says **class-(a)-adjacent by construction — enforced by
+what doesn't exist.** The Charter note adopts the latter and states why: **no code evaluates this
+clause.** It holds because the firm owns no funded key, which is a fact about the world, not a
+mechanism in the repo. It is stronger than class (a) while the fact holds and **degrades to class
+(b) the instant a credential with trade scope is created** — so the moment of the grant is the
+moment the control needs a named executor. Filing it as class (a) proper would put it in the same
+bucket as controls a test can fail, and nothing here can fail a test.
+
+**2 · THE HARDENING PASS IS PREPARED, NOT COMMITTED** — `ops/HARDENING-2026-08-14.md`, diff in the
+working tree against `.claude/settings.json`, for the Principal's commit with his own verification.
+
+**Four claims carried into the pass from the Watchtower report were wrong, and the pass caught them
+because it re-fetched rather than trusting the intake.** This is the firm's own rule — a fetched
+claim is not a checked one — applied to the firm's own output one exchange after publishing it:
+
+- **The version attribution was backwards.** All three named permission-boundary defects are in
+  **2.1.223**, not 2.1.222. The report's "correction" was itself wrong and is **struck** in place.
+- **2.1.222 contains something the intake missed**, and it matters more than what it found:
+  *"Fixed worktree-isolated sessions and their subagents being able to run destructive git commands
+  against the main checkout."* **That is CASE-3 recurring in the vendor's implementation**, in the
+  mechanism this firm relies on for parallel-agent isolation.
+- **Head is 2.1.227, not 2.1.226** — and 2.1.227 is already installed, so the upgrade is a no-op.
+- **`defaultMode` was already pinned.** By the vendor's own statement the firm was **already
+  unaffected** by the 14 August flip. The urgency was real; the exposure was not.
+
+**3 · THE CIO CONTRADICTS THE AUTHORIZATION ON ONE POINT, WITH EXECUTED EVIDENCE.** The
+authorization said the deny rules "incidentally convert the registry read-only default from Sprint 3
+intention to mechanical fact." **They do not.** Three probes were run rather than described:
+`Write` → `book/vaults/**` **DENIED**; `Write` → `book/registry.db` **DENIED**; and
+`os.access(...)` through an allowed Bash call returns **`True` for both**. The deny binds the
+`Write`/`Edit` **tools**; the process keeps filesystem write access, and `Bash(python3:*)` and
+`Bash(sqlite3:*)` are on the allow list **because that is how the harness legitimately writes the
+registry.** What was bought is real defense-in-depth against a classifier approving a plausible
+`Write` — and it is not read-only. **Registry read-only remains a Sprint 3 intention**, and
+mechanical enforcement belongs in the store, per Ruling 001. Recording it as achieved would have
+made an objective look met that is not.
+
+**4 · ONE ITEM OF THE FOUR COULD NOT BE APPLIED AND IS NOT PRETENDED CLOSED.**
+`crossSessionInbound: "refuse"` is **rejected by the 2.1.227 settings validator at project scope**
+(*"Unrecognized field"*) though the changelog and the docs both say it exists. It was **not** written
+under `permissions`, where it would have validated silently and quite possibly enforced nothing —
+CASE-9 by construction. **Gap G-1 is open: the cross-session injection path into Validation, Risk
+and the Devil's Advocate is not closed.** Recommended next step is a user-scope attempt by hand; if
+that also fails, it goes to the Issue Log as unreachable on this build. Gaps G-2 (process-level
+writability), G-3 (the version floor is a document, not a mechanism — class (b)) and G-4
+(`settings.local.json`, 76 allow entries, untracked, higher precedence, unreviewed) are recorded in
+the same document.
+
+**5 · CASE-15 FILED** — *the guard that counted the wrong side.* The Watchtower's own first run
+destroyed 100% of its payload while a fan-in guard correctly reported 6/6 fetchers and zero gaps.
+**Distinguished from CASE-4 in the case itself:** CASE-4's fix was to add verification by output and
+fan-in counts, and that fix was already adopted and running here. It worked. The residual failure is
+**correctly-placed verification of the wrong quantity** — the harder version, because the green
+signal is genuine. Rule adopted verbatim as instructed: **a fan-in guard must count what leaves the
+stage it guards, not what arrives at it.**
+
+**6 · LEAKAGE SENTINEL — no change.** Queued for Validation per S3-D-004 §3, sequenced after the
+seal path, not dispatched, Opus impact already stated there.
+
+**7 · ONE DISCREPANCY THE CIO WILL NOT RESOLVE SILENTLY.** The authorization sequences the sentinel
+after *"R-004 → C2 → C3."* **R-004 landed at S3-D-002**; the item in flight is **R-005** (S3-D-003,
+the three-class relabeling), and S3-D-003 §6 states the sequence as *"R-005 relabeling → C2 → C3 →
+registration-as-seal."* Read as R-005 the sequencing is unchanged and nothing is blocked. Flagged
+rather than corrected, because it is the Principal's sequence to state.
+
+**8 · Budget.** **3 of 30 · 2 of 12 Opus, unchanged** — the Watchtower cycle, the hardening pass and
+this entry consumed **no seat invocation**. Watchtower fetch/verify ran on workflow subagents, which
+are not firm seats and draw on no seat tier. Insurance 2 of 2 intact; DA reserve sealed. §5
+dead-man: **8 invocations remain.**
+
+**Review date:** on the settings hash, and at Watchtower cycle 2 (2026-08-17) for gap G-1.
