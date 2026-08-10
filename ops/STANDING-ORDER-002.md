@@ -101,7 +101,12 @@ If **10 invocations** are spent, or **5 calendar days** elapse, since the last P
 
 The Principal reviews: the **Friday Research Review**, the **Monthly Letter**, and the **interrupt queue as it arrives.** The decision record, the `[would-have-asked]` log, and the **findings index (§7.1)** are the review surface between checkpoints. Per-turn Principal review is discontinued.
 
-**The weekly `[PRINCIPAL]` pull-and-merge ritual runs Fridays alongside the Research Review**, with the merge summary (new / unchanged / RESTATED / exit code) pasted to the record per `TEMPLATES.md` §7.9. **A skipped week is a skipped verification and is logged as such.**
+**The weekly `[PRINCIPAL]` Friday ritual, alongside the Research Review**, now carries two items, each pasted to the record per `TEMPLATES.md` §7.9. **A skipped week is a skipped verification and is logged as such.**
+
+1. **Pull-and-merge** — summary of new / unchanged / RESTATED / exit code.
+2. **Kill-condition evaluation [NEW — 2026-08-10].** Every registered kill condition, every clause, evaluated against the store. **Added because no harness path evaluates a kill condition on any date, for any family** (I-135) — so KC-002, signature-required and carrying an absolute observation date, was enforced by nothing. The Principal: ***"'defeatable by not running it' cannot describe a signature-required clause."***
+
+   **This is a class-(b) control under the R-005 labeling mandate and carries its three fields: executor the Principal, cadence weekly Friday, artifact the pasted evaluation.** It reverts to class (a) when Validation's harness kill-condition evaluator lands — read registered KC fields, evaluate every clause on invocation, **exit nonzero on any firing *or* on inability-to-evaluate**, per the exit-code pattern the merge script proved. Specced this sprint; Sonnet implements red-first.
 
 ---
 

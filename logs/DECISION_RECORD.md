@@ -3317,3 +3317,70 @@ It goes on the ruling.
 dead-man: **8 invocations remain.**
 
 **Review date:** on the Principal's ruling on I-130.
+
+---
+
+## S3-D-003 · 2026-08-10 · I-130 and I-133 ruled · relabeling dispatched alone, not in parallel
+
+**1 · I-130 approved; `n_inherited = 7` enters the payload.** The Principal recorded the finding's
+shape as doctrine, and it generalizes past this family: **I-105's class is a field-by-field
+disease; every sealed numeric field must be asked "what does the harness read here, and what does
+zero mean."** The Director reversing its own position against its own family's interest, unprompted,
+is recorded **as conduct.**
+
+**2 · I-133 sustained as filed at MEDIUM, and the remedy is a LABELING mandate, not a
+mechanization mandate.** The seat's conclusion adopted verbatim. Binding on R-005 before C2:
+
+| Class | Requires |
+|---|---|
+| **(a) harness-enforced** | named field, named code path |
+| **(b) procedure-enforced** | named executor, named cadence, named artifact |
+| **(c) declared commitment** | binding as record; audit and adversarial review only |
+
+**No limit may describe itself as a control without carrying its class.** The Principal's reason
+for putting it before C2 rather than after: *"Validation grading prose-as-controls would have been
+a wasted unit and a worse precedent."*
+
+**The CIO added one guard the mandate did not state**, because class (b) is the one that will be
+abused: a limit is (b) only if **executor, cadence, and artifact can all three be named.** *"The
+Director will check"* is not a cadence and produces no artifact — **that is (c) wearing (b)'s
+clothes.** And the brief states plainly that **class (c) is a full and honourable answer, not a
+demotion**: a document honestly declaring thirty commitments is stronger than one implying thirty
+controls and having nine.
+
+**3 · The kill-condition gap gets an executor.** *"'Defeatable by not running it' cannot describe a
+signature-required clause."* Two acts, and **`ops/STANDING-ORDER-002.md` §6 is amended now** rather
+than at sprint close:
+
+- **Validation specs a harness kill-condition evaluator this sprint** — reads registered KC fields,
+  evaluates every clause on invocation, **exits nonzero on any firing *or* on inability-to-evaluate**,
+  per the exit-code pattern the merge script proved. Sonnet implements red-first. **Not yet
+  dispatched — see §4.**
+- **Until it lands, KC evaluation joins the weekly Friday `[PRINCIPAL]` ritual**, and it is written
+  into the order **carrying its three class-(b) fields** — executor the Principal, cadence weekly
+  Friday, artifact the pasted evaluation. **The mandate applied to the mandate's own remedy.**
+
+**4 · ONE OPUS DISPATCH, NOT TWO — and the reason is the audit.** The relabeling and the KC
+evaluator spec are independent, touch different files and different seats, and could have run in
+parallel. **They did not.**
+
+**Entry 14 — concurrent Opus at zero slack against a demonstrated termination mode — is the single
+entry the §7 audit decided differently**, and its price was 42% of Sprint 2's Opus tier. **Repeating
+it in Sprint 3's third dispatch would mean the audit changed nothing.** The relabeling is on the
+critical path to C2; the KC evaluator is not. **It goes second.**
+
+**5 · §2.2 flag: this ruling carried no headroom note.** Every Principal message is to open with
+`[usage: session X% · weekly-opus Y%]`. The last reading was **`58% / 18%`, several exchanges and
+four calendar days ago** — far past the ~2-hour staleness bound, so **headroom is UNKNOWN under
+§2.2** and the conservative posture applies. **No termination has occurred in Sprint 3, so the
+posture's specific prohibition does not bite** — but combined with the entry-14 finding it is a
+second independent reason the parallel dispatch was declined. **Requested for the next message.**
+
+**6 · Sequence to the seal, unchanged and now explicit:** **R-005 relabeling → C2 → C3 on the
+sealed reserve → registration-as-seal, a §4 interrupt and the Principal's act.** `test_h7`/`h8`
+going live at `n = 7` joins Validation's queue with the four reds.
+
+**7 · Budget.** **3 of 30 · 2 of 12 Opus** (2nd of 9 free). Insurance **2 of 2 intact**; DA reserve
+sealed. §5 dead-man: **8 invocations remain.**
+
+**Review date:** on R-005's return.
