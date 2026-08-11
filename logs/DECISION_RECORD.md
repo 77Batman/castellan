@@ -3544,7 +3544,14 @@ dead-man: **8 invocations remain.**
 
 ---
 
-## S3-D-005 · 2026-08-10 · R-005 lands · §4 INTERRUPT — I-140, HIGH and DATED TO TOMORROW
+## S3-D-006 · 2026-08-10 · R-005 lands · §4 INTERRUPT — I-140, HIGH and DATED TO TOMORROW
+
+> **Renumbered S3-D-005 → S3-D-006 on 2026-08-11.** Two sessions wrote `S3-D-005` into this
+> ledger on the same day: the watchtower session at **19:26:52** (`fdc87ba`) and the CIO at
+> **19:29:12** (`82c436b`). **The watchtower entry landed first and keeps the number; the CIO
+> yields, as it did at S2-D-002 when it renumbered its own entry rather than the Principal's.**
+> Consequence to state rather than leave: the Director's live R-006 brief carries the dispatch tag
+> `S3-D-006`, which now names *this* entry. **That tag is stale; R-006's record entry is S3-D-007.**
 
 **1 · §4 HARD INTERRUPT. Trigger: *"any issue filed HIGH."* This one has a deadline of 2026-08-11
 — tomorrow — and the CIO leads with it for that reason.**
@@ -3637,3 +3644,64 @@ status is contested and its deadline is 24 hours out would produce a verdict nee
 sealed. §5 dead-man: **7 invocations remain.**
 
 **Review date:** on the Principal's ruling on I-140 — **before 2026-08-11.**
+
+---
+
+## S3-D-007 · 2026-08-11 · Watchtower session boundaried · a cross-session key collision found and yielded
+
+**1 · Disclosure recorded: `fdc87ba` was authored by the watchtower session (personal ops) under
+the Principal's instruction.** Charter v1.2, CASE-15, adoption ledger. **Going forward that session
+writes only under `ops/watchtower/`, and any other write from it is an incident.**
+
+**2 · Verified as usual** [measured]. `fdc87ba` touched **five paths, four of them outside
+`ops/watchtower/`**:
+
+| Path | |
+|---|---|
+| `FUND_CHARTER.md` | A5 at v1.2 — **verified present in `HEAD`** with its Appendix D provenance row |
+| `logs/DECISION_RECORD.md` | +91 lines — **the collision, see §3** |
+| `ops/CASEBOOK.md` | CASE-15 |
+| `ops/HARDENING-2026-08-14.md` | the hardening pass, **prepared, not applied** |
+| `ops/watchtower/watchtower-2026-08-10.md` | in scope |
+
+**Those four writes were authorized when made** — under the Principal's instruction, before the
+boundary existed. **They are not incidents and are not recorded as such.** The boundary applies
+prospectively, and **the CIO notes that under it, four of that commit's five paths would now be
+incidents** — which is precisely why the boundary is worth having.
+
+**3 · CROSS-SESSION KEY COLLISION — two `S3-D-005` entries, and the CIO yields.**
+
+The watchtower session wrote `S3-D-005` at **19:26:52**; the CIO wrote `S3-D-005` at **19:29:12**.
+**The watchtower entry landed first and keeps the number.** The CIO's R-005 entry is renumbered
+**S3-D-006**, on the same principle it applied at S2-D-002: **when two sessions collide in a ledger,
+the CIO renumbers its own entry, not the other party's.**
+
+**Stated rather than left to be discovered:** the Director's **live** R-006 brief carries the
+dispatch tag `S3-D-006`, which now names the R-005 record entry. **That tag is stale. R-006's
+record entry will be S3-D-007's successor, S3-D-008.** A dispatch tag is a label on a brief; the
+ledger governs.
+
+**4 · The boundary is the structural fix, and the collision is the evidence for it.** Sprint 2's
+numbering collisions were one CIO writing into ranges it had issued to seats — fixed by allocating
+disjoint ranges at dispatch. **This one is a different mechanism: two independent sessions, neither
+aware of the other's writes, appending to one file within three minutes.** Range allocation cannot
+fix that, because neither session issues ranges to the other.
+
+**What fixes it is exactly what the Principal has just done** — confining the watchtower session to
+`ops/watchtower/`, so the two sessions no longer share an append target. **The CIO therefore
+proposes no additional mechanism**, and records that it considered a `S3-W-` prefix and rejected it:
+**a namespace for writes that will no longer occur is machinery for a problem the boundary already
+removes.**
+
+**5 · `ops/HARDENING-2026-08-14.md` noted, not verified.** The hardening pass is **prepared and
+dated 08-14**, and the settings commit itself has not landed — **the hash is still outstanding.**
+The CIO's standing position is unchanged: **nothing is treated as in force until the hash resolves
+against `HEAD`**, because two of three artifacts asserted as committed in Sprint 2 were not there.
+The watchtower session reporting that **four of its own inputs were wrong** is noted as the reason
+that position exists.
+
+**6 · Budget.** **5 of 30 · 4 of 12 Opus**, unchanged — this entry consumed no invocation.
+Insurance 2 of 2 intact; DA reserve sealed. §5 dead-man: **7 invocations remain.** R-006 is in
+flight.
+
+**Review date:** on R-006's return, and on the settings hash.
