@@ -1,6 +1,7 @@
 {
   "permissions": {
     "defaultMode": "acceptEdits",
+    "disableAutoMode": "disable",
     "additionalDirectories": ["../castellan-worktrees"],
     "allow": [
       "Read", "Edit", "Write", "Task", "Glob", "Grep",
@@ -16,7 +17,9 @@
     "deny": [
       "Bash(sudo:*)", "Bash(rm -rf:*)", "Bash(crontab:*)",
       "Bash(launchctl:*)", "Bash(ssh:*)", "Bash(scp:*)", "Bash(rsync:*)",
-      "Read(~/.ssh/**)", "Read(~/.aws/**)"
+      "Read(~/.ssh/**)", "Read(~/.aws/**)",
+      "Write(./book/vaults/**)", "Edit(./book/vaults/**)",
+      "Write(./book/registry.db)", "Edit(./book/registry.db)"
     ]
   }
 }
