@@ -1439,3 +1439,377 @@ and the mandate's whole point is that a class-(c) label is a full answer rather 
 *Director of Research · Castellan Capital · **addendum §11 added 2026-08-10 for revision R-005***
 *Dispatch S3-D-003. Trial budget ZERO. No hypothesis opened, no trial run, no vault sealed, `harness/`
 not touched, `book/` not written to, no test executed, no suite state reported.*
+
+---
+
+# ADDENDUM — REVISION R-006 · 2026-08-11 · PRE-SEAL
+
+*Dispatch **S3-D-006**. Trial budget **ZERO**. `book/registry.db` reads **0 hypotheses / 0 trials /
+1 event** [measured — read-only `SELECT COUNT(*)`, this session]. No `harness/` file touched, no
+`VALIDATION-*` document touched, no `book/` artifact written, no test run, no suite state reported,
+no commit. `test_h7` / `test_h8` not approached.*
+
+## 12. THE PRINCIPAL'S I-034 RULING APPLIED TO THE DOCUMENT — and the dated-clause sweep it mandates
+
+### 12.1 What was ruled, and the one thing it does NOT do
+
+**Ruled by the Principal, 2026-08-11:** **I-034 is CLOSED**, satisfied **2026-07-29** on commit
+`875874f`'s evidence, recorded 2026-08-11, discovery credit **R-005**. **Condition precedent C1 is
+DISCHARGED, not extended** — *"a family does not get downgraded because its paperwork didn't learn
+what its repository did."*
+
+**The residual is retained and is not swept up with it.** §12 defect **(d)** — `CostModel` has no
+field that can charge liquidation or venue-insolvency risk, the largest risk in the mandate — stands
+as **class (c), C-25** in the §10.11.4 register. `VALIDATION-RULING-003` §4 declines to invent a
+number for it and R-006 does not invent one either. **It is not a condition precedent, because there
+is nothing to wait for.**
+
+**One fact this seat did not have at R-005, supplied by the CIO** [cited]: **commit `875874f`'s own
+message reads *"Closes I-034."*** The work landed, the commit announced the closure, and
+`logs/ISSUE_LOG.md` read *"open — blocking execution of PREREG-002"* for **thirteen days**. R-005's
+finding is therefore the **fourth instance of I-092's class** — a closure recorded somewhere the
+index never reached — and **the first with a dated consequence attached.**
+
+### 12.2 THE SITE ROSTER — AND THE CARDINAL "SIX" IS WRONG AT EVERY READING
+
+**I-140 states *"six sites."* Its own roster in the same sentence names seven groups. R-005's R26
+"clause changed" column names eleven. The set R-006 must actually touch is fourteen.** The cardinal
+has never agreed with any roster it has been written beside, and it has now propagated into a CLOSED
+Issue Log entry (*"Six stale document sites corrected at R-006"*) and into dispatch S3-D-006's own
+task heading.
+
+**This is I-141's defect class for the fourth time** — R8(c) (three surviving instances of a
+superseded budget), R22 (§15's step table summing to 83 against 79), R25 (§10.10's 4/3/9 against its
+own 4/4/8), and now this. **Filed I-150, LOW-MEDIUM.** LOW because no consequence follows from the
+cardinal — the roster is what anyone acts on, and every roster written has been complete or nearly
+so. **Not lower, because it propagated twice: once into the Issue Log's closure text and once into a
+dispatch, which is precisely the escape route I-141 was rated MEDIUM for.**
+
+**The fourteen sites R-006 corrects**, partitioned by what is wrong with each:
+
+**(A) Sites that state C1 is open, conditional, or not this seat's to close — seven:**
+
+| # | Site | What it said |
+|---|---|---|
+| S-1 | §1 recommendation box, *Verdict sought* | *"ADMITTED … conditional on **C1**, C3 and C11"* |
+| S-2 | §12's R26 note | *"does NOT close I-034 and does NOT close **C1**"* |
+| S-3 | §12.3 | *"It is condition precedent **C1** and it is Validation's to specify, not this seat's to implement"* |
+| S-4 | §12.8 (two rows) | *"if **C1's** specification calls for one"* · *"routed per Validation's **C1** specification"* |
+| S-5 | §19 verdict + §19.2 spend table | *"ADMITTED, conditional on **C1**, C3 and C11"* · *"**C1** … everything else is blocked on it"* / *"Any net-P&L claim … before **C1** lands"* |
+| S-6 | §20's C1 row | *"DISCHARGED IN SUBSTANCE, AND THIS SEAT DOES NOT CLOSE IT"* |
+| S-7 | seal-readiness block, R-005 row | *"Formal closure of I-034 and of **C1** routes to `quant-validation → head-of-data-infra`"* |
+
+**(B) Sites that still describe the pre-repair cost model, all inside §21 — the SEALED field block,
+where the text is hashed into `prereg_sha256` — three, and this is the half R-005 did not reach:**
+
+| # | Site | What is still there, un-struck |
+|---|---|---|
+| S-8 | `success_criteria`, COST-STACK paragraph | the whole pre-repair diagnosis — *"−21.9%/yr charged … THE SIGN INVERTED AND THE BASE DOUBLED"*, *"there is no `CRYPTO_SPOT_TAKER` preset"*, *"`scaled(2.0)` doubles `funding_bps_annual` to 2190"* — closing with **"NO NET NUMBER FROM THIS FAMILY, IN ANY DOCUMENT OR IN THE PAPER BOOK, IS ADMISSIBLE UNTIL C1 LANDS."** |
+| S-9 | `forward_kill_condition`, condition-precedent sentence | *"the C1 cost-model repair is … implemented by **2026-08-11**; if unresolved by that date the family is **ADMITTED-AS-EXPLORATORY** only"* — **the exact sentence that made I-140 a HIGH, struck in §14's prose at R-005 and left standing in the field** |
+| S-10 | `falsifier`, E2 | *"the first complete run of the three series **after C1 lands**"* · *"**If C1's repair changes the cost stack** after F-002 has been computed …"* |
+
+> **S-9 is the finding inside the finding.** R-005 struck the condition precedent where a **reader**
+> meets it (§14) and left it standing where the **registry** meets it (§21). The R26 note that
+> corrects it sits **roughly forty lines further down the same field.** A field is hashed as one
+> string; a reader of that string encounters the downgrade before the correction. **The repair R-005
+> is credited with was made in the prose and not in the payload — which is I-105's lesson
+> (*"a control exists where the harness reads it, and nowhere else"*) arriving from the opposite
+> direction: a correction exists where the seal reads it, and nowhere else.**
+
+**(C) Sites conformed at R-005 and re-checked at R-006, correct as they stand — four:** §12's R26
+header block, §12.1's preset quotation (correctly labelled *"as shipped ON 2026-07-28"*), §15 step 0,
+§16's cost-robustness row. **Named so their absence from the edit list is legible rather than an
+omission.**
+
+### 12.3 WHAT HOUSE RULE 5's DISCHARGE ACTUALLY COSTS — AND IT IS NOT ONE TRIAL
+
+**I-140 records, R-005 repeats, and dispatch S3-D-006 restates: *"one trial inside Stage 1's 47
+discharges house rule 5."* This seat measured the instrument and the figure is wrong.**
+
+`carry.carry_breakeven_bps_annual(net_returns_at_shift, bracket=(0.0, 2000.0), iters=40)`
+[measured — `harness/castellan/carry.py:81–123`] takes a **callable**, not a return series, and
+evaluates it:
+
+- once at `bracket[0]` (`:107`), for the base series and the HAC lag;
+- once at `bracket[1]` (`:113`), for the ceiling check;
+- **once per bisection step**, `iters` times (`:116–122`).
+
+**At the shipped default that is 42 evaluations.** The harness's own sanctioned usage — T-18,
+`harness/tests/test_carry_accounting.py:580–592` — implements the callable as a **`run_backtest` call
+per shift** [measured], and `run_backtest` calls `registry.log_trial` unconditionally
+(`engine.py:248`). **Forty-two logged trials, each a row in `trials`, each feeding `fam.n_trials`,
+each deflating DSR and raising MinBTL.**
+
+**Against Stage 1's 47 that is not a rounding error — it is 89% of the authorized budget for a
+statistic that contains no selection of any kind.**
+
+**The honest cost, stated as a schedule rather than a scalar:**
+
+| Path | Trials | Why |
+|---|---:|---|
+| **F-002 fires (this seat's pre-registered expectation, §19.3)** | **0** | `t_lo < hurdle` returns `lo` at `:111–112` **before evaluating anything else**. On a family whose net `t` is below 3.0 the breakeven **is** 0.0 bps/yr, by construction, and the δ=0 series is step 3's own already-logged trial. **The KILL memo's house-rule-5 line is free.** |
+| **F-002 survives, `iters = 8`, bracket unchanged** | **9** | 1 ceiling check + 8 bisection steps, δ=0 supplied from step 3's cached engine output. Resolution `2000 / 2⁸` = **7.8 bps/yr** on a carry of 11.86%/14.07% [cited — `DATA-INGEST-002` §4]. |
+| **F-002 survives, shipped default `iters = 40`** | **41** | Resolution `2000 / 2⁴⁰`. **Absurd precision bought with the family's entire denominator.** |
+
+**Two things this seat will NOT do to make the number smaller, and they are stated because both are
+available and both are wrong.**
+
+1. **It will not narrow the bracket.** `carry_breakeven_bps_annual` returns the **bracket endpoint**
+   when the breakeven lies outside it (`:111–115`). `VALIDATION-SPEC-002` §1286 records that this
+   function has already once *"returned its bracket ceiling"*, and I-037 names returning a search's
+   ceiling as fabricated robustness. **Narrowing the bracket to save trials is the I-037 operation
+   performed on the instrument built to avoid it.** Reducing `iters` costs resolution only and can
+   never move an endpoint.
+2. **It will not construct the shifted net series outside the engine.** The shift is a per-bar
+   constant, so `net(δ)` is arithmetically recoverable from one run's positions and carry accrual —
+   **at a cost of zero trials and in direct breach of A2**, which makes a number produced outside the
+   engine inadmissible. **That is a Validation ruling, not a researcher's convenience**, and it is
+   put to C2 rather than taken.
+
+**Does this seat intend to spend it? Yes, conditionally, and the condition is already the
+pre-registered expectation.**
+
+> **Nine trials, at `iters = 8`, bracket `(0, 2000)` unchanged, as a new §15 step 3b — spent ONLY if
+> F-002 survives in full. On the KILL path it costs nothing and is reported anyway.**
+
+**And it does not fit.** §15's Stage 1 line items sum to **exactly 47** — `2 + 1 + 2 + 2 + 5 + 25 + 10`
+[integer arithmetic on already-declared line items] — **zero slack.** So R-006 records the arithmetic
+and **does not move the sealed `trial_budget`**, which stays at 47 and is not this revision's to
+touch. Three exits exist and this seat names its preference without taking it:
+
+| Exit | Cost | This seat's view |
+|---|---|---|
+| Spend the 9 from **Stage 2's contingent 32** | Stage 2 falls to 23 | **Preferred.** Stage 2 is contingent on a measured `ρ̂`, and the breakeven is only ever computed on a family that survived F-002 — the same conditional |
+| Fund it inside step 5's **≤ 5** diagnostics at `iters ≤ 3` | resolution 250 bps/yr | **Rejected.** 2.5%/yr resolution on an 11–14%/yr carry is a number that cannot discriminate |
+| Validation rules a **monotone reporting statistic with no selection in it does not deflate DSR** | 0 against `N` | **The right answer if Validation will give it**, and it is not this seat's to assume |
+
+**Put to C2 as C13(j). Filed I-151, MEDIUM** — permissive in the sense that matters (a document
+telling a sponsor a mandatory statistic costs 1 when it costs 9 to 42 is a budget that will be blown
+by a seat following instructions), conservative in none.
+
+### 12.4 C5 — THE BLOCKING FORM, AND WHOSE RULING IT ACTUALLY NEEDS
+
+**The Principal's ruling, adopted verbatim into §20 and into the seal-readiness block:**
+
+> **The family may not be evaluated at Gate 1, and no PROCEED may be reported, until C5 is ruled.**
+
+**The CIO reads C5 as Validation's. That reading is right about the first of three parts and
+incomplete about the other two, and this seat says so rather than accepting the convenient form.**
+
+**Part 1 — the point of application. Validation's, and final short of the Principal.** §4.6 says an
+edge derived from published research *"is haircut 50%"* and does not say haircut **what**. The three
+natural readings are **not** equivalent, and one of them is a **no-op**:
+
+| Reading | Operation | Effect on Gate 1's `t ≥ 3.0` |
+|---|---|---|
+| **(i) haircut the return series** | `r → 0.5·r` | **NONE.** Mean and standard deviation both halve; Sharpe, `t`, DSR, PBO, WFE, subperiod positivity and P&L concentration are **all invariant to a positive scalar** [inferred — from the definitions; no measurement involved]. Only capacity and cost-robustness move, because costs do not scale with the multiplier |
+| **(ii) haircut the expected return only** | `μ → 0.5·μ`, `σ` as measured | **`t` halves.** Effective hurdle **6.0**. This is §5.4's reading |
+| **(iii) haircut the computed Sharpe** | `SR → 0.5·SR` post hoc | Same as (ii) for the Sharpe criterion; **undefined** for `t` and for DSR's benchmark |
+
+> **The finding, and it is stronger than "the haircut is unenforced": under reading (i) the Charter's
+> own §4.6 haircut is mathematically inert on every scale-invariant criterion in Gate 1, which is
+> nearly all of them.** C5 is therefore not a choice between three shades of the same control. **It
+> is a choice between a 2× hurdle and nothing**, and §19.3's entire order-20 composite
+> (`3.0 × 2 × 3.3`) rests on the branch being (ii).
+
+**Part 2 — the ratification, and it is the PRINCIPAL's, not Validation's.** Whichever reading
+Validation names, the ruling either **doubles the effective Gate 1 `t`-bar to 6.0** or **leaves it at
+3.0 and makes §4.6 inert there**. Charter §4 reserves *"any change to the Gate thresholds in Part
+IV"* to the Principal, in writing. **`T_STAT_HURDLE = 3.0` never moves in either case — and the bar
+a family must clear moves by a factor of two.** A ruling that changes the effective bar by 2× while
+leaving the literal constant untouched is a §4 reserved act wearing an interpretation's clothes, and
+it is **the Principal's own doctrine of 2026-08-11 applied one clause over**: *a condition precedent
+with a date is a kill condition wearing different clothes.* **Escalated under house rule 7, not
+resolved here.**
+
+**Part 3 — the executor, without which Part 1 changes nothing.** `published_signal_haircut_applied
+= 0.50` has **zero non-`registry.py` consumers** and **no haircut computation exists anywhere in the
+harness** [measured — I-134, R21, R28]. **A ruling that names a point of application and no executor
+is class (c) and leaves I-143's permissive branch exactly where it is.** C5 discharges only when the
+ruling carries **executor, cadence and artifact** — the §4.7.2/class-(b) triple: *Validation, at
+every `evaluate_gate1` call on this family, with the haircut's point of application and its applied
+value named on the Validation Report's face.*
+
+**C5's blocking form, as written into §20 and the seal-readiness block:**
+
+> **C5 · BLOCKING ON GATE 1 EVALUATION AND ON ANY REPORTED VERDICT — ABSOLUTELY.** The family may be
+> sealed, may be run, and may spend Stage 1 with C5 open. **It may not be evaluated at Gate 1, and no
+> PROCEED may be reported, until C5 is ruled.** This is a lock, not a footnote, and the Principal's
+> reason is recorded with it because it sets the standard for findings of this class: *"a path to
+> half the Charter's bar existing quietly is exactly what the relabeling mandate existed to surface,
+> and its first substantive yield gets a lock, not a footnote."*
+
+**And this seat finds otherwise on one point of form.** The set **C2, C3, C5, C7, C8, C11** is
+correct as *the set that must be cleared before a PROCEED can exist*. **It is not the seal-blocking
+set, and R-005's own block already conflated the two** by listing C3 — §20's *"Blocking on Gate 1,
+not on sealing"* — among *"the same five open and blocking"* seal conditions. **Merging two kinds of
+block into one list is the shape of error that produced I-140.** The honest partition:
+
+| Set | Members | Meaning |
+|---|---|---|
+| **Seal-blocking** | **C2 · C7 · C8 · C11** | `open_hypothesis` may not be called until all four clear |
+| **Verdict-blocking** | **C3 · C5**, and by §20's own column also **C4** (Gate 1 scheduling) and **C10** (Gate 1, met in substance, formal closure outstanding) | the family may be sealed and run; **no Gate 1 verdict and no PROCEED may exist** until these clear |
+
+**The six-item set is the union minus C4 and C10.** R-006 writes the six with the Principal's force
+**and names the two the six-item framing drops**, because a blocking set that quietly loses two
+members is the defect this dispatch exists to correct. **Filed I-152, MEDIUM.**
+
+### 12.5 THE DATED-CLAUSE SWEEP — 24 CLAUSES, 15 WITH A FALSE PREMISE, AND A SECOND C1
+
+**Doctrine applied, extracted by the Principal from R-005's I-140:** *"a condition precedent with a
+date is a kill condition wearing different clothes, and nothing evaluates it."* `STANDING-ORDER-002`
+§6 is widened accordingly and the KC-evaluator spec's scope now covers **all dated clauses**. **This
+sweep applies it to PREREG-002 before the evaluator exists.**
+
+**Scope:** every clause in the document naming a calendar date on which something is required, fires,
+is evaluated, or is asserted true.
+
+| # | Site | Date | What fires on it | What evaluates it | Premise true today? |
+|---|---|---|---|---|---|
+| **D-1** | §14 condition precedent (prose) | **2026-08-11** | family → ADMITTED-AS-EXPLORATORY | **nothing** | **FALSE** — struck R-005; C1 discharged R-006 |
+| **D-2** | §21 `forward_kill_condition`, same clause **inside the hashed field** | **2026-08-11** | same, on the sealed string | **nothing** | **FALSE** — **un-struck until R-006.** S-9 above |
+| **D-3** | §14 observation date | **2027-01-31** | the whole of KC-002 | class (b): Principal, weekly ritual | **FALSE** — premise is *"187 days after an intended seal `C` = 2026-07-28"* and `C ≠ 2026-07-28` |
+| **D-4** | §21 field opening | **`C + 187 days`** | the whole of KC-002 | class (b) | **TRUE** — a formula, and by R-004's payload rule **it governs** |
+| **D-5** | §21 field body, *"over `[C, 2027-01-31]`"* | **2027-01-31** | the computation's window | **nothing** | **FALSE** — contradicts D-4 **in the same field** |
+| **D-6** | §21 field body, anti-reinterpretation clause 3 | **2027-01-31** | the successor-family boundary | **nothing** | **FALSE** — same |
+| **D-7** | §21 field body, **clause 5, SILENCE IS A KILL** | **2027-01-31** | **AUTOMATIC TERMINATION** | class (b) | **FALSE — AND THIS IS THE SECOND C1. SEE BELOW.** |
+| **D-8** | §11.4 R3 table, `forward_window_start` | **2026-07-28** | the forward window's start | `open_hypothesis` computes `C` (class (a)) | **FALSE** — **R23 named §11.4 as a changed clause and did not reach it** |
+| **D-9** | §11.4 R3 table, `forward_kill_condition` row | **2027-01-31 "absolute"** | restates D-3 | **nothing** | **FALSE** — same un-reached table |
+| **D-10** | §6.3 success criteria, *"KC-002 survival … at 2027-01-31"* | **2027-01-31** | the success criterion's date | **nothing** | **FALSE** |
+| **D-11** | §10.5.2 Stage 2, `N_forward` *"through 2027-01-31"* | **2027-01-31** | the forward budget's span | **nothing** | **FALSE** |
+| **D-12** | §10.5.3 line item, same | **2027-01-31** | same | **nothing** | **FALSE** |
+| **D-13** | §15 step 8, *"through `C + 187 days`"* | formula | forward generation | **nothing** | **TRUE** |
+| **D-14** | §20.1, *"Realistic seal date: on or before sprint close, **2026-08-11**"* | **2026-08-11** | nothing mechanical — a dated commitment | **nothing** | **FALSE** — that is **today**, and C2, C7, C8 and C11 are open |
+| **D-15** | §11.3 earliest Gate 1, reading 1 | **2027-07-28** | Gate 1 schedule | C4 | **FALSE** — it is `C + 12 months` computed at `C = 2026-07-28` |
+| **D-16** | §11.3 reading 2 | **2030-07-28** | same | C4 | **FALSE** — same basis |
+| **D-17** | §11.3 reading 3 | **2028-10-05** | same | C4 | **FALSE** — same basis |
+| **D-18** | §16, §17 rank 9, §22 row 6 — restatements of D-15…D-17 | same three | same | C4 | **FALSE** — three further copies |
+| **D-19** | §11.1 in-sample `[2020-01-01, C]` = **6.571 years** | span | **MinBTL, DSR, the length criterion** | `evaluate_gate1` — **class (a)** | **FALSE, IN THE FAMILY'S FAVOUR** — 6.571 y is measured to 2026-07-28; at any `C` later than that the true span is longer and every margin quoted from it is understated |
+| **D-20** | §11.1 ingest ceiling, *"conservative against any `C ≥ 2026-07-28`"* | 2026-07-28 | the ingest bound | `PITStore` ceiling — class (a) | **TRUE** — written formula-safe on purpose |
+| **D-21** | §7.1.1, K7's named in-sample trigger | 2025-09-18 | K7's declaration | class (c) | **TRUE** [cited — official] |
+| **D-22** | §14.1's quoted C-001 sentence | 2026-11-01 | nothing here | n/a | **n/a** — a quotation about KC-001 |
+| **D-23** | §6.1 / §9.1, SOL's structural break | 2022-11-09 | K4 / R3's universe decision | class (c) | **TRUE** [measured, three converging series] |
+| **D-24** | §20 C8, *"same session, same UTC day"* | relative | P7 | `evaluate_gate1` P7 — **class (a)** | **TRUE** |
+
+**Two of twenty-four are evaluated by code. Three more are class (b) with a named executor. Nineteen
+are evaluated by nothing at all.** And **fifteen carry a premise that is false today** — thirteen of
+those because the document was drafted against a same-day seal on 2026-07-28 that §20.1 then
+recommended against, and never fully reconciled.
+
+---
+
+#### **D-7 — THE SECOND C1, AND IT IS WORSE THAN THE FIRST**
+
+**`forward_kill_condition`'s opening sentence and its clause 5 are in direct contradiction, inside
+one hashed string.**
+
+> **Opening:** *"Observation date = `C + 187 days`… (Drafted against an intended `C` = 2026-07-28,
+> giving 2027-01-31; §20.1 recommends NOT sealing that day, so the executed value is whatever
+> `C + 187 days` resolves to and **the DRAFTED DATE IS NOT BINDING — the formula is**.)"*
+>
+> **Clause 5:** *"**SILENCE IS A KILL** — if the computation is not performed **on 2027-01-31** for
+> ANY reason … **the family is killed by default.**"*
+
+**Read as sealed, clause 5 terminates this family with certainty.** The observation date the field
+itself schedules is `C + 187 days`; at any seal after 2026-07-28 that date is **later than
+2027-01-31**. On 2027-01-31 the computation will not have been performed — **it is not due** — and
+clause 5 fires. **Registry TERMINATED, no further trials, no Gate 1 submission ever, automatic, not
+appealable to the CIO.**
+
+**Why this is strictly worse than I-140's condition precedent.** I-140's clause downgraded the family
+to **ADMITTED-AS-EXPLORATORY** — ineligible for Gate 1, still alive — and it fired on a premise that
+merely **happened** to be false. **D-7 terminates**, and it fires on a premise that **cannot be
+satisfied**: the field's own schedule makes non-performance on 2027-01-31 the guaranteed state of the
+world. **A kill condition written to be undefeatable has become one that cannot be survived.** P7
+would make it permanent.
+
+**And nothing evaluates it.** I-135 stands: no harness path evaluates a kill condition on any date,
+for any family; for a FORWARD classification the field is not even presence-checked. **The clause is
+class (b) — executor the Principal, cadence the weekly Friday ritual, artifact the pasted evaluation
+— and a Principal executing it correctly, reading the sealed text, finds the family dead.**
+
+**R-006's repair, and the direction it runs is stated first because it is the flattering one.**
+The three `2027-01-31` literals in the field body (D-5, D-6, D-7) are conformed to **`C + 187 days`**,
+which is what the same field's opening already declares and what §15 step 8 already computes.
+**No new rule is introduced.** The contradiction is removed **in the direction the field's own
+governing sentence names**, per R-004's payload rule: *"anywhere this document's prose and that
+payload could diverge, the payload is what gets passed to `open_hypothesis`."*
+
+**This runs IN THE FAMILY'S FAVOUR — it removes a certain kill — and that is exactly why it is
+disclosed at maximum volume and why the ruling is not this seat's.** A sponsor deleting a clause that
+terminates its own family is the shape of act this firm exists to distrust. **Put to C2 as C13(k):
+Validation may refuse the conformance and require the literal `2027-01-31` sealed as drafted, in
+which case the family accepts a shortened window and this seat writes the KILL memo on the day.
+Filed I-153, HIGH.**
+
+**§14's prose changes meaning, and this seat will not present that as conformance.** §14 currently
+reads *"The date is fixed and does not move… If the seal slips, the window shortens; the date does
+not extend."* The field reads *"fixed at sealing and ABSOLUTE thereafter."* **These are two different
+rules.** Under §14 the window is `[C, 2027-01-31]` and shrinks with every day of slippage — which
+also silently **tightens KC-002 clause (b)**, whose 30-conditioning-day threshold was calibrated
+against 187 days and against *"~184 daily bars and ~552 funding prints."* At a seal on 2026-08-12 the
+§14 window is **172 days**, 8% shorter, against an unchanged 30-day threshold. **A kill condition
+mechanically tightened by scheduling rather than by design.** R-006 conforms **the prose to the
+field**, not the field to the prose, because the field is what gets sealed and because the field's
+opening is the sentence that already anticipated the slip.
+
+---
+
+#### **D-8 / D-9 — §11.4's R3 TABLE WAS NAMED BY R23 AND NEVER REACHED**
+
+**R-004's R23 row names its changed clauses as *"§11.4; §21 `forward_window_start`."*** §21 was
+changed. **§11.4 was not.** Its R3 table still reads, un-struck, today:
+
+> `forward_window_start` | `2026-07-28` (= `C`; **the seal is intended for today**)
+> `forward_kill_condition` | KC-002, §14, in full. Observation date **2027-01-31**, **absolute**
+
+**Both premises are false, and the parenthesis *"the seal is intended for today"* has been false
+since 2026-08-04** — R23's own stated reason for striking the literal in §21.
+
+**This is the fifth instance of `conforming-pass-did-not-reach-every-instance`** — R8(c), R22, R25,
+I-140, and now this — and the first in which a revision row **names the site it failed to reach**,
+which is why it is worse than the four before it. A reader auditing R23 against its own clause list
+would tick §11.4 as done. **Filed I-154, MEDIUM.**
+
+### 12.6 WHAT R-006 COSTS THIS FAMILY, AND FOR THE THIRD REVISION RUNNING IT MOVES IN BOTH DIRECTIONS
+
+**For the family:** C1 is discharged rather than extended, the condition precedent does not fire, and
+the certain termination at D-7 is removed pre-seal. **Three sources of death removed in one
+revision, all of them clerical.**
+
+**Against the document, which is the half that matters more:**
+
+- **Fifteen of twenty-four dated clauses carry a premise that is false today**, and **nineteen of
+  twenty-four are evaluated by nothing**. The document has been carrying a schedule it never
+  reconciled to its own sequencing decision of 2026-08-04.
+- **The mandatory house-rule-5 statistic costs between 9 and 42 trials, not one**, and Stage 1 has
+  **zero** slack. A seat following this document's own instruction would blow the budget it was
+  written to protect.
+- **C5 is a choice between a 2× hurdle and a no-op**, and §19.3's most conservative pre-registered
+  expectation rests entirely on the branch nobody has ruled.
+- **The correction R-005 is credited with was made where readers look and not where the seal
+  looks.** S-9 is I-105's lesson inverted, and finding it required reading the payload rather than
+  the prose that describes it.
+
+**Payload: UNCHANGED. `trial_budget = 47`, `n_inherited = 7`, all sixteen literals as recorded.**
+Three prose-field bodies receive conforming inserts by the R-004 mechanism; the document is unsealed
+and a prose-field edit is a draft edit, not an amendment. **No binding field's value moves.**
+
+### 12.7 What §12 did not do
+
+- **No seal, no registration, no registry write, no vault.** `book/registry.db` reads **0/0** and must
+  still read 0/0 when this is put down.
+- **No trial. No number computed.** Every harness fact is `[measured]` at a named file and line; the
+  only arithmetic is `2 + 40 = 42`, `1 + 8 = 9`, `2000 / 2⁸ = 7.8`, `2 + 1 + 2 + 2 + 5 + 25 + 10 = 47`
+  and `187 − 172 = 15`, on already-declared integers.
+- **No `harness/` file touched, no test run, no suite state reported. `test_h7` / `test_h8` not
+  approached.**
+- **No `VALIDATION-*` document touched. No `book/` artifact touched. No commit.**
+- **No declared menu edited. No selection moved. `N_conditioning` remains 7.**
+- **No issue closed by this seat.** I-034's closure is the Principal's act of 2026-08-11 and is
+  recorded, not performed, here.
+
+---
+
+*Director of Research · Castellan Capital · **addendum §12 added 2026-08-11 for revision R-006***
+*Dispatch S3-D-006. Trial budget ZERO.*

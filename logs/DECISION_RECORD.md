@@ -3851,3 +3851,117 @@ at next harvest**: a doctrine and its own near-miss are worth more paired than a
 dead-man: **7 invocations remain.** R-006 in flight.
 
 **Review date:** on R-006's return.
+
+---
+
+## S3-D-010 · 2026-08-11 · R-006 lands · §4 INTERRUPT — I-153, a kill condition that cannot be survived
+
+**1 · §4 HARD INTERRUPT. Trigger: *"any issue filed HIGH"*, and separately *"any kill-condition
+signature or restatement."***
+
+**I-153 · HIGH — `forward_kill_condition` clause 5 terminates this family with CERTAINTY as
+drafted.**
+
+The field opens: *"Observation date = `C + 187 days` … the DRAFTED DATE IS NOT BINDING — the
+formula is."* Clause 5 then reads: *"if the computation is not performed **on 2027-01-31** for ANY
+reason … the family is killed by default."*
+
+**At any seal after 2026-07-28, `C + 187 days` falls later than 2027-01-31.** So on 2027-01-31 the
+computation is **not due**, will therefore not have been performed, and **clause 5 fires: registry
+TERMINATED, no Gate 1 submission ever, not appealable.**
+
+**This is strictly worse than I-140 on two heads, and the CIO states both:** I-140 **downgraded**;
+this **kills.** I-140 fired on a premise that **happened** to be false; this fires on one that
+**cannot be satisfied.** **A kill condition written to be undefeatable had become one that cannot be
+survived.**
+
+And **nothing evaluates it** — I-135 stands, no harness path evaluates a kill condition on any date
+— so the failure mode is not a machine misfiring. **A Principal executing the sealed text correctly,
+by hand, on the day, would read it and find the family dead.**
+
+**The seat conformed the literal to `C + 187 days` and then refused to ratify its own repair**:
+*"the repair runs in the family's favour, so it is not mine to ratify."* Routed to **C13(k)**, with
+the alternative stated plainly — **Validation may require the literal sealed as drafted, in which
+case the family accepts the shortened window and the Director writes the KILL memo on the day.**
+Third time this seat has declined an authority that would have favoured it.
+
+**2 · "R-005 corrected where readers look and not where the seal looks."** Three of the fourteen
+sites were **inside §21, the sealed field block**, which R-005 never reached — including
+`forward_kill_condition` **still carrying the exact 2026-08-11 ADMITTED-AS-EXPLORATORY sentence
+that made I-140 a HIGH**, struck in §14's prose and left standing in the field, "corrected" by a
+note forty lines further down the same string.
+
+**A field is hashed as one string.** The seat's own summary is the finding: **I-105's doctrine run
+backwards.** §4.7.2 says a control exists where the harness reads it — **and the harness reads the
+field, not the prose the reader reads.**
+
+**3 · The "six sites" cardinal was wrong at every reading, and it propagated into the CIO's own
+brief.** I-140 says six; its own roster names seven; R-005's R26 names eleven; **the set is
+fourteen.** It reached I-034's CLOSED entry and **S3-D-006's Task 1 heading, which the CIO wrote.**
+**Second time this sprint the CIO has repeated a cardinal it did not check against its own roster**
+— I-141 was the first. **I-150.**
+
+**4 · House rule 5 costs 0–42 trials, not one — and the CIO is the one who wrote "one."** The
+figure came from R-005's return, the CIO repeated it in the S3-D-006 brief without checking, and
+the seat has now measured it: `carry_breakeven_bps_annual` takes a **callable**, evaluated once per
+bracket end and once per bisection step, and the sanctioned usage makes each evaluation a
+`run_backtest` call, which **logs a trial unconditionally.**
+
+| Path | Trials |
+|---|---:|
+| **F-002 fires** (§19.3's own expectation) | **0** — returns before evaluating; the breakeven of a family below the hurdle **is** 0.0 by construction |
+| Survives, `iters = 8` | **9** |
+| Survives, shipped `iters = 40` | **41 — 89% of Stage 1 for a statistic containing no selection** |
+
+**The seat intends to spend 9, survive-path only, and it does not fit: §15's Stage 1 sums to
+exactly 47, zero slack.** Two shortcuts refused: narrowing the bracket is **"the I-037 operation
+performed on the instrument built to avoid it"**; reconstructing `net(δ)` outside the engine
+**breaches A2.** Routed to **C13(j)**, **I-151.** Asymmetry flagged for Validation: `gates.py`'s own
+`breakeven_cost_multiplier` bisection **logs nothing**, and no ruling says whether the carry one
+counts toward `N`.
+
+**5 · C5 — the CIO's reading was right about one part of three, and the part it missed is the
+substantive one.**
+
+**Haircutting the return series is a no-op.** Sharpe, `t`, DSR, PBO, WFE, subperiod positivity and
+P&L concentration are **all invariant to a positive scalar.** Only haircutting the *expected return*
+halves `t`. **So C5 is a choice between a 2× hurdle and nothing** — and §19.3's order-20 composite
+rests entirely on the branch **nobody has ruled.**
+
+**Ratification is the Principal's, not Validation's**, and the seat's reasoning is this firm's own
+doctrine turned one clause over: **"a ruling that doubles the bar without touching the constant is a
+§4 reserved act wearing an interpretation's clothes."** `T_STAT_HURDLE = 3.0` never moves while the
+effective bar moves between 3.0 and 6.0. **Escalated, not resolved. I-152.**
+
+**And a ruling without executor, cadence and artifact is class (c) — I-143's permissive branch
+survives it.** The labeling mandate applied to the remedy for the labeling mandate's own finding.
+
+**6 · The blocking set was merging two kinds of block, and is now written separately.**
+**Seal-blocking: C2 · C7 · C8 · C11.** **Verdict-blocking: C3 · C5 — and by §20's own column also
+C4 and C10**, which the six-item framing dropped. The CIO's own S3-D-006 brief proposed the merged
+six-item form and the seat **found otherwise on form**, correctly.
+
+**7 · The sweep: 24 dated clauses. 2 evaluated by code. 3 class (b). 19 evaluated by a reader
+noticing. 15 carry a premise false today** — thirteen of them because the document was drafted
+against a same-day seal on 2026-07-28 that §20.1 abandoned on 2026-08-04 and never reconciled.
+
+**§20.1's "Realistic seal date: on or before sprint close, 2026-08-11" is today**, with C2, C7, C8
+and C11 open. Struck, replaced by a condition. **§11.1's 6.571-year span is an understatement at any
+later `C` — the one stale date running *for* the family, which is why four revisions passed over
+it.** The CIO records that asymmetry: **stale dates that cost the firm get found; stale dates that
+favour it survive four passes.**
+
+**8 · I-154 — the conforming-pass class, fifth instance, and the first that defeats its own audit.**
+R23's row lists §11.4 among its changed clauses. **§11.4 was never changed** — it still carries
+`2026-07-28` and *"the seal is intended for today."* **An auditor checking R23 against its own list
+would tick §11.4 as done.**
+
+**9 · Verified** [measured]: registry **0 hypotheses / 0 trials / 1 event**; payload **untouched
+this dispatch**, `trial_budget = 47`, `n_inherited = 7`; `harness/`, `VALIDATION-*` and `book/`
+untouched; `test_h7`/`h8` not approached; no seal, no registration.
+
+**10 · Budget.** **6 of 30 · 5 of 12 Opus** (5th of 9 free). **4 free remain and 4 are committed** —
+C2, the dated-clause evaluator spec, the leakage sentinel, the registry read-only spec. **Zero
+uncommitted free Opus.** Insurance 2 of 2; DA reserve sealed. §5 dead-man: **6 invocations remain.**
+
+**Review date:** on the Principal's rulings on I-153 and I-152.

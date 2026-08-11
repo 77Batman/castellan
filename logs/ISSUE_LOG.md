@@ -4165,3 +4165,221 @@ labeled class (c) rather than presented as protection.
 **Resolution:** open — **HIGH, before the Principal.** Does not block Sprint 3's current path;
 **does block any claim that the registry and vault are write-protected.**
 **Pattern tag:** `control-covers-the-unused-path` · `label-does-not-mean-what-it-says`
+
+---
+
+## I-150 · 2026-08-11 · "Six stale sites" is a cardinal that has never agreed with any roster written beside it — and it has now propagated into a CLOSED log entry and into a dispatch · Severity: LOW-MEDIUM · Owner: director-of-research
+
+**Description.** **I-140 states *"six sites."*** Its own roster, in the same sentence, names **seven**
+groups: the recommendation box's breakeven row · §12.1's quoted preset · §12.2 / §12.3 / §12.6's
+defects (a), (b) and (e) · §15's step 0 · §16's cost-robustness row · §17's risk 1 · §14's condition
+precedent. **R-005's R26 "clause changed" column names eleven.** **The set R-006 actually had to
+touch is fourteen** [measured — `DIR-RESTATE-001` §12.2, enumerated site by site], of which **three
+are inside §21's sealed field block and were not reached at R-005 at all** (see I-155's sibling
+finding recorded at `PREREG-002` R29(b)).
+
+**It has propagated twice.** I-034's CLOSED entry reads *"Six stale document sites corrected at
+R-006, pre-seal."* **Dispatch S3-D-006's Task 1 heading reads *"R-006 corrects all six stale
+sites."*** A cardinal wrong at its origin is now in the firm's index and in its instructions.
+
+**This is I-141's defect class for the fourth time** — R8(c) (three surviving instances of a
+superseded budget), R22 (§15's step table summing to 83 against 79), R25 (§10.10's 4/3/9 against its
+own 4/4/8), and now this. **Two denominators, one number.**
+
+**Rated LOW-MEDIUM.** LOW because **no consequence follows from the cardinal**: the roster is what
+anyone acts on and every roster written has been complete or nearly so. **Not lower, because it
+propagated into a closed Issue Log entry and into a dispatch**, which is exactly the escape route
+I-141 was rated MEDIUM for.
+
+**Resolution:** **DISCHARGED at `PREREG-002` R-006 (R29, R29(b))** — fourteen sites corrected and
+enumerated. **The cardinal in I-140 and in I-034's closure text is left standing as the record and is
+corrected here rather than edited there**, because rewriting a closed entry to match a later count is
+the I-046 error inverted.
+**Pattern tag:** `count-disagrees-with-its-own-roster` · `two-denominators-one-number` · `propagated-before-measured`
+
+---
+
+## I-151 · 2026-08-11 · House rule 5's instrument costs between 0 and 42 logged trials, not the "one trial" this firm has asserted three times — and `PREREG-002` Stage 1 sums to exactly 47 with zero slack · Severity: MEDIUM · Owner: director-of-research (document); quant-validation (C13(j) ruling)
+
+**Description.** **I-140 records, `PREREG-002` R-005 repeats, and dispatch S3-D-006 restates:
+*"one trial inside Stage 1's 47 discharges house rule 5."*** The instrument was measured this
+session and the figure is wrong.
+
+`carry.carry_breakeven_bps_annual(net_returns_at_shift, bracket=(0.0, 2000.0), iters=40)`
+[measured — `harness/castellan/carry.py:81–123`] takes a **callable**, not a return series, and
+evaluates it **once at `bracket[0]` (`:107`), once at `bracket[1]` (`:113`), and once per bisection
+step (`:116–122`)** — **42 evaluations at the shipped default.** The harness's **own sanctioned usage
+pattern**, T-18 at `harness/tests/test_carry_accounting.py:580–592`, implements the callable as a
+**`run_backtest` call per shift**, and `run_backtest` calls `registry.log_trial` unconditionally
+(`engine.py:248`) [both measured]. **Forty-two rows in `trials`, each feeding `fam.n_trials`, each
+deflating DSR and raising MinBTL — for a statistic that contains no selection of any kind.**
+
+**The honest cost is a schedule, not a scalar:**
+
+| Path | Trials | Why |
+|---|---:|---|
+| **F-002 fires** (the sponsor's pre-registered expectation, §19.3) | **0** | `t_lo < hurdle` returns `lo` at `:111–112` before evaluating anything else; the breakeven of a family below the hurdle **is** 0.0 bps/yr by construction, on a δ=0 series step 3 already logged |
+| **F-002 survives, `iters = 8`** | **9** | resolution `2000 / 2⁸` = 7.8 bps/yr against a carry of 11.86% / 14.07% [cited — `DATA-INGEST-002` §4] |
+| **F-002 survives, shipped `iters = 40`** | **41** | resolution `2000 / 2⁴⁰` — **absurd precision bought with 89% of the authorized budget** |
+
+**And it does not fit.** `PREREG-002` §15's Stage 1 line items sum to **exactly 47** —
+`2 + 1 + 2 + 2 + 5 + 25 + 10` — **zero slack.** **A seat following the document's own instruction
+would blow the budget the document was written to protect.**
+
+**Two available shortcuts are named and refused by the sponsor rather than taken.** **(1) Narrowing
+the bracket** — `carry_breakeven_bps_annual` returns the **bracket endpoint** when the root lies
+outside it (`:111–115`), `VALIDATION-SPEC-002` §1286 records it doing exactly that once already, and
+narrowing to save trials is **the I-037 operation performed on the instrument built to avoid it.**
+**(2) Reconstructing `net(δ)` arithmetically outside the engine** — the shift is a per-bar constant,
+so it is recoverable from one run's positions at **zero trials and in direct breach of A2.**
+
+**A structural asymmetry worth Validation's attention, recorded rather than argued.** `gates.py`'s
+own `breakeven_cost_multiplier` bisection runs **inside `evaluate_gate1` and logs nothing**. **The
+firm has two breakeven instruments with opposite trial-accounting behaviour, and nothing in
+`VALIDATION-RULING-003` addresses whether the carry one's evaluations count toward `N`** [measured —
+searched].
+
+**Rated MEDIUM.** It is **permissive in the sense that matters** — a document telling a sponsor a
+mandatory statistic costs 1 when it costs 9 to 42 is a budget that will be blown by a seat following
+instructions — and it is closable by a single C2-side ruling already queued.
+
+**Resolution:** open — **routed to C2's intake as C13(j)**, with three exits named: fund the 9 from
+Stage 2's contingent 32 (the sponsor's stated preference, untaken); rule that a monotone reporting
+statistic containing no selection does not deflate DSR; or accept `iters ≤ 3` at 250 bps/yr
+resolution, which the sponsor regards as a number that cannot discriminate. **Document conformance
+DISCHARGED at `PREREG-002` R-006 (R30)** — recommendation box, new §15 step 3b, §19.2, and §21's
+`success_criteria`.
+**Pattern tag:** `asserted-cost-was-never-measured` · `sanctioned-usage-is-the-expensive-one` · `cheaper-before-the-freeze`
+
+---
+
+## I-152 · 2026-08-11 · C5 is a choice between a 2× Gate 1 hurdle and a no-op, and its ruling is in three parts of which only the first is Validation's · Severity: MEDIUM · Owner: quant-validation (part 1, part 3); **the Principal (part 2)**
+
+**Description.** Sizes and decomposes the ruling **I-143** routes to C5. The Principal has ruled that
+`funding-carry-conditioning-002` **may not be evaluated at Gate 1 and that no PROCEED may be reported
+until C5 is ruled** — *"a path to half the Charter's bar existing quietly is exactly what the
+relabeling mandate existed to surface, and its first substantive yield gets a lock, not a footnote."*
+
+**The finding is stronger than "the haircut is unenforced": one of the three natural readings of
+§4.6 is mathematically inert.**
+
+| Reading | Operation | Effect on Gate 1's `t ≥ 3.0` |
+|---|---|---|
+| **(i) haircut the return series** | `r → 0.5·r` | **NONE.** Sharpe, `t`, DSR, PBO, WFE, subperiod positivity and P&L concentration are **all invariant to a positive scalar** [inferred — from the definitions]. Only capacity and cost-robustness move, because costs do not scale with the multiplier |
+| **(ii) haircut the expected return** | `μ → 0.5·μ`, `σ` as measured | **`t` halves.** Effective hurdle **6.0** — `PREREG-002` §5.4's reading |
+| **(iii) haircut the computed Sharpe** | `SR → 0.5·SR` post hoc | as (ii) for the Sharpe criterion; **undefined** for `t` and for DSR's benchmark |
+
+**C5 is therefore not a choice among three shades of one control. It is a choice between a 2× hurdle
+and nothing**, and `PREREG-002` §19.3's order-20 composite (`3.0 × 2 × 3.3`) rests entirely on the
+branch being (ii).
+
+**The three parts, and the second is not Validation's to give.**
+
+1. **The point of application — Validation's**, final short of the Principal. Part IV is Validation's.
+2. **The ratification — THE PRINCIPAL'S.** Either ruling moves the bar a family must clear between
+   **3.0 and 6.0 while `T_STAT_HURDLE = 3.0` never moves.** Charter §4 reserves *"any change to the
+   Gate thresholds in Part IV"* to the Principal, in writing. **A ruling that changes the effective
+   bar by 2× while leaving the literal constant untouched is a §4 reserved act wearing an
+   interpretation's clothes** — the Principal's own 2026-08-11 doctrine (*"a condition precedent with
+   a date is a kill condition wearing different clothes"*) applied one clause over. **Escalated under
+   house rule 7 rather than resolved.**
+3. **The executor — without which part 1 changes nothing.** `published_signal_haircut_applied = 0.50`
+   has **zero non-`registry.py` consumers** and **no haircut computation exists anywhere in the
+   harness** [measured — I-134]. **A ruling naming a point of application and no executor is class (c)
+   and leaves I-143's permissive branch exactly where it is.** C5 discharges only on a ruling carrying
+   **executor, cadence and artifact**.
+
+**A finding of form, recorded because it is the shape of error that produced I-140.** The blocking
+set *"C2, C3, C5, C7, C8, C11"* **merges two different kinds of block.** C2, C7, C8 and C11 block
+**sealing**; C3 and C5 block the **verdict**, and by §20's own column so do **C4** and **C10**, which
+the six-item framing drops. `PREREG-002` R-005's own seal-readiness block already listed C3 — *"Blocking
+on Gate 1, not on sealing"* — among *"the same five open and blocking"* seal conditions.
+
+**Rated MEDIUM**, inheriting I-143's rating: permissive, at the family's largest acknowledged hurdle,
+closable by one ruling already queued.
+
+**Resolution:** open. **C5's blocking form written into `PREREG-002` R-006 (R31, R35)** as
+**BLOCKING ON GATE 1 EVALUATION AND ON ANY REPORTED VERDICT, ABSOLUTELY**, with the three-part
+structure and the §4 escalation on the face of §20 and of the seal-readiness block. **Part 2 is
+before the Principal.**
+**Pattern tag:** `sealed-is-not-enforced` · `interpretation-that-is-a-threshold-change` · `two-kinds-of-block-in-one-list`
+
+---
+
+## I-153 · 2026-08-11 · `PREREG-002`'s `forward_kill_condition` clause 5 terminates the family with CERTAINTY as drafted — a kill condition written to be undefeatable had become one that cannot be survived · Severity: **HIGH** · Owner: director-of-research (conformance, done at R-006); quant-validation (C13(k) ruling)
+
+**Description.** **The second instance of I-140's class, found by the dated-clause sweep the
+Principal ordered, and it is strictly worse than the first.**
+
+`PREREG-002` §21's `forward_kill_condition` — the string hashed into `prereg_sha256` — contains two
+sentences in direct contradiction:
+
+> **Opening:** *"Observation date = `C + 187 days`… (Drafted against an intended `C` = 2026-07-28,
+> giving 2027-01-31; §20.1 recommends NOT sealing that day, so the executed value is whatever
+> `C + 187 days` resolves to and **the DRAFTED DATE IS NOT BINDING — the formula is**.)"*
+>
+> **Clause 5:** *"**SILENCE IS A KILL** — if the computation is not performed **on 2027-01-31** for
+> ANY reason … **the family is killed by default.**"*
+
+**Read as sealed, clause 5 terminates this family with certainty.** The observation date the field
+itself schedules is `C + 187 days`; **at any seal after 2026-07-28 that date falls later than
+2027-01-31.** On 2027-01-31 the computation will not have been performed — **it is not due** — and
+clause 5 fires: **registry TERMINATED, no further trials, no Gate 1 submission ever, automatic, not
+appealable to the CIO.** Two further `2027-01-31` literals in the same field (*"over `[C,
+2027-01-31]`"*, *"restated after 2027-01-31"*) carry the same false premise.
+
+**Why HIGH, and why worse than I-140 on two heads.** **I-140's condition precedent DOWNGRADED** the
+family to ADMITTED-AS-EXPLORATORY; **this TERMINATES it.** **I-140's clause fired on a premise that
+HAPPENED to be false; this one fires on a premise that CANNOT BE SATISFIED.** **P7 would have made it
+permanent on the day of the seal.**
+
+**And nothing evaluates it.** I-135 stands: no harness path evaluates a kill condition on any date,
+for any family, and for a FORWARD classification the field is not even presence-checked [measured].
+It is **class (b)** — executor the Principal, cadence the weekly Friday ritual — **and a Principal
+executing it correctly, reading the sealed text, would find the family dead.**
+
+**A second, separable defect inside the same clause.** `PREREG-002` §14's prose stated a **different
+rule** from the field's: *"the date is fixed and does not move… **if the seal slips, the window
+shortens**."* Under it the window is `[C, 2027-01-31]` and shrinks with slippage — **at a seal on
+2026-08-12, 172 days against the 187 that KC-002 clause (b)'s 30-conditioning-day threshold was
+calibrated on, and against the field's own stated basis of *"~184 daily bars and ~552 funding
+prints."*** **A kill condition mechanically tightened by scheduling rather than by design.**
+
+**Resolution:** **conformance DISCHARGED at `PREREG-002` R-006 (R32, R32(b), R33)** — the three field
+literals and §14's prose conformed to `C + 187 days`, the direction fixed by R-004's payload rule
+(*"anywhere this document's prose and that payload could diverge, the payload is what gets passed to
+`open_hypothesis`"*). **THE CONFORMANCE RUNS IN THE FAMILY'S FAVOUR — it removes a certain kill — and
+is therefore NOT the sponsor's to ratify. Routed to C2's intake as C13(k): Validation may refuse it
+and require the literal `2027-01-31` sealed as drafted**, in which case the family accepts the
+shortened window and the sponsor writes the KILL memo on the day.
+**Pattern tag:** `dated-clause-with-a-false-premise` · `kill-condition-that-cannot-be-survived` · `repair-runs-for-the-sponsor` · `cheaper-before-the-freeze`
+
+---
+
+## I-154 · 2026-08-11 · `PREREG-002` R23 named §11.4 as a changed clause and never reached it — the first conforming-pass miss where the revision row names the site it failed to touch · Severity: MEDIUM · Owner: director-of-research
+
+**Description.** `PREREG-002` R-004's **R23** row lists its changed clauses as ***"§11.4; §21
+`forward_window_start`."*** **§21 was changed. §11.4 was not.** Its R3 table stood un-struck until
+2026-08-11 reading:
+
+> `forward_window_start` | **`2026-07-28`** (= `C`; **the seal is intended for today**)
+> `forward_kill_condition` | KC-002, §14, in full. Observation date **2027-01-31**, **absolute**
+
+**Both premises are false**, and the parenthesis *"the seal is intended for today"* **has been false
+since 2026-08-04** — which is R23's own stated reason for striking the identical literal in §21. The
+second row carries the observation-date literal that **I-153** has now found to make clause 5 fire
+with certainty.
+
+**The fifth instance of `conforming-pass-did-not-reach-every-instance`** — R8(c), R22, R25, I-140, and
+now this — **and the first in which a revision row NAMES the site it failed to reach.** That is what
+makes it worse than the four before it: **a reader auditing R23 against its own clause list would tick
+§11.4 as done.** The four prior instances were silent misses; this one is a false positive in the
+document's own audit trail.
+
+**Rated MEDIUM**, on I-136's and I-141's precedent for the identical class. **Not LOW** because the
+row is an *attestation* that the site was reached, and because one of the two stale values is
+load-bearing for I-153.
+
+**Resolution:** **DISCHARGED at `PREREG-002` R-006 (R33)**, both rows, with the finding recorded
+beneath the table rather than silently conformed.
+**Pattern tag:** `conforming-pass-did-not-reach-every-instance` · `revision-row-attests-a-site-it-missed` · `cheaper-before-the-freeze`
