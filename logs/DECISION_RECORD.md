@@ -3767,3 +3767,87 @@ including the cross-session `S3-D-005` key collision, which the CIO yielded. No 
 2 of 2 intact; DA reserve sealed. §5 dead-man: **7 invocations remain.** R-006 in flight.
 
 **Review date:** on the Principal's ruling on I-095, and on R-006's return.
+
+---
+
+## S3-D-009 · 2026-08-11 · I-095 sustained · the fix moves down a layer · doctrine named at §4.7.3
+
+**1 · I-095 sustained, and the status line is corrected first.** The `f54f9b9` line now reads what
+the commit actually bought: *"vault/registry denies cover the Write/Edit tool path only; the
+`python3`/`sqlite3` path — the only path anything real uses — is ungoverned by the permission
+layer."* **The protection a reader inferred does not exist, and the file now says so.**
+
+**2 · The durable fix moves down a layer, and the Principal's reasoning is the part that
+generalizes.** The permission layer **cannot** aim at this: `Bash(python3:*)` is how the harness
+legitimately works, and *"python3 except when it touches the registry"* is **classification wearing
+enumeration's clothes.**
+
+So the registry and the vault **defend themselves in code, class (a)**: `registry.py` and the vault
+open **read-only by default (SQLite `mode=ro`)**, writes requiring an **explicit per-invocation
+grant** — an environment token or constructor flag the dispatch brief supplies. **Write authority
+becomes something the CIO grants per task and the record shows.**
+
+The Principal names its lineage: **this is Sprint 2's external-state policy — read-only default,
+write-per-dispatch, sanctioned migrations — finally landing in its correct home.** CASE-3's rule,
+arriving where it always belonged.
+
+**3 · SEQUENCING — the CIO's call, and it holds the fix rather than parallelizing it.**
+
+The bound is *"before first trials log"* — **objective 2 is the deadline, not the seal.** Trials
+follow the seal, which follows C2 and C3: **at least three dispatches away. There is no schedule
+pressure**, and therefore no reason to run a second long Opus dispatch beside R-006, which is in
+flight.
+
+**This is the third time this sprint the CIO has declined a defensible parallel Opus dispatch**, on
+the entry-14 finding. Recorded again because the value of an audit finding is whether it changes
+behaviour after the sprint that produced it — and **the honest test is declining when parallelizing
+would be convenient, not when it would be reckless.** §2.2's headroom note is again absent from this
+ruling; headroom is **UNKNOWN**, which is a second independent reason.
+
+**Order:** R-006 returns → **registry/vault read-only spec** (Validation, red-first) → C2 → C3 →
+seal → implementation lands → **then** first trials.
+
+**4 · Opus arithmetic, stated because it is now the binding constraint.** **9 free, 4 spent, 5
+remaining.** Committed: **C2**, the **dated-clause evaluator spec**, the **leakage sentinel**, and
+now the **registry read-only spec** — **four of the five.** DA reserve holds C3.
+
+**One free Opus unit remains for contingency and for every Gate 1 evaluation dispatch objectives 2
+and 3 will require.** The insurance (2) is reserved against terminations and is **not** working
+capacity. **The CIO flags now, not at close, that Sprint 3's objectives 2 and 3 are not obviously
+fundable on the remaining tier**, and will bring a re-plan rather than discover it.
+
+**5 · The version floor reclassified honestly, and it is a demotion the CIO endorses.** No key in
+the committed file pins a version, so **"floor 2.1.227" is a class-(c) declared commitment verified
+manually (`claude doctor`), not a control.** It upgrades to (a) only if cycle 2 finds a real pinning
+mechanism. **G-1 unchanged: user scope, unverifiable from the firm's side, correctly unclaimed.**
+
+**Both now sit in the Friday ritual** — `STANDING-ORDER-002` §6 extended to **four items**: merge,
+dated-clause review, **I-095 gap review** (class (c) until the code fix lands), and **version-floor
+verification.**
+
+**6 · Hardening-doc reference closed, with one correction.** The ruling cites *"fdc87da's
+predecessor"*; **`fdc87da` is not an object in this repository** [measured — `git cat-file -e`
+fails]. The document is `ops/HARDENING-2026-08-14.md`, carried in **`fdc87ba`**, which the CIO
+verified at S3-D-007. **The substance resolves and the hash in the ruling is a transposition.**
+Recorded because this firm has spent two sprints on references that do not resolve — I-059's
+dangling citations, I-120, and the fourth instance that nearly cost the family.
+
+**7 · The convergence is countersigned as doctrine and has a name, now at `reference/GATES.md`
+§4.7.3: *put the control where the machine reads, not where the reader infers.*** Four domains —
+computed over narrated, registered over described, credentialed over instructed, enumerated over
+classified.
+
+**I-095 is recorded there as the doctrine's negative print**: stated correctly, implemented one
+layer off. **The rule was enumerated, deterministic, correctly configured, and pointed at nobody.**
+The separating test is written into §4.7.3 and is not *"is this control deterministic?"* but
+**"name the path a real actor would take, and show this control on it."** A control that is
+deterministic about the wrong path is, from the record, indistinguishable from one that works.
+
+**Placed in `GATES.md` rather than the decision record**, per §7.3's promotion path — **the doctrine
+outlives the order that produced it.** The casebook is directed to hold §4.7.3 and I-095 **together
+at next harvest**: a doctrine and its own near-miss are worth more paired than apart.
+
+**8 · Budget.** **5 of 30 · 4 of 12 Opus**, unchanged. Insurance 2 of 2; DA reserve sealed. §5
+dead-man: **7 invocations remain.** R-006 in flight.
+
+**Review date:** on R-006's return.
