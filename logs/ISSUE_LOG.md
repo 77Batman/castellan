@@ -4106,3 +4106,62 @@ house rule 5.**
 **Resolution:** **CLOSED**, satisfied 2026-07-29. **Condition precedent C1 is discharged** and does
 not fire. Six stale document sites corrected at R-006, pre-seal.
 **Pattern tag:** `closure-announced-never-propagated` · `dated-consequence`
+
+---
+
+## I-095 · 2026-08-11 · The vault and registry write denies cover the tool path nobody uses and leave the path everybody uses · Severity: HIGH · Owner: CIO → Principal
+
+**Description.** `f54f9b9` adds four deny rules, verified present in `HEAD` [measured]:
+
+```
+"Write(./book/vaults/**)", "Edit(./book/vaults/**)",
+"Write(./book/registry.db)", "Edit(./book/registry.db)"
+```
+
+**They deny the `Write` and `Edit` tools. Nothing in this firm has ever written the registry or the
+vault with `Write` or `Edit`.**
+
+Every registry write the firm performs goes through **Python** — `TrialRegistry.open_hypothesis`,
+`log_trial`, `log_event`, `_binding_hash`. Every vault write goes through **`HoldoutVault.lock()`**.
+Both are invoked as `python3 …`. And the same file's allow-list carries, unqualified:
+
+```
+"Bash(python:*)", "Bash(python3:*)", "Bash(sqlite3:*)",
+"Bash(cp:*)", "Bash(mv:*)", "Bash(touch:*)"
+```
+
+**So the control blocks a path that was never the threat and leaves the only path that is.** The
+denies are **live and correctly configured**; they are **misaimed.** The Principal's status line
+*"vault/registry write denies live"* is true as stated and does not describe the protection a
+reader would infer from it.
+
+**This is the firm's own recurring defect, arriving in the control plane.** I-022 annotated where
+it should have failed. I-053 stated a rule the registry refuses. I-105 described a stage nothing
+registers. **I-095 denies a tool nobody uses.** The `GATES.md` §4.7.2 test — *name the field the
+harness reads to enforce it* — applied here reads: **name the path the deny actually intercepts.**
+For registry and vault writes, it intercepts none.
+
+**What the CIO did NOT do, and why.** **It did not test the gap.** Demonstrating it means writing to
+`book/registry.db` or `book/vaults/` through `python3` — which would violate the 0-hypotheses /
+0-trials state every dispatch this sprint has been required to preserve, and would mean **routing
+around a deny to prove the deny does not work.** D-003's standing rule is *queue it, don't work
+around it*, and that rule does not suspend itself when the target is the rule's own coverage.
+**The finding is stated from configuration, which is unambiguous, and is marked `[measured]` on the
+config and `[inferred]` on the exploit.**
+
+**Nothing is presently at risk.** The registry holds **0 hypotheses / 0 trials**; `book/vaults/`
+holds only `.gitkeep`; no seat has attempted such a write and none has had reason to. **The
+exposure is prospective and begins the moment the registry stops being empty — which is Sprint 3's
+second objective.**
+
+**Remedy is the Principal's, and the CIO offers shape without deciding it:** the interceptable
+surface for a Bash-path write is the command, not the file, so a deny would have to name
+`sqlite3` against those paths and some form of Python guard — **and a Python guard that a seat can
+route around by writing its own file is not a control either.** The honest alternatives may be a
+pre-tool hook, or accepting that **registry integrity is enforced by the harness's own append-only
+discipline and `prereg_sha256`, not by the permission layer** — in which case the deny should be
+labeled class (c) rather than presented as protection.
+
+**Resolution:** open — **HIGH, before the Principal.** Does not block Sprint 3's current path;
+**does block any claim that the registry and vault are write-protected.**
+**Pattern tag:** `control-covers-the-unused-path` · `label-does-not-mean-what-it-says`

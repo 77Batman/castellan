@@ -3705,3 +3705,65 @@ Insurance 2 of 2 intact; DA reserve sealed. §5 dead-man: **7 invocations remain
 flight.
 
 **Review date:** on R-006's return, and on the settings hash.
+
+---
+
+## S3-D-008 · 2026-08-11 · Hardening verified · §4 INTERRUPT — I-095, the denies are misaimed
+
+**1 · `f54f9b9` verified in `HEAD`, pushed, `main` in sync with `origin/main`** [measured]. Four of
+five components check out exactly as reported.
+
+| Component | Verified |
+|---|---|
+| `disableAutoMode: "disable"` | **present** |
+| Vault / registry write denies | **present — all four, and see §2** |
+| `launchctl` / `git rm` allows | **absent from the project allow-list** (G-4 purge was local/user scope) |
+| G-1 `crossSessionInbound` | **user scope — outside this repo; the CIO cannot verify it and does not claim to.** Retest 08-17 stands |
+| **Version floor 2.1.227** | **NOT present as a key in `.claude/settings.json`.** Reported as *"(head, no-op)"*, so it may live at user scope or be enforced elsewhere — **but it is not in the file this commit touched, and the CIO records that rather than assuming** |
+
+**2 · §4 HARD INTERRUPT — I-095, HIGH. The vault and registry denies cover the tool path nobody
+uses and leave the path everybody uses.**
+
+The four rules deny **`Write` and `Edit`**. **Nothing in this firm has ever written the registry or
+the vault with `Write` or `Edit`.** Registry writes go through `TrialRegistry.open_hypothesis`,
+`log_trial`, `log_event`; vault writes through `HoldoutVault.lock()` — **all invoked as
+`python3`**, and the same file allows `Bash(python:*)`, `Bash(python3:*)`, `Bash(sqlite3:*)`,
+`cp`, `mv`, `touch`, unqualified.
+
+**The denies are live and correctly configured. They are misaimed.** The status line *"vault/registry
+write denies live"* is true as written and **does not describe the protection a reader infers from
+it.**
+
+**This is the firm's own recurring defect arriving in the control plane.** I-022 annotated where it
+should have failed; I-053 stated a rule the registry refuses; I-105 described a stage nothing
+registers. **I-095 denies a tool nobody uses.** §4.7.2's test, translated: **name the path the deny
+actually intercepts.** For these writes it intercepts none.
+
+**3 · The CIO did not test it, and the reason is the rule itself.** Demonstrating the gap means
+writing to `book/registry.db` or `book/vaults/` through `python3` — violating the 0/0 state every
+dispatch this sprint has been required to preserve, and **routing around a deny to prove the deny
+does not work.** D-003's standing rule is *queue it, don't work around it*, and **that rule does not
+suspend itself when the target is the rule's own coverage.** Filed from configuration, marked
+`[measured]` on the config and `[inferred]` on the exploit.
+
+**Nothing is presently at risk** — registry 0/0, vault `.gitkeep` only. **The exposure begins the
+moment the registry stops being empty, which is Sprint 3's second objective.**
+
+**4 · `disableAutoMode` retained — the doctrine is worth keeping and generalizes.** The Principal:
+**classifier nondeterminism in the control plane loses to enumerated rules.** Revisit if G-1 stays
+open at cycle 2.
+
+**That is `GATES.md` §4.7.2 applied to the permission layer** — a control exists where something
+deterministic reads it. **The firm has now made the same choice four times**: computed over
+narrated (A2), registered over described (I-105), credentials over instruction (A5), and enumerated
+over classified (this). **Four domains, one doctrine, and the CIO records the convergence because it
+is now the firm's most reliable predictor of which design will hold.**
+
+**5 · The `fdc87ba` provenance note and the `ops/watchtower/` boundary were recorded at S3-D-007**,
+including the cross-session `S3-D-005` key collision, which the CIO yielded. No re-recording needed.
+**The hardening-doc commit reference is still outstanding** and will be verified on arrival.
+
+**6 · Budget.** **5 of 30 · 4 of 12 Opus**, unchanged — this entry consumed no invocation. Insurance
+2 of 2 intact; DA reserve sealed. §5 dead-man: **7 invocations remain.** R-006 in flight.
+
+**Review date:** on the Principal's ruling on I-095, and on R-006's return.
