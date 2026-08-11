@@ -104,7 +104,11 @@ The Principal reviews: the **Friday Research Review**, the **Monthly Letter**, a
 **The weekly `[PRINCIPAL]` Friday ritual, alongside the Research Review**, now carries two items, each pasted to the record per `TEMPLATES.md` §7.9. **A skipped week is a skipped verification and is logged as such.**
 
 1. **Pull-and-merge** — summary of new / unchanged / RESTATED / exit code.
-2. **Kill-condition evaluation [NEW — 2026-08-10].** Every registered kill condition, every clause, evaluated against the store. **Added because no harness path evaluates a kill condition on any date, for any family** (I-135) — so KC-002, signature-required and carrying an absolute observation date, was enforced by nothing. The Principal: ***"'defeatable by not running it' cannot describe a signature-required clause."***
+2. **Dated-clause review [NEW — 2026-08-10; scope widened 2026-08-11].**
+
+   **Every dated clause the firm holds** — kill conditions, **condition precedents**, observation dates — evaluated against the store and against the repository. **Widened from kill conditions alone after I-140**, where a condition precedent with a 2026-08-11 deadline would have downgraded PREREG-002 to ADMITTED-AS-EXPLORATORY on a premise falsified twelve days earlier. The Principal's doctrine: ***"a condition precedent with a date is a kill condition wearing different clothes, and nothing evaluates it — same gap as I-133's KC finding."***
+
+   Original scope, retained: Every registered kill condition, every clause, evaluated against the store. **Added because no harness path evaluates a kill condition on any date, for any family** (I-135) — so KC-002, signature-required and carrying an absolute observation date, was enforced by nothing. The Principal: ***"'defeatable by not running it' cannot describe a signature-required clause."***
 
    **This is a class-(b) control under the R-005 labeling mandate and carries its three fields: executor the Principal, cadence weekly Friday, artifact the pasted evaluation.** It reverts to class (a) when Validation's harness kill-condition evaluator lands — read registered KC fields, evaluate every clause on invocation, **exit nonzero on any firing *or* on inability-to-evaluate**, per the exit-code pattern the merge script proved. Specced this sprint; Sonnet implements red-first.
 

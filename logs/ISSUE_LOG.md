@@ -4070,3 +4070,39 @@ argues up; it is closable by a **single C5 ruling already queued at intake**, wh
 (R28) at **both** points of reliance — §5.4 and §19.3 — rather than only at §11.6 where the haircut is
 declared.
 **Pattern tag:** `sealed-is-not-enforced` · `schema-without-computation` · `permissive-direction`
+
+---
+
+### I-034 · CLOSED · 2026-08-11 · satisfied 2026-07-29 · recorded on the Principal's I-140 ruling
+
+**Satisfaction date: 2026-07-29. Recording date: 2026-08-11. Discovery credit: R-005.** The record
+states the sequence rather than collapsing it, per the Principal's ruling: *"the satisfaction date
+is the work's date, evidenced; only the recording is tonight, and the record says so."*
+
+**This is not the I-046 inversion** the Director correctly refused when it declined to rewrite the
+haircut field. Nothing is backdated: the work's date is a measured fact, the recording's date is
+today, and both are stated.
+
+**Evidence** [measured, verified at source by the CIO 2026-08-10 and again from commit history]:
+commit **`875874f`, 2026-07-29**, message *"Ruling 003 implemented: carry accounting, 139/139.
+**Closes I-034**, I-037, I-039."* `costs.py` carries `CRYPTO_PERP_TAKER` (no funding term) and
+`CRYPTO_SPOT_TAKER`; `carry.py` exposes `carry_breakeven_bps_annual`; **25 carry tests pass.**
+
+**The finding inside the finding, and it is the fourth instance of I-092's class.** **The commit
+message itself announced the closure.** The work landed, the commit said *"Closes I-034"*, and the
+Issue Log entry read **"open — blocking execution of PREREG-002"** for **thirteen days** — while
+PREREG-002's §14 carried a condition precedent that would have downgraded the family to
+**ADMITTED-AS-EXPLORATORY, pre-declared ineligible for Gate 1, on 2026-08-11.**
+
+**A closure announced in a commit message and never propagated to the index nearly cost this firm
+its only family.** I-092 named the pattern; I-120 found a defect never written; I-094 found
+learnings with no index to reach. **This one had a dated consequence.**
+
+**Residual retained, not closed with it:** defect (d) — no `CostModel` field for liquidation risk —
+stands as **class (c) C-25** under R-005's register. The breakeven is **unstated, not
+unstateable**: `carry_breakeven_bps_annual` exists and **one trial inside Stage 1's 47 discharges
+house rule 5.**
+
+**Resolution:** **CLOSED**, satisfied 2026-07-29. **Condition precedent C1 is discharged** and does
+not fire. Six stale document sites corrected at R-006, pre-seal.
+**Pattern tag:** `closure-announced-never-propagated` · `dated-consequence`
