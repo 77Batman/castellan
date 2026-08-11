@@ -171,3 +171,41 @@ harness reads to enforce it. **If there is no such field, there is no limit.**
 is asserted rather than computed is not a control.** I-022 (a criterion that annotated instead of
 failing), I-053 (an escalation rule the registry refuses), I-105 (a stage the harness never
 reads), and 4.7.1's four-times-written inheritance rule are the same defect wearing four costumes.*
+
+---
+
+#### 4.7.3 · Put the control where the machine reads, not where the reader infers
+
+**Named as doctrine by the Principal, 2026-08-11 (S3-D-009), on a four-domain convergence.**
+
+The firm has made the same choice in four unrelated places, and the convergence is now its most
+reliable predictor of which design will hold:
+
+| Domain | Rejected | Adopted |
+|---|---|---|
+| Numbers | narrated | **computed** — A2, every figure through `run_backtest` |
+| Limits | described | **registered** — I-105, §4.7.2 |
+| Trading | instructed | **credentialed** — Charter A5, paper as a property of credentials |
+| Permissions | classified | **enumerated** — `disableAutoMode`, *"classifier nondeterminism in the control plane loses to enumerated rules"* |
+
+**One principle: a control exists where something deterministic reads it, and nowhere else.**
+
+**I-095 is this doctrine's negative print** — the doctrine stated correctly and the implementation
+landed **one layer off.** Vault and registry write denies were aimed at the `Write`/`Edit` tool
+path, which nothing in this firm has ever used, while the `python3`/`sqlite3` path that every real
+write uses stayed ungoverned. **The rule was enumerated, deterministic, correctly configured, and
+pointed at nobody.**
+
+**The test that separates the two:** not *"is this control deterministic?"* but **"name the path a
+real actor would take, and show this control on it."** A control that is deterministic about the
+wrong path is indistinguishable, from the record, from one that works.
+
+**Consequence for remedies, which is where I-095 was ultimately fixed:** when the control cannot be
+aimed at the real path from outside — `Bash(python3:*)` is how the harness legitimately works, and
+*"python3 except when it touches the registry"* is **classification wearing enumeration's clothes**
+— **the control moves down a layer into the thing being protected.** The registry and vault defend
+themselves in code, read-only by default, write authority granted per-invocation and visible in the
+record.
+
+*The casebook holds §4.7.3 and I-095 together: a doctrine and its own near-miss are worth more
+paired than apart.*

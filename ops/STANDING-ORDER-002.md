@@ -103,6 +103,9 @@ The Principal reviews: the **Friday Research Review**, the **Monthly Letter**, a
 
 **The weekly `[PRINCIPAL]` Friday ritual, alongside the Research Review**, now carries two items, each pasted to the record per `TEMPLATES.md` §7.9. **A skipped week is a skipped verification and is logged as such.**
 
+3. **I-095 gap review [NEW — 2026-08-11].** Until the registry/vault read-only-by-default fix lands, the `python3`/`sqlite3` write path is **ungoverned by the permission layer** and the gap is **class (c) — named in the record, reviewed here.** Confirm at each ritual that the registry and vault remain at their expected state and that no unsanctioned write has occurred. **Retires when the code-layer fix lands, which is bound to *before first trials log*, not to the seal.**
+4. **Version-floor verification [NEW — 2026-08-11].** No key in `.claude/settings.json` pins a version, so **"floor 2.1.227" is a class-(c) declared commitment, not a control.** Verified manually — `claude doctor` — at each ritual. **Upgrades to class (a) only if cycle 2 finds a real pinning mechanism.**
+
 1. **Pull-and-merge** — summary of new / unchanged / RESTATED / exit code.
 2. **Dated-clause review [NEW — 2026-08-10; scope widened 2026-08-11].**
 
