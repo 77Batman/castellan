@@ -3965,3 +3965,81 @@ C2, the dated-clause evaluator spec, the leakage sentinel, the registry read-onl
 uncommitted free Opus.** Insurance 2 of 2; DA reserve sealed. §5 dead-man: **6 invocations remain.**
 
 **Review date:** on the Principal's rulings on I-153 and I-152.
+
+---
+
+## S3-D-011 · 2026-08-12 · Re-plan adopted · slip ruled in advance · row 1 dispatched
+
+**1 · Re-plan adopted as delivered.** The consolidation approved **on its own test** — same owner,
+same reviewer, same implementer, same layer; *"two specs would have been ceremony."*
+
+**2 · The leakage-sentinel deferral carries a binding condition the CIO did not propose and now
+records as tighter than its own recommendation:**
+
+> **The sentinel lands before any family's first Gate 1 evaluation, whichever sprint that falls
+> in.** *"Its entire purpose is upstream of gate credibility, and deferring it past the gate would
+> convert a sequencing choice into a silent kill of the adoption."*
+
+**The CIO proposed a deferral by sprint; the Principal converted it to a deferral by event.** The
+difference matters: a sprint boundary is a date the firm can slide, and **an event boundary is one
+it cannot.** The watchtower adoption ledger keeps its +60d review regardless.
+
+**Interaction worth stating: the slip ruling and this condition are compatible only on the kill
+path.** If F-002 fires there is no Gate 1 evaluation and the sentinel has room. **If F-002 survives,
+objective 3 slips *and* Gate 1 evaluation moves to Sprint 4 — where the sentinel must land first.**
+The two constraints do not collide; they queue.
+
+**3 · THE SLIP IS RULED, VERBATIM, BEFORE ANY OUTCOME EXISTS:**
+
+> **If F-002 survives, or if C2 returns findings requiring a further revision, objective 3 slips to
+> Sprint 4 and the sprint closes on objectives 1 and 2.**
+
+The Principal's rationale, recorded because it names the discipline rather than the decision: *"the
+branch the tier cannot fund is the branch the document expects, and my own C5 ratification raised
+its probability — ruling the slip after that ratification, before any outcome exists, is the same
+pre-commitment discipline as KC-001's cut, applied to the schedule."*
+
+**And the standard the sprint will be judged against:** *"a sprint that ends with a sealed family
+and logged trials, having pre-declared that the verdict waits for funded evaluation, is an honest
+sprint. One that improvises at close is not."*
+
+**4 · The alternative declined, with the CIO's own reasoning adopted:** trading a known documentary
+defect for a chance at a verdict **inverts the fortnight's entire evidence** — I-140 and I-153 were
+each **one unread document from killing this family** — and **§11.1 is the one stale date running in
+the family's favour, which the asymmetry doctrine makes the most important to fix, not the safest to
+skip.**
+
+**5 · Accounting note carried into the close, stated now.** Under this plan the **DA reserve spends
+on C3** and **insurance stays termination-only**, so **one Opus termination on rows 1–4 consumes
+half the insurance and two end the sprint's Opus work outright.** Analysis/authoring split,
+pre-split sizing and the headroom protocol apply to **all four rows without exception.**
+
+**6 · Row 1 dispatched — the harness self-defence spec — and the CIO named a tension in the brief
+rather than discovering it.** The consolidation is *what paid for the re-plan*; §2.2's ~800-line
+pre-split, if it bites, would **price the merged dispatch as two and un-do the saving entirely.**
+The CIO projects under the threshold and **told the seat what to do if the projection is wrong**:
+scope to what fits, defer the remainder with a **named boundary**, and say which — **not truncate,
+not silently exceed.** *"A spec that is honest about its edge is worth more than one that covers
+everything badly."*
+
+**7 · The question the CIO added, and it is I-095's test turned on I-095's own remedy.** A seat that
+can run `python3` can set an environment variable. **If the write grant is an env token, the seat
+can mint its own** — I-103's *"the harness cannot authenticate anyone"* arriving in a new place.
+
+The brief requires the specification to **name the path a real actor would take and show the control
+on it**, and, if the honest answer is that the grant makes writes **deliberate and visible** rather
+than **prevented**, to **say exactly that, in those terms, in the spec.** **A remedy for a misaimed
+control that is itself described as more than it is would be I-095's successor** — and the CIO would
+rather ship a modest control described precisely than a strong-sounding one described loosely.
+
+**8 · Direction-blindness required by construction, not intention.** The Principal's mechanism for
+the stale-date asymmetry: every dated clause checked against its premise **regardless of whom the
+staleness serves.** The brief states the measured reason — **15 of 24 clauses carried false
+premises, and §11.1, the one running *for* the family, survived four passes** — and the test:
+**a checker a sponsor would be relieved to see pass is not direction-blind.**
+
+**9 · Budget.** **7 of 30 · 6 of 12 Opus.** **3 free remain against 3 committed rows** — conformance
+pass, C2, terminal-verdict memo. **Zero uncommitted free Opus.** Insurance 2 of 2; DA reserve sealed.
+§5 dead-man: **5 invocations remain.**
+
+**Review date:** on row 1's return.
