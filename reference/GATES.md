@@ -209,3 +209,41 @@ record.
 
 *The casebook holds §4.7.3 and I-095 together: a doctrine and its own near-miss are worth more
 paired than apart.*
+
+---
+
+#### 4.7.4 · Two constructions binding on every future harness control
+
+**Promoted to standing design doctrine by the Principal, 2026-08-12 (S3-D-013), from
+`VALIDATION-SPEC-004`. Placed here under §7.3's promotion path rather than left in the order, which
+expires.**
+
+**(i) The authority record is written by the act it authorizes.**
+
+> **"No ordering exists in which a write precedes the record of its authority."**
+
+The grant row in `write_grants` **is the first write performed under its own grant.** Not written
+before the work as an intention, not appended after as a log — **the record of authority and the
+first exercise of it are the same operation.** A control whose audit trail is a separate write can
+be defeated by the write that does not happen; this one cannot, because skipping the record means
+skipping the authority.
+
+**Test for a proposed control:** if the audit entry and the authorized act can fail independently,
+the audit is a hope. **Make them the same act or accept that you have a log, not a control.**
+
+**(ii) A control reports whether or not it fired.**
+
+> **"A control visible only when it fires is one nobody can confirm is running."**
+
+`evaluate_gate1` prints orphan count, chain integrity and chain head **on every invocation,
+including when all three are zero.** A control that is silent when clean is indistinguishable —
+from the record, and from every downstream reader — **from a control that has been switched off, has
+crashed, or was never wired in.** Silence is not evidence of health; it is absence of evidence, and
+this firm has spent two sprints learning the difference.
+
+**Test for a proposed control:** **name the output a reader sees on a clean run.** If there is none,
+the control cannot be confirmed to exist, and its clean runs and its non-runs are the same
+observation.
+
+*Both are §4.7.3's principle applied to the control's own reporting surface: **put the evidence
+where the machine writes it, not where the reader would have to infer it.***

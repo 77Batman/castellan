@@ -4144,3 +4144,70 @@ committed rows**: conformance pass, C2, terminal-verdict memo. Insurance 2 of 2;
 §5 dead-man: **5 invocations remain.**
 
 **Review date:** on the Principal's ruling on §13 and on the pricing call.
+
+---
+
+## S3-D-013 · 2026-08-12 · Pricing sustained with a ratchet · `f54f9b9` amended · two doctrines promoted
+
+**1 · Pricing SUSTAINED at one unit**, and the Principal names why the disclosure mattered as much
+as the answer: *"the disclosure pattern — ruled in own favour, offered for overrule, re-plan
+promised if overruled — is exactly what §3 asks of a self-interested call."*
+
+**A RATCHET ATTACHES, and the CIO records it as binding on itself:**
+
+> **The 857-vs-800 near-miss is recorded. The next projection that lands over threshold prices as
+> two, without appeal.** *"A sizing control whose projections keep grazing the line stops being
+> conservative, and the second data point decides that, not this one."*
+
+**This is the correct shape and the CIO would not have proposed it.** A single overrun is noise; a
+pattern of overruns is a projector biased toward the answer it wants. **The ratchet does not punish
+the first instance and removes the CIO's discretion on the second — which is where the bias would
+show.** It is in force from now.
+
+**2 · `f54f9b9`'s status line amended — the commit stands unrewritten per A3, and this entry is the
+correction it points to.** Adopted verbatim:
+
+> **The registry and vault are not write-protected.** The grant mechanism makes writes **deliberate,
+> typed, and attributable-by-declaration** — it **prevents** incidental, ungranted, and wrongly-classed
+> writes; it **detects but does not prevent** raw-path writes; **it does not authenticate the
+> declarant.**
+
+**This is the second correction to one status line**, and the Principal sets it as a standard rather
+than a fix: *"I-095's remedy surviving its own test because it says so is the standard every future
+control description is now held to."* **Every control this firm ships is now described by what it
+prevents, what it merely detects, and what it does not touch — in those three registers, or it is
+not described.**
+
+**3 · C13(k) confirmed UNDISCHARGED and routed.** Validation rules I-153's **instance** inside C2's
+absorbed scope at row 3, **with the alternative live for it to take** — requiring the drafted literal
+and accepting a shortened window. **The seal does not proceed past an unruled C13(k).** The spec
+built the checker for the class; **the instance ruling stays owed**, and the CIO has recorded it in
+the seal path so no later session reads a class-checker as an instance ruling.
+
+**4 · Two constructions promoted to standing design doctrine at `reference/GATES.md` §4.7.4**, under
+§7.3's promotion path — **placed in `GATES.md` rather than left in the order, which expires:**
+
+- **(i) The authority record is written by the act it authorizes.** *"No ordering exists in which a
+  write precedes the record of its authority."* **Test: if the audit entry and the authorized act
+  can fail independently, the audit is a hope.**
+- **(ii) A control reports whether or not it fired.** *"A control visible only when it fires is one
+  nobody can confirm is running."* **Test: name the output a reader sees on a clean run. If there is
+  none, the control's clean runs and its non-runs are the same observation.**
+
+The CIO added the two tests; the constructions are Validation's and the promotion is the
+Principal's. **Both are §4.7.3 applied to a control's own reporting surface** — put the evidence
+where the machine writes it, not where the reader would infer it.
+
+**5 · The five-mechanism direction-blindness accepted as the mechanization the ruling required**,
+with **§11.1's own stale span as its proof case.** **I-164 endorsed as filed:** exit 4 on first real
+run is the correct answer — *"nineteen uncovered clauses is the truth about an unregistered
+document, and the remedy is registration, not a gentler checker."*
+
+**6 · Row 2 dispatched** — the Director's conformance pass. **The ratchet was stated to the seat in
+its brief**, because a sizing rule the executing seat does not know about is a rule that cannot
+change its behaviour.
+
+**7 · Budget.** **8 of 30 · 7 of 12 Opus.** **2 free remain against 2 committed rows** — C2 and the
+terminal-verdict memo. Insurance 2 of 2; DA reserve sealed. §5 dead-man: **4 invocations remain.**
+
+**Review date:** on row 2's return.
