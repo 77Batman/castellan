@@ -4383,3 +4383,188 @@ load-bearing for I-153.
 **Resolution:** **DISCHARGED at `PREREG-002` R-006 (R33)**, both rows, with the finding recorded
 beneath the table rather than silently conformed.
 **Pattern tag:** `conforming-pass-did-not-reach-every-instance` · `revision-row-attests-a-site-it-missed` · `cheaper-before-the-freeze`
+
+---
+
+## I-160 · 2026-08-12 · The vault's write guard has one layer where the registry has two: a caller holding a vault object writes `vault_dir` around it and nothing refuses · Severity: MEDIUM · Owner: quant-validation → head-of-data-infra
+
+**Description.** `VALIDATION-SPEC-004` R-5 gives the registry a **backstop underneath its guard**:
+`self.conn` is a SQLite `mode=ro` handle, so a caller reaching around the API —
+`registry.conn.execute("INSERT …")` — is refused **by SQLite, at execute**, not by harness code the
+caller could decline to call. `test_rwg_06` grades exactly that.
+
+**The vault has no equivalent and cannot be given one at this layer.** Its payload writes are
+**files** — `spec.json`, `payload.enc`, `verifier.json`, `acquisition_meta.json` — and R-17's guard
+lives in the methods (`seal()`, `acquire_once()`). A caller holding a vault object can call
+`open(vault._payload_path, "wb")` and **the guard never runs, because the guard is in a method the
+caller declined to use.** There is no filesystem analogue of `mode=ro` that the process holding the
+object does not also hold the authority to undo.
+
+**What does exist, and it is weaker, and it is labelled as weaker.** The vault cannot log its
+`holdout_sealed` / `holdout_acquired` events without a registry grant (R-4). So a file written
+around the guard produces a vault whose **directory** and whose **state machine** disagree —
+`is_sealed()` reads True from the file while `state` reads UNSEALED from the events. **That
+divergence is detectable and Gate 1 already reads the event side.** It is detection after the fact,
+not refusal at the moment, and the specification says so rather than testing a prevention the design
+does not have (`test_rwg_19`'s docstring is explicit about declining to write that test).
+
+**Resolution:** open — **disclosed and accepted, not remedied.** Reopened only if a vault write
+outside the sanctioned methods is ever observed.
+**Pattern tag:** `control-weaker-than-its-sibling` · `asymmetry-disclosed-not-papered`
+
+---
+
+## I-161 · 2026-08-12 · I-103 recurs at the write grant: a seat that can run `python3` can mint its own token, so the remedy for a misaimed control is itself attributable only by declaration · Severity: MEDIUM · Owner: quant-validation → Principal (disclosure only)
+
+**Description.** I-095's remedy makes registry and vault writes require an **explicit
+per-invocation grant** — an environment token or constructor flag the dispatch supplies. **The
+dispatch brief named the problem before this seat did, and it is right: a seat that can run
+`python3` can set an environment variable.** `CASTELLAN_REGISTRY_WRITE` is mintable by exactly the
+actor it governs. This is **I-103** — *the harness cannot authenticate anyone* — arriving in a new
+place, and it is filed under a new number rather than folded into I-103 because a structural limit
+that reappears in a second control is a second disclosure, not a duplicate.
+
+**Stated in the terms `VALIDATION-SPEC-004` §4.4 uses, so no reader can infer more:**
+
+> **The grant makes registry and vault writes DELIBERATE, TYPED, and ATTRIBUTABLE-BY-DECLARATION.
+> It does not make them PREVENTED, and it does not AUTHENTICATE the declarant.**
+
+**What it is proof against** [measured against the specification]: accident; incidental writes by
+code that did not mean to write (three writes happen in `__init__` today, before any caller
+expresses an intention); reaching around the API from inside the process (R-5); a write of a class
+the open grant did not name (R-10); and a raw-path write remaining **invisible** (R-14's orphan
+`grant_id`, which the outside path does not know to set).
+
+**What it is not proof against:** a seat that decides to write, mints a token, takes a well-formed
+typed grant, and writes through the harness. **That write succeeds and its record reads correct.**
+
+**No fix is requested.** This seat does not think identity is worth building at this firm's scale
+and said so at I-103; repeating the finding without repeating the request is the point.
+
+**Resolution:** open — disclosure. **The consequence that is actionable is a labelling one:** when
+Seat 9's implementation lands, the `f54f9b9` status line needs its **second** correction, and
+`VALIDATION-SPEC-004` §13(1) supplies the exact text. **A remedy for a misaimed control that is
+itself described as more than it is would be I-095's successor.**
+**Pattern tag:** `structural-limit-disclosed` · `control-weaker-than-it-reads` · `i-103-recurrence`
+
+---
+
+## I-162 · 2026-08-12 · `--as-of` is a suppression vector on a checker specified to have none, and it is mitigated by marking rather than by prevention · Severity: MEDIUM · Owner: quant-validation
+
+**Description.** `VALIDATION-SPEC-004` E-17 forbids the dated-clause evaluator any parameter
+capable of silencing a finding, and enforces it with a signature test (`test_dce_17`). **`--as-of`
+is that parameter wearing a legitimate purpose's clothes:** an evaluator invoked with
+`--as-of 2020-01-01` returns `PENDING` for every clause in the family and exits 0.
+
+**It cannot simply be removed.** Deterministic tests need it, and a dated re-run of a past
+evaluation needs it.
+
+**Mitigation, and it is marking rather than prevention, which is why this is filed and not closed:**
+an as-of earlier than the family's seal date is **refused, exit 1**; any as-of other than wall-clock
+stamps **`AS-OF OVERRIDE`** on the header **and on every line** of the report; and `evaluate_gate1`
+never passes one. So a suppressed run is a run whose every line says it was suppressed. **A reader
+who does not read the report is not protected, and no clause can protect him.**
+
+**Resolution:** open — mitigated, not closed. Reviewed if an `AS-OF OVERRIDE` report is ever
+presented as an evaluation.
+**Pattern tag:** `suppression-vector-in-a-legitimate-parameter` · `mitigated-by-marking`
+
+---
+
+## I-163 · 2026-08-12 · The migration amnesty is permanent for `book/registry.db`'s one pre-existing event row, which will carry `grant_id IS NULL` for the life of the file · Severity: LOW · Owner: quant-validation → head-of-data-infra
+
+**Description.** `VALIDATION-SPEC-004` R-14 adds `grant_id` to `hypotheses`, `trials` and `events`;
+R-15 treats a NULL as an orphan and an orphan makes the whole Gate report INSUFFICIENT-DATA.
+**`book/registry.db` holds 1 event row that predates the column** [measured: 0 hypotheses / 0 trials
+/ 1 event] and can never carry a grant.
+
+R-16 handles it with a **watermark**: the `MIGRATION` grant records `MAX(rowid)` per table at
+migration time, rows at or below are exempt, and the watermark is printed on the face of every Gate
+report beside the orphan counts. **The amnesty is bounded to rows that already existed, recorded in
+the row that granted it, and non-re-issuable** — a second `MIGRATION` grant may not raise it, and
+`test_rwg_18` refuses one.
+
+**Why it is filed at all rather than treated as bookkeeping.** An amnesty that is not written down
+becomes a precedent, and *"the migration forgave it"* is the shape of sentence that later forgives
+something else. The watermark is the number that makes the forgiveness finite and auditable.
+
+**Resolution:** open until the migration lands, then closed with the watermark values recorded here.
+**Pattern tag:** `bounded-amnesty-recorded` · `pre-existing-row-cannot-satisfy-a-new-invariant`
+
+---
+
+## I-164 · 2026-08-12 · Under the dated-clause evaluator's coverage rule, 19 of PREREG-002's 24 dated clauses land UNCOVERED — the first real run against that family is an exit 4, and that is the correct answer · Severity: MEDIUM · Owner: director-of-research
+
+**Description.** `DIR-RESTATE-001` §12.5's sweep measured PREREG-002's dated clauses: **24 total, 2
+evaluated by code, 3 class (b) with a named executor, 19 evaluated by a reader noticing.**
+
+`VALIDATION-SPEC-004` E-6 requires every extracted date site to be **claimed by exactly one row of
+the `dated_clauses` table**; an unclaimed site returns `UNCOVERED`, which is an
+inability-to-evaluate verdict and exits **4**. Applied to PREREG-002 as it stands, **the nineteen
+become nineteen UNCOVERED findings and the family's first evaluation is a nonzero exit.**
+
+**This is recorded in advance so that when it happens it is not read as a regression, a harness
+defect, or a reason to relax E-6.** The evaluator is not failing; it is declining to certify
+nineteen clauses nobody has made evaluable, which is exactly what *"19 evaluated by a reader
+noticing"* means when it is written in code instead of in prose.
+
+**The sponsor's routes are two and both are cheap pre-seal:** register the clause in structured form
+(tag, field, offset, kind, `date_expr`, discharge event) or **strike it from the document**.
+`VALIDATION-SPEC-004` §9.2 refuses in advance the third route — a wildcard claim, a `covers_all`
+flag, or an offset range — and refuses it at the implementer's desk so the request arrives at
+Validation instead.
+
+**Resolution:** open — routed to the Director, actionable pre-seal only. Post-seal it becomes I-153's
+shape: an escalation, not a repair (E-15).
+**Pattern tag:** `evaluated-by-a-reader-noticing` · `cheaper-before-the-freeze` · `finding-recorded-before-it-fires`
+
+---
+
+## I-165 · 2026-08-12 · Two new conditions void a whole Gate report as INSUFFICIENT-DATA without appearing in §4.4's criterion table · Severity: MEDIUM · Owner: quant-validation → Principal (disclosure)
+
+**Description.** `VALIDATION-SPEC-004` attaches **two provenance preconditions** to the overall Gate
+verdict:
+
+- **R-15** — a registry with any orphan row, a broken grant chain, or an unclosed grant returns
+  **INSUFFICIENT-DATA as the OVERALL verdict**, not a FAIL of one criterion.
+- **E-24** — a family whose dated-clause evaluation exits nonzero returns the same.
+
+**Neither moves a number in Charter §4.2 and neither adds a row to §4.4's table.** R-15 applies the
+Charter's existing Seat 3 constraint — *"if N is unknown or unreconstructable, the verdict is
+automatically INSUFFICIENT-DATA, never PASS"* — to a newly-detectable way for N's provenance to be
+unknown: a registry that cannot account for how its rows arrived has not delivered an N, it has
+delivered an integer. E-24 applies the same reasoning to a family whose own dated clauses cannot be
+evaluated. **Both are inside this seat's mandate and are not §4 reserved acts.**
+
+**They are disclosed anyway, for one reason: R-15 will fire on a Friday.** One raw `sqlite3` INSERT
+by any seat, at any time, for any reason, voids **every subsequent Gate report** until it is
+explained. That is the correct rule and this seat is not softening it. It is also an operational
+consequence the firm has not lived with, and **a rule that voids a report should be visible before
+it costs a Gate evaluation rather than after.**
+
+**Resolution:** open — disclosure to the Principal at `VALIDATION-SPEC-004` §13(2). No decision
+requested; an objection, if there is one, is the Principal's to raise before implementation lands.
+**Pattern tag:** `precondition-outside-the-criterion-table` · `disclosed-before-it-bites`
+
+---
+
+## I-166 · 2026-08-12 · Two closed vocabularies in SPEC-004 will be hit by real work, and the first hit will arrive as schedule pressure · Severity: LOW · Owner: quant-validation
+
+**Description.** `VALIDATION-SPEC-004` closes two vocabularies: R-10's grant `reason`
+(`MIGRATION`, `REGISTER_HYPOTHESIS`, `LOG_TRIAL`, `LOG_EVENT`, `VAULT_SEAL`, `VAULT_ACQUIRE`,
+`GATE_VERDICT`) and E-5's clause `kind` (`OBSERVATION`, `DEADLINE`, `PRECEDENT`). An out-of-
+vocabulary value raises rather than passing through.
+
+**The route-back is specified** (§9.2: extending either is a specification act, Validation's, and
+*"do not add a member to make a script run"*). **What is filed here is not the gap but its timing:**
+the first hit will arrive mid-task, with a deadline, and the cheapest local action will be to add
+one string. That is the mechanism by which every closed vocabulary in this firm has historically
+opened.
+
+**Why LOW and not higher.** The failure is loud, typed, and cannot be reached accidentally; and a
+request to extend a vocabulary tells this seat that a write class or a clause class exists that the
+specification did not anticipate, **which is information, not an obstacle.**
+
+**Resolution:** open — standing. Every extension request is recorded here with the value requested
+and the ruling.
+**Pattern tag:** `closed-vocabulary-under-schedule-pressure` · `route-back-specified`

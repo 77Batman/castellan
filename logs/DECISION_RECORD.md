@@ -4043,3 +4043,104 @@ pass, C2, terminal-verdict memo. **Zero uncommitted free Opus.** Insurance 2 of 
 §5 dead-man: **5 invocations remain.**
 
 **Review date:** on row 1's return.
+
+---
+
+## S3-D-012 · 2026-08-12 · Row 1 lands · §4 INTERRUPT — SPEC-004 §13 · the pricing call, ruled
+
+**1 · §4 HARD INTERRUPT. Trigger: *"any finding by Validation… addressed to the Principal."***
+No HIGH filed — I-160 through I-166 are **5 MEDIUM, 2 LOW**, verified on disk. **§13 carries three
+items:**
+
+- **The `f54f9b9` status line needs a SECOND correction when this lands**, and the seat supplies the
+  exact text. **It is not "registry and vault are write-protected."** Its reason is the CIO's own
+  brief turned back on it: *a remedy for a misaimed control described as more than it is would be
+  I-095's successor.*
+- **R-15 has teeth that will be felt before they are appreciated:** **one orphan row voids every
+  subsequent Gate report**, and *"it will fire on a Friday."*
+- **I-153's C13(k) ruling is still owed by Validation and this document does not discharge it.**
+  *"It builds the checker for I-153's class; it does not rule I-153's instance, and it should not be
+  read as answered."* **The CIO records that explicitly so the seal path does not treat C13(k) as
+  cleared by a spec that never touched it.**
+
+**2 · THE PRICING CALL — ruled at ONE unit, and the CIO states that this runs in the firm's favour
+before defending it.**
+
+**The projection did not hold: 857 authored lines against ~800, a 7% overrun** — and it held that
+closely **only because the seat cut scope**, exactly as instructed. Uncut it projected past 990.
+
+**Ruling: one unit.** §2.2's text is *"any dispatch **projected** past ~800 authored lines is split
+into two invocations **at dispatch time** and priced as two."* **The rule binds the projection and
+the splitting decision at dispatch time. It is a sizing control whose purpose is termination
+insurance — limiting what a failure costs.** The dispatch completed. **Re-pricing delivered work
+serves no part of that purpose, and would cost a second unit from three, forcing objective 3's slip
+immediately and buying nothing.**
+
+**The test the CIO applied to itself before ruling** — the same one §4.7.3 sets — is whether the
+reading measures more of what the rule always claimed to measure. §2.2 claims to insure against
+termination loss; post-hoc billing insures against nothing. **The reading is principled rather than
+convenient, and "~800" tolerates 857 on its face.**
+
+**Flagged for reversal without argument.** This is a §2 budget matter decided in the firm's favour
+by the party the budget constrains. **If the Principal prices it as two, the CIO will not defend the
+ruling — it will re-plan.** `[would-have-asked]`.
+
+**3 · The scope cut, with its boundary named at clause E-25 — and what the seat refused to cut.**
+Deferred: **what a firing *does*** (termination, downgrade, notification are not evaluated, stored,
+or inferred from `kind`); the sponsor remediation workflow; and the **document-side clause surface**
+— *"a clause living only in prose is caught only insofar as a registry field carries it; the remedy
+is that clauses must be registered, not that a checker learns to read documents."* **That is §4.7.2
+applied to the checker's own scope.**
+
+**Refused: §4, the honest account.** *"A line budget eats that section first and it is what this
+dispatch was actually about."* **The seat protected the section a schedule would have eaten and said
+so.**
+
+**4 · The honest answer the CIO demanded, delivered in the terms demanded.** The grant:
+
+| | |
+|---|---|
+| **Prevents** | incidental writes (three occur in today's `__init__` before any caller expresses intent) · ungranted writes through any harness handle · writes of a class the grant did not name — **R-10 types the grant, so a `LOG_EVENT` grant cannot register a hypothesis** |
+| **Detects, does not prevent** | a raw-path write — leaves `grant_id IS NULL`, reported as an orphan |
+| **Does not prevent at all** | **a seat that decides to write.** A seat that can run `python3` can set the token and mint its own grant — **I-103 in a new place, filed again as I-161** |
+
+Written into the specification in these words: **the grant makes writes DELIBERATE, TYPED and
+ATTRIBUTABLE-BY-DECLARATION; it does not make them PREVENTED and does not AUTHENTICATE the
+declarant.** **That is the sentence the CIO asked for and the one I-095's remedy needed to survive
+its own test.**
+
+**5 · Two constructions worth keeping past this family.** The grant row is **the first write under
+its own grant** — *"no ordering exists in which a write precedes the record of its authority."* And
+`evaluate_gate1` **prints orphans, chain integrity and head whether or not they are zero**, because
+*"a control visible only when it fires is one nobody can confirm is running."* The chain's witness
+is git: **`book/registry.db` is tracked** [CIO-verified].
+
+**6 · Direction-blindness enforced by five mechanisms, none a promise** — a verdict vocabulary with
+**no favourable member**; `test_dce_17` asserting via `inspect.signature` that **no parameter in the
+module** matches `ignore|skip|allow|waive|suppress|exempt|except|only|severity|priority`, *"so the
+request to silence one finding is refused before the conversation"*; no severity or ranking; report
+order by field, never by verdict; and **the mirror-pair obligation** — every `fx_*_against` fixture
+requires an arithmetic mirror `fx_*_for`, with a meta-test asserting the pairing is total.
+
+**The proof case is `test_dce_21`: §11.1's 6.571-year span — the one stale figure that ran *for* the
+family and survived four revision passes — must return `SPAN-DIVERGENT` exit 3 identically to its
+overstating mirror.** The asymmetry the CIO named is now a test that fails if it recurs.
+
+**Exit codes 4 > 3 > 2, inability outranking a firing**, *"because this seat ranks epistemic state,
+not consequence."*
+
+**7 · I-164 is the finding the seal path must absorb: 19 of PREREG-002's 24 dated clauses land
+`UNCOVERED`, so the evaluator's first real run against this family is exit 4 — and that is the
+correct answer.** The document's clauses are not registered, and **the remedy is registration, not a
+more forgiving checker.**
+
+**8 · Verified** [measured]: suite **272 passed / 50 failed / 322**; 46 of the 50 are **red by
+design**, the 4 pre-existing ones counted separately *"so the two sets never merge"*; registry **0
+hypotheses / 0 trials**; `harness/castellan/`, `book/vaults/`, `PREREG-002` and `DIR-RESTATE-*`
+untouched.
+
+**9 · Budget.** **7 of 30 · 6 of 12 Opus** — row 1 priced at one. **3 free remain against 3
+committed rows**: conformance pass, C2, terminal-verdict memo. Insurance 2 of 2; DA reserve sealed.
+§5 dead-man: **5 invocations remain.**
+
+**Review date:** on the Principal's ruling on §13 and on the pricing call.
