@@ -4588,3 +4588,45 @@ work and it is the last free unit; the brief says so plainly."*
 reserve 1. §5 dead-man: **7 remain.**
 
 **Review date:** on the ingest's return, and on the Principal's reading of the headroom figures.
+
+---
+
+## S3-D-020 · 2026-08-13 · The headroom figures are CONSUMPTION — resolved by measurement, not argument
+
+**Reading supplied: `session 27% · weekly 13%`.** Prior reading, hours earlier: **`22% / 12%`.**
+
+**Both figures ROSE across an interval in which the firm only spent.** Between the two readings the
+CIO ran one Sonnet dispatch (S3-D-019's ingest) and a series of read-only queries. **Nothing was
+returned, refunded, or reset.**
+
+> **Consumption rises with spending. Remaining falls with spending. Both figures rose. They are
+> consumption.**
+
+**This upgrades the S3-D-019 flag from `[inferred]` to `[measured]`.** That entry argued from a
+five-reading historical series — that weekly-Opus rising 12 → 15 → 17 → 18 inside one week is
+impossible for a quota that does not refill mid-week. **The argument was suggestive. Two consecutive
+readings across known, one-directional activity are dispositive**, and the CIO records the
+difference because *the first was reasoning and the second is evidence.*
+
+**Consequence: weekly usage stands at ~13% consumed, ~87% remaining. C2 is not quota-blocked, and
+the window does not need to reset.** The ruling's *"12% weekly-Opus remaining means C2 does not
+dispatch until the window resets"* rested on the inverted reading.
+
+**One caution the CIO does not paper over:** the label changed between readings — **`weekly-opus`**
+previously, **`weekly session`** now. The values are continuous (12 → 13), so the CIO treats them as
+one series; **if they are two different metrics, this conclusion is about whichever one the 13%
+belongs to, and the Opus-specific figure would still be outstanding.** One line resolves it and the
+CIO will not assume past it.
+
+**C2 STILL DOES NOT DISPATCH — and now for the correct reason.** The Principal's own sequence is
+**ingest-and-conform → C2**, and **the ingest is in flight.** C2 would otherwise rule on a §11.1 span
+that is being conformed underneath it. **The dependency was always the real blocker; the quota
+reading was a second one that turns out not to exist.**
+
+**C2 dispatches on the ingest's return, on this headroom reading, unless the Principal rules
+otherwise.**
+
+**Budget unchanged: 11 of 30 invocations · 8 of 12 Opus · free 1, held for C2 · insurance 2 · DA
+reserve 1.** §5 dead-man: **7 remain.**
+
+**Review date:** on the ingest's return.
