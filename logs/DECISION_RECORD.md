@@ -4511,3 +4511,80 @@ C5's mechanics, **the executed diff, the 8 exceptions, and the firing-count call
 Headroom last known **22% / 12%**, fresh. §5 dead-man: **8 remain.**
 
 **Review date:** on the ingest-and-conform's return.
+
+---
+
+## S3-D-019 · 2026-08-13 · Ingest dispatched · the headroom figures read as CONSUMED, not remaining
+
+**1 · I-185's execution ACCEPTED; the acceptance criterion is what failed.** The Principal:
+*"a seat that lands on an unreachable number by refusing to chase it has satisfied the brief better
+than hitting 55 would have."*
+
+**I-096 countersigned with its corrective, and the corrective binds both parties** — the Principal
+records having made the same class of error twice this fortnight, and **"computed live from the
+artifact the seat will measure" now governs his rulings' numbers as well as the CIO's.** The
+unamended **55** stands as the record's own lesson: *the committed 55, the delivered 65, and the
+derivation of the gap are the acceptance artifact.*
+
+**2 · The refusal to fabricate checker output is named the exchange's standing exhibit**, and the
+Principal supplies the reading the CIO would want kept: **"the range is the honest output of a
+control that hasn't been built."** §4.7.4(ii) honoured *in the checker's absence.*
+
+**3 · Ingest dispatched at Sonnet, as instructed** — to current, then §11.1 conformed to the
+measured span with its measurement date, **direction-blind, "whichever way the number moved."** The
+brief carries three refusals the CIO added: **do not bypass the ingest ceiling** (*"a seat that
+lifts a ceiling to complete its own dispatch has defeated the control it was working under"*); **do
+not repair restatement incidents** — report verbatim and escalate; and **do not characterize the
+new span as favourable or unfavourable — write the number and its date.**
+
+**One question added that no instruction contained:** R-007 found the span grows with **ingest**,
+not with `C`, *"and none has occurred."* **If ingest now occurs and the span still does not move,
+that is the more interesting finding** — it would mean the vendor holds no bars past 2026-07-29 for
+these legs, **which bears directly on whether the family can be sealed against a window it claims to
+have data for.**
+
+**4 · §2.2 FLAG — THE HEADROOM FIGURES APPEAR TO BE CONSUMED, NOT REMAINING, AND THE RULING READS
+THEM THE OTHER WAY.**
+
+The ruling states *"12% weekly-Opus remaining means C2 does not dispatch until the window resets."*
+**The CIO believes 12% is consumption, leaving ~88%.** Evidence is the series itself, recorded
+across five readings:
+
+| Date | session | weekly-opus |
+|---|---:|---:|
+| 2026-08-04 | 24% | **12%** |
+| 2026-08-05 | 19% | **15%** |
+| 2026-08-06 | 49% | **17%** |
+| 2026-08-06 | 58% | **18%** |
+| 2026-08-13 | 22% | **12%** |
+
+**Read as *remaining*, weekly-Opus rose 12 → 15 → 17 → 18 across three days inside one week. A
+weekly quota does not refill mid-week.** Read as *consumed*, the same series is monotonic
+accumulation across 08-04 → 08-06 and a **reset to 12% on 08-13, a new week** — which is exactly
+what a weekly counter does.
+
+**The CIO cannot verify this directly** — `/usage` is not invocable by this seat, which is why the
+control was retracted and replaced at S2-D-016 — **so this is `[inferred]` from the series, not
+`[measured]`.**
+
+**What it costs if the CIO is right:** C2 is the last free Opus unit and sits on the critical path to
+the seal. **Holding it for a window reset that has not been consumed delays objectives 1 and 2 by
+days, in a sprint whose shortfall has already been ruled twice.**
+
+**What it costs if the CIO is wrong:** a dispatch dies on quota and spends insurance on a calendar
+problem — **exactly the outcome the Principal is protecting against, and the more expensive error of
+the two.**
+
+**The CIO therefore does not dispatch C2.** The instruction stands until the Principal rules, and
+**the asymmetry favours waiting**: being wrong about waiting costs days, being wrong about
+dispatching costs an insurance unit the tier cannot spare. **One `/usage` line resolves it.**
+
+**5 · C2's absorbed scope, restated so nothing arrives by surprise:** the executed diff · the 8
+in-field exceptions · **I-181's unbalanced bracket — *"it resolves before hashing or the field
+doesn't seal"*** · the 27–51 point estimate · **C13(k)** · **C5 mechanics.** *"That is a full unit's
+work and it is the last free unit; the brief says so plainly."*
+
+**6 · Budget.** **11 of 30 invocations · 8 of 12 Opus.** Free **1**, held for C2. Insurance 2; DA
+reserve 1. §5 dead-man: **7 remain.**
+
+**Review date:** on the ingest's return, and on the Principal's reading of the headroom figures.
