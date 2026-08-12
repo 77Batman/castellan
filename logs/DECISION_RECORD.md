@@ -4718,3 +4718,80 @@ RULING-005's 583 for four.**
 Headroom **13% consumed weekly** — not a constraint. §5 dead-man: **6 remain.**
 
 **Review date:** immediately — C2 does not dispatch without a ruling on scope.
+
+---
+
+## S3-D-022 · 2026-08-13 · Quota reading corrected · span seals at 6.6093 · C2 DISPATCHED on the last free unit
+
+**1 · The quota label resolved from the Principal's side.** Same series, transcription varied,
+**semantics are consumption as the CIO measured.** The `[measured]` upgrade stands, **"12%
+remaining" is corrected in the record to ~87% remaining**, and **the quota-block rationale attached
+to C2's timing is withdrawn as founded on a misreading.** *"C2 was never quota-blocked; the ingest
+dependency was always the real gate."*
+
+**The CIO records what made this resolvable: two consecutive readings across known one-directional
+activity.** Neither party could settle it by argument — the earlier five-reading series was
+suggestive and no more. **A disagreement about a measurement was resolved by taking another
+measurement**, which is the only method that has worked in this firm's two sprints.
+
+**2 · THE SPAN SEALS AT 6.6093 — settled bars only — and the reasoning is promoted to doctrine:**
+
+> **A sealed figure may not include a value known in advance to be provisional. Sealing 6.6120 would
+> freeze a number the firm already expects to restate — manufacturing a future A4 event inside a
+> P7-frozen field.**
+
+And the Principal corrects the CIO's own framing of its recommendation: **"choosing the shorter
+figure here is direction-blind by construction, not conservatism: the criterion is *settled*, and
+settled happens to be shorter today."** **The CIO had defended the choice as direction-blind and
+then hedged it as "not a conservative flourish" — the correction is that the criterion never
+mentioned length at all, and stating the criterion is enough.**
+
+§10.4's arithmetic consequence routed to Validation inside C2. **The two A4 escalations at zero
+blast radius are noted with approval: *"the rule fires on cause, not consequence."***
+
+**3 · C2's SCOPE SPLIT APPROVED. The measurement governs, and the Principal applied the ratchet to
+himself:** *"the ratchet admits no appeal including mine; my 'full unit's work' is corrected by your
+line-count to 'two units' work,' and the firm has one."*
+
+**Deferral legitimacy stated on its own logic, not on convenience:** the partition is R-006's
+seal/verdict separation applied to the budget; every deferred item binds where it always bound; and
+**"nothing in the deferred column can produce a wrong seal — only a wrong evaluation, which cannot
+occur before Sprint 4's funded path reaches it."**
+
+**4 · The addition that binds the verdict's FORM, and it is the sharpest instrument of the
+exchange:**
+
+> **The intake verdict must state, in the three-register form, what it did NOT rule — the deferred
+> named as deferred, "so the seal's record shows a scoped verdict and not a complete one wearing
+> scoped clothes."**
+
+**This is the `f54f9b9` three-register correction — prevents / merely detects / does not touch —
+turned on a verdict's own authority.** A scoped verdict that does not name its scope is
+indistinguishable, to every later reader, from a complete one.
+
+**5 · The CIO put a counting instruction in the brief that names its own uncertainty.** The CIO's
+table enumerates **four** deferred items; **the Principal's ruling says five.** **Neither counted
+from the enumeration.** The brief tells Validation to **enumerate exhaustively and report its own
+count**, taking the number from neither party — *"this firm has produced six cardinal errors of
+exactly that shape in two sprints."* **The CIO does not resolve the discrepancy in its own favour or
+the Principal's; it removes both of us from the arithmetic.**
+
+**6 · One requirement the CIO imposed after failing the same test itself.** The brief requires
+Validation to **plan and state its line budget section by section before writing, and to say so and
+propose cuts if the plan exceeds ~800 — before writing past it, not after.** The CIO's stated reason
+to the seat: **I-096 records the CIO committing an acceptance number from a cached artifact in a
+brief whose whole point was that acceptance is computed, not narrated. A line budget discovered at
+the end is the same error.**
+
+**7 · C2 dispatched on the scoped set, this headroom, now.** Projection stated honestly as **close to
+threshold, could go either way**, against measured precedent — 464 lines for an intake verdict,
+583 for four adjudications.
+
+**8 · Budget.** **13 of 30 invocations · 9 of 12 Opus. FREE OPUS: ZERO.** Remaining tier is **the DA
+reserve (C3, submission-gating, unskippable) and 2 termination-insurance units.** **There is no
+second attempt at C2 this sprint.** §5 dead-man: **5 remain.**
+
+**9 · Sequence to the seal:** C2 *(running)* → **C3 on the reserve** → **registration-as-seal, a §4
+interrupt and the Principal's act.**
+
+**Review date:** on C2's return.
