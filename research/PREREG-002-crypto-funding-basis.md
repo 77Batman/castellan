@@ -174,6 +174,29 @@ House rule 6 applies throughout: **[measured]** = read or executed in this repos
 
 ---
 
+## REVISION BLOCK — R-007 · 2026-08-12 · PRE-SEAL · **CONFORMANCE ONLY**
+
+> **UNSEALED. `book/registry.db` reads 0 hypotheses / 0 trials. Trial budget ZERO.** One number is produced and the Principal instructed it: the §11.1 span, a read-only `SELECT` over `book/pit.db` and a subtraction of two calendar dates. **No market data was modelled, no return series was touched, no backtest ran, no `harness/` file was opened, no `VALIDATION-*` document was touched, no `book/` artifact was written, no test was run, `test_h7` / `test_h8` were not approached, and nothing was committed.**
+
+**Authority:** dispatch **S3-D-014** · the Principal's instruction to measure §11.1's span rather than label it · the Principal's ratification of I-153's conformance, by his own act, pre-seal.
+**Payload:** `research/REGISTRATION-PAYLOAD-PREREG-002.md` — **UNCHANGED. `trial_budget = 47`, `n_inherited = 7`, all sixteen literals as recorded. No binding field VALUE moves.** Three prose-field bodies receive conforming inserts by the R-004 mechanism.
+**New artifact:** `research/REGISTRATION-PAYLOAD-DATED-CLAUSES-PREREG-002.md` — the `dated_clauses` rows, produced as a payload because `dated_clauses` does not exist and this seat cannot write rows.
+
+| # | Clause changed | What changed | Why |
+|---|---|---|---|
+| **R37** | §11.1 in-sample row | **THE SPAN IS MEASURED AND R34's LABEL IS STRUCK AS UNEARNED. It is 6.571 years and it has not moved** — `[2020-01-01, 2026-07-28] = 2400 days = 6.5710 y` [measured 2026-08-12, read-only `SELECT` over `book/pit.db`; six primary-universe legs; `ingest_ceiling` zero rows; last `knowledge_time` 2026-07-29]. **R34 asserted the span grows with `C`. It grows with INGEST**, and none has occurred since 2026-07-29. At `C = 2026-08-12` the declared in-sample window runs **15 days past the last bar on disk.** The figure is **exact today, not understated**, and §10.4's 0.43-year margin is exact with it. | **The asymmetry doctrine's own prediction, confirmed against the seat that benefits.** R34 replaced a stale-favourable *figure* with a stale-favourable *label* and neither was measured. **This correction runs AGAINST the family — it removes a claimed hidden margin — which is what a genuine check on a favourable claim looks like.** Filed **I-176, MEDIUM.** |
+| **R38** | §21 `forward_kill_condition`, after the C13(k) sentence | **I-153's CONFORMANCE IS RATIFIED BY THE PRINCIPAL, IN-FIELD, AND C13(k) IS NOT DISCHARGED BY IT.** The Principal conformed clause 5 to `C + 187 days` by his own act, pre-seal, with **zero outcome knowledge**, on the field's own declaration that *"the drafted date is not binding — the formula is."* His ruling, recorded verbatim: *"the committed quantity is the 187-day window; fixing it pre-seal with zero outcome knowledge is conforming a document to its own governing terms, not extending a test that is going badly. 'Absolute' meant absolute against results-based movement; it still is."* | **This seat's refusal to ratify its own favourable repair was correct routing and is the third such refusal.** It now stands ratified by the seat whose act it is. **And the insert says what the ratification does NOT do:** Validation holds I-153's **instance** inside C2 at row 3, the alternative — the drafted literal and a shortened window — is **live**, and **the seal does not proceed past it.** A Principal ratification of a routing is not a Validation ruling on an instance and this seat will not present it as one. |
+| **R39** | §21 `model_prior_provenance` | **I-150's CARDINAL WAS STILL "SIX" INSIDE THE SEALED FIELD.** Conformed to **fourteen**. | **R29(b)'s lesson for the sixth time and in the same direction:** the cardinal was corrected in the prose that describes the payload and left standing in the payload. **The register at §12.2 of the memo says fourteen; the hashed string said six.** Filed **I-177, LOW-MEDIUM.** |
+| **R40** | seal-readiness block | **REFRESHED. R-006's two-set separation carried intact. R-007 clears nothing and creates no new blocker.** | **Seal-blocking: C2 · C7 · C8 · C11. Verdict-blocking: C3 · C5 · C4 · C10.** |
+
+**WHAT R-007 COSTS, AND FOR THE FOURTH REVISION RUNNING IT MOVES IN BOTH DIRECTIONS.**
+
+**For the family:** nothing. **No source of death is removed and none is added.** R38 records a ratification the family already had the benefit of.
+
+**Against the document, which is the half that matters:** **the one figure four revisions passed over, and which R34 labelled rather than measured, was labelled wrongly.** The span does not grow with the seal date and the margin R34 said was understated is exact. **And the dated-clause register the Principal ordered returns 10 of 24, not 24 of 24** — thirteen of the fourteen misses are clauses living in document prose that no registry field carries, which is E-25(3)'s named gap arriving with a number attached. **The register's larger finding is worse than its headline:** E-2 extracts **90** sites from this document's own binding fields, **72 of them dates that are not clauses**, **75 of them firing on the first invocation**, and **`evaluate_gate1` makes any nonzero exit INSUFFICIENT-DATA.** **This family cannot pass Gate 1 while its sealed prose fields carry their own revision history**, and the revision history is this seat's.
+
+---
+
 ## REVISION BLOCK — R-006 · 2026-08-11 · PRE-SEAL
 
 > **This document remains UNSEALED. `book/registry.db` holds 0 hypotheses, 0 trials and 1 event [measured — this session, read-only `SELECT COUNT(*)`]. Every change below was made before `open_hypothesis` was called and therefore before any result on this family existed to select on. P7 has not yet bitten. Trial budget for this revision was ZERO. NO NUMBER WAS COMPUTED: every harness fact is `[measured]` at a named file and line, every figure about this family is `[cited]` from a prior artifact, and the only arithmetic is `2 + 40 = 42`, `1 + 8 = 9`, `2 + 1 + 2 + 2 + 5 + 25 + 10 = 47` and `187 − 172 = 15` on already-declared integers. No `harness/` file was touched, no `VALIDATION-*` document was touched, no `book/` artifact was written, no test was run, no suite state is reported, and `test_h7` / `test_h8` were not approached.**
@@ -1398,7 +1421,7 @@ fall. It is not a budget.
 |---|---|
 | **Regime** | Option D (D-006). `C` = the pre-registration seal date (D-007). Holdout = `[C, G]`, forward, growing with wall-clock. |
 | **`C`** | **The seal date.** Not fixed by this document. Fixed by Pod B's `open_hypothesis` call, on the same UTC day as the vault seal. |
-| **In-sample** | `[2020-01-01, C]` for BTC/ETH — **6.571 years, gap-free, measured, not estimated.** **[R34 · 2026-08-11] 6.571 years is measured to 2026-07-28. `C` is later than that and the true span at the seal is LONGER — so 6.571 is an UNDERSTATEMENT, and every margin quoted from it (§10.4's 0.43-year MinBTL margin above all) is understated with it.** **This is the one stale date in this document that runs FOR the family, which is precisely why four revisions passed over it. The figure is NOT re-derived here — re-deriving it is a computation a zero-trial budget does not authorize — and it is labelled rather than corrected.** |
+| **In-sample** | `[2020-01-01, C]` for BTC/ETH — **6.571 years, gap-free, measured, not estimated.** ~~**[R34 · 2026-08-11] 6.571 years is measured to 2026-07-28. `C` is later than that and the true span at the seal is LONGER — so 6.571 is an UNDERSTATEMENT, and every margin quoted from it (§10.4's 0.43-year MinBTL margin above all) is understated with it.** **This is the one stale date in this document that runs FOR the family, which is precisely why four revisions passed over it. The figure is NOT re-derived here — re-deriving it is a computation a zero-trial budget does not authorize — and it is labelled rather than corrected.**~~ **[R37 · 2026-08-12 — MEASURED, AND R34's LABEL IS STRUCK AS UNEARNED.] The span is 6.571 years and it has not moved. Measured this session, `[2020-01-01, 2026-07-28] = 2400 days = 6.5710 years` (6.570977 at E-9's 365.2425; 6.570842 at 365.25), from a read-only `SELECT` over `book/pit.db`: BTC/USDT and ETH/USDT spot close, BTC and ETH perp close, and both funding series, common coverage `[2020-01-01, 2026-07-28]`, `ingest_ceiling` **zero rows** [all measured — 2026-08-12; last `knowledge_time` on every leg is 2026-07-29]. **R34 asserted the span grows with `C`. It does not: it grows with INGEST, and no bar has been ingested since 2026-07-29.** At `C = 2026-08-12` the declared in-sample window runs 15 days past the last bar on disk. **The figure is therefore EXACT today, not understated, and §10.4's 0.43-year MinBTL margin is exact with it.** Any larger span is contingent on §15 step 1's post-seal ingest actually running to `C` — **an assumption, not a measurement**, and R34 recorded it as though the margin were already banked. **This is a correction that runs AGAINST the family: it removes a claimed hidden margin. Filed I-176, MEDIUM.** |
 | **Vault** | One `HoldoutVault` per (dataset, family) under `book/vaults/`, sealed with `family="funding-carry-conditioning-002"`, `cutoff=C`, `holdout_end_rule="open-ended, forward from C"`. **The passphrase is the Principal's and is never written to this repo, to Oracle, or to any file.** Acceptance 001 C-2 writes only a salted one-way verifier, which is what lets `acquire_once()` refuse a wrong-but-non-empty passphrase before any fetch (I-015). |
 | **Sequencing, binding** | The vault is sealed **on or before the calendar day of `C`, in the same session as the `open_hypothesis` call.** P7 fails Gate 1 if the seal postdates `C` at UTC day granularity. |
 | **Ingest ceiling** | `seal()` writes the ceiling into `PITStore`. **The `binanceusdm` perp OHLCV ingest (§15 step 1) occurs after the seal and is bounded by it.** The spot and funding panels already on disk are bounded at `2026-07-28T23:59:59Z` [measured — DATA-INGEST-001 §1.2, §2], conservative against any `C ≥ 2026-07-28`. `book/pit.db :: ingest_ceiling` currently has **zero rows**, so there is no collision to manage [measured]. |
@@ -3233,6 +3256,24 @@ forward_kill_condition            = "KC-002. Observation date = C + 187 days, fi
                                      clause (b)'s 30-day threshold becomes correspondingly harder
                                      against a window calibrated at 187 days, and this seat writes
                                      the KILL memo on the day without argument.
+                                     [R38, PRE-SEAL: RATIFIED BY THE PRINCIPAL, BY HIS OWN ACT, WITH
+                                     ZERO OUTCOME KNOWLEDGE. This seat REFUSED to ratify its own
+                                     favourable repair and routed it instead - the third such refusal
+                                     - and that routing is recorded as correct. The Principal
+                                     conformed clause 5 to C + 187 days himself, pre-seal, on this
+                                     field's own declaration that THE DRAFTED DATE IS NOT BINDING -
+                                     THE FORMULA IS. His ruling, verbatim and binding: the committed
+                                     quantity is the 187-day window; fixing it pre-seal with zero
+                                     outcome knowledge is conforming a document to its own governing
+                                     terms, not extending a test that is going badly. ABSOLUTE meant
+                                     absolute against RESULTS-BASED movement; it still is. WHAT THIS
+                                     RATIFICATION DOES NOT DO: it does not discharge C13(k). The
+                                     INSTANCE inside C2 at row 3 remains Validation's, the
+                                     alternative - the drafted literal 2027-01-31 and a shortened
+                                     window - remains LIVE for Validation to take, and the seal does
+                                     not proceed past it. A ratification by the Principal of the
+                                     seat's routing is not a ruling by Validation on the instance,
+                                     and this seat will not present it as one.]
                                      (4) Kill is automatic on the date, requires no meeting, no vote and no
                                      CIO concurrence, and IS NOT APPEALABLE TO THE CIO; only the Principal
                                      may reverse it, in writing, logged in DECISION_RECORD.md as an
@@ -3416,7 +3457,11 @@ model_prior_provenance            = "R4(a). Per I-009 the firm does not know its
                                      correction of section 10.10's field-count arithmetic from nine
                                      zero-consumer fields to eight (R25, I-141); the finding that
                                      I-034/C1 is IMPLEMENTED and that this document described the
-                                     pre-repair cost model at six sites including a condition
+                                     pre-repair cost model at ~~six~~ [R39, PRE-SEAL: FOURTEEN. The
+                                     cardinal "six" is I-150 and it had propagated into this SEALED
+                                     field while the prose that describes the field carried the
+                                     corrected fourteen - R29(b)'s lesson, a sixth time, in the same
+                                     direction] fourteen sites including a condition
                                      precedent one day from firing (R26, I-140); the finding that
                                      I-022 is REPAIRED and that C10 and two further clauses rest on it
                                      being live (R27, I-142); and the placement of the haircut's class
@@ -3620,7 +3665,28 @@ HoldoutVault(vault_dir="book/vaults/funding-carry-conditioning-002-binance",
 >
 > **D-015's reading holds a sixth time, and the pattern has now completed itself.** *"The ceiling binding at the seal is the control functioning."* **R-004 found a control that did not exist. R-005 found two that existed while the document said they did not. R-006 found a control that existed, was written to be undefeatable, and would have fired on the family that wrote it.** **A kill condition that kills correctly is the machinery working; a kill condition that kills with certainty is a clerical error wearing the machinery's clothes, and the only difference between them is a date nothing evaluates.**
 
+> ---
+>
+> ### **[R-007 · 2026-08-12] SEAL-READINESS AFTER R-007 — REFRESHED, WITH R-006's SEPARATION CARRIED INTACT.**
+>
+> **SEAL-BLOCKING: C2 · C7 · C8 · C11.** **VERDICT-BLOCKING: C3 · C5 · C4 · C10.**
+> **R-007 clears no member of either set and creates no new member of either.** It is a conformance pass and a register; **it moves no binding field's value, no threshold, no menu and no selection.**
+>
+> | Blocker | Set | Status after R-007 |
+> |---|---|---|
+> | **C2 · Validation's Gate 0 intake verdict** | **SEAL** | **OPEN — BLOCKING.** Unchanged. **R-007 adds no C13 item and hands C2 four findings it does not have to discover: I-171** (the `FORMULA` recognizer is case-sensitive, so clause 5 — the automatic-termination clause — extracts as a **bare `C`**, and the field is caught only by E-14, only because the struck literal is still in it), **I-172** (there are **zero `SPAN` sites** in this family, so E-9 and **E-21's named proof case** never run), **I-173** (registering as the document stands returns a permanent nonzero exit and therefore a permanent `INSUFFICIENT-DATA`), and **I-176** (§11.1's span is exact, not understated). |
+> | **C13(k) · the I-153 instance** | **SEAL, inside C2 at row 3** | **UNDISCHARGED, AND EXPLICITLY NOT DISCHARGED BY R38.** The Principal has ratified the seat's **routing**; **Validation holds the instance** and the alternative — the drafted literal `2027-01-31` sealed as drafted, with a window shortened by however long the seal took — **is live for Validation to take. The seal does not proceed past it.** If Validation takes it, the dated-clause payload's rows 74 and 76 and D-7's mapping change and the payload is reissued. |
+> | **C7 · KC-002 signed · C8 · seal and vault same UTC day · C11 · leg-(ii) null** | **SEAL** | **OPEN — BLOCKING.** Unchanged. |
+> | **C5 · the point of application of the §4.6 haircut** | **VERDICT — A LOCK** | **OPEN — BLOCKING ON GATE 1 EVALUATION AND ON ANY REPORTED VERDICT, ABSOLUTELY.** Unchanged by R-007. |
+> | **C3 · Devil's Advocate Red-Team Memo** | **VERDICT** | **OPEN.** R-007 hands the red team a second concrete target beside R32's conformance: **R38 is the Principal ratifying a repair that removed a certain kill from the sponsor's own family**, and the red team should read it as such. |
+> | **C4 · the §11.3 holdout reading** · **C10 · I-022's formal closure** | **VERDICT** | **OPEN.** Unchanged. **C4 gains weight at R37:** its three readings are formulae in `C`, and R37 establishes that the in-sample span backing them is bounded by ingest and not by `C`. |
+> | ~~**C1**~~ · **C12 · C9** | — | **DISCHARGED / DISCHARGED (narrowly) / CLOSED.** Unchanged. |
+>
+> **WHAT R-007 DID TO SEAL-READINESS.** **Nothing, toward a seal — and that is the correct outcome for a conformance pass.** Against the document it did two things. **First, it measured the one figure the firm had agreed to label rather than measure, and the label was wrong in the family's favour** — R34 said the 0.43-year MinBTL margin was understated; it is exact. **Second, it produced the number the Principal asked for and the number is 10 of 24.** Thirteen of the fourteen misses are clauses that live in prose no registry field carries. **E-25(3) named that gap in advance and this seat's answer is the one Validation already gave: the remedy is registration, not a gentler checker — and registration here means moving the clause into a binding field or striking it, which is a revision this dispatch did not fund and did not start.**
+>
+> **D-015's reading holds a seventh time, and the direction has now reversed.** *"The ceiling binding at the seal is the control functioning."* **R-004 found a control that did not exist. R-005 found two that existed while the document said they did not. R-006 found a control that would have fired on the family that wrote it. R-007 found a control — E-21's direction-blindness proof case, built specifically to catch §11.1's span — that exists, is correct, and has no site to act on.** **A control aimed at a defect it cannot reach is the most expensive kind, because everyone downstream believes the defect is covered.**
+
 ---
 
-*Director of Research · Castellan Capital · **revised R-005, 2026-08-10, pre-seal (S3-D-003, the class mandate)** · **revised R-006, 2026-08-11, pre-seal (S3-D-006 — C1 DISCHARGED / I-034 CLOSED · house rule 5 priced · C5 locked · the dated-clause sweep · I-150 · I-151 · I-152 · I-153 · I-154)***
+*Director of Research · Castellan Capital · **revised R-005, 2026-08-10, pre-seal (S3-D-003, the class mandate)** · **revised R-006, 2026-08-11, pre-seal (S3-D-006 — C1 DISCHARGED / I-034 CLOSED · house rule 5 priced · C5 locked · the dated-clause sweep · I-150 · I-151 · I-152 · I-153 · I-154)** · **revised R-007, 2026-08-12, pre-seal (S3-D-014 — §11.1's span MEASURED · I-153 ratified in-field · seal-readiness refreshed · the dated-clause register · I-170 … I-179)***
 *Trial budget ZERO. No hypothesis opened, no trial run, no registry write, no vault sealed, no issue closed, `harness/` not touched, no `VALIDATION-*` document touched, `book/` not written to, no test executed, no suite state reported, no commit. `test_h7` and `test_h8` not approached. `book/registry.db` reads **0 hypotheses / 0 trials** and must still read 0 / 0 when this document is put down.*

@@ -1813,3 +1813,52 @@ and a prose-field edit is a draft edit, not an amendment. **No binding field's v
 
 *Director of Research · Castellan Capital · **addendum §12 added 2026-08-11 for revision R-006***
 *Dispatch S3-D-006. Trial budget ZERO.*
+
+---
+
+# ADDENDUM — REVISION R-007 · 2026-08-12 · PRE-SEAL · CONFORMANCE + REGISTER
+
+*Dispatch **S3-D-014**. Trial budget **ZERO**. `book/registry.db` reads **0 hypotheses / 0 trials**
+[measured — read-only `SELECT COUNT(*)`]. No `open_hypothesis`, no registration, no seal, no vault.
+No `harness/` file touched, no `VALIDATION-*` document touched, no `book/` artifact **written** — one
+read-only `SELECT` over `book/pit.db` for the span the Principal instructed. No test run, no suite
+state reported, `test_h7` / `test_h8` not approached. No commit. No issue closed by this seat.*
+
+## 13. THE CONFORMANCE PASS, AND THE REGISTER THE PRINCIPAL ORDERED
+
+### 13.1 The four corrections, in one table
+
+| Item | Disposition |
+|---|---|
+| **§11.1's span** | **MEASURED, and R34's label struck as unearned.** `[2020-01-01, 2026-07-28]` = **2400 days = 6.5710 years**, measurement date **2026-08-12**. `ingest_ceiling` zero rows; last `knowledge_time` 2026-07-29 on all six primary-universe legs. **The span grows with INGEST, not with `C`** — R34 asserted the opposite without measuring, and the assertion ran in the family's favour. §10.4's 0.43-year margin is **exact, not understated**. `PREREG-002` R37 · **I-176, MEDIUM** |
+| **I-153's ratification** | **RECORDED IN-FIELD** at `PREREG-002` §21 `forward_kill_condition`, R38, with the Principal's ruling verbatim. **The insert also states what the ratification does not do**: C13(k)'s instance stays with Validation, the drafted-literal alternative stays live, **the seal does not proceed past it.** This seat's refusal to ratify its own favourable repair is recorded as the third such refusal and as correct routing |
+| **Seal-readiness** | **REFRESHED at R40, R-006's separation intact. Seal-blocking C2 · C7 · C8 · C11. Verdict-blocking C3 · C5 · C4 · C10.** R-007 clears none and creates none |
+| **§11.4** | **CLOSED BY R-006, at R33.** Both R3 rows are struck-and-replaced in-field — `forward_window_start` → `C`, `forward_kill_condition` → `C + 187 days`, ABSOLUTE — and the I-154 note stands above them naming R23 as the row that listed the site and never reached it. **Verified against the file this session, not inherited from R-006's own claim.** No further action |
+| **I-150's cardinal** | **NOT consistent, and the surviving instance was in the sealed string.** `model_prior_provenance` still read *"six sites"*; conformed to **fourteen** at R39. Two further instances named and left: `ISSUE_LOG` I-034's CLOSED entry (**the CRO's**), and R-005's seal-readiness block (**a faithful record of what R-005 said**). **I-177, LOW-MEDIUM** |
+| **Payload** | **UNCHANGED. `trial_budget = 47`, `n_inherited = 7`.** No binding field VALUE moved. Nothing interrupts |
+
+### 13.2 The register: **10 of 24**, and the denominator is the finding
+
+`research/REGISTRATION-PAYLOAD-DATED-CLAUSES-PREREG-002.md`. **Fully covered: D-4, D-5, D-6, D-7,
+D-10, D-21, D-23. Residue only: D-2. Covered with the mechanism absent: D-19, D-8. Uncoverable:
+fourteen**, thirteen of them because the clause lives in prose no registry field carries — E-25(3)'s
+named gap, now with a number. **D-24 is the honourable fourteenth: it has no date expression and P7
+already evaluates it.**
+
+**The 24 is the wrong denominator.** E-2 extracts by literal form over nine fields and yields **90
+sites**, of which **72 are dates that are not clauses**, **75 fire on the first invocation**, and
+`kind`'s closed vocabulary describes none of the 72. **`evaluate_gate1` therefore returns
+`INSUFFICIENT-DATA` permanently, and the cause is that this seat put its own revision apparatus inside
+strings that get hashed.** The remedy is a revision this dispatch did not fund, and it must land before
+the seal or P7 freezes it. **I-171 · I-172 · I-173 · I-178 · I-179**, with **I-170** and **I-174** /
+**I-175** routed to Validation.
+
+**The unflattering line, stated because it is the whole lesson:** recording the Principal's ratification
+in-field — a correct execution of a correct instruction — **added two more sites to the obligation on
+the day the register was written.** The register enumerates 90 of 92. **A payload that recedes as you
+write it is telling you the container is wrong, not the writing.**
+
+---
+
+*Director of Research · Castellan Capital · **addendum §13 added 2026-08-12 for revision R-007***
+*Dispatch S3-D-014. Trial budget ZERO.*

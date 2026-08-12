@@ -4568,3 +4568,226 @@ specification did not anticipate, **which is information, not an obstacle.**
 **Resolution:** open — standing. Every extension request is recorded here with the value requested
 and the ruling.
 **Pattern tag:** `closed-vocabulary-under-schedule-pressure` · `route-back-specified`
+
+---
+
+## I-170 · 2026-08-12 · No document defines the canonical string of a prose binding field, and `dated_clauses.source_offset` requires an integer over it · Severity: **MEDIUM** · Owner: quant-validation
+
+**Description.** `VALIDATION-SPEC-004` E-5 requires an integer `source_offset` per clause row and E-6
+matches sites to rows on `(field, source_offset)` exactly. **Nothing states what string the offset is
+measured over.** `REGISTRATION-PAYLOAD-PREREG-002` §3 says only *"the text between `<field_name> = "`
+and its closing `"`"* in `PREREG-002` §21's fenced block. Read literally that includes the 37-column
+alignment indent on every continuation line; read as intended, it does not.
+
+**Measured consequence: 88 of 90 extracted sites have different offsets under the two readings**
+[measured — `research/work/build_register.py`]. A register built on the wrong one puts 88 rows at
+`DANGLING` and 88 sites at `UNCOVERED`, **exit 4, from a whitespace convention.**
+
+**Why MEDIUM and not higher.** It is cheap to fix, pre-seal, by one sentence in the specification, and
+the failure is loud rather than silent. **Not lower: it is a precondition for `dated_clauses` to be
+writable at all**, and it lands on Seat 9 as an implementation choice unless Validation makes it.
+
+**Resolution:** open — routed to Validation. The dated-clause payload ships a canonicalization-
+invariant identity `(field, recognizer, matched_text, occurrence_ordinal)` and both candidate offsets
+in the interim.
+**Pattern tag:** `spec-requires-an-integer-nothing-defines` · `implementer-would-have-chosen`
+
+---
+
+## I-171 · 2026-08-12 · E-2's `FORMULA` recognizer is case-sensitive, so `PREREG-002` clause 5 — the automatic-termination clause — extracts as a bare `C` · Severity: **HIGH** · Owner: quant-validation
+
+**Description.** E-2 specifies `FORMULA` as `\bC\s*(?:[+-]\s*\d+\s*(?:day|month|year)s?)?\b`. Clause 5
+as conformed at R32 reads *"on THE OBSERVATION DATE **C + 187 DAYS**"* — the unit in capitals, because
+`PREREG-002`'s emphasis convention inside binding fields is ALL CAPS. `DAYS` does not match `days?`,
+the optional group fails, and **the recognizer matches bare `C`** at offsets 6089 and 7341 [measured].
+
+**Consequence, and it is not the obvious one.** The site resolves to the seal day; the clause row's
+`date_expr` is `C + 187 days`. **E-12 does not catch it** — the divergence test fires only when
+`matched_text` is an `ISO` literal. **E-14 does**, because the field still holds the struck literal
+`2027-01-31`, so `forward_kill_condition` returns `DIVERGENT` at both offsets and exits 3.
+
+**Why HIGH.** **The document is currently protected by its own uncorrected text.** Strike the struck
+literals from the field — which is the obvious hygiene action, and which §4.3 of the dated-clause
+payload independently recommends — and E-14 loses its `ISO` partner, at which point clause 5 is a bare
+`C` resolving to the seal day and returning `FIRED` immediately. **Two correct-looking clean-ups
+compose into a wrong answer on the clause that terminates the family.**
+
+**Resolution:** open — routed to Validation with two options named and neither chosen by this seat:
+make the unit match case-insensitively, or forbid a capitalised unit inside a binding field.
+**Pattern tag:** `recognizer-vs-house-emphasis-convention` · `control-held-by-an-uncorrected-defect`
+
+---
+
+## I-172 · 2026-08-12 · There are zero `SPAN` sites in `funding-carry-conditioning-002`, so E-9 and E-21's named proof case never run · Severity: **HIGH** · Owner: director-of-research → quant-validation
+
+**Description.** E-21 makes §11.1's `6.571 years` over `[2020-01-01, C]` a **required test** and the
+whole of `VALIDATION-SPEC-004` §7's direction-blindness apparatus is built around it. E-2's `SPAN`
+recognizer requires a **bracketed** interval in the same sentence as a quantity.
+
+**Measured: across all nine E-1 fields this family has zero `SPAN` sites.** The span appears in a
+registry field exactly once, in `universe`, as *"common span **2020-01-01 to C = 6.571 years**"* —
+**unbracketed**, so it extracts as two ordinary sites and E-9's recomputation never runs. The one
+bracketed interval in a registry field, `[2020-01-01, C]` in `falsifier`, sits in a sentence carrying
+no quantity, so it is not a `SPAN` site either. **The stale figure itself lives in §11.1 — document
+prose, outside E-1 entirely.**
+
+**Why HIGH.** The apparatus is sound and the specification is not at fault; **the control has no site
+to act on in the family it was written for**, and everyone downstream reasonably believes the defect
+is covered. **The remedy is a one-character-class document edit** (`universe` to read
+`[2020-01-01, C] = 6.571 years`) **and this seat did not make it**, because editing a hashed binding
+string to satisfy a checker is the shape of act R32 was disclosed at maximum volume for. Put to C2.
+
+**Resolution:** open — the edit is routed through C2 rather than taken.
+**Pattern tag:** `control-with-no-site` · `remedy-declined-because-the-sponsor-benefits`
+
+---
+
+## I-173 · 2026-08-12 · Registering `PREREG-002`'s dated clauses as the document stands produces a permanent nonzero exit and therefore a permanent `INSUFFICIENT-DATA` · Severity: **HIGH** · Owner: director-of-research
+
+**Description.** E-2 extracts **90 sites** from this family's binding prose fields [measured]. Under
+E-10 row 4 (`discharge_event_kind == ''` and `resolved_date <= T` ⇒ `FIRED`, unconditionally),
+**75 of the 90 fire on the first invocation** — 59 past-dated `ISO` sites and 16 `FORMULA` sites
+resolving to bare `C`. **Nothing discharges a revision stamp because no event kind could.** E-24 makes
+any nonzero exit an `INSUFFICIENT-DATA` Gate verdict.
+
+**Therefore this family cannot pass Gate 1 while its sealed prose fields carry their own revision
+history**, and the revision history is this seat's, inserted deliberately across R-001 … R-007.
+
+**Why HIGH and why it is not the evaluator's defect.** The evaluator is correct at every clause. **The
+document is wrong**: binding prose fields must carry the clause and not its editorial apparatus. The
+remedy is a revision — six prose fields, roughly 35 revision-stamp insertions, all inside
+`prereg_sha256`'s domain — **and it is not funded in S3-D-014. Named and left open rather than
+started**, because a half-completed strip of a hashed field is worse than an uncorrected one.
+
+**Resolution:** open — the remedy is scoped and unfunded. It must land **before** the seal or P7
+freezes it.
+**Pattern tag:** `editorial-apparatus-inside-the-payload` · `remedy-named-and-unfunded`
+
+---
+
+## I-174 · 2026-08-12 · E-8's `ANCHOR-STALE`, whose named case is the sweep's D-8, cannot fire on this family · Severity: LOW · Owner: quant-validation
+
+**Description.** E-8 returns `ANCHOR-STALE` when `forward_window_start` holds an ISO literal differing
+from the `hypothesis_sealed` UTC date, and names the sweep's D-8 — `forward_window_start = 2026-07-28
+(= C; the seal is intended for today)` — as its case. **`REGISTRATION-PAYLOAD-PREREG-002` §2.5 fixes
+the field as `datetime.now(timezone.utc).date().isoformat()`, computed at the instant of the act.**
+The two dates are therefore equal by construction and E-8 has nothing to bite on here.
+
+**Why LOW.** The condition E-8 exists to detect was removed by the payload before the evaluator was
+specified — **the control is redundant for this family and correct for the next one**, which is the
+benign direction. Recorded so that a future reader does not conclude E-8 was exercised and passed.
+
+**Resolution:** open — informational, no action requested.
+**Pattern tag:** `control-redundant-for-the-family-that-motivated-it`
+
+---
+
+## I-175 · 2026-08-12 · `model_prior_provenance` is a binding field and is outside E-1's enumerated evaluator scope · Severity: LOW · Owner: quant-validation
+
+**Description.** E-1 enumerates nine fields. `_BINDING_FIELDS` has sixteen. **`model_prior_provenance`
+is hashed into `prereg_sha256` and carries dated provenance claims that no clause row will cover and
+no evaluator will read.** R39 corrected one such claim inside it in this pass — the I-150 cardinal —
+and nothing would have caught it.
+
+**Why LOW.** Provenance is where dates *should* live, so the exclusion runs in the benign direction
+and is arguably deliberate. **Not zero: the exclusion is not stated as deliberate anywhere**, and a
+reader comparing the sixteen binding fields to the nine in scope has no way to tell an omission from a
+decision.
+
+**Resolution:** open — request that E-1 state the exclusion and its reason.
+**Pattern tag:** `binding-but-unevaluated` · `omission-indistinguishable-from-decision`
+
+---
+
+## I-176 · 2026-08-12 · R34 labelled §11.1's span an UNDERSTATEMENT without measuring it; measured, the span has not moved and the label ran in the family's favour · Severity: **MEDIUM** · Owner: director-of-research
+
+**Description.** R34 recorded that §11.1's `6.571 years` is measured to 2026-07-28 and is therefore an
+**understatement at any later `C`**, *"and every margin quoted from it (§10.4's 0.43-year MinBTL margin
+above all) is understated with it."* **Measured 2026-08-12** by read-only `SELECT` over `book/pit.db`:
+the six primary-universe legs have common coverage `[2020-01-01, 2026-07-28]` = **2400 days = 6.5710
+years**; `ingest_ceiling` holds **zero rows**; the last `knowledge_time` on every leg is 2026-07-29.
+
+**The span does not grow with `C`. It grows with ingest, and none has occurred.** At `C = 2026-08-12`
+the declared in-sample window runs **15 days past the last bar on disk.** Any larger span is contingent
+on §15 step 1's post-seal ingest running to `C` — **an assumption, not a measurement.**
+
+**Why MEDIUM.** No number in the document changes and no criterion moves — 6.571 was and remains
+correct. **What was wrong was a claimed hidden margin**, and it was claimed in the direction that
+flatters the sponsor, by the sponsor, in the revision that was ordered to find stale dates. **This is
+the asymmetry doctrine confirming itself on the seat it was aimed at: R-006 caught the stale dates that
+cost the family and replaced the one that favoured it with a favourable label rather than a
+measurement.**
+
+**Resolution:** **DISCHARGED at `PREREG-002` R-007 (R37)** — R34's label struck, the measured value and
+its measurement date recorded in-field. Filed rather than merely corrected because the pattern matters
+more than the instance.
+**Pattern tag:** `favourable-claim-labelled-not-measured` · `asymmetry-doctrine-confirmed-on-its-author`
+
+---
+
+## I-177 · 2026-08-12 · I-150's cardinal "six" was still inside the sealed field while the prose describing that field carried the corrected "fourteen" · Severity: LOW-MEDIUM · Owner: director-of-research
+
+**Description.** I-150 recorded that the cardinal *"six stale sites"* has never agreed with any roster
+written beside it and that the true count is **fourteen**. R-006 corrected it in `DIR-RESTATE-001`
+§12.2 and in `PREREG-002` R29's revision row. **It remained un-struck inside `model_prior_provenance`**
+— a hashed binding field — reading *"described the pre-repair cost model at six sites"* [measured].
+
+**This is R29(b)'s finding for the sixth time and in the identical direction:** the correction was made
+where readers look and not where the seal looks. **Two further live instances remain and are named
+rather than edited:** `logs/ISSUE_LOG.md` I-034's CLOSED entry (*"Six stale document sites corrected at
+R-006"*) — **not this seat's to edit, since closure is the CRO's and the Principal's** — and R-005's
+seal-readiness block, which is a faithful record of what R-005 said and is correctly left alone.
+
+**Why LOW-MEDIUM.** No consequence follows from the cardinal; the roster is what anyone acts on.
+**Not lower: it is now inside the string that gets hashed**, and P7 would freeze it permanently.
+
+**Resolution:** **conformed at `PREREG-002` R-007 (R39).** The Issue Log instance is routed to the CRO.
+**Pattern tag:** `corrected-in-the-prose-not-in-the-payload` · `cardinal-propagation`
+
+---
+
+## I-178 · 2026-08-12 · Every conforming insert into a binding prose field creates new clause rows, so a `dated_clauses` register can never be finished while the field carries commentary · Severity: **MEDIUM** · Owner: director-of-research
+
+**Description.** The dated-clause payload's 90-row roster is measured against `PREREG-002` §21 **as at
+R-006**. **R-007's own R38 insert — the Principal's ratification of I-153, which S3-D-014 ordered
+recorded in-field — adds 2 sites**, taking the E-6 obligation to **92** [measured, both
+canonicalizations]. The register therefore enumerates 90 of 92 **on the day it was written**.
+
+**The recursion is structural, not clerical.** E-6 demands total coverage; every insert is new text;
+every piece of new text containing an ISO date or a bare `C` is a new site. **A document that records
+its own rulings inside its payload cannot converge.**
+
+**Why MEDIUM.** It is a direct corollary of I-173 and shares its remedy. **Filed separately because it
+is the demonstration**: this seat produced the defect by executing a Principal instruction correctly,
+which is the cleanest evidence available that the problem is the document's architecture and not any
+seat's carelessness.
+
+**Resolution:** open — resolved by I-173's remedy. The payload states the gap rather than silently
+regenerating.
+**Pattern tag:** `coverage-obligation-that-recedes` · `defect-produced-by-correct-execution`
+
+---
+
+## I-179 · 2026-08-12 · The dated-clause register returns 10 of 24; thirteen of the fourteen misses are clauses living in prose no registry field carries · Severity: **MEDIUM** · Owner: director-of-research
+
+**Description.** The Principal ordered `DIR-RESTATE-001` §12.5's twenty-four dated clauses registered as
+a payload. **The register covers 10.** Fully covered: D-4, D-5, D-6, D-7, D-10, D-21, D-23 (seven).
+Covered as residue only: D-2. Covered with the governing mechanism absent: D-19 (no `SPAN` site —
+I-172), D-8 (E-8 cannot fire — I-174). **Uncoverable: D-1, D-3, D-9, D-11, D-12, D-13, D-14, D-15,
+D-16, D-17, D-18, D-20, D-22, D-24 — fourteen.**
+
+**Thirteen of the fourteen are uncoverable for one reason: the clause lives in document prose that no
+registry field carries** — §10.5.2, §10.5.3, §11.1, §11.3, §11.4, §14, §15, §16, §17, §20, §22. That is
+**E-25(3)'s named gap with a number attached.** The fourteenth, **D-24**, is uncoverable because it has
+no date expression at all and is already class (a) under P7 — **that one is correct as it stands.**
+
+**Why MEDIUM.** The remedy Validation already stated is right — *"clauses must be registered, not the
+checker taught to read documents"* — and it is expensive here: **for those thirteen, registration means
+moving the clause into a binding field or striking it**, and moving a clause into a binding field is
+what I-173 and I-178 say the document must stop doing. **The two remedies pull against each other and
+this seat does not resolve the tension**; it is a Gate 0 admissibility question and belongs to
+Validation at C2.
+
+**Resolution:** open — escalated under house rule 7, not resolved. Payload at
+`research/REGISTRATION-PAYLOAD-DATED-CLAUSES-PREREG-002.md`.
+**Pattern tag:** `prose-clause-outside-the-registered-surface` · `two-remedies-that-conflict`

@@ -1,0 +1,401 @@
+
+==============================================================================
+CANONICALIZATION = dedent
+==============================================================================
+
+-- statement  (len 877)  sites: 2
+   off    483  ISO       '2020-01-01'
+        sent: The claim under test is narrower: de-scaling that position as the realized funding rate rises above its own trailing 30-day baseline produces POSITIVE ALPHA to the unconditioned position, at the firm'
+   off    497  FORMULA   'C'
+        sent: The claim under test is narrower: de-scaling that position as the realized funding rate rises above its own trailing 30-day baseline produces POSITIVE ALPHA to the unconditioned position, at the firm'
+
+-- mechanism  (len 6409)  sites: 2
+   off    904  ISO       '2026-08-04'
+        sent: [R1, 2026-08-04, PRE-SEAL - WITHDRAWN AND REPLACED.
+   off   3193  ISO       '2026-08-04'
+        sent: THE ACTUAL CLAIM: [R2, 2026-08-04, PRE-SEAL - RESTATED.
+
+-- falsifier  (len 5836)  sites: 5
+   off    137  ISO       '2020-01-01'
+        sent: Computed from THREE runs through castellan.run_backtest against this family, on the same daily UTC index over the full in-sample [2020-01-01, C], all net of the full Charter 4.6 cost stack AS REPAIRED
+   off    149  FORMULA   'C'
+        sent: Computed from THREE runs through castellan.run_backtest against this family, on the same daily UTC index over the full in-sample [2020-01-01, C], all net of the full Charter 4.6 cost stack AS REPAIRED
+   off   4643  FORMULA   'C'
+        sent: E2 DISCIPLINE, BINDING (Validation C-001): F-002 is evaluated ONCE, on the first complete run of the three series under the repaired cost stack [R29, 2026-08-11: "after C1 lands" STRUCK - C1 is DISCHA
+   off   4758  ISO       '2026-08-11'
+        sent: E2 DISCIPLINE, BINDING (Validation C-001): F-002 is evaluated ONCE, on the first complete run of the three series under the repaired cost stack [R29, 2026-08-11: "after C1 lands" STRUCK - C1 is DISCHA
+   off   4832  ISO       '2026-07-29'
+        sent: E2 DISCIPLINE, BINDING (Validation C-001): F-002 is evaluated ONCE, on the first complete run of the three series under the repaired cost stack [R29, 2026-08-11: "after C1 lands" STRUCK - C1 is DISCHA
+
+-- universe  (len 19138)  sites: 17
+   off    184  ISO       '2020-01-01'
+        sent: UNIVERSE: BTC/USDT and ETH/USDT spot paired against BTC/USDT:USDT and ETH/USDT:USDT perpetuals, common span 2020-01-01 to C = 6.571 years, zero gaps [measured].
+   off    198  FORMULA   'C'
+        sent: UNIVERSE: BTC/USDT and ETH/USDT spot paired against BTC/USDT:USDT and ETH/USDT:USDT perpetuals, common span 2020-01-01 to C = 6.571 years, zero gaps [measured].
+   off    274  ISO       '2026-08-04'
+        sent: [R3, 2026-08-04, PRE-SEAL - SOL IS DROPPED ENTIRELY.
+   off    677  ISO       '2022-11-09'
+        sent: The prior text made SOL a SECONDARY member reported separately on its own 5.87-year span with its own N and its own verdict, never pooled.] REASON, per I-045: Binance changed SOLUSDT's funding settlem
+   off   2522  ISO       '2022-11-10'
+        sent: WHAT THE DROP DOES NOT COST: F-002 is computed on the common PRIMARY-universe index (BTC, ETH), so NO LEG OF F-002 EVER READ SOL and SOL's 2022-11-10 tail realization (-0.17166 accrual on -1.0 perp no
+   off   2938  ISO       '2020-03-12'
+        sent: WHAT IT DOES COST, recorded pre-seal: the universe's largest in-sample basis excursions are -73.65bp (BTC) and -102.95bp (ETH), both 2020-03-12 [measured - DATA-INGEST-002 section 4] - roughly an ORDE
+   off   5621  ISO       '2026-08-04'
+        sent: [R3, 2026-08-04: selection MOVED WITHIN the   already-declared menu, from (2) to (4).
+   off   6175  ISO       '2026-08-04'
+        sent: [R4, 2026-08-04: THE CADENCE   CONSTANT IS DELETED.
+   off   7756  ISO       '2026-08-04'
+        sent: [R5, 2026-08-04: NEW CHOICE, declared pre-measurement   against a registry holding 0 families and 0 trials.
+   off  10371  ISO       '2025-09-18'
+        sent: THE ONE KNOWN IN-SAMPLE TRIGGER, NAMED BY DATE SO NO DISCRETION   EXISTS AT RUN TIME: 2025-09-18, on which Binance changed the   funding formula FIRM-WIDE, introducing the /(8/N) divisor [cited -   of
+   off  10809  ISO       '2025-09-18'
+        sent: UNDER A MECHANICAL TRIGGER IT FIRES   REGARDLESS, AND THIS SEAT DECLARES THAT IT DOES: BTC and ETH carry   z(t) = INSUFFICIENT-DATA and w = 1.0 for the 30 days from   2025-09-18.
+   off  11121  ISO       '2026-08-04'
+        sent: N CONTRIBUTION: [R5/R6, 2026-08-04: 6 -> 7] 7 - one per choice, K1 through K7.
+   off  11182  ISO       '2026-08-10'
+        sent: [R19, 2026-08-10, PRE-SEAL: THE 7 IS NOW REGISTERED, NOT MERELY DECLARED.
+   off  13279  ISO       '2026-08-05'
+        sent: [R9, 2026-08-05, PRE-SEAL - STRUCK AND REPLACED ON THREE HEADS.
+   off  17131  ISO       '2026-08-04'
+        sent: COUNTERFACTUAL, recorded so the rider's value is legible: had K1-K7 been selected AFTER seeing results, the product would be [R5, 2026-08-04] 10 x 3 x 9 x 5 x 5 x 4 x 5 = 135,000 [arithmetic on declar
+   off  18294  ISO       '2026-08-04'
+        sent: EXPLICITLY NOT CONDITIONED ON, checked deliberately: no excluded period, date range or event window; no post-event window; no volatility-state filter (volatility is a REPORTING cut only, never a filte
+   off  18711  ISO       '2022-11-09'
+        sent: THREE FACTS MAKE IT ADMISSIBLE HERE AND ALL THREE ARE CHECKABLE: (i) the reason is a DOCUMENTED VENDOR ACT DATED 2022-11-09 [cited - official], not a property of SOL's returns; (ii) NO RETURN STATISTI
+
+-- horizon  (len 1780)  sites: 0
+
+-- success_criteria  (len 28209)  sites: 23
+   off      6  ISO       '2026-08-05'
+        sent: [R11, 2026-08-05, PRE-SEAL - THE ML-2 ASSERTION, ADDED VERBATIM AND PLACED FIRST BECAUSE RULING-004 ML-2 MAKES ITS ABSENCE A GATE 0 REJECTION RATHER THAN A DEFERRAL, AND BECAUSE 'SILENCE IS NOT THAT A
+   off    758  ISO       '2022-11-09'
+        sent: The assertion is checkable and section 10.7(a) is the check, choice by choice: K1-K7 were each selected BEFORE any measurement from a menu declared in this document against a registry holding 0 famili
+   off   1669  FORMULA   'C'
+        sent: The assertion is checkable and section 10.7(a) is the check, choice by choice: K1-K7 were each selected BEFORE any measurement from a menu declared in this document against a registry holding 0 famili
+   off   2657  ISO       '2026-08-06'
+        sent: [R13/R14/R15/R16/R17, 2026-08-06, PRE-SEAL - THE CEILING IS A FUNCTION AND THE BUDGET IS STAGED AGAINST A DECLARED RHO.
+   off   3191  ISO       '2026-08-10'
+        sent: [R20, 2026-08-10, PRE-SEAL - I-105's DISCHARGE.
+   off   8383  FORMULA   'C + 187 days'
+        sent: (2) KC-002 survival at C + 187 days: no clause fires - and per KC-002's own text, SURVIVING IT CONFIRMS NOTHING.
+   off   9603  ISO       '2026-08-04'
+        sent: Required in every artifact regardless of verdict: per- regime-cell decomposition (all four cells); raw AND effective observation counts side by side; gross and net with the breakeven cost; hit rate PA
+   off   9711  ISO       '2026-08-10'
+        sent: Required in every artifact regardless of verdict: per- regime-cell decomposition (all four cells); raw AND effective observation counts side by side; gross and net with the breakeven cost; hit rate PA
+   off  10522  ISO       '2026-08-05'
+        sent: REPLACED BY:] the disclosure line 'registry N = n_inherited 7 (the K1-K7 conditioning floor, SEALED, with four harness consumers) + logged <count>; declared ceiling 54 at Stage 1, 86 at full Stage 2; 
+   off  13289  ISO       '2026-08-05'
+        sent: [R11, 2026-08-05] TWO HARNESS LEAKAGE DEFECTS ARE CARRIED RATHER THAN ASSUMED AWAY, because one of them is sized against THIS family's own parameter: walk_forward_windows applies NO purge and NO embar
+   off  14207  ISO       '2026-08-10'
+        sent: [R21, 2026-08-10, PRE-SEAL - THE GATES.md 4.7.2 AUDIT, RECORDED IN THE SEALED TEXT INCLUDING ITS UNFLATTERING HALF, BECAUSE A DOCUMENT THAT DESCRIBES CONTROLS IT DOES NOT HAVE IS I-046'S COSTUME ON TH
+   off  16836  ISO       '2026-08-10'
+        sent: [R24/R25/R28, 2026-08-10, PRE-SEAL - THE CLASS REGISTER, AND THE TWO CORRECTIONS THE AUDIT ABOVE GOT WRONG.] EVERY LIMIT THIS DOCUMENT CLAIMS NOW CARRIES ITS CLASS AT SECTION 10.11: (a) HARNESS-ENFORC
+   off  19524  ISO       '2026-08-10'
+        sent: RECORDED AT PRE-REGISTRATION, all [measured] from castellan.stats: ~~n_inherited = 0 (no prior search exists)~~ [R19, 2026-08-10: n_inherited = 7 - REGISTERED, not declared.
+   off  19770  ISO       '2026-08-04'
+        sent: See the N CONTRIBUTION note in `universe` and section 10.3.]; [R5/R6, 2026-08-04] N_conditioning = 7 (was 6; K7 adds one); trial budget 79 (was 80; the 'SOL on its own span' diagnostic is struck with 
+   off  20127  ISO       '2026-08-04'
+        sent: See the N CONTRIBUTION note in `universe` and section 10.3.]; [R5/R6, 2026-08-04] N_conditioning = 7 (was 6; K7 adds one); trial budget 79 (was 80; the 'SOL on its own span' diagnostic is struck with 
+   off  21051  ISO       '2026-08-05'
+        sent: [R8, 2026-08-05, PRE-SEAL - THE ABSOLUTE CEILING IS CORRECTED FROM 110 TO 109.
+   off  22451  ISO       '2026-08-04'
+        sent: [R3, 2026-08-04: the clause 'On the SOL-inclusive 5.87-year span the ceiling is 74' is MOOT - no SOL-inclusive span exists and the 74 ceiling never binds.
+   off  24373  ISO       '2026-08-11'
+        sent: [R29(b), 2026-08-11, PRE-SEAL - THE WHOLE OF THE PRECEDING COST- STACK PARAGRAPH DESCRIBES A COST MODEL THAT NO LONGER EXISTS AND IS RETAINED ONLY AS THE RECORD OF THE DEFECT.
+   off  25171  ISO       '2026-08-11'
+        sent: C1 IS DISCHARGED; I-034 IS CLOSED (Principal, 2026-08-11; satisfied 2026-07-29, commit 875874f).
+   off  25193  ISO       '2026-07-29'
+        sent: C1 IS DISCHARGED; I-034 IS CLOSED (Principal, 2026-08-11; satisfied 2026-07-29, commit 875874f).
+   off  26074  ISO       '2026-07-29'
+        sent: All nineteen Validation-authored T-cases pass (DATA-IMPL-004 sections 5-6, landed 2026-07-29) [cited].
+   off  26314  FORMULA   'C'
+        sent: THE ONE HEAD NOT REPAIRED IS DEFECT (d) - CostModel has no field that can charge liquidation or venue-insolvency risk, the largest risk in this mandate - which is CLASS (c), C-25 in the section 10.11.
+   off  26511  ISO       '2026-08-11'
+        sent: HOUSE RULE 5, AND THE COST IS NOT ONE TRIAL [R30, 2026-08-11]: carry.carry_breakeven_bps_annual is the instrument and it takes a CALLABLE, evaluating it once at bracket[0], once at bracket[1], and onc
+
+-- forward_kill_condition  (len 14377)  sites: 41
+   off     27  FORMULA   'C + 187 days'
+        sent: Observation date = C + 187 days, fixed at sealing and ABSOLUTE thereafter - it does not move with the sprint calendar, the ingest schedule, the cost-model repair, or the harness; once written it does 
+   off    264  FORMULA   'C'
+        sent: (Drafted against an intended C = 2026-07-28, giving 2027-01-31; section 20.1 recommends NOT sealing that day, so the executed value is whatever C + 187 days resolves to and the DRAFTED DATE IS NOT BIN
+   off    268  ISO       '2026-07-28'
+        sent: (Drafted against an intended C = 2026-07-28, giving 2027-01-31; section 20.1 recommends NOT sealing that day, so the executed value is whatever C + 187 days resolves to and the DRAFTED DATE IS NOT BIN
+   off    287  ISO       '2027-01-31'
+        sent: (Drafted against an intended C = 2026-07-28, giving 2027-01-31; section 20.1 recommends NOT sealing that day, so the executed value is whatever C + 187 days resolves to and the DRAFTED DATE IS NOT BIN
+   off    379  FORMULA   'C + 187 days'
+        sent: (Drafted against an intended C = 2026-07-28, giving 2027-01-31; section 20.1 recommends NOT sealing that day, so the executed value is whatever C + 187 days resolves to and the DRAFTED DATE IS NOT BIN
+   off    779  FORMULA   'C'
+        sent: On that date Validation computes, from registry.db and pit.db ALONE, on the FROZEN pre-registration, over [C, C + 187 days] [R32, 2026-08-11: the literal "2027-01-31" that stood here is STRUCK and con
+   off    782  FORMULA   'C + 187 days'
+        sent: On that date Validation computes, from registry.db and pit.db ALONE, on the FROZEN pre-registration, over [C, C + 187 days] [R32, 2026-08-11: the literal "2027-01-31" that stood here is STRUCK and con
+   off    802  ISO       '2026-08-11'
+        sent: On that date Validation computes, from registry.db and pit.db ALONE, on the FROZEN pre-registration, over [C, C + 187 days] [R32, 2026-08-11: the literal "2027-01-31" that stood here is STRUCK and con
+   off    827  ISO       '2027-01-31'
+        sent: On that date Validation computes, from registry.db and pit.db ALONE, on the FROZEN pre-registration, over [C, C + 187 days] [R32, 2026-08-11: the literal "2027-01-31" that stood here is STRUCK and con
+   off   3035  FORMULA   'C '
+        sent: (2) No post-C exclusions - any regime filter, date exclusion, asset exclusion, venue change or universe restriction not present in the sealed pre-registration is inadmissible in this computation; this
+   off   3243  ISO       '2026-08-05'
+        sent: (2) No post-C exclusions - any regime filter, date exclusion, asset exclusion, venue change or universe restriction not present in the sealed pre-registration is inadmissible in this computation; this
+   off   3764  FORMULA   'C + 187 days'
+        sent: (3) No restatement as continuation - a hypothesis restated after the observation date C + 187 days [R32, 2026-08-11: literal "2027-01-31" STRUCK] is a NEW family [R9, 2026-08-05: the prior text read '
+   off   3783  ISO       '2026-08-11'
+        sent: (3) No restatement as continuation - a hypothesis restated after the observation date C + 187 days [R32, 2026-08-11: literal "2027-01-31" STRUCK] is a NEW family [R9, 2026-08-05: the prior text read '
+   off   3804  ISO       '2027-01-31'
+        sent: (3) No restatement as continuation - a hypothesis restated after the observation date C + 187 days [R32, 2026-08-11: literal "2027-01-31" STRUCK] is a NEW family [R9, 2026-08-05: the prior text read '
+   off   3845  ISO       '2026-08-05'
+        sent: (3) No restatement as continuation - a hypothesis restated after the observation date C + 187 days [R32, 2026-08-11: literal "2027-01-31" STRUCK] is a NEW family [R9, 2026-08-05: the prior text read '
+   off   4733  ISO       '2026-08-11'
+        sent: [R32, 2026-08-11, PRE-SEAL - THE SECOND C1, AND IT IS IN CLAUSE 5 BELOW.
+   off   4877  FORMULA   'C + 187 days'
+        sent: FILED I-153, HIGH.] This field's opening declares the observation date to be C + 187 days and states that THE DRAFTED DATE IS NOT BINDING - THE FORMULA IS.
+   off   5021  ISO       '2027-01-31'
+        sent: Clause 5 as drafted read "if the computation is not performed ON 2027-01-31 for ANY reason ...
+   off   5177  ISO       '2026-07-28'
+        sent: the family is killed by default." READ AS SEALED, THOSE TWO SENTENCES TERMINATE THIS FAMILY WITH CERTAINTY: at any seal after 2026-07-28, C + 187 days falls LATER than 2027-01-31, so on 2027-01-31 the
+   off   5189  FORMULA   'C + 187 days'
+        sent: the family is killed by default." READ AS SEALED, THOSE TWO SENTENCES TERMINATE THIS FAMILY WITH CERTAINTY: at any seal after 2026-07-28, C + 187 days falls LATER than 2027-01-31, so on 2027-01-31 the
+   off   5219  ISO       '2027-01-31'
+        sent: the family is killed by default." READ AS SEALED, THOSE TWO SENTENCES TERMINATE THIS FAMILY WITH CERTAINTY: at any seal after 2026-07-28, C + 187 days falls LATER than 2027-01-31, so on 2027-01-31 the
+   off   5237  ISO       '2027-01-31'
+        sent: the family is killed by default." READ AS SEALED, THOSE TWO SENTENCES TERMINATE THIS FAMILY WITH CERTAINTY: at any seal after 2026-07-28, C + 187 days falls LATER than 2027-01-31, so on 2027-01-31 the
+   off   6089  FORMULA   'C'
+        sent: THE LITERAL IS CONFORMED TO C + 187 DAYS in clause 5 below, in the two clauses above, and in section 14's prose.
+   off   6668  ISO       '2027-01-31'
+        sent: PUT TO C2 AS C13(k) - VALIDATION MAY REFUSE THIS CONFORMANCE AND REQUIRE THE LITERAL 2027-01-31 SEALED AS DRAFTED, in which case the family accepts a window shortened by however long the seal took, cl
+   off   7341  FORMULA   'C'
+        sent: (5) SILENCE IS A KILL - if the computation is not performed on THE OBSERVATION DATE C + 187 DAYS [R32, 2026-08-11: literal "2027-01-31" STRUCK - see the R32 note above; the literal made this clause fi
+   off   7360  ISO       '2026-08-11'
+        sent: (5) SILENCE IS A KILL - if the computation is not performed on THE OBSERVATION DATE C + 187 DAYS [R32, 2026-08-11: literal "2027-01-31" STRUCK - see the R32 note above; the literal made this clause fi
+   off   7381  ISO       '2027-01-31'
+        sent: (5) SILENCE IS A KILL - if the computation is not performed on THE OBSERVATION DATE C + 187 DAYS [R32, 2026-08-11: literal "2027-01-31" STRUCK - see the R32 note above; the literal made this clause fi
+   off   7916  ISO       '2026-08-11'
+        sent: [R29(b), 2026-08-11, PRE-SEAL - STRUCK IN THIS FIELD, WHICH IS WHERE IT MATTERED AND WHERE R-005 DID NOT REACH.] The sentence that stood here - "CONDITION PRECEDENT, separately binding: the C1 cost-mo
+   off   8164  ISO       '2026-08-11'
+        sent: [R29(b), 2026-08-11, PRE-SEAL - STRUCK IN THIS FIELD, WHICH IS WHERE IT MATTERED AND WHERE R-005 DID NOT REACH.] The sentence that stood here - "CONDITION PRECEDENT, separately binding: the C1 cost-mo
+   off   8436  ISO       '2026-08-11'
+        sent: C1 IS DISCHARGED: I-034 CLOSED by the Principal 2026-08-11, satisfied 2026-07-29 (commit 875874f, "Ruling 003 implemented: carry accounting, 139/139.
+   off   8458  ISO       '2026-07-29'
+        sent: C1 IS DISCHARGED: I-034 CLOSED by the Principal 2026-08-11, satisfied 2026-07-29 (commit 875874f, "Ruling 003 implemented: carry accounting, 139/139.
+   off   9173  FORMULA   'C'
+        sent: The residual is retained and is NOT swept up with the closure: CostModel has no field that can charge liquidation or venue-insolvency risk (section 12.5 defect (d)), it is class (c) C-25 in the sectio
+   off   9428  FORMULA   'C'
+        sent: WHAT KC-002 IS NOT, stated here rather than waiting to be told (Validation C-001 section 1.6 makes the identical statement about KC-001): KC-002 IS A KILL CONDITION, NOT A CONFIRMATORY TEST.
+   off   9842  FORMULA   'C'
+        sent: This family DOES NOT claim the C-001 N=1 confirmatory exemption; should it ever seek one it must satisfy E1-E5 in full and be entered in the firm-level register of outstanding confirmatory exemptions 
+   off  10249  FORMULA   'C'
+        sent: Separately, per C-001 E3: the family's <= 22 forward-window trials are N_forward, they are LOGGED AS TRIALS, and NO REPORTED RESULT MAY BE SELECTED FROM AMONG THEM.
+   off  10404  ISO       '2026-08-10'
+        sent: [R21, 2026-08-10, PRE-SEAL - WHAT THE HARNESS DOES WITH THIS FIELD, RECORDED ON KC-002'S OWN FACE BECAUSE THE ANSWER IS NOTHING, AND BECAUSE THE SEAT THAT WOULD PREFER NOT TO SAY SO IS THE SEAT THAT W
+   off  12127  ISO       '2026-08-10'
+        sent: [R24/R26, 2026-08-10, PRE-SEAL - KC-002 IS CLASS (b), AND ITS THREE FIELDS ARE NAMED.
+   off  13113  ISO       '2026-08-10'
+        sent: [R26, 2026-08-10, PRE-SEAL - THE CONDITION PRECEDENT IS SATISFIED AND THE DOWNGRADE MUST NOT FIRE.] The C1 cost-model repair is SPECIFIED (VALIDATION-RULING-003, whose header names 'Blocks: PREREG-002
+   off  13434  ISO       '2026-07-29'
+        sent: [R26, 2026-08-10, PRE-SEAL - THE CONDITION PRECEDENT IS SATISFIED AND THE DOWNGRADE MUST NOT FIRE.] The C1 cost-model repair is SPECIFIED (VALIDATION-RULING-003, whose header names 'Blocks: PREREG-002
+   off  13763  ISO       '2026-08-11'
+        sent: SECTION 14's CONDITION PRECEDENT WOULD HAVE DOWNGRADED THIS FAMILY TO ADMITTED-AS-EXPLORATORY ON 2026-08-11 - 'pre-declared ineligible for Gate 1' - ON A PREMISE FALSE ELEVEN DAYS BEFORE THE DEADLINE,
+   off  14241  FORMULA   'C'
+        sent: The one head of section 12 that is NOT repaired is defect (d) - CostModel has no field that can charge liquidation or venue-insolvency risk - which is class (c), is C-25 in the register, is disclosed 
+
+TOTAL SITES (dedent) = 90
+
+==============================================================================
+CANONICALIZATION = verbatim
+==============================================================================
+
+-- statement  (len 1321)  sites: 2
+   off    742  ISO       '2020-01-01'
+        sent: The claim under                                      test is narrower: de-scaling that position as the realized funding                                      rate rises above its own trailing 30-day ba
+   off    756  FORMULA   'C'
+        sent: The claim under                                      test is narrower: de-scaling that position as the realized funding                                      rate rises above its own trailing 30-day ba
+
+-- mechanism  (len 10035)  sites: 2
+   off   1422  ISO       '2026-08-04'
+        sent: [R1, 2026-08-04, PRE-SEAL - WITHDRAWN AND REPLACED.
+   off   5006  ISO       '2026-08-04'
+        sent: THE ACTUAL CLAIM: [R2, 2026-08-04, PRE-SEAL - RESTATED.
+
+-- falsifier  (len 9166)  sites: 5
+   off    211  ISO       '2020-01-01'
+        sent: Computed from THREE runs through castellan.run_backtest                                      against this family, on the same daily UTC index over the full                                      in-samp
+   off    223  FORMULA   'C'
+        sent: Computed from THREE runs through castellan.run_backtest                                      against this family, on the same daily UTC index over the full                                      in-samp
+   off   7307  FORMULA   'C'
+        sent: E2 DISCIPLINE, BINDING (Validation C-001): F-002 is evaluated ONCE,                                      on the first complete run of the three series under the repaired                               
+   off   7496  ISO       '2026-08-11'
+        sent: E2 DISCIPLINE, BINDING (Validation C-001): F-002 is evaluated ONCE,                                      on the first complete run of the three series under the repaired                               
+   off   7607  ISO       '2026-07-29'
+        sent: E2 DISCIPLINE, BINDING (Validation C-001): F-002 is evaluated ONCE,                                      on the first complete run of the three series under the repaired                               
+
+-- universe  (len 30053)  sites: 17
+   off    258  ISO       '2020-01-01'
+        sent: UNIVERSE: BTC/USDT and ETH/USDT spot paired against                                      BTC/USDT:USDT and ETH/USDT:USDT perpetuals, common span 2020-01-01 to                                      C = 
+   off    309  FORMULA   'C'
+        sent: UNIVERSE: BTC/USDT and ETH/USDT spot paired against                                      BTC/USDT:USDT and ETH/USDT:USDT perpetuals, common span 2020-01-01 to                                      C = 
+   off    422  ISO       '2026-08-04'
+        sent: [R3, 2026-08-04, PRE-SEAL - SOL IS DROPPED ENTIRELY.
+   off   1047  ISO       '2022-11-09'
+        sent: The                                      prior text made SOL a SECONDARY member reported separately on its own                                      5.87-year span with its own N and its own verdict, n
+   off   3891  ISO       '2022-11-10'
+        sent: WHAT THE DROP DOES NOT COST:                                      F-002 is computed on the common PRIMARY-universe index (BTC, ETH), so                                      NO LEG OF F-002 EVER READ S
+   off   4566  ISO       '2020-03-12'
+        sent: WHAT IT DOES COST, recorded pre-seal: the universe's                                      largest in-sample basis excursions are -73.65bp (BTC) and -102.95bp                                      (ETH)
+   off   8803  ISO       '2026-08-04'
+        sent: [R3, 2026-08-04: selection MOVED WITHIN the                                        already-declared menu, from (2) to (4).
+   off   9690  ISO       '2026-08-04'
+        sent: [R4, 2026-08-04: THE CADENCE                                        CONSTANT IS DELETED.
+   off  12196  ISO       '2026-08-04'
+        sent: [R5, 2026-08-04: NEW CHOICE, declared pre-measurement                                        against a registry holding 0 families and 0 trials.
+   off  16328  ISO       '2025-09-18'
+        sent: THE ONE KNOWN IN-SAMPLE TRIGGER, NAMED BY DATE SO NO DISCRETION                                        EXISTS AT RUN TIME: 2025-09-18, on which Binance changed the                                     
+   off  17025  ISO       '2025-09-18'
+        sent: UNDER A MECHANICAL TRIGGER IT FIRES                                        REGARDLESS, AND THIS SEAT DECLARES THAT IT DOES: BTC and ETH carry                                        z(t) = INSUFFICIENT
+   off  17522  ISO       '2026-08-04'
+        sent: N CONTRIBUTION: [R5/R6, 2026-08-04: 6 -> 7] 7 - one per choice, K1                                      through K7.
+   off  17620  ISO       '2026-08-10'
+        sent: [R19, 2026-08-10, PRE-SEAL: THE 7 IS NOW REGISTERED,                                      NOT MERELY DECLARED.
+   off  20938  ISO       '2026-08-05'
+        sent: [R9, 2026-08-05, PRE-SEAL - STRUCK AND REPLACED                                      ON THREE HEADS.
+   off  26936  ISO       '2026-08-04'
+        sent: COUNTERFACTUAL, recorded so                                      the rider's value is legible: had K1-K7 been selected AFTER seeing                                      results, the product would be [
+   off  28728  ISO       '2026-08-04'
+        sent: EXPLICITLY NOT CONDITIONED ON, checked deliberately: no excluded                                      period, date range or event window; no post-event window; no                                      
+   off  29367  ISO       '2022-11-09'
+        sent: THREE FACTS MAKE IT ADMISSIBLE HERE AND ALL THREE ARE                                      CHECKABLE: (i) the reason is a DOCUMENTED VENDOR ACT DATED 2022-11-09                                      [c
+
+-- horizon  (len 2742)  sites: 0
+
+-- success_criteria  (len 44600)  sites: 23
+   off      6  ISO       '2026-08-05'
+        sent: [R11, 2026-08-05, PRE-SEAL - THE ML-2 ASSERTION, ADDED VERBATIM AND                                      PLACED FIRST BECAUSE RULING-004 ML-2 MAKES ITS ABSENCE A GATE 0                                
+   off   1202  ISO       '2022-11-09'
+        sent: The assertion is checkable and section                                      10.7(a) is the check, choice by choice: K1-K7 were each selected                                      BEFORE any measurement
+   off   2594  FORMULA   'C'
+        sent: The assertion is checkable and section                                      10.7(a) is the check, choice by choice: K1-K7 were each selected                                      BEFORE any measurement
+   off   4174  ISO       '2026-08-06'
+        sent: [R13/R14/R15/R16/R17, 2026-08-06, PRE-SEAL - THE CEILING IS A                                      FUNCTION AND THE BUDGET IS STAGED AGAINST A DECLARED RHO.
+   off   5041  ISO       '2026-08-10'
+        sent: [R20, 2026-08-10, PRE-SEAL - I-105's DISCHARGE.
+   off  13230  FORMULA   'C + 187 days'
+        sent: (2) KC-002 survival at                                      C + 187 days: no clause fires - and per KC-002's own text, SURVIVING                                      IT CONFIRMS NOTHING.
+   off  15116  ISO       '2026-08-04'
+        sent: Required in every artifact regardless of verdict: per-                                      regime-cell decomposition (all four cells); raw AND effective                                      observati
+   off  15298  ISO       '2026-08-10'
+        sent: Required in every artifact regardless of verdict: per-                                      regime-cell decomposition (all four cells); raw AND effective                                      observati
+   off  16590  ISO       '2026-08-05'
+        sent: REPLACED BY:] the disclosure line 'registry N =                                      n_inherited 7 (the K1-K7 conditioning floor, SEALED, with four                                      harness consume
+   off  20911  ISO       '2026-08-05'
+        sent: [R11, 2026-08-05] TWO HARNESS LEAKAGE DEFECTS ARE CARRIED RATHER THAN                                      ASSUMED AWAY, because one of them is sized against THIS family's own                         
+   off  22347  ISO       '2026-08-10'
+        sent: [R21, 2026-08-10, PRE-SEAL - THE GATES.md 4.7.2 AUDIT, RECORDED IN                                      THE SEALED TEXT INCLUDING ITS UNFLATTERING HALF, BECAUSE A                                      
+   off  26567  ISO       '2026-08-10'
+        sent: [R24/R25/R28, 2026-08-10, PRE-SEAL - THE CLASS REGISTER, AND THE                                      TWO CORRECTIONS THE AUDIT ABOVE GOT WRONG.] EVERY LIMIT THIS                                      
+   off  30883  ISO       '2026-08-10'
+        sent: RECORDED AT PRE-REGISTRATION, all [measured] from castellan.stats:                                      ~~n_inherited = 0 (no prior search exists)~~ [R19, 2026-08-10:                                  
+   off  31277  ISO       '2026-08-04'
+        sent: See the N CONTRIBUTION note in                                      `universe` and section 10.3.]; [R5/R6, 2026-08-04]                                      N_conditioning = 7 (was 6; K7 adds one); tri
+   off  31893  ISO       '2026-08-04'
+        sent: See the N CONTRIBUTION note in                                      `universe` and section 10.3.]; [R5/R6, 2026-08-04]                                      N_conditioning = 7 (was 6; K7 adds one); tri
+   off  33335  ISO       '2026-08-05'
+        sent: [R8,                                      2026-08-05, PRE-SEAL - THE ABSOLUTE CEILING IS CORRECTED FROM 110 TO                                      109.
+   off  35475  ISO       '2026-08-04'
+        sent: [R3, 2026-08-04: the clause 'On the SOL-inclusive                                      5.87-year span the ceiling is 74' is MOOT - no SOL-inclusive span                                      exists and
+   off  38507  ISO       '2026-08-11'
+        sent: [R29(b), 2026-08-11, PRE-SEAL - THE WHOLE OF THE PRECEDING COST-                                      STACK PARAGRAPH DESCRIBES A COST MODEL THAT NO LONGER EXISTS AND                                  
+   off  39786  ISO       '2026-08-11'
+        sent: C1 IS DISCHARGED; I-034 IS CLOSED (Principal,                                      2026-08-11; satisfied 2026-07-29, commit 875874f).
+   off  39808  ISO       '2026-07-29'
+        sent: C1 IS DISCHARGED; I-034 IS CLOSED (Principal,                                      2026-08-11; satisfied 2026-07-29, commit 875874f).
+   off  41207  ISO       '2026-07-29'
+        sent: All nineteen Validation-authored T-cases pass                                      (DATA-IMPL-004 sections 5-6, landed 2026-07-29) [cited].
+   off  41595  FORMULA   'C'
+        sent: THE ONE HEAD NOT                                      REPAIRED IS DEFECT (d) - CostModel has no field that can charge                                      liquidation or venue-insolvency risk, the lar
+   off  41903  ISO       '2026-08-11'
+        sent: HOUSE RULE 5, AND THE COST IS NOT ONE TRIAL [R30, 2026-08-11]:                                      carry.carry_breakeven_bps_annual is the instrument and it takes                                     
+
+-- forward_kill_condition  (len 22924)  sites: 41
+   off     27  FORMULA   'C + 187 days'
+        sent: Observation date = C + 187 days, fixed at sealing and ABSOLUTE                                      thereafter - it does not move with the sprint calendar, the ingest                                  
+   off    375  FORMULA   'C'
+        sent: (Drafted against an intended C =                                      2026-07-28, giving 2027-01-31; section 20.1 recommends NOT sealing                                      that day, so the executed 
+   off    416  ISO       '2026-07-28'
+        sent: (Drafted against an intended C =                                      2026-07-28, giving 2027-01-31; section 20.1 recommends NOT sealing                                      that day, so the executed 
+   off    435  ISO       '2027-01-31'
+        sent: (Drafted against an intended C =                                      2026-07-28, giving 2027-01-31; section 20.1 recommends NOT sealing                                      that day, so the executed 
+   off    564  FORMULA   'C + 187 days'
+        sent: (Drafted against an intended C =                                      2026-07-28, giving 2027-01-31; section 20.1 recommends NOT sealing                                      that day, so the executed 
+   off   1223  FORMULA   'C'
+        sent: On that date Validation computes, from                                      registry.db and pit.db ALONE, on the FROZEN pre-registration, over                                      [C, C + 187 days] [R
+   off   1226  FORMULA   'C + 187 days'
+        sent: On that date Validation computes, from                                      registry.db and pit.db ALONE, on the FROZEN pre-registration, over                                      [C, C + 187 days] [R
+   off   1246  ISO       '2026-08-11'
+        sent: On that date Validation computes, from                                      registry.db and pit.db ALONE, on the FROZEN pre-registration, over                                      [C, C + 187 days] [R
+   off   1271  ISO       '2027-01-31'
+        sent: On that date Validation computes, from                                      registry.db and pit.db ALONE, on the FROZEN pre-registration, over                                      [C, C + 187 days] [R
+   off   4774  FORMULA   'C '
+        sent: (2) No post-C exclusions -                                      any regime filter, date exclusion, asset exclusion, venue change or                                      universe restriction not presen
+   off   5093  ISO       '2026-08-05'
+        sent: (2) No post-C exclusions -                                      any regime filter, date exclusion, asset exclusion, venue change or                                      universe restriction not presen
+   off   5984  FORMULA   'C + 187 days'
+        sent: (3) No restatement as                                      continuation - a hypothesis restated after the observation date                                      C + 187 days [R32, 2026-08-11: literal "
+   off   6003  ISO       '2026-08-11'
+        sent: (3) No restatement as                                      continuation - a hypothesis restated after the observation date                                      C + 187 days [R32, 2026-08-11: literal "
+   off   6024  ISO       '2027-01-31'
+        sent: (3) No restatement as                                      continuation - a hypothesis restated after the observation date                                      C + 187 days [R32, 2026-08-11: literal "
+   off   6102  ISO       '2026-08-05'
+        sent: (3) No restatement as                                      continuation - a hypothesis restated after the observation date                                      C + 187 days [R32, 2026-08-11: literal "
+   off   7508  ISO       '2026-08-11'
+        sent: [R32, 2026-08-11, PRE-SEAL - THE SECOND C1, AND IT IS IN CLAUSE                                      5 BELOW.
+   off   7726  FORMULA   'C + 187 days'
+        sent: FILED I-153, HIGH.] This field's opening declares the                                      observation date to be C + 187 days and states that THE DRAFTED                                      DATE IS 
+   off   7944  ISO       '2027-01-31'
+        sent: Clause 5 as drafted read                                      "if the computation is not performed ON 2027-01-31 for ANY                                      reason ...
+   off   8211  ISO       '2026-07-28'
+        sent: the family is killed by default." READ AS SEALED,                                      THOSE TWO SENTENCES TERMINATE THIS FAMILY WITH CERTAINTY: at any                                      seal after 
+   off   8223  FORMULA   'C + 187 days'
+        sent: the family is killed by default." READ AS SEALED,                                      THOSE TWO SENTENCES TERMINATE THIS FAMILY WITH CERTAINTY: at any                                      seal after 
+   off   8253  ISO       '2027-01-31'
+        sent: the family is killed by default." READ AS SEALED,                                      THOSE TWO SENTENCES TERMINATE THIS FAMILY WITH CERTAINTY: at any                                      seal after 
+   off   8308  ISO       '2027-01-31'
+        sent: the family is killed by default." READ AS SEALED,                                      THOSE TWO SENTENCES TERMINATE THIS FAMILY WITH CERTAINTY: at any                                      seal after 
+   off   9641  FORMULA   'C'
+        sent: THE LITERAL IS CONFORMED TO C + 187 DAYS in                                      clause 5 below, in the two clauses above, and in section 14's                                      prose.
+   off  10590  ISO       '2027-01-31'
+        sent: PUT TO C2                                      AS C13(k) - VALIDATION MAY REFUSE THIS CONFORMANCE AND REQUIRE                                      THE LITERAL 2027-01-31 SEALED AS DRAFTED, in which ca
+   off  11633  FORMULA   'C'
+        sent: (5) SILENCE IS A KILL - if the                                      computation is not performed on THE OBSERVATION DATE C + 187 DAYS                                      [R32, 2026-08-11: literal "20
+   off  11689  ISO       '2026-08-11'
+        sent: (5) SILENCE IS A KILL - if the                                      computation is not performed on THE OBSERVATION DATE C + 187 DAYS                                      [R32, 2026-08-11: literal "20
+   off  11710  ISO       '2027-01-31'
+        sent: (5) SILENCE IS A KILL - if the                                      computation is not performed on THE OBSERVATION DATE C + 187 DAYS                                      [R32, 2026-08-11: literal "20
+   off  12578  ISO       '2026-08-11'
+        sent: [R29(b), 2026-08-11, PRE-SEAL - STRUCK IN THIS FIELD, WHICH IS                                      WHERE IT MATTERED AND WHERE R-005 DID NOT REACH.] The sentence                                      
+   off  12974  ISO       '2026-08-11'
+        sent: [R29(b), 2026-08-11, PRE-SEAL - STRUCK IN THIS FIELD, WHICH IS                                      WHERE IT MATTERED AND WHERE R-005 DID NOT REACH.] The sentence                                      
+   off  13394  ISO       '2026-08-11'
+        sent: C1 IS DISCHARGED:                                      I-034 CLOSED by the Principal 2026-08-11, satisfied 2026-07-29                                      (commit 875874f, "Ruling 003 implemented: car
+   off  13416  ISO       '2026-07-29'
+        sent: C1 IS DISCHARGED:                                      I-034 CLOSED by the Principal 2026-08-11, satisfied 2026-07-29                                      (commit 875874f, "Ruling 003 implemented: car
+   off  14612  FORMULA   'C'
+        sent: The residual is retained and is NOT swept up with the closure:                                      CostModel has no field that can charge liquidation or                                      venue-ins
+   off  15015  FORMULA   'C'
+        sent: WHAT KC-002 IS NOT, stated here rather than waiting to be told                                      (Validation C-001 section 1.6 makes the identical statement about                                   
+   off  15651  FORMULA   'C'
+        sent: This family                                      DOES NOT claim the C-001 N=1 confirmatory exemption; should it ever                                      seek one it must satisfy E1-E5 in full and be 
+   off  16280  FORMULA   'C'
+        sent: Separately, per C-001 E3: the family's <= 22 forward-window                                      trials are N_forward, they are LOGGED AS TRIALS, and NO REPORTED                                      R
+   off  16546  ISO       '2026-08-10'
+        sent: [R21, 2026-08-10, PRE-SEAL - WHAT THE HARNESS DOES WITH THIS                                      FIELD, RECORDED ON KC-002'S OWN FACE BECAUSE THE ANSWER IS                                      NOTHIN
+   off  19305  ISO       '2026-08-10'
+        sent: [R24/R26, 2026-08-10, PRE-SEAL - KC-002 IS CLASS (b), AND ITS                                      THREE FIELDS ARE NAMED.
+   off  20920  ISO       '2026-08-10'
+        sent: [R26, 2026-08-10, PRE-SEAL - THE CONDITION PRECEDENT IS                                      SATISFIED AND THE DOWNGRADE MUST NOT FIRE.] The C1 cost-model                                      repair i
+   off  21426  ISO       '2026-07-29'
+        sent: [R26, 2026-08-10, PRE-SEAL - THE CONDITION PRECEDENT IS                                      SATISFIED AND THE DOWNGRADE MUST NOT FIRE.] The C1 cost-model                                      repair i
+   off  21977  ISO       '2026-08-11'
+        sent: SECTION 14's CONDITION PRECEDENT WOULD                                      HAVE DOWNGRADED THIS FAMILY TO ADMITTED-AS-EXPLORATORY ON                                      2026-08-11 - 'pre-declared in
+   off  22714  FORMULA   'C'
+        sent: The one                                      head of section 12 that is NOT repaired is defect (d) - CostModel                                      has no field that can charge liquidation or venue-in
+
+TOTAL SITES (verbatim) = 90
+

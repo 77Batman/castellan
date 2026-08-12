@@ -1,0 +1,3 @@
+section-21 fence: md lines 2030..3491 (1462 lines)
+fields found: family, statement, mechanism, falsifier, universe, horizon, success_criteria, trial_budget, n_inherited, predecessor_family, holdout_classification, forward_window_start, forward_window_min_length, forward_kill_condition, model_prior_provenance, published_signal_haircut_applied
+measured continuation indent = 37

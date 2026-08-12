@@ -1,0 +1,16 @@
+=== uppercase 'C + N DAYS': FORMULA recognizer is case-sensitive, extracts BARE C ===
+  forward_kill_condition off 6089  matched='C'
+      THE LITERAL IS CONFORMED TO C + 187 DAYS in clause 5 below, in the two clauses above, and in section 14's prose.
+  forward_kill_condition off 7341  matched='C'
+      (5) SILENCE IS A KILL - if the computation is not performed on THE OBSERVATION DATE C + 187 DAYS [R32, 2026-08-11: literal "2027-01-31" STRUCK - see the R32 not
+
+=== SPAN sites across all E-1 prose fields: 0  (E-9 / E-21 have nothing to act on)
+
+=== literals absent from every E-1 field ===
+  2026-11-01: ABSENT
+  2027-07-28: ABSENT
+  2030-07-28: ABSENT
+  2028-10-05: ABSENT
+
+=== matched_text carrying trailing whitespace ===
+  forward_kill_condition off 3035 matched='C '

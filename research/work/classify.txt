@@ -1,0 +1,59 @@
+provenance revision-stamp ISO sites: 35
+all other sites: 55
+
+--- NON-STAMP sites (the ones a kind value must describe) ---
+  1 | statement              | ISO     | '2020-01-01'     | ord 1 | ded    483 | The claim under test is narrower: de-scaling that position as the realized funding rate rises above its own tr
+  2 | statement              | FORMULA | 'C'              | ord 1 | ded    497 | The claim under test is narrower: de-scaling that position as the realized funding rate rises above its own tr
+  5 | falsifier              | ISO     | '2020-01-01'     | ord 1 | ded    137 | Computed from THREE runs through castellan.run_backtest against this family, on the same daily UTC index over 
+  6 | falsifier              | FORMULA | 'C'              | ord 1 | ded    149 | Computed from THREE runs through castellan.run_backtest against this family, on the same daily UTC index over 
+  7 | falsifier              | FORMULA | 'C'              | ord 2 | ded   4643 | E2 DISCIPLINE, BINDING (Validation C-001): F-002 is evaluated ONCE, on the first complete run of the three ser
+  9 | falsifier              | ISO     | '2026-07-29'     | ord 1 | ded   4832 | E2 DISCIPLINE, BINDING (Validation C-001): F-002 is evaluated ONCE, on the first complete run of the three ser
+ 10 | universe               | ISO     | '2020-01-01'     | ord 1 | ded    184 | UNIVERSE: BTC/USDT and ETH/USDT spot paired against BTC/USDT:USDT and ETH/USDT:USDT perpetuals, common span 20
+ 11 | universe               | FORMULA | 'C'              | ord 1 | ded    198 | UNIVERSE: BTC/USDT and ETH/USDT spot paired against BTC/USDT:USDT and ETH/USDT:USDT perpetuals, common span 20
+ 13 | universe               | ISO     | '2022-11-09'     | ord 1 | ded    677 | The prior text made SOL a SECONDARY member reported separately on its own 5.87-year span with its own N and it
+ 14 | universe               | ISO     | '2022-11-10'     | ord 1 | ded   2522 | WHAT THE DROP DOES NOT COST: F-002 is computed on the common PRIMARY-universe index (BTC, ETH), so NO LEG OF F
+ 15 | universe               | ISO     | '2020-03-12'     | ord 1 | ded   2938 | WHAT IT DOES COST, recorded pre-seal: the universe's largest in-sample basis excursions are -73.65bp (BTC) and
+ 19 | universe               | ISO     | '2025-09-18'     | ord 1 | ded  10371 | THE ONE KNOWN IN-SAMPLE TRIGGER, NAMED BY DATE SO NO DISCRETION   EXISTS AT RUN TIME: 2025-09-18, on which Bin
+ 20 | universe               | ISO     | '2025-09-18'     | ord 2 | ded  10809 | UNDER A MECHANICAL TRIGGER IT FIRES   REGARDLESS, AND THIS SEAT DECLARES THAT IT DOES: BTC and ETH carry   z(t
+ 25 | universe               | ISO     | '2026-08-04'     | ord 7 | ded  18294 | EXPLICITLY NOT CONDITIONED ON, checked deliberately: no excluded period, date range or event window; no post-e
+ 26 | universe               | ISO     | '2022-11-09'     | ord 2 | ded  18711 | THREE FACTS MAKE IT ADMISSIBLE HERE AND ALL THREE ARE CHECKABLE: (i) the reason is a DOCUMENTED VENDOR ACT DAT
+ 28 | success_criteria       | ISO     | '2022-11-09'     | ord 1 | ded    758 | The assertion is checkable and section 10.7(a) is the check, choice by choice: K1-K7 were each selected BEFORE
+ 29 | success_criteria       | FORMULA | 'C'              | ord 1 | ded   1669 | The assertion is checkable and section 10.7(a) is the check, choice by choice: K1-K7 were each selected BEFORE
+ 32 | success_criteria       | FORMULA | 'C + 187 days'   | ord 1 | ded   8383 | (2) KC-002 survival at C + 187 days: no clause fires - and per KC-002's own text, SURVIVING IT CONFIRMS NOTHIN
+ 33 | success_criteria       | ISO     | '2026-08-04'     | ord 1 | ded   9603 | Required in every artifact regardless of verdict: per- regime-cell decomposition (all four cells); raw AND eff
+ 34 | success_criteria       | ISO     | '2026-08-10'     | ord 2 | ded   9711 | Required in every artifact regardless of verdict: per- regime-cell decomposition (all four cells); raw AND eff
+ 35 | success_criteria       | ISO     | '2026-08-05'     | ord 2 | ded  10522 | REPLACED BY:] the disclosure line 'registry N = n_inherited 7 (the K1-K7 conditioning floor, SEALED, with four
+ 45 | success_criteria       | ISO     | '2026-08-11'     | ord 2 | ded  25171 | C1 IS DISCHARGED; I-034 IS CLOSED (Principal, 2026-08-11; satisfied 2026-07-29, commit 875874f).
+ 46 | success_criteria       | ISO     | '2026-07-29'     | ord 1 | ded  25193 | C1 IS DISCHARGED; I-034 IS CLOSED (Principal, 2026-08-11; satisfied 2026-07-29, commit 875874f).
+ 47 | success_criteria       | ISO     | '2026-07-29'     | ord 2 | ded  26074 | All nineteen Validation-authored T-cases pass (DATA-IMPL-004 sections 5-6, landed 2026-07-29) [cited].
+ 48 | success_criteria       | FORMULA | 'C'              | ord 2 | ded  26314 | THE ONE HEAD NOT REPAIRED IS DEFECT (d) - CostModel has no field that can charge liquidation or venue-insolven
+ 50 | forward_kill_condition | FORMULA | 'C + 187 days'   | ord 1 | ded     27 | Observation date = C + 187 days, fixed at sealing and ABSOLUTE thereafter - it does not move with the sprint c
+ 51 | forward_kill_condition | FORMULA | 'C'              | ord 1 | ded    264 | (Drafted against an intended C = 2026-07-28, giving 2027-01-31; section 20.1 recommends NOT sealing that day, 
+ 52 | forward_kill_condition | ISO     | '2026-07-28'     | ord 1 | ded    268 | (Drafted against an intended C = 2026-07-28, giving 2027-01-31; section 20.1 recommends NOT sealing that day, 
+ 53 | forward_kill_condition | ISO     | '2027-01-31'     | ord 1 | ded    287 | (Drafted against an intended C = 2026-07-28, giving 2027-01-31; section 20.1 recommends NOT sealing that day, 
+ 54 | forward_kill_condition | FORMULA | 'C + 187 days'   | ord 2 | ded    379 | (Drafted against an intended C = 2026-07-28, giving 2027-01-31; section 20.1 recommends NOT sealing that day, 
+ 55 | forward_kill_condition | FORMULA | 'C'              | ord 2 | ded    779 | On that date Validation computes, from registry.db and pit.db ALONE, on the FROZEN pre-registration, over [C, 
+ 56 | forward_kill_condition | FORMULA | 'C + 187 days'   | ord 3 | ded    782 | On that date Validation computes, from registry.db and pit.db ALONE, on the FROZEN pre-registration, over [C, 
+ 58 | forward_kill_condition | ISO     | '2027-01-31'     | ord 2 | ded    827 | On that date Validation computes, from registry.db and pit.db ALONE, on the FROZEN pre-registration, over [C, 
+ 59 | forward_kill_condition | FORMULA | 'C '             | ord 1 | ded   3035 | (2) No post-C exclusions - any regime filter, date exclusion, asset exclusion, venue change or universe restri
+ 61 | forward_kill_condition | FORMULA | 'C + 187 days'   | ord 4 | ded   3764 | (3) No restatement as continuation - a hypothesis restated after the observation date C + 187 days [R32, 2026-
+ 63 | forward_kill_condition | ISO     | '2027-01-31'     | ord 3 | ded   3804 | (3) No restatement as continuation - a hypothesis restated after the observation date C + 187 days [R32, 2026-
+ 66 | forward_kill_condition | FORMULA | 'C + 187 days'   | ord 5 | ded   4877 | FILED I-153, HIGH.] This field's opening declares the observation date to be C + 187 days and states that THE 
+ 67 | forward_kill_condition | ISO     | '2027-01-31'     | ord 4 | ded   5021 | Clause 5 as drafted read "if the computation is not performed ON 2027-01-31 for ANY reason ...
+ 68 | forward_kill_condition | ISO     | '2026-07-28'     | ord 2 | ded   5177 | the family is killed by default." READ AS SEALED, THOSE TWO SENTENCES TERMINATE THIS FAMILY WITH CERTAINTY: at
+ 69 | forward_kill_condition | FORMULA | 'C + 187 days'   | ord 6 | ded   5189 | the family is killed by default." READ AS SEALED, THOSE TWO SENTENCES TERMINATE THIS FAMILY WITH CERTAINTY: at
+ 70 | forward_kill_condition | ISO     | '2027-01-31'     | ord 5 | ded   5219 | the family is killed by default." READ AS SEALED, THOSE TWO SENTENCES TERMINATE THIS FAMILY WITH CERTAINTY: at
+ 71 | forward_kill_condition | ISO     | '2027-01-31'     | ord 6 | ded   5237 | the family is killed by default." READ AS SEALED, THOSE TWO SENTENCES TERMINATE THIS FAMILY WITH CERTAINTY: at
+ 72 | forward_kill_condition | FORMULA | 'C'              | ord 3 | ded   6089 | THE LITERAL IS CONFORMED TO C + 187 DAYS in clause 5 below, in the two clauses above, and in section 14's pros
+ 73 | forward_kill_condition | ISO     | '2027-01-31'     | ord 7 | ded   6668 | PUT TO C2 AS C13(k) - VALIDATION MAY REFUSE THIS CONFORMANCE AND REQUIRE THE LITERAL 2027-01-31 SEALED AS DRAF
+ 74 | forward_kill_condition | FORMULA | 'C'              | ord 4 | ded   7341 | (5) SILENCE IS A KILL - if the computation is not performed on THE OBSERVATION DATE C + 187 DAYS [R32, 2026-08
+ 76 | forward_kill_condition | ISO     | '2027-01-31'     | ord 8 | ded   7381 | (5) SILENCE IS A KILL - if the computation is not performed on THE OBSERVATION DATE C + 187 DAYS [R32, 2026-08
+ 79 | forward_kill_condition | ISO     | '2026-08-11'     | ord 7 | ded   8436 | C1 IS DISCHARGED: I-034 CLOSED by the Principal 2026-08-11, satisfied 2026-07-29 (commit 875874f, "Ruling 003 
+ 80 | forward_kill_condition | ISO     | '2026-07-29'     | ord 1 | ded   8458 | C1 IS DISCHARGED: I-034 CLOSED by the Principal 2026-08-11, satisfied 2026-07-29 (commit 875874f, "Ruling 003 
+ 81 | forward_kill_condition | FORMULA | 'C'              | ord 5 | ded   9173 | The residual is retained and is NOT swept up with the closure: CostModel has no field that can charge liquidat
+ 82 | forward_kill_condition | FORMULA | 'C'              | ord 6 | ded   9428 | WHAT KC-002 IS NOT, stated here rather than waiting to be told (Validation C-001 section 1.6 makes the identic
+ 83 | forward_kill_condition | FORMULA | 'C'              | ord 7 | ded   9842 | This family DOES NOT claim the C-001 N=1 confirmatory exemption; should it ever seek one it must satisfy E1-E5
+ 84 | forward_kill_condition | FORMULA | 'C'              | ord 8 | ded  10249 | Separately, per C-001 E3: the family's <= 22 forward-window trials are N_forward, they are LOGGED AS TRIALS, a
+ 88 | forward_kill_condition | ISO     | '2026-07-29'     | ord 2 | ded  13434 | [R26, 2026-08-10, PRE-SEAL - THE CONDITION PRECEDENT IS SATISFIED AND THE DOWNGRADE MUST NOT FIRE.] The C1 cos
+ 89 | forward_kill_condition | ISO     | '2026-08-11'     | ord 8 | ded  13763 | SECTION 14's CONDITION PRECEDENT WOULD HAVE DOWNGRADED THIS FAMILY TO ADMITTED-AS-EXPLORATORY ON 2026-08-11 - 
+ 90 | forward_kill_condition | FORMULA | 'C'              | ord 9 | ded  14241 | The one head of section 12 that is NOT repaired is defect (d) - CostModel has no field that can charge liquida

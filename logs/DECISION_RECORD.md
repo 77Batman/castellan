@@ -4211,3 +4211,126 @@ change its behaviour.
 terminal-verdict memo. Insurance 2 of 2; DA reserve sealed. §5 dead-man: **4 invocations remain.**
 
 **Review date:** on row 2's return.
+
+---
+
+## S3-D-015 · 2026-08-12 · Row 2 lands · THE RATCHET FIRES · the sprint's objectives are now unfundable
+
+**1 · §4 HARD INTERRUPT — three HIGH: I-171, I-172, I-173.** Verified on disk: 3 HIGH, 4 MEDIUM,
+1 LOW-MEDIUM, 2 LOW.
+
+**2 · THE PRICING CALL — ROW 2 PRICES AS TWO. The ratchet fires on its first test, and the CIO
+measured the footprint itself rather than accept either reading.**
+
+The seat reported 1,106 total and **750 on the narrowest reading**, and — to its credit — **told the
+CIO not to take its narrow reading as cover.** The CIO's own measurement, excluding the capture
+daemon's 172 log lines (not the seat's work) and the machine-generated JSON/txt outputs:
+
+| | Lines |
+|---|---:|
+| Authored prose into tracked files | 341 |
+| The dated-clause register | 333 |
+| **Analysis tooling the seat wrote** | **264** |
+| **Authored total** | **938** |
+
+**938 > 800. Over threshold. Priced as two.**
+
+**The disputed term is whether authored tooling counts, and the CIO rules that it does.** §2.2 is
+**termination insurance** — it sizes a dispatch by how much work a failure would destroy. **264 lines
+of Python written and lost to a termination is work lost.** Excluding it would size the dispatch by
+what survives review rather than by what is at risk, which is not what the rule insures.
+
+**The seat named the ambiguity honestly and refused to shelter behind it** — *"'authored lines' is
+itself undefined, the same defect class I filed as I-170, and the CIO should price this row as it
+sees fit."* **The CIO resolves an undefined term against the firm, per the asymmetry doctrine: a
+definitional ambiguity resolved toward "under threshold" is precisely the stale-term-that-favours-us
+pattern this firm has spent two sprints cataloguing.**
+
+**And the ratchet says "without appeal." It is not appealed.**
+
+**3 · THE CONSEQUENCE, AND IT IS WORSE THAN THE SLIP THAT WAS RULED.**
+
+**Opus: 8 of 12 spent. Free: 1. Insurance: 2, termination-only. DA reserve: 1, holds C3.**
+
+**Claims on that single free unit: three.**
+
+| Claim | Seat | Status |
+|---|---|---|
+| **I-173's revision** — *"scoped and unfunded, and it must land before the seal or P7 freezes it"* | Director | **required before C2** |
+| **C2** — the Gate 0 intake verdict | Validation | **seal-blocking** |
+| Terminal-verdict memo | Director | objective 3 |
+
+**One unit. Three claims. And the dependency chain makes this worse than a missed objective 3:**
+
+> **Objective 2 requires trials. Trials require a registered family. Registration IS the seal.
+> Objective 1 is the seal. So objectives 1, 2 and 3 all depend on the seal — and the seal now needs
+> two free Opus units the firm does not have.**
+
+**The slip ruled in advance covered objective 3 on two named conditions. Neither has occurred.**
+**This shortfall arrives by a third route the ruling did not name — a pricing call — and it reaches
+all three objectives, not one.** The CIO states that plainly rather than filing it under an existing
+ruling it does not fit.
+
+**4 · THE CIO'S PROPOSED RESOLUTION, which preserves objectives 1 and 2 without touching the ceiling
+or the insurance.**
+
+**Execute I-173's remedy at Sonnet, against the Director's already-delivered roster.**
+
+I-173's finding is that **the Director put its own revision apparatus inside strings that get
+hashed** — `[Rn · date]` markers inside sealed fields, which the evaluator correctly extracts as
+dated sites. **E-2 extracts 90 sites from nine fields; 72 are dates that are not clauses; 75 fire on
+first invocation; E-24 therefore makes the Gate verdict permanently `INSUFFICIENT-DATA`.**
+
+**The judgment is already done and delivered**: `research/work/site_roster.json` (901 lines) and
+`site_roster.md` classify all 90 sites. **The remaining act is mechanical — move revision apparatus
+out of hashed fields to a non-hashed location, against a classification the Director has already
+made and which governs.**
+
+**Risk stated, not buried:** a Sonnet seat editing sealed fields is the class of act that normally
+needs Opus judgment. **The mitigation is that it makes no classification — it executes one.** If the
+roster is not precise enough to execute mechanically, **the seat must stop and say so rather than
+decide**, and the CIO will bring the shortfall back.
+
+**That leaves: C2 on the last free unit → C3 on the DA reserve → seal → trials at Sonnet.
+Objectives 1 and 2 recoverable. Objective 3 slips, as already ruled.**
+
+**5 · Alternatives the CIO considered and rejected, stated so the Principal can take one:**
+
+- **Price row 2 as one.** Reverses the ratchet on its first firing, on a reading the seat itself
+  declined to use. **The ratchet exists for exactly this moment; applying it only when convenient is
+  not applying it.**
+- **Release an insurance unit to working capacity.** Insurance is termination-only by the
+  Principal's own term, against a failure mode with a measured 27% base rate. **Spending it as
+  capacity removes the cover at the moment the tier is thinnest.**
+- **Raise the ceiling.** Refused twice, and against the CIO's own doctrine — *a ceiling that moves
+  when it binds is not a ceiling.*
+
+**6 · The §11.1 correction runs AGAINST the family, and the "understatement" was itself wrong.**
+Measured **2026-08-12**, read-only over `book/pit.db`, all six primary legs: **`[2020-01-01,
+2026-07-28]` = 2,400 days = 6.5710 years. The figure has not moved.** R34 asserted the span grows
+with `C`; **it grows with ingest, and none has occurred** — last `knowledge_time` on every leg is
+2026-07-29, `ingest_ceiling` empty.
+
+**So §10.4's 0.43-year MinBTL margin is exact, not understated — the hidden margin four passes
+believed in does not exist.** And **at `C = 2026-08-12` the declared in-sample window runs 15 days
+past the last bar on disk.** I-176.
+
+**7 · Two register findings that bear on the seal.** **I-171:** E-2's `FORMULA` recognizer is
+**case-sensitive**, so clause 5's *"C + 187 **DAYS**"* extracts as a bare `C` and is caught only by
+E-14, **only because the struck literal is still in the field** — *"strip the struck literals and the
+termination clause fires immediately."* **The struck text is load-bearing by accident.**
+**I-172:** there are **zero `SPAN` sites** in this family, so **E-21's named proof case — §11.1's own
+stale span — never runs on the family it was built from.**
+
+**8 · The register covers 10 of 24**, and **the 24 is the wrong denominator** — the real surface is
+90 sites. Fourteen uncoverable, thirteen because the clause lives in prose no registry field
+carries: **E-25(3)'s named gap, with a number attached.**
+
+**9 · Verified** [measured]: registry **0 hypotheses / 0 trials**; payload **unchanged** and
+untouched; `harness/` untouched; §11.4 **closed at R33**, verified against the file rather than
+inherited from R-006's claim.
+
+**10 · Budget.** **8 of 30 invocations · 8 of 12 Opus.** **Free: 1. Insurance 2. DA reserve 1.**
+§5 dead-man: **4 invocations remain.**
+
+**Review date:** immediately — the Principal's ruling is required before any further dispatch.

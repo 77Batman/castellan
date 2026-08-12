@@ -1,0 +1,902 @@
+[
+ {
+  "field": "statement",
+  "rec": "ISO",
+  "text": "2020-01-01",
+  "ordinal": 1,
+  "off_ded": 483,
+  "off_ver": 742,
+  "sent": "The claim under test is narrower: de-scaling that position as the realized funding rate rises above its own trailing 30-day baseline produces POSITIVE ALPHA to the unconditioned position, at the firm's own t >= 3.0 hurdle, over 2020-01-01 to C, net of the full Charter 4.6 cost stack on both legs.",
+  "stamp": false
+ },
+ {
+  "field": "statement",
+  "rec": "FORMULA",
+  "text": "C",
+  "ordinal": 1,
+  "off_ded": 497,
+  "off_ver": 756,
+  "sent": "The claim under test is narrower: de-scaling that position as the realized funding rate rises above its own trailing 30-day baseline produces POSITIVE ALPHA to the unconditioned position, at the firm's own t >= 3.0 hurdle, over 2020-01-01 to C, net of the full Charter 4.6 cost stack on both legs.",
+  "stamp": false
+ },
+ {
+  "field": "mechanism",
+  "rec": "ISO",
+  "text": "2026-08-04",
+  "ordinal": 1,
+  "off_ded": 904,
+  "off_ver": 1422,
+  "sent": "[R1, 2026-08-04, PRE-SEAL - WITHDRAWN AND REPLACED.",
+  "stamp": true
+ },
+ {
+  "field": "mechanism",
+  "rec": "ISO",
+  "text": "2026-08-04",
+  "ordinal": 2,
+  "off_ded": 3193,
+  "off_ver": 5006,
+  "sent": "THE ACTUAL CLAIM: [R2, 2026-08-04, PRE-SEAL - RESTATED.",
+  "stamp": true
+ },
+ {
+  "field": "falsifier",
+  "rec": "ISO",
+  "text": "2020-01-01",
+  "ordinal": 1,
+  "off_ded": 137,
+  "off_ver": 211,
+  "sent": "Computed from THREE runs through castellan.run_backtest against this family, on the same daily UTC index over the full in-sample [2020-01-01, C], all net of the full Charter 4.6 cost stack AS REPAIRED PER CONDITION PRECEDENT C1: R_bench = the UNCONDITIONED benchmark (delta-neutral long-spot /   short-perp, CONSTANT notional w == 1.0, equal-weight, daily   rebalance inside the turnover band); R_str",
+  "stamp": false
+ },
+ {
+  "field": "falsifier",
+  "rec": "FORMULA",
+  "text": "C",
+  "ordinal": 1,
+  "off_ded": 149,
+  "off_ver": 223,
+  "sent": "Computed from THREE runs through castellan.run_backtest against this family, on the same daily UTC index over the full in-sample [2020-01-01, C], all net of the full Charter 4.6 cost stack AS REPAIRED PER CONDITION PRECEDENT C1: R_bench = the UNCONDITIONED benchmark (delta-neutral long-spot /   short-perp, CONSTANT notional w == 1.0, equal-weight, daily   rebalance inside the turnover band); R_str",
+  "stamp": false
+ },
+ {
+  "field": "falsifier",
+  "rec": "FORMULA",
+  "text": "C",
+  "ordinal": 2,
+  "off_ded": 4643,
+  "off_ver": 7307,
+  "sent": "E2 DISCIPLINE, BINDING (Validation C-001): F-002 is evaluated ONCE, on the first complete run of the three series under the repaired cost stack [R29, 2026-08-11: \"after C1 lands\" STRUCK - C1 is DISCHARGED, the repair landed 2026-07-29, and the contingency this clause guarded against cannot now arise; the clause is retained in the general form it always had, ANY post-computation change to the cost ",
+  "stamp": false
+ },
+ {
+  "field": "falsifier",
+  "rec": "ISO",
+  "text": "2026-08-11",
+  "ordinal": 1,
+  "off_ded": 4758,
+  "off_ver": 7496,
+  "sent": "E2 DISCIPLINE, BINDING (Validation C-001): F-002 is evaluated ONCE, on the first complete run of the three series under the repaired cost stack [R29, 2026-08-11: \"after C1 lands\" STRUCK - C1 is DISCHARGED, the repair landed 2026-07-29, and the contingency this clause guarded against cannot now arise; the clause is retained in the general form it always had, ANY post-computation change to the cost ",
+  "stamp": true
+ },
+ {
+  "field": "falsifier",
+  "rec": "ISO",
+  "text": "2026-07-29",
+  "ordinal": 1,
+  "off_ded": 4832,
+  "off_ver": 7607,
+  "sent": "E2 DISCIPLINE, BINDING (Validation C-001): F-002 is evaluated ONCE, on the first complete run of the three series under the repaired cost stack [R29, 2026-08-11: \"after C1 lands\" STRUCK - C1 is DISCHARGED, the repair landed 2026-07-29, and the contingency this clause guarded against cannot now arise; the clause is retained in the general form it always had, ANY post-computation change to the cost ",
+  "stamp": false
+ },
+ {
+  "field": "universe",
+  "rec": "ISO",
+  "text": "2020-01-01",
+  "ordinal": 1,
+  "off_ded": 184,
+  "off_ver": 258,
+  "sent": "UNIVERSE: BTC/USDT and ETH/USDT spot paired against BTC/USDT:USDT and ETH/USDT:USDT perpetuals, common span 2020-01-01 to C = 6.571 years, zero gaps [measured].",
+  "stamp": false
+ },
+ {
+  "field": "universe",
+  "rec": "FORMULA",
+  "text": "C",
+  "ordinal": 1,
+  "off_ded": 198,
+  "off_ver": 309,
+  "sent": "UNIVERSE: BTC/USDT and ETH/USDT spot paired against BTC/USDT:USDT and ETH/USDT:USDT perpetuals, common span 2020-01-01 to C = 6.571 years, zero gaps [measured].",
+  "stamp": false
+ },
+ {
+  "field": "universe",
+  "rec": "ISO",
+  "text": "2026-08-04",
+  "ordinal": 1,
+  "off_ded": 274,
+  "off_ver": 422,
+  "sent": "[R3, 2026-08-04, PRE-SEAL - SOL IS DROPPED ENTIRELY.",
+  "stamp": true
+ },
+ {
+  "field": "universe",
+  "rec": "ISO",
+  "text": "2022-11-09",
+  "ordinal": 1,
+  "off_ded": 677,
+  "off_ver": 1047,
+  "sent": "The prior text made SOL a SECONDARY member reported separately on its own 5.87-year span with its own N and its own verdict, never pooled.] REASON, per I-045: Binance changed SOLUSDT's funding settlement frequency and raised its Capped Funding Rate Multiplier from 0.75 to 1 - taking the cap to +/-2.00%, roughly 40x the default +/-0.05% band - announced 2022-11-09 20:00 UTC [cited - official, DATA-",
+  "stamp": false
+ },
+ {
+  "field": "universe",
+  "rec": "ISO",
+  "text": "2022-11-10",
+  "ordinal": 1,
+  "off_ded": 2522,
+  "off_ver": 3891,
+  "sent": "WHAT THE DROP DOES NOT COST: F-002 is computed on the common PRIMARY-universe index (BTC, ETH), so NO LEG OF F-002 EVER READ SOL and SOL's 2022-11-10 tail realization (-0.17166 accrual on -1.0 perp notional [measured - VALIDATION-RULING-003 T-9]) was never inside the test; that realization is in any case NOT usable as forward evidence, its magnitude having required the +/-2.00% cap then in force [",
+  "stamp": false
+ },
+ {
+  "field": "universe",
+  "rec": "ISO",
+  "text": "2020-03-12",
+  "ordinal": 1,
+  "off_ded": 2938,
+  "off_ver": 4566,
+  "sent": "WHAT IT DOES COST, recorded pre-seal: the universe's largest in-sample basis excursions are -73.65bp (BTC) and -102.95bp (ETH), both 2020-03-12 [measured - DATA-INGEST-002 section 4] - roughly an ORDER OF MAGNITUDE milder than SOL's - so F-002 LEG (ii) IS A TAIL TEST ON A MILD TAIL AND ITS SURVIVAL IS WEAKER EVIDENCE OF TAIL REDUCTION THAN THE LEG'S CONSTRUCTION IMPLIES; and the firm loses a corro",
+  "stamp": false
+ },
+ {
+  "field": "universe",
+  "rec": "ISO",
+  "text": "2026-08-04",
+  "ordinal": 2,
+  "off_ded": 5621,
+  "off_ver": 8803,
+  "sent": "[R3, 2026-08-04: selection MOVED WITHIN the   already-declared menu, from (2) to (4).",
+  "stamp": true
+ },
+ {
+  "field": "universe",
+  "rec": "ISO",
+  "text": "2026-08-04",
+  "ordinal": 3,
+  "off_ded": 6175,
+  "off_ver": 9690,
+  "sent": "[R4, 2026-08-04: THE CADENCE   CONSTANT IS DELETED.",
+  "stamp": true
+ },
+ {
+  "field": "universe",
+  "rec": "ISO",
+  "text": "2026-08-04",
+  "ordinal": 4,
+  "off_ded": 7756,
+  "off_ver": 12196,
+  "sent": "[R5, 2026-08-04: NEW CHOICE, declared pre-measurement   against a registry holding 0 families and 0 trials.",
+  "stamp": true
+ },
+ {
+  "field": "universe",
+  "rec": "ISO",
+  "text": "2025-09-18",
+  "ordinal": 1,
+  "off_ded": 10371,
+  "off_ver": 16328,
+  "sent": "THE ONE KNOWN IN-SAMPLE TRIGGER, NAMED BY DATE SO NO DISCRETION   EXISTS AT RUN TIME: 2025-09-18, on which Binance changed the   funding formula FIRM-WIDE, introducing the /(8/N) divisor [cited -   official, DATA-VERIFY-001 section 3.1].",
+  "stamp": false
+ },
+ {
+  "field": "universe",
+  "rec": "ISO",
+  "text": "2025-09-18",
+  "ordinal": 2,
+  "off_ded": 10809,
+  "off_ver": 17025,
+  "sent": "UNDER A MECHANICAL TRIGGER IT FIRES   REGARDLESS, AND THIS SEAT DECLARES THAT IT DOES: BTC and ETH carry   z(t) = INSUFFICIENT-DATA and w = 1.0 for the 30 days from   2025-09-18.",
+  "stamp": false
+ },
+ {
+  "field": "universe",
+  "rec": "ISO",
+  "text": "2026-08-04",
+  "ordinal": 5,
+  "off_ded": 11121,
+  "off_ver": 17522,
+  "sent": "N CONTRIBUTION: [R5/R6, 2026-08-04: 6 -> 7] 7 - one per choice, K1 through K7.",
+  "stamp": true
+ },
+ {
+  "field": "universe",
+  "rec": "ISO",
+  "text": "2026-08-10",
+  "ordinal": 1,
+  "off_ded": 11182,
+  "off_ver": 17620,
+  "sent": "[R19, 2026-08-10, PRE-SEAL: THE 7 IS NOW REGISTERED, NOT MERELY DECLARED.",
+  "stamp": true
+ },
+ {
+  "field": "universe",
+  "rec": "ISO",
+  "text": "2026-08-05",
+  "ordinal": 1,
+  "off_ded": 13279,
+  "off_ver": 20938,
+  "sent": "[R9, 2026-08-05, PRE-SEAL - STRUCK AND REPLACED ON THREE HEADS.",
+  "stamp": true
+ },
+ {
+  "field": "universe",
+  "rec": "ISO",
+  "text": "2026-08-04",
+  "ordinal": 6,
+  "off_ded": 17131,
+  "off_ver": 26936,
+  "sent": "COUNTERFACTUAL, recorded so the rider's value is legible: had K1-K7 been selected AFTER seeing results, the product would be [R5, 2026-08-04] 10 x 3 x 9 x 5 x 5 x 4 x 5 = 135,000 [arithmetic on declared menu sizes; NO market data touched, NO new statistic computed].",
+  "stamp": true
+ },
+ {
+  "field": "universe",
+  "rec": "ISO",
+  "text": "2026-08-04",
+  "ordinal": 7,
+  "off_ded": 18294,
+  "off_ver": 28728,
+  "sent": "EXPLICITLY NOT CONDITIONED ON, checked deliberately: no excluded period, date range or event window; no post-event window; no volatility-state filter (volatility is a REPORTING cut only, never a filter on what is traded); no funding-sign filter (excluding the negative-funding regime is the most tempting and most dishonest exclusion available to this family and K3 forbids it); no basis-level filter",
+  "stamp": false
+ },
+ {
+  "field": "universe",
+  "rec": "ISO",
+  "text": "2022-11-09",
+  "ordinal": 2,
+  "off_ded": 18711,
+  "off_ver": 29367,
+  "sent": "THREE FACTS MAKE IT ADMISSIBLE HERE AND ALL THREE ARE CHECKABLE: (i) the reason is a DOCUMENTED VENDOR ACT DATED 2022-11-09 [cited - official], not a property of SOL's returns; (ii) NO RETURN STATISTIC ON SOL HAS EVER BEEN COMPUTED BY THIS FAMILY - the registry holds 0 trials [measured] - so there is no result the drop could have been selected on; (iii) the destination WAS ALREADY ON K4'S DECLARED",
+  "stamp": false
+ },
+ {
+  "field": "success_criteria",
+  "rec": "ISO",
+  "text": "2026-08-05",
+  "ordinal": 1,
+  "off_ded": 6,
+  "off_ver": 6,
+  "sent": "[R11, 2026-08-05, PRE-SEAL - THE ML-2 ASSERTION, ADDED VERBATIM AND PLACED FIRST BECAUSE RULING-004 ML-2 MAKES ITS ABSENCE A GATE 0 REJECTION RATHER THAN A DEFERRAL, AND BECAUSE 'SILENCE IS NOT THAT ASSERTION'.] NO NUMBER REPORTED BY THIS FAMILY IS SELECTED BY COMPARING CANDIDATES ON A QUANTITY COMPUTED FROM THE SAMPLE.",
+  "stamp": true
+ },
+ {
+  "field": "success_criteria",
+  "rec": "ISO",
+  "text": "2022-11-09",
+  "ordinal": 1,
+  "off_ded": 758,
+  "off_ver": 1202,
+  "sent": "The assertion is checkable and section 10.7(a) is the check, choice by choice: K1-K7 were each selected BEFORE any measurement from a menu declared in this document against a registry holding 0 families and 0 trials [measured], and K4's R3 move - the only selection that changed after data existed - moved on a DOCUMENTED VENDOR ACT DATED 2022-11-09, not on any statistic, with no return statistic on",
+  "stamp": false
+ },
+ {
+  "field": "success_criteria",
+  "rec": "FORMULA",
+  "text": "C",
+  "ordinal": 1,
+  "off_ded": 1669,
+  "off_ver": 2594,
+  "sent": "The assertion is checkable and section 10.7(a) is the check, choice by choice: K1-K7 were each selected BEFORE any measurement from a menu declared in this document against a registry holding 0 families and 0 trials [measured], and K4's R3 move - the only selection that changed after data existed - moved on a DOCUMENTED VENDOR ACT DATED 2022-11-09, not on any statistic, with no return statistic on",
+  "stamp": false
+ },
+ {
+  "field": "success_criteria",
+  "rec": "ISO",
+  "text": "2026-08-06",
+  "ordinal": 1,
+  "off_ded": 2657,
+  "off_ver": 4174,
+  "sent": "[R13/R14/R15/R16/R17, 2026-08-06, PRE-SEAL - THE CEILING IS A FUNCTION AND THE BUDGET IS STAGED AGAINST A DECLARED RHO.",
+  "stamp": true
+ },
+ {
+  "field": "success_criteria",
+  "rec": "ISO",
+  "text": "2026-08-10",
+  "ordinal": 1,
+  "off_ded": 3191,
+  "off_ver": 5041,
+  "sent": "[R20, 2026-08-10, PRE-SEAL - I-105's DISCHARGE.",
+  "stamp": true
+ },
+ {
+  "field": "success_criteria",
+  "rec": "FORMULA",
+  "text": "C + 187 days",
+  "ordinal": 1,
+  "off_ded": 8383,
+  "off_ver": 13230,
+  "sent": "(2) KC-002 survival at C + 187 days: no clause fires - and per KC-002's own text, SURVIVING IT CONFIRMS NOTHING.",
+  "stamp": false
+ },
+ {
+  "field": "success_criteria",
+  "rec": "ISO",
+  "text": "2026-08-04",
+  "ordinal": 1,
+  "off_ded": 9603,
+  "off_ver": 15116,
+  "sent": "Required in every artifact regardless of verdict: per- regime-cell decomposition (all four cells); raw AND effective observation counts side by side; gross and net with the breakeven cost; hit rate PAIRED with slugging ratio (Charter 5.4 - neither means anything alone); the plateau centroid AND the argmax reported together, with only the centroid advancing, the distance between them being itself t",
+  "stamp": false
+ },
+ {
+  "field": "success_criteria",
+  "rec": "ISO",
+  "text": "2026-08-10",
+  "ordinal": 2,
+  "off_ded": 9711,
+  "off_ver": 15298,
+  "sent": "Required in every artifact regardless of verdict: per- regime-cell decomposition (all four cells); raw AND effective observation counts side by side; gross and net with the breakeven cost; hit rate PAIRED with slugging ratio (Charter 5.4 - neither means anything alone); the plateau centroid AND the argmax reported together, with only the centroid advancing, the distance between them being itself t",
+  "stamp": false
+ },
+ {
+  "field": "success_criteria",
+  "rec": "ISO",
+  "text": "2026-08-05",
+  "ordinal": 2,
+  "off_ded": 10522,
+  "off_ver": 16590,
+  "sent": "REPLACED BY:] the disclosure line 'registry N = n_inherited 7 (the K1-K7 conditioning floor, SEALED, with four harness consumers) + logged <count>; declared ceiling 54 at Stage 1, 86 at full Stage 2; authorized budget stage <1 or 2>'; and the disclosure line 'F-002 false-survival rate under the no-information null: 1.3e-4 [derived, with the leg-(ii) term ASSUMED / MEASURED per C11]' - because I-02",
+  "stamp": false
+ },
+ {
+  "field": "success_criteria",
+  "rec": "ISO",
+  "text": "2026-08-05",
+  "ordinal": 3,
+  "off_ded": 13289,
+  "off_ver": 20911,
+  "sent": "[R11, 2026-08-05] TWO HARNESS LEAKAGE DEFECTS ARE CARRIED RATHER THAN ASSUMED AWAY, because one of them is sized against THIS family's own parameter: walk_forward_windows applies NO purge and NO embargo at all, and purged_kfold_splits embargoes ceil(0.01*T) = 24 BARS on a 2,398-bar sample - SHORTER THAN THIS FAMILY'S 30-DAY K1 LOOKBACK - so a training bar 25-30 bars after a test fold computes z(t)",
+  "stamp": true
+ },
+ {
+  "field": "success_criteria",
+  "rec": "ISO",
+  "text": "2026-08-10",
+  "ordinal": 3,
+  "off_ded": 14207,
+  "off_ver": 22347,
+  "sent": "[R21, 2026-08-10, PRE-SEAL - THE GATES.md 4.7.2 AUDIT, RECORDED IN THE SEALED TEXT INCLUDING ITS UNFLATTERING HALF, BECAUSE A DOCUMENT THAT DESCRIBES CONTROLS IT DOES NOT HAVE IS I-046'S COSTUME ON THE RESEARCH SIDE AND P7 MAKES IT PERMANENT.] NINE OF THE SIXTEEN BINDING FIELDS ARE SEALED AND READ BY NOTHING [measured - zero non-registry.py consumers for universe, horizon, success_criteria, model_",
+  "stamp": true
+ },
+ {
+  "field": "success_criteria",
+  "rec": "ISO",
+  "text": "2026-08-10",
+  "ordinal": 4,
+  "off_ded": 16836,
+  "off_ver": 26567,
+  "sent": "[R24/R25/R28, 2026-08-10, PRE-SEAL - THE CLASS REGISTER, AND THE TWO CORRECTIONS THE AUDIT ABOVE GOT WRONG.] EVERY LIMIT THIS DOCUMENT CLAIMS NOW CARRIES ITS CLASS AT SECTION 10.11: (a) HARNESS-ENFORCED, named field where one exists and named code path always; (b) PROCEDURE-ENFORCED, named executor, named cadence, named artifact; (c) DECLARED COMMITMENT, binding as a matter of record and enforced ",
+  "stamp": true
+ },
+ {
+  "field": "success_criteria",
+  "rec": "ISO",
+  "text": "2026-08-10",
+  "ordinal": 5,
+  "off_ded": 19524,
+  "off_ver": 30883,
+  "sent": "RECORDED AT PRE-REGISTRATION, all [measured] from castellan.stats: ~~n_inherited = 0 (no prior search exists)~~ [R19, 2026-08-10: n_inherited = 7 - REGISTERED, not declared.",
+  "stamp": true
+ },
+ {
+  "field": "success_criteria",
+  "rec": "ISO",
+  "text": "2026-08-04",
+  "ordinal": 2,
+  "off_ded": 19770,
+  "off_ver": 31277,
+  "sent": "See the N CONTRIBUTION note in `universe` and section 10.3.]; [R5/R6, 2026-08-04] N_conditioning = 7 (was 6; K7 adds one); trial budget 79 (was 80; the 'SOL on its own span' diagnostic is struck with the asset); CEILING N = 86 IN BOTH ACCOUNTINGS - THE MULTIPLE-TESTING COUNT AT THE CEILING DOES NOT MOVE - so MinBTL(86, SR 1.0) = 6.14 years against 6.571 available, clearing with 0.43 years of margi",
+  "stamp": true
+ },
+ {
+  "field": "success_criteria",
+  "rec": "ISO",
+  "text": "2026-08-04",
+  "ordinal": 3,
+  "off_ded": 20127,
+  "off_ver": 31893,
+  "sent": "See the N CONTRIBUTION note in `universe` and section 10.3.]; [R5/R6, 2026-08-04] N_conditioning = 7 (was 6; K7 adds one); trial budget 79 (was 80; the 'SOL on its own span' diagnostic is struck with the asset); CEILING N = 86 IN BOTH ACCOUNTINGS - THE MULTIPLE-TESTING COUNT AT THE CEILING DOES NOT MOVE - so MinBTL(86, SR 1.0) = 6.14 years against 6.571 available, clearing with 0.43 years of margi",
+  "stamp": true
+ },
+ {
+  "field": "success_criteria",
+  "rec": "ISO",
+  "text": "2026-08-05",
+  "ordinal": 4,
+  "off_ded": 21051,
+  "off_ver": 33335,
+  "sent": "[R8, 2026-08-05, PRE-SEAL - THE ABSOLUTE CEILING IS CORRECTED FROM 110 TO 109.",
+  "stamp": true
+ },
+ {
+  "field": "success_criteria",
+  "rec": "ISO",
+  "text": "2026-08-04",
+  "ordinal": 4,
+  "off_ded": 22451,
+  "off_ver": 35475,
+  "sent": "[R3, 2026-08-04: the clause 'On the SOL-inclusive 5.87-year span the ceiling is 74' is MOOT - no SOL-inclusive span exists and the 74 ceiling never binds.",
+  "stamp": true
+ },
+ {
+  "field": "success_criteria",
+  "rec": "ISO",
+  "text": "2026-08-11",
+  "ordinal": 1,
+  "off_ded": 24373,
+  "off_ver": 38507,
+  "sent": "[R29(b), 2026-08-11, PRE-SEAL - THE WHOLE OF THE PRECEDING COST- STACK PARAGRAPH DESCRIBES A COST MODEL THAT NO LONGER EXISTS AND IS RETAINED ONLY AS THE RECORD OF THE DEFECT.",
+  "stamp": true
+ },
+ {
+  "field": "success_criteria",
+  "rec": "ISO",
+  "text": "2026-08-11",
+  "ordinal": 2,
+  "off_ded": 25171,
+  "off_ver": 39786,
+  "sent": "C1 IS DISCHARGED; I-034 IS CLOSED (Principal, 2026-08-11; satisfied 2026-07-29, commit 875874f).",
+  "stamp": false
+ },
+ {
+  "field": "success_criteria",
+  "rec": "ISO",
+  "text": "2026-07-29",
+  "ordinal": 1,
+  "off_ded": 25193,
+  "off_ver": 39808,
+  "sent": "C1 IS DISCHARGED; I-034 IS CLOSED (Principal, 2026-08-11; satisfied 2026-07-29, commit 875874f).",
+  "stamp": false
+ },
+ {
+  "field": "success_criteria",
+  "rec": "ISO",
+  "text": "2026-07-29",
+  "ordinal": 2,
+  "off_ded": 26074,
+  "off_ver": 41207,
+  "sent": "All nineteen Validation-authored T-cases pass (DATA-IMPL-004 sections 5-6, landed 2026-07-29) [cited].",
+  "stamp": false
+ },
+ {
+  "field": "success_criteria",
+  "rec": "FORMULA",
+  "text": "C",
+  "ordinal": 2,
+  "off_ded": 26314,
+  "off_ver": 41595,
+  "sent": "THE ONE HEAD NOT REPAIRED IS DEFECT (d) - CostModel has no field that can charge liquidation or venue-insolvency risk, the largest risk in this mandate - which is CLASS (c), C-25 in the section 10.11.4 register, disclosed on the face of every artifact, and NOT a condition precedent because there is nothing to wait for.",
+  "stamp": false
+ },
+ {
+  "field": "success_criteria",
+  "rec": "ISO",
+  "text": "2026-08-11",
+  "ordinal": 3,
+  "off_ded": 26511,
+  "off_ver": 41903,
+  "sent": "HOUSE RULE 5, AND THE COST IS NOT ONE TRIAL [R30, 2026-08-11]: carry.carry_breakeven_bps_annual is the instrument and it takes a CALLABLE, evaluating it once at bracket[0], once at bracket[1], and once per bisection step - 42 evaluations at the shipped iters=40, each a run_backtest call and therefore a LOGGED TRIAL under the harness's own sanctioned usage (T-18) [measured: carry.py:107,113,116-122",
+  "stamp": true
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "FORMULA",
+  "text": "C + 187 days",
+  "ordinal": 1,
+  "off_ded": 27,
+  "off_ver": 27,
+  "sent": "Observation date = C + 187 days, fixed at sealing and ABSOLUTE thereafter - it does not move with the sprint calendar, the ingest schedule, the cost-model repair, or the harness; once written it does not extend for any reason.",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "FORMULA",
+  "text": "C",
+  "ordinal": 1,
+  "off_ded": 264,
+  "off_ver": 375,
+  "sent": "(Drafted against an intended C = 2026-07-28, giving 2027-01-31; section 20.1 recommends NOT sealing that day, so the executed value is whatever C + 187 days resolves to and the DRAFTED DATE IS NOT BINDING - the formula is.) 187 days yields ~184 daily bars and ~552 funding prints - enough to measure expectancy and count conditioning events, and DELIBERATELY NOT ENOUGH to measure a Sharpe; KC-002 te",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "ISO",
+  "text": "2026-07-28",
+  "ordinal": 1,
+  "off_ded": 268,
+  "off_ver": 416,
+  "sent": "(Drafted against an intended C = 2026-07-28, giving 2027-01-31; section 20.1 recommends NOT sealing that day, so the executed value is whatever C + 187 days resolves to and the DRAFTED DATE IS NOT BINDING - the formula is.) 187 days yields ~184 daily bars and ~552 funding prints - enough to measure expectancy and count conditioning events, and DELIBERATELY NOT ENOUGH to measure a Sharpe; KC-002 te",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "ISO",
+  "text": "2027-01-31",
+  "ordinal": 1,
+  "off_ded": 287,
+  "off_ver": 435,
+  "sent": "(Drafted against an intended C = 2026-07-28, giving 2027-01-31; section 20.1 recommends NOT sealing that day, so the executed value is whatever C + 187 days resolves to and the DRAFTED DATE IS NOT BINDING - the formula is.) 187 days yields ~184 daily bars and ~552 funding prints - enough to measure expectancy and count conditioning events, and DELIBERATELY NOT ENOUGH to measure a Sharpe; KC-002 te",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "FORMULA",
+  "text": "C + 187 days",
+  "ordinal": 2,
+  "off_ded": 379,
+  "off_ver": 564,
+  "sent": "(Drafted against an intended C = 2026-07-28, giving 2027-01-31; section 20.1 recommends NOT sealing that day, so the executed value is whatever C + 187 days resolves to and the DRAFTED DATE IS NOT BINDING - the formula is.) 187 days yields ~184 daily bars and ~552 funding prints - enough to measure expectancy and count conditioning events, and DELIBERATELY NOT ENOUGH to measure a Sharpe; KC-002 te",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "FORMULA",
+  "text": "C",
+  "ordinal": 2,
+  "off_ded": 779,
+  "off_ver": 1223,
+  "sent": "On that date Validation computes, from registry.db and pit.db ALONE, on the FROZEN pre-registration, over [C, C + 187 days] [R32, 2026-08-11: the literal \"2027-01-31\" that stood here is STRUCK and conformed to the formula this field's own opening declares governing]: (i) cumulative NET return of the sealed conditioned strategy after the full Charter 4.6 cost stack at 1x modelled costs using CRYPTO",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "FORMULA",
+  "text": "C + 187 days",
+  "ordinal": 3,
+  "off_ded": 782,
+  "off_ver": 1226,
+  "sent": "On that date Validation computes, from registry.db and pit.db ALONE, on the FROZEN pre-registration, over [C, C + 187 days] [R32, 2026-08-11: the literal \"2027-01-31\" that stood here is STRUCK and conformed to the formula this field's own opening declares governing]: (i) cumulative NET return of the sealed conditioned strategy after the full Charter 4.6 cost stack at 1x modelled costs using CRYPTO",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "ISO",
+  "text": "2026-08-11",
+  "ordinal": 1,
+  "off_ded": 802,
+  "off_ver": 1246,
+  "sent": "On that date Validation computes, from registry.db and pit.db ALONE, on the FROZEN pre-registration, over [C, C + 187 days] [R32, 2026-08-11: the literal \"2027-01-31\" that stood here is STRUCK and conformed to the formula this field's own opening declares governing]: (i) cumulative NET return of the sealed conditioned strategy after the full Charter 4.6 cost stack at 1x modelled costs using CRYPTO",
+  "stamp": true
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "ISO",
+  "text": "2027-01-31",
+  "ordinal": 2,
+  "off_ded": 827,
+  "off_ver": 1271,
+  "sent": "On that date Validation computes, from registry.db and pit.db ALONE, on the FROZEN pre-registration, over [C, C + 187 days] [R32, 2026-08-11: the literal \"2027-01-31\" that stood here is STRUCK and conformed to the formula this field's own opening declares governing]: (i) cumulative NET return of the sealed conditioned strategy after the full Charter 4.6 cost stack at 1x modelled costs using CRYPTO",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "FORMULA",
+  "text": "C ",
+  "ordinal": 1,
+  "off_ded": 3035,
+  "off_ver": 4774,
+  "sent": "(2) No post-C exclusions - any regime filter, date exclusion, asset exclusion, venue change or universe restriction not present in the sealed pre-registration is inadmissible in this computation; this clause is the [R9, 2026-08-05] K1-K7 declaration made enforceable, and any of K1-K7 revised in order to change this computation's answer is refused by P3 and, if pursued, [R9] TERMINATES THE LINE - t",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "ISO",
+  "text": "2026-08-05",
+  "ordinal": 1,
+  "off_ded": 3243,
+  "off_ver": 5093,
+  "sent": "(2) No post-C exclusions - any regime filter, date exclusion, asset exclusion, venue change or universe restriction not present in the sealed pre-registration is inadmissible in this computation; this clause is the [R9, 2026-08-05] K1-K7 declaration made enforceable, and any of K1-K7 revised in order to change this computation's answer is refused by P3 and, if pursued, [R9] TERMINATES THE LINE - t",
+  "stamp": true
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "FORMULA",
+  "text": "C + 187 days",
+  "ordinal": 4,
+  "off_ded": 3764,
+  "off_ver": 5984,
+  "sent": "(3) No restatement as continuation - a hypothesis restated after the observation date C + 187 days [R32, 2026-08-11: literal \"2027-01-31\" STRUCK] is a NEW family [R9, 2026-08-05: the prior text read 'opened with n_inherited >= the killed family's final n_trials plus its own', which was REDUNDANT AND UNEXECUTABLE from the same misreading of family_stats as head (ii) above] opened with predecessor_f",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "ISO",
+  "text": "2026-08-11",
+  "ordinal": 2,
+  "off_ded": 3783,
+  "off_ver": 6003,
+  "sent": "(3) No restatement as continuation - a hypothesis restated after the observation date C + 187 days [R32, 2026-08-11: literal \"2027-01-31\" STRUCK] is a NEW family [R9, 2026-08-05: the prior text read 'opened with n_inherited >= the killed family's final n_trials plus its own', which was REDUNDANT AND UNEXECUTABLE from the same misreading of family_stats as head (ii) above] opened with predecessor_f",
+  "stamp": true
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "ISO",
+  "text": "2027-01-31",
+  "ordinal": 3,
+  "off_ded": 3804,
+  "off_ver": 6024,
+  "sent": "(3) No restatement as continuation - a hypothesis restated after the observation date C + 187 days [R32, 2026-08-11: literal \"2027-01-31\" STRUCK] is a NEW family [R9, 2026-08-05: the prior text read 'opened with n_inherited >= the killed family's final n_trials plus its own', which was REDUNDANT AND UNEXECUTABLE from the same misreading of family_stats as head (ii) above] opened with predecessor_f",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "ISO",
+  "text": "2026-08-05",
+  "ordinal": 2,
+  "off_ded": 3845,
+  "off_ver": 6102,
+  "sent": "(3) No restatement as continuation - a hypothesis restated after the observation date C + 187 days [R32, 2026-08-11: literal \"2027-01-31\" STRUCK] is a NEW family [R9, 2026-08-05: the prior text read 'opened with n_inherited >= the killed family's final n_trials plus its own', which was REDUNDANT AND UNEXECUTABLE from the same misreading of family_stats as head (ii) above] opened with predecessor_f",
+  "stamp": true
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "ISO",
+  "text": "2026-08-11",
+  "ordinal": 3,
+  "off_ded": 4733,
+  "off_ver": 7508,
+  "sent": "[R32, 2026-08-11, PRE-SEAL - THE SECOND C1, AND IT IS IN CLAUSE 5 BELOW.",
+  "stamp": true
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "FORMULA",
+  "text": "C + 187 days",
+  "ordinal": 5,
+  "off_ded": 4877,
+  "off_ver": 7726,
+  "sent": "FILED I-153, HIGH.] This field's opening declares the observation date to be C + 187 days and states that THE DRAFTED DATE IS NOT BINDING - THE FORMULA IS.",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "ISO",
+  "text": "2027-01-31",
+  "ordinal": 4,
+  "off_ded": 5021,
+  "off_ver": 7944,
+  "sent": "Clause 5 as drafted read \"if the computation is not performed ON 2027-01-31 for ANY reason ...",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "ISO",
+  "text": "2026-07-28",
+  "ordinal": 2,
+  "off_ded": 5177,
+  "off_ver": 8211,
+  "sent": "the family is killed by default.\" READ AS SEALED, THOSE TWO SENTENCES TERMINATE THIS FAMILY WITH CERTAINTY: at any seal after 2026-07-28, C + 187 days falls LATER than 2027-01-31, so on 2027-01-31 the computation will not have been performed BECAUSE IT IS NOT DUE, and clause 5 fires - registry TERMINATED, no further trials, no Gate 1 submission ever.",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "FORMULA",
+  "text": "C + 187 days",
+  "ordinal": 6,
+  "off_ded": 5189,
+  "off_ver": 8223,
+  "sent": "the family is killed by default.\" READ AS SEALED, THOSE TWO SENTENCES TERMINATE THIS FAMILY WITH CERTAINTY: at any seal after 2026-07-28, C + 187 days falls LATER than 2027-01-31, so on 2027-01-31 the computation will not have been performed BECAUSE IT IS NOT DUE, and clause 5 fires - registry TERMINATED, no further trials, no Gate 1 submission ever.",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "ISO",
+  "text": "2027-01-31",
+  "ordinal": 5,
+  "off_ded": 5219,
+  "off_ver": 8253,
+  "sent": "the family is killed by default.\" READ AS SEALED, THOSE TWO SENTENCES TERMINATE THIS FAMILY WITH CERTAINTY: at any seal after 2026-07-28, C + 187 days falls LATER than 2027-01-31, so on 2027-01-31 the computation will not have been performed BECAUSE IT IS NOT DUE, and clause 5 fires - registry TERMINATED, no further trials, no Gate 1 submission ever.",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "ISO",
+  "text": "2027-01-31",
+  "ordinal": 6,
+  "off_ded": 5237,
+  "off_ver": 8308,
+  "sent": "the family is killed by default.\" READ AS SEALED, THOSE TWO SENTENCES TERMINATE THIS FAMILY WITH CERTAINTY: at any seal after 2026-07-28, C + 187 days falls LATER than 2027-01-31, so on 2027-01-31 the computation will not have been performed BECAUSE IT IS NOT DUE, and clause 5 fires - registry TERMINATED, no further trials, no Gate 1 submission ever.",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "FORMULA",
+  "text": "C",
+  "ordinal": 3,
+  "off_ded": 6089,
+  "off_ver": 9641,
+  "sent": "THE LITERAL IS CONFORMED TO C + 187 DAYS in clause 5 below, in the two clauses above, and in section 14's prose.",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "ISO",
+  "text": "2027-01-31",
+  "ordinal": 7,
+  "off_ded": 6668,
+  "off_ver": 10590,
+  "sent": "PUT TO C2 AS C13(k) - VALIDATION MAY REFUSE THIS CONFORMANCE AND REQUIRE THE LITERAL 2027-01-31 SEALED AS DRAFTED, in which case the family accepts a window shortened by however long the seal took, clause (b)'s 30-day threshold becomes correspondingly harder against a window calibrated at 187 days, and this seat writes the KILL memo on the day without argument.",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "FORMULA",
+  "text": "C",
+  "ordinal": 4,
+  "off_ded": 7341,
+  "off_ver": 11633,
+  "sent": "(5) SILENCE IS A KILL - if the computation is not performed on THE OBSERVATION DATE C + 187 DAYS [R32, 2026-08-11: literal \"2027-01-31\" STRUCK - see the R32 note above; the literal made this clause fire with certainty] for ANY reason, INCLUDING that the perp price series was never ingested, that the cost model was never repaired, that Validation had no unit available, or that the harness was not r",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "ISO",
+  "text": "2026-08-11",
+  "ordinal": 4,
+  "off_ded": 7360,
+  "off_ver": 11689,
+  "sent": "(5) SILENCE IS A KILL - if the computation is not performed on THE OBSERVATION DATE C + 187 DAYS [R32, 2026-08-11: literal \"2027-01-31\" STRUCK - see the R32 note above; the literal made this clause fire with certainty] for ANY reason, INCLUDING that the perp price series was never ingested, that the cost model was never repaired, that Validation had no unit available, or that the harness was not r",
+  "stamp": true
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "ISO",
+  "text": "2027-01-31",
+  "ordinal": 8,
+  "off_ded": 7381,
+  "off_ver": 11710,
+  "sent": "(5) SILENCE IS A KILL - if the computation is not performed on THE OBSERVATION DATE C + 187 DAYS [R32, 2026-08-11: literal \"2027-01-31\" STRUCK - see the R32 note above; the literal made this clause fire with certainty] for ANY reason, INCLUDING that the perp price series was never ingested, that the cost model was never repaired, that Validation had no unit available, or that the harness was not r",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "ISO",
+  "text": "2026-08-11",
+  "ordinal": 5,
+  "off_ded": 7916,
+  "off_ver": 12578,
+  "sent": "[R29(b), 2026-08-11, PRE-SEAL - STRUCK IN THIS FIELD, WHICH IS WHERE IT MATTERED AND WHERE R-005 DID NOT REACH.] The sentence that stood here - \"CONDITION PRECEDENT, separately binding: the C1 cost-model repair is specified by Validation and implemented by 2026-08-11; if unresolved by that date the family is ADMITTED-AS-EXPLORATORY only and remains so until it is, because until then clause (a) wou",
+  "stamp": true
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "ISO",
+  "text": "2026-08-11",
+  "ordinal": 6,
+  "off_ded": 8164,
+  "off_ver": 12974,
+  "sent": "[R29(b), 2026-08-11, PRE-SEAL - STRUCK IN THIS FIELD, WHICH IS WHERE IT MATTERED AND WHERE R-005 DID NOT REACH.] The sentence that stood here - \"CONDITION PRECEDENT, separately binding: the C1 cost-model repair is specified by Validation and implemented by 2026-08-11; if unresolved by that date the family is ADMITTED-AS-EXPLORATORY only and remains so until it is, because until then clause (a) wou",
+  "stamp": true
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "ISO",
+  "text": "2026-08-11",
+  "ordinal": 7,
+  "off_ded": 8436,
+  "off_ver": 13394,
+  "sent": "C1 IS DISCHARGED: I-034 CLOSED by the Principal 2026-08-11, satisfied 2026-07-29 (commit 875874f, \"Ruling 003 implemented: carry accounting, 139/139.",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "ISO",
+  "text": "2026-07-29",
+  "ordinal": 1,
+  "off_ded": 8458,
+  "off_ver": 13416,
+  "sent": "C1 IS DISCHARGED: I-034 CLOSED by the Principal 2026-08-11, satisfied 2026-07-29 (commit 875874f, \"Ruling 003 implemented: carry accounting, 139/139.",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "FORMULA",
+  "text": "C",
+  "ordinal": 5,
+  "off_ded": 9173,
+  "off_ver": 14612,
+  "sent": "The residual is retained and is NOT swept up with the closure: CostModel has no field that can charge liquidation or venue-insolvency risk (section 12.5 defect (d)), it is class (c) C-25 in the section 10.11.4 register, VALIDATION-RULING-003 section 4 declines to invent a number for it, and it is NOT a condition precedent because there is nothing to wait for.",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "FORMULA",
+  "text": "C",
+  "ordinal": 6,
+  "off_ded": 9428,
+  "off_ver": 15015,
+  "sent": "WHAT KC-002 IS NOT, stated here rather than waiting to be told (Validation C-001 section 1.6 makes the identical statement about KC-001): KC-002 IS A KILL CONDITION, NOT A CONFIRMATORY TEST.",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "FORMULA",
+  "text": "C",
+  "ordinal": 7,
+  "off_ded": 9842,
+  "off_ver": 15651,
+  "sent": "This family DOES NOT claim the C-001 N=1 confirmatory exemption; should it ever seek one it must satisfy E1-E5 in full and be entered in the firm-level register of outstanding confirmatory exemptions that I-032 requires and that does not yet exist - at 20 families each holding one exemption the firm-level false-positive rate is ~2.7% [cited, Validation], which is why the register is a precondition",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "FORMULA",
+  "text": "C",
+  "ordinal": 8,
+  "off_ded": 10249,
+  "off_ver": 16280,
+  "sent": "Separately, per C-001 E3: the family's <= 22 forward-window trials are N_forward, they are LOGGED AS TRIALS, and NO REPORTED RESULT MAY BE SELECTED FROM AMONG THEM.",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "ISO",
+  "text": "2026-08-10",
+  "ordinal": 1,
+  "off_ded": 10404,
+  "off_ver": 16546,
+  "sent": "[R21, 2026-08-10, PRE-SEAL - WHAT THE HARNESS DOES WITH THIS FIELD, RECORDED ON KC-002'S OWN FACE BECAUSE THE ANSWER IS NOTHING, AND BECAUSE THE SEAT THAT WOULD PREFER NOT TO SAY SO IS THE SEAT THAT WROTE CLAUSE 5.] NO HARNESS PATH EVALUATES A KILL CONDITION, ON ANY DATE, FOR ANY FAMILY [measured - zero non-registry.py consumers of forward_kill_condition].",
+  "stamp": true
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "ISO",
+  "text": "2026-08-10",
+  "ordinal": 2,
+  "off_ded": 12127,
+  "off_ver": 19305,
+  "sent": "[R24/R26, 2026-08-10, PRE-SEAL - KC-002 IS CLASS (b), AND ITS THREE FIELDS ARE NAMED.",
+  "stamp": true
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "ISO",
+  "text": "2026-08-10",
+  "ordinal": 3,
+  "off_ded": 13113,
+  "off_ver": 20920,
+  "sent": "[R26, 2026-08-10, PRE-SEAL - THE CONDITION PRECEDENT IS SATISFIED AND THE DOWNGRADE MUST NOT FIRE.] The C1 cost-model repair is SPECIFIED (VALIDATION-RULING-003, whose header names 'Blocks: PREREG-002 condition precedent C1') AND IMPLEMENTED (DATA-IMPL-004 sections 5-6, 'All nineteen T-cases are implemented and pass', landed 2026-07-29; verified in source [measured]: CRYPTO_PERP_TAKER carries NO f",
+  "stamp": true
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "ISO",
+  "text": "2026-07-29",
+  "ordinal": 2,
+  "off_ded": 13434,
+  "off_ver": 21426,
+  "sent": "[R26, 2026-08-10, PRE-SEAL - THE CONDITION PRECEDENT IS SATISFIED AND THE DOWNGRADE MUST NOT FIRE.] The C1 cost-model repair is SPECIFIED (VALIDATION-RULING-003, whose header names 'Blocks: PREREG-002 condition precedent C1') AND IMPLEMENTED (DATA-IMPL-004 sections 5-6, 'All nineteen T-cases are implemented and pass', landed 2026-07-29; verified in source [measured]: CRYPTO_PERP_TAKER carries NO f",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "ISO",
+  "text": "2026-08-11",
+  "ordinal": 8,
+  "off_ded": 13763,
+  "off_ver": 21977,
+  "sent": "SECTION 14's CONDITION PRECEDENT WOULD HAVE DOWNGRADED THIS FAMILY TO ADMITTED-AS-EXPLORATORY ON 2026-08-11 - 'pre-declared ineligible for Gate 1' - ON A PREMISE FALSE ELEVEN DAYS BEFORE THE DEADLINE, AND P7 WOULD HAVE MADE IT PERMANENT.",
+  "stamp": false
+ },
+ {
+  "field": "forward_kill_condition",
+  "rec": "FORMULA",
+  "text": "C",
+  "ordinal": 9,
+  "off_ded": 14241,
+  "off_ver": 22714,
+  "sent": "The one head of section 12 that is NOT repaired is defect (d) - CostModel has no field that can charge liquidation or venue-insolvency risk - which is class (c), is C-25 in the register, is disclosed on the face of every artifact, and is NOT a condition precedent because there is nothing to wait for.",
+  "stamp": false
+ }
+]
