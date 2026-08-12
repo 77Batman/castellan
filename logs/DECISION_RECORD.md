@@ -4411,3 +4411,36 @@ registration-as-seal → trials at Sonnet.
 **8 · Budget.** **9 of 30 invocations · 8 of 12 Opus.** Free **1**; insurance 2; DA reserve 1.
 
 **Review date:** on the I-173 execution's return.
+
+---
+
+## S3-D-017 · 2026-08-13 · Headroom reading — conservative posture lifted
+
+**`[usage: session 22% · weekly-opus 12%]`**, supplied on request. **First known headroom since
+2026-08-06 (`58% / 18%`).** Recorded with its message per §2.2, because the whole value of the
+signal is that it is timestamped.
+
+**Posture:** the note is fresh and **no termination has occurred in Sprint 3**, so headroom is
+**KNOWN**, and §2.2's conservative posture — under which the CIO declined a parallel Opus dispatch
+three times — is **lifted.** Pre-split and incremental writes remain in force unconditionally; they
+were never posture-dependent.
+
+**What this unblocks, and what it does not.** **Row 3 — C2, the last free Opus unit — was the
+dispatch the CIO said should wait for a fresh reading rather than proceed under an unknown one. It
+now has one.**
+
+**But C2 still waits, and on a dependency rather than on headroom:**
+
+1. the **I-173 execution** (Sonnet, in flight) — **guardrail 3 sends its diff to C2 for review**, so
+   C2 cannot precede it;
+2. the **ingest-and-conform** (Sonnet, not yet dispatched) — C2 would otherwise rule on a §11.1 span
+   the Principal has ordered conformed to the disk.
+
+**The ingest is not dispatched concurrently with the I-173 execution**, for the reason the CIO has
+given every time: **same seat, same tree.** Both are Seat 9's. **Sequencing costs latency; collision
+costs correctness**, and the tree in question is the document about to be sealed.
+
+**Budget unchanged: 9 of 30 invocations · 8 of 12 Opus · free 1 · insurance 2 · DA reserve 1.**
+§5 dead-man: **9 remain** since the 2026-08-13 checkpoint.
+
+**Review date:** on the I-173 execution's return.
