@@ -5032,3 +5032,91 @@ seat to compute and commit the number **before** it edits.
 
 **Resolution:** open — corrective in force; the three-instance pattern goes to the §7 audit.
 **Pattern tag:** `count-from-the-document-not-the-thing` · `narrated-acceptance`
+
+---
+
+## I-190 · 2026-08-12 · Vendor restatement on `PREREG-002`'s primary universe: `binanceusdm` re-adjusted its `2026-07-29` perp-close bar on re-fetch, three fields each on BTC and ETH · Severity: MEDIUM · Owner: head-of-data-infra → quant-validation
+
+**Description.** Per dispatch S3-D-019 (ingest-to-current, TASK 1), this seat ingested the primary
+universe (BTC/ETH only — SOL excluded per R3, not touched) to current via `castellan.loaders`
+(`fetch_ccxt_ohlcv`, `fetch_ccxt_funding`) against `binance` (spot) and `binanceusdm` (perp + funding),
+through `PITStore`, raw, two-timestamp discipline. The re-fetch of `binanceusdm` daily OHLCV re-covered
+`2026-07-27` onward to pick up the prior terminal bar's overlap and found `2026-07-29` had settled
+differently from what was on disk: `BTC/USDT:USDT` — `low` 63569.5→63234.0, `close` 63971.4→63958.9,
+`volume` 143297.911→179976.299; `ETH/USDT:USDT` — `low` 1883.38→1870.26, `close` 1901.85→1909.68,
+`volume` 3866008.851→4781085.516. Auto-logged by `PITStore.ingest` under A4 as two `data_restatement`
+events (`book/registry.db` event_id 2, 3) [measured — this session]. The old rows are not touched; the
+new versions carry a later `knowledge_time` (this session's ingest instant); both are on disk.
+
+**Read, not diagnosed as an error.** `2026-07-29` was itself the currently-forming, partial UTC day at
+the time of the prior ingest (its inclusion in `binanceusdm`'s max `event_time` while `binance` spot's
+max stopped a day earlier is exactly the artifact R37 measured around, per §11.1). This restatement is
+the exchange settling that day's candle, not a vendor data-quality failure — but A4 requires it logged
+and escalated regardless of cause, and this seat does neither more nor less than that.
+
+**Blast radius: none, measured not asserted.** `book/registry.db` reads 0 hypotheses / 0 trials both
+before and after this ingest [measured, this session]. No trial anywhere has read either the old or the
+new value of these six cells; there is nothing downstream to invalidate. Recorded because A4's auto-log
+requirement does not carry a blast-radius exemption, not because this restatement has consequences yet.
+
+**Forward note.** The new terminal bar this same ingest wrote, `2026-08-12`, is itself the currently-
+forming UTC day on every one of the six primary legs (spot BTC volume 398.04 against a several-
+thousand-per-day trailing norm) — the identical shape that produced this restatement. A near-identical
+`I-190`-class event on `2026-08-12` should be expected on the next re-fetch and is not, by itself, a new
+finding when it arrives.
+
+**Resolution:** open — informational, no action required at zero blast radius. Escalated to Validation
+the same session per Charter Seat 9 standing duty (a leak or restatement discovered late invalidates
+every result derived from it; this one is caught immediately and derives nothing yet).
+**Pattern tag:** `terminal-bar-is-provisional` · `restatement-is-not-a-gap`
+
+---
+
+## I-191 · 2026-08-12 · Ingest ran for the first time since 2026-07-29; the primary universe's common span moved for the first time this document has recorded, from 6.5710 to 6.6120 years (6.6093 excluding the new partial terminal bar) · Severity: MEDIUM · Owner: head-of-data-infra → director-of-research, quant-validation
+
+**Description.** Per dispatch S3-D-019 (TASK 2), this seat re-measured `PREREG-002`'s §11.1 in-sample
+span by the same read-only `SELECT` methodology R-007/R37 established: `MIN(event_time)`/`MAX(event_time)`
+across all six primary-universe legs (`binance` BTC/USDT and ETH/USDT spot close; `binanceusdm` BTC and
+ETH perp close; `binanceusdm` BTC and ETH funding rate), common coverage = the intersection. Result:
+`[2020-01-01, 2026-08-12] = 2415 days = 6.6120 years` at E-9's 365.2425 (6.611910 at 365.25) — up from
+R37's `2400 days = 6.5710 years`, a growth of exactly 15 days, the same 15 days R37 measured the declared
+in-sample window (`[2020-01-01, C]`) as running past the last bar on disk. Excluding the partial terminal
+bar (`2026-08-12`, see I-190's forward note), the last fully settled common bar is `2026-08-11`:
+`2414 days = 6.6093 years`. **Both figures are longer than R37's, not shorter — reported whichever way
+the number moved, per the Principal's direction-blind instruction, and this is the direction it moved.**
+
+**What this confirms, against R37's own prediction.** R37 (`I-176`) found the span "grows with INGEST,
+and none has occurred since 2026-07-29" and declined to treat any larger figure as measured. Ingest has
+now occurred, under direct dispatch, and the span grew by exactly the ingested days — R37's prediction
+was correct in both directions (it does not grow with `C` alone, and it does grow with ingest).
+
+**What moves downstream, reported as arithmetic inputs, not re-derived.** §10.4's `MinBTL(86, SR 1.0) =
+6.14 yr` is unaffected by the available span (it is a function of `N`, `SR`, and `vif`, not of what is on
+disk) and this seat does not recompute it. Mechanically, the margin against it widens from **0.43 yr** to
+**0.472 yr** (inclusive figure) or **0.469 yr** (settled-only figure). §11.1 and the five §21 fields that
+carry the span literal in clean, non-marker-entangled text (`universe` ×2, `success_criteria` clean-prose
+site, `trial_budget` comment, `n_inherited` comment, `model_prior_provenance`) were conformed with dated
+`[SUPERSEDED - S3-D-019, 2026-08-12]` notes, old figures struck-through or retained for audit trail, not
+silently overwritten. **Four occurrences inside `success_criteria`'s unclosed `[R13/R14/R15/R16/R17...]`
+bracket (I-181) were left untouched** — they are among the 8 in-field exceptions S3-D-016 could not
+relocate, and this dispatch does not authorize touching them either. `§21.1` was not adjusted. §10.4
+itself, §15's sequencing table, and `research/REGISTRATION-PAYLOAD-PREREG-002.md` were not touched —
+`register-002`'s payload is what actually governs sealing (§21 preamble, R19/R23) and this dispatch does
+not authorize editing it; the conforming notes above are prose-consistency only.
+
+**A sequencing finding, disclosed rather than corrected.** §15 step 1 plans `binanceusdm` perp OHLCV
+ingest as occurring *after* the seal, bounded by the ceiling. This dispatch ingested perp OHLCV (and
+spot, and funding) pre-seal, under explicit instruction, because no ceiling yet exists to bound anything
+by — the family is unregistered. §15 step 1, as written, now describes an ingest that has already
+happened, ahead of its planned position in the sequence. Flagged in §11.1's "Ingest ceiling" row; §15
+itself not edited (out of this dispatch's authorized scope).
+
+**Verified:** `book/registry.db` reads 0 hypotheses / 0 trials, unchanged before and after [measured].
+`ingest_ceiling` holds zero rows, unchanged before and after [measured] — nothing was blocked, nothing
+was lifted, there was no ceiling to bypass. `research/work/site_roster.json`,
+`research/REGISTRATION-PAYLOAD-*`, all `VALIDATION-*` documents, and `harness/` are untouched [measured
+— `git status`]. Repo not committed, per dispatch instruction.
+
+**Resolution:** open — escalated to Validation the same session. Whether/how to re-seal §10.4's margin
+arithmetic against the new span is Validation's call, not this seat's.
+**Pattern tag:** `span-grows-with-ingest-not-with-C` · `direction-blind-measurement` · `partial-terminal-bar`

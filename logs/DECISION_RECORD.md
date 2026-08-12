@@ -4630,3 +4630,91 @@ otherwise.**
 reserve 1.** §5 dead-man: **7 remain.**
 
 **Review date:** on the ingest's return.
+
+---
+
+## S3-D-021 · 2026-08-13 · Ingest complete · span moved · C2 PROJECTS OVER THRESHOLD — not dispatched
+
+**1 · Ingest complete. 376 new rows across six legs; last `knowledge_time` now 2026-08-12 on every
+leg.** The ingest ceiling **did not block anything**, and the seat's framing is the correct one:
+*"the family is unregistered, there is no cutoff to enforce — this is not 'the control was
+bypassed,' it's 'the control had nothing to fire on.'"*
+
+**2 · Two restatement incidents, auto-logged under A4** — registry events 2 and 3, verified
+[measured]. Three fields per perp leg on **2026-07-29**: `low`, `close`, `volume`. **Blast radius:
+none** — registry holds 0 hypotheses / 0 trials, so no trial's number is touched. Escalated to
+Validation, **I-190 MEDIUM**. Cause is the exchange settling a bar that was still forming at prior
+ingest, **and the seat filed it anyway** — *"A4 requires the log+escalation regardless of cause or
+blast radius."*
+
+**3 · THE SPAN MOVED, AND THE SEAL NOW HAS A CHOICE THE CIO PUTS TO THE PRINCIPAL.**
+
+| | Days | Years @ 365.2425 |
+|---|---:|---:|
+| Previous (R37, pre-ingest) | 2400 | **6.5710** |
+| **Inclusive of the terminal bar** | 2415 | **6.6120** |
+| **Settled bars only** | 2414 | **6.6093** |
+
+**R37's prediction is confirmed in both directions** — the span did not move while no ingest ran,
+and moved by exactly the ingested days once it did.
+
+**But the terminal bar 2026-08-12 is the currently-forming UTC day** — spot BTC volume **398.04**
+against a several-thousand-per-day norm — and the seat states plainly: **expect an I-190-shaped
+restatement on the next re-fetch.**
+
+**So sealing against 6.6120 seals a span whose terminal bar is known in advance to be wrong.** Under
+P7 that freezes. **The CIO recommends sealing against the settled-only 6.6093** — it is the shorter
+figure, it is the one that does not require a restatement inside a sealed in-sample window, and
+**choosing the shorter of two numbers when the longer is knowingly provisional is the
+direction-blind answer, not a conservative flourish.** §10.4's margin widens either way — 0.43 →
+0.472 inclusive, 0.469 settled — **and the CIO reports that the arithmetic moves without proposing
+what §10.4 should say, which is Validation's.**
+
+**4 · A sequencing finding the seat disclosed rather than corrected.** §15 step 1 plans
+`binanceusdm` perp OHLCV ingest as **post-seal, bounded by the ceiling.** This dispatch ingested it
+**pre-seal, under explicit instruction, because no ceiling exists yet.** §15 was not edited — out of
+scope — and §11.1 now flags it. **The document's method section and what actually happened disagree,
+and that disagreement is now in the record rather than in a gap.**
+
+**Four span occurrences were left untouched — all inside I-181's unclosed bracket.** The seat
+declined to reach into an S3-D-016 exception it was not authorized to touch. **Correct.**
+
+**5 · C2 PROJECTS OVER THRESHOLD. IT IS NOT DISPATCHED, AND THE CIO MEASURED RATHER THAN GUESSED.**
+
+Precedent, read from disk [measured]: **`VALIDATION-GATE0-001` — a Gate 0 intake verdict — is 464
+lines.** **`VALIDATION-RULING-005` — four adjudications — is 583 lines.**
+
+**C2 as scoped is a Gate 0 intake verdict PLUS eight absorbed rulings**: the executed diff · the 8
+in-field exceptions · I-181 · the 27–51 estimate · C13(k) · C5 mechanics · and now the §11.1
+conformance and the span choice. **Projection: 1,000–1,200 lines. Over threshold, not marginally.**
+
+**The ratchet is in force and admits no appeal: over threshold prices as two. The firm has one free
+unit.** Dispatching as scoped means either violating the ratchet or exhausting the tier, **and the
+CIO will do neither.** The Principal's own words on this scope — *"that is a full unit's work"* —
+**the measurement says it is two.**
+
+**6 · PROPOSAL: scope C2 to the seal-blocking set only, using the firm's own separation.**
+
+R-006 established it and the Principal ruled on it: **C5 is verdict-blocking, not seal-blocking** —
+*"sealable, runnable, Stage-1-spendable with C5 open; not evaluable, and no PROCEED reportable."*
+
+| Keep — seal-blocking | Defer to the Gate 1 path |
+|---|---|
+| The **Gate 0 intake verdict** | **C5 mechanics** — blocks evaluation, not sealing |
+| **C13(k)** — *"the seal does not proceed past an unruled C13(k)"* | **The 27–51 estimate** — concerns an evaluator that is not implemented |
+| **I-181** — *"it resolves before hashing or the field doesn't seal"* | **I-045** — the Director's view is it survives the seal as a standing disclosure |
+| **The executed diff** — guardrail 3 | **I-076** — `test_mbs_12`'s band, unrelated to the seal |
+| **The span choice** — §11.1 and the forming terminal bar | |
+
+**This is not a thinning of scrutiny — it is the firm's own seal/verdict separation applied to a
+budget that has one unit.** Everything deferred binds where it was always going to bind: **at Gate 1
+evaluation, which the ruled slip already moved to Sprint 4.** **Nothing adversarial is dropped; C3
+remains on the reserve and remains unskippable.**
+
+**Projected under threshold on the precedent: a 464-line Gate 0 base plus four rulings, against
+RULING-005's 583 for four.**
+
+**7 · Budget.** **12 of 30 invocations · 8 of 12 Opus.** Free **1**, held. Insurance 2; DA reserve 1.
+Headroom **13% consumed weekly** — not a constraint. §5 dead-man: **6 remain.**
+
+**Review date:** immediately — C2 does not dispatch without a ruling on scope.
