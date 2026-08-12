@@ -4795,3 +4795,111 @@ second attempt at C2 this sprint.** §5 dead-man: **5 remain.**
 interrupt and the Principal's act.**
 
 **Review date:** on C2's return.
+
+---
+
+## S3-D-023 · 2026-08-13 · GATE 0: ADMIT-CONDITIONAL · seal-blocking reduced to C7 and C8
+
+**1 · THE FIRM HAS ITS FIRST GATE 0 VERDICT ON PREREG-002: ADMIT-CONDITIONAL.** Five criteria PASS,
+**zero FAIL**, two recorded **PENDING BY CONSTRUCTION** — criteria 6 (trial counter opened) and 7
+(holdout locked) **cannot be PASS at any Gate 0 evaluation in this firm**, because `open_hypothesis`
+*is* the seal and the vault is C8-bound to the same UTC day. **Both are satisfied by the act the
+verdict authorizes.** `VALIDATION-GATE0-001` never named this (I-206).
+
+**Seal-blocking after C2: C7 and C8 only.** C3 remains **verdict-blocking, unspent, unskippable**,
+and the verdict states expressly that it does not substitute for it.
+
+**2 · The line-budget requirement worked, and it is the first thing the CIO checked.** Planned
+**~700 across thirteen sections, stated in §0 before writing. Held at 590 — 210 spare, nothing
+cut.** The CIO imposed it after failing the same test at I-096; **a seat that plans its budget
+before writing does not discover an overrun after.**
+
+**3 · C13(k) — CONCURRENCE, NO DISSENT, AND ON A GROUND THE PRINCIPAL DID NOT STATE. This is the
+finest reasoning of the sprint.**
+
+KC-002 clause (b)'s **30 conditioning days is a count, not a rate.** Hold the count, take the
+drafted literal, and the implied rate moves **16.04% → 17.54%** at a 2026-08-13 seal —
+`(30/171)÷(30/187) = 1.0936` [measured].
+
+> **Requiring the drafted literal moves a pre-registered threshold by 9.4% as a function of how many
+> days elapsed between drafting and sealing. That is not tightening, it is randomizing** — a §4
+> reserved act arriving by scheduling accident.
+
+**And the sentence the CIO wants preserved above all others from this dispatch:**
+
+> **"Refusing the conformance would have been the permissive act wearing the adversarial seat's
+> clothes."**
+
+**The adversarial-looking choice was the permissive one, and only an adversary who checks arithmetic
+rather than posture finds that.**
+
+**4 · §4 HARD INTERRUPT — I-204, HIGH.** E-14's `DIVERGENT` — **the only control catching clause 5's
+bare-`C` extraction — fires *only because* the struck `2027-01-31` literals are still in the field.**
+Ruled in both directions: E-2's recognizer must become case-insensitive on the unit (a spec
+amendment, Validation's, **unfunded**), and **until it lands no seat may strip those eight
+literals.** **Struck text is load-bearing, and the document is safe by an accident that is now
+recorded as a rule.**
+
+**5 · I-181 resolved by ONE CHARACTER, and the near-miss is worth more than the fix.** A single `]`
+at line 2559. Verified: **bracket depth 1 → 0, no negative excursion, extraction unchanged —
+provably semantically null.** The Director's obstacle never had to be answered: **the document
+answers "where does the marker close" by its own convention, twice in the same field.**
+
+**I-203 — the near-miss.** The obvious repair, closing at the field's end, **would have placed
+§10.4's entire sealed ceiling function, §10.8's verdict bands, both mandatory render strings and
+both disclosed leakage defects inside a revision marker — making all of it eligible for relocation
+*out* of the hashed field under S3-D-016's own rule.** **Guardrail 1's stop-and-queue prevented it.**
+The guardrail that looked like caution was load-bearing.
+
+**6 · C11 removed from the seal-blocking set — it was circular.** It required ≤2 logged trials;
+`log_trial` refuses an unregistered family; **registration is the seal.** **It asked for work whose
+precondition was the act it blocked**, and §20 and the registration payload have contradicted each
+other about it since R-004. Re-imposed as **class (b) at Gate 1** with executor, cadence and artifact
+named (I-202).
+
+**7 · §10.4 — every number in it is class (c), and that is why none of it needs re-sealing.** Both
+circulating margins were **rounded-input arithmetic**: 0.43 and 0.469 both subtract the *displayed*
+6.14 rather than the measured **6.135900**. Correct values **0.4351** and **0.4734**; binding ρ̂
+**0.034241 → 0.037143**; absolute ceiling **109 → 112**.
+
+**None of the three loosenings may be banked, because none binds:** `86 < 109 < 112`, and `gates.py`
+**recomputes from `oos_index` at evaluation time and reads no sealed literal.** The two stale
+literals are **stale in the conservative direction and accepted sealed** (I-207). **The labeling
+mandate paid here: knowing the numbers were class (c) is what made re-sealing unnecessary.**
+
+**8 · THE DEFERRED COUNT IS NINE. Both the CIO's four and the Principal's five were wrong.** The five
+neither party named: **C4, C6, C13(j), I-170, I-172.** Filed as **I-205 — "seventh cardinal in three
+sprints taken from a table rather than an enumeration, in the dispatch that ordered the enumeration
+to prevent it."**
+
+**The instruction worked exactly as intended.** The CIO removed both parties from the arithmetic and
+told the seat to count from the enumeration; **it counted, and both parties were wrong.** A
+discrepancy resolved in either party's favour would have shipped a scoped verdict understating its
+own scope by five items.
+
+**9 · I-209 IS THE CIO'S, AND ITS CAUSE IS INSTRUCTIVE.** `book/registry.db` held **3 events in the
+working copy and 1 in HEAD** — **under A3 the book of record did not contain the two A4 restatement
+incidents.** Caught by Validation, not by the CIO. **Fixed: committed, HEAD now holds 3.**
+
+**The cause is the corrective for I-054.** After `git add -A` captured a concurrent seat's
+in-progress work, the CIO adopted **named-path staging only.** **A named-path discipline omits
+whatever the CIO did not think to name** — and `book/registry.db` was written by a seat, not by the
+CIO. **One corrective produced the opposite failure**, which is the honest cost of the fix and not an
+argument against it. The `family = NULL` column on both events is a separate defect and stays open.
+
+**10 · To the Principal — four items, two needing an act:** **C5 part 2** (his; Validation **declines
+part 1 in isolation** — *"a point of application without ratification and executor is a class-(c)
+no-op"*) · **I-206**'s one-sentence Charter clarification · **C13(k) concurrence on independent
+grounds** · **the one-character edit, disclosed for his sight.**
+
+**11 · Verified independently** [measured]: registry **0 hypotheses / 0 trials**, 3 events;
+extraction **68**; the edit is **1 insertion, 1 deletion**; §21.1 remains outside the fence at the
+current head — **the CIO's own 3392/3396 line numbers had drifted, the property holds** (I-201).
+
+**12 · Budget.** **13 of 30 invocations · 9 of 12 Opus · FREE OPUS: ZERO.** Remaining: **DA reserve
+(C3)** and **2 insurance units.** §5 dead-man: **4 remain.**
+
+**13 · Sequence:** **C3 on the reserve → registration-as-seal, a §4 interrupt and the Principal's
+act.** C7 and C8 resolve alongside.
+
+**Review date:** on the Principal's rulings, then C3.

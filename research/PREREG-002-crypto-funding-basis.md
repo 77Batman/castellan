@@ -2556,7 +2556,7 @@ success_criteria                  = "
                                      A further <= 32 trials are DECLARED AND NOT AUTHORIZED and reach
                                      budget 79 / ceiling 86 ONLY at a measured rho_hat <= 0.034. Neither
                                      N_conditioning (7) nor the MinBTL figures move; what moves is what
-                                     may be SPENT.
+                                     may be SPENT.]
                                      [R20, 2026-08-10, PRE-SEAL - I-105's DISCHARGE. THE TWO-STAGE
                                      BUDGET IS A REGISTRATION ACT, NOT A PROSE ACT, AND UNTIL THIS
                                      REVISION IT WAS THE SECOND. THE SEALED trial_budget IS 47 - STAGE

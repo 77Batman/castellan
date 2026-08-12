@@ -5120,3 +5120,245 @@ was lifted, there was no ceiling to bypass. `research/work/site_roster.json`,
 **Resolution:** open — escalated to Validation the same session. Whether/how to re-seal §10.4's margin
 arithmetic against the new span is Validation's call, not this seat's.
 **Pattern tag:** `span-grows-with-ingest-not-with-C` · `direction-blind-measurement` · `partial-terminal-bar`
+
+---
+
+## I-200 · 2026-08-12 · §10.4's 0.43-year MinBTL margin is arithmetic on a rounded input, the document disagrees with itself by 0.005 yr, and the S3-D-019 restatement to 0.469 inherits the same rounding · Severity: MEDIUM · Owner: quant-validation (values supplied) → director-of-research (document)
+
+**Description.** `MinBTL(86, SR 1.0) = 6.135900` [measured this session —
+`castellan.stats.min_backtest_length_years(86, 1.0, 252)`]. §10.4's table displays it rounded to
+`6.14`, and the margin propagated through §10.1, §10.3, §10.4, R6, R8(b), R19(c) and
+`REGISTRATION-PAYLOAD-PREREG-002` §2.8 is `6.571 − 6.14 = 0.431 → "0.43"`. **§10.4.2 of the same
+document carries the correct figure — *"the margin is 0.435 years, 7.1% of the required length"* —
+so the document has disagreed with itself across two sections since R14.**
+
+| Span | Margin as propagated | **Margin, measured** |
+|---|---:|---:|
+| 6.571 (sealed) | 0.43 | **0.4351** (7.09% of required length) |
+| 6.6093 (settled, Principal-ruled) | 0.469 | **0.4734** (7.71%) |
+
+**The dispatch's and S3-D-019's `0.469` is `6.6093 − 6.14` and inherits the identical rounding.**
+Direction runs **against** the family — it understates margin — which is why seven revisions passed
+over it.
+
+**Resolution:** open. **No hashed-field edit required** — `VALIDATION-GATE0-002` §7.2 rules that
+every number in §10.4 is class (c) and that the computed values belong on the Validation Report, not
+in a frozen prose field. The sealed `[SUPERSEDED - S3-D-019]` note's *"~0.47"* is consistent with the
+measured 0.4734 and is conservative.
+**Pattern tag:** `rounded-input-propagates-as-a-cardinal` · `document-disagrees-with-itself`
+
+---
+
+## I-201 · 2026-08-12 · The dated-site count moved 65 → 68 between S3-D-016 and S3-D-019: a dispatch ordered to record a measurement wrote three new dated sites into the fields a prior dispatch had just cleaned · Severity: MEDIUM · Owner: quant-validation → director-of-research
+
+**Description.** Live re-extraction, this session: **68 sites** [measured —
+`research/work/extract_dated_sites.py`], against I-185's post-repair **65**. Reconciled to the site,
+not asserted:
+
+| Step | Sites |
+|---|---:|
+| Pre-edit, live (I-180) | **92** |
+| Relocated by S3-D-016 | **−27** |
+| Post-edit (I-185) | **= 65** |
+| **Written back by S3-D-019's span-conforming notes** | **+3** |
+| **Live now** | **68** |
+
+Per-field now: `statement` 2 · `mechanism` 0 · `falsifier` 5 · `universe` 11 · `horizon` 0 ·
+`success_criteria` 14 · `forward_kill_condition` 36. The +3 lands exactly where I-191 records writing
+conforming notes: `universe` +2, `success_criteria` +1.
+
+**This is I-178 measured a second time, and the second instance is stronger than the first**: the
+sites were added by a dispatch that was correct to run, recording a measurement the Principal
+ordered. **The count moves whenever any seat touches the document for any reason, including good
+ones.**
+
+**Resolution:** open — carried by I-178 and I-173. The remedy is unchanged and is document-side:
+binding prose fields carry the clause, never its editorial history.
+**Pattern tag:** `register-can-never-be-finished` · `conforming-pass-adds-sites`
+
+---
+
+## I-202 · 2026-08-12 · C11 could never have cleared as a seal condition — it requires ≤2 logged trials, and the act it blocks is the precondition of logging one · Severity: MEDIUM · Owner: quant-validation
+
+**Description.** `PREREG-002` §20 lists C11 (the leg-(ii) null calibration, ≤2 trials) as
+**"Recommended BLOCKING on sealing."** Under A2 every backtest routes through `run_backtest`, and
+`log_trial` refuses a family that is not registered; **registration is the seal** (P1). **The
+condition therefore asks for work whose precondition is the act it blocks.**
+
+**The contradiction has been on-disk since R-004:** `REGISTRATION-PAYLOAD-PREREG-002` §2.2 budgets
+*"C11 — leg-(ii) null calibration, run before F-002, ≤ 2"* **inside the post-seal Stage 1 total of
+47.** The payload and §20 have said opposite things about when C11 runs for eight days.
+
+**Resolution:** **RULED at `VALIDATION-GATE0-002` §10.1.** C11 is removed from the seal-blocking set
+and re-imposed as **class (b)** at Gate 1 with its three fields named — **executor** Validation;
+**cadence** once, at the first `evaluate_gate1` call on this family; **artifact** the Validation
+Report stating on its face whether §5.3's `≤ 0.10` is `[assumed]` or `[measured]`, and if measured the
+trial ids of the two calibration trials and that they are trials 1 and 2 of the ledger. Trial order is
+in the registry, so it is checkable rather than asserted.
+**Pattern tag:** `condition-blocks-its-own-precondition` · `two-documents-disagree-about-sequencing`
+
+---
+
+## I-203 · 2026-08-12 · I-181's near-miss: closing the unbalanced marker at the field's end rather than at the marker's would have made §10.4's sealed ceiling function eligible for relocation OUT of the hashed field · Severity: MEDIUM (records a HIGH near-miss) · Owner: quant-validation
+
+**Description.** `success_criteria`'s `[R13/R14/R15/R16/R17 ...` marker had no closing `]` (I-181).
+The obvious mechanical repair — insert `]` at the field's end — would have placed **§10.4's entire
+sealed ceiling function (`N_max = min(109, max_admissible_trials(...))`), §10.8's pre-committed
+verdict bands, both mandatory disclosure render strings, the tiered success criteria, the I-050
+statement and both disclosed harness leakage defects** inside a revision marker.
+
+**Under S3-D-016's relocation rule — `[Rn, ...]` markers move to the non-hashed §21.1 — all of it
+would then have been eligible to leave `prereg_sha256`'s input.** The family would have sealed with
+its own ceiling function outside the hash.
+
+**Guardrail 1's STOP-AND-QUEUE prevented it.** The executing seat did not guess a boundary, and that
+refusal is the single highest-value act that guardrail has produced.
+
+**Resolution:** closed by `VALIDATION-GATE0-002` §5, which closes the marker at the **sibling**
+boundary determined by the document's own convention (`[R3, ...]` and `[R19(b), ... REPLACED BY:]`
+both hold the revision note and leave substantive text outside the bracket). Recorded so the
+counterfactual is on the record rather than only the repair.
+**Pattern tag:** `guardrail-1-worked-as-designed` · `obvious-repair-was-the-catastrophic-one`
+
+---
+
+## I-204 · 2026-08-12 · The struck `2027-01-31` literals are load-bearing as a control and may not be removed from `forward_kill_condition` until E-2's recognizer is case-insensitive · Severity: HIGH · Owner: quant-validation
+
+**Description.** Standing prohibition, in force from `VALIDATION-GATE0-002` §4, issued alongside the
+C13(k) ruling that adopts `C + 187 days`.
+
+I-171 establishes that E-2's `FORMULA` recognizer is case-sensitive, so clause 5 — *"SILENCE IS A KILL
+… on THE OBSERVATION DATE **C + 187 DAYS**"* — extracts as a **bare `C`**, resolving to the seal day.
+E-12 does not catch it. **E-14 does, and only because the field still holds an `ISO` partner
+(`2027-01-31`) whose resolved date differs.** Strip the eight struck literals and clause 5 becomes a
+bare `C` that **FIRES on the day of the seal**.
+
+**The document is presently protected by its own uncorrected text, and that is not a control.**
+
+**Ruled, in both available directions:** **(1)** E-2's `FORMULA` recognizer **is case-insensitive on
+the unit** — a tightening amendment to `VALIDATION-SPEC-004`, this seat's, **not funded in S3-D-022**;
+**(2)** until it lands, **no seat may remove the eight struck `2027-01-31` literals from
+`forward_kill_condition` in any conforming pass.**
+
+**Resolution:** open on (1); (2) is in force now and is a condition on the seal
+(`VALIDATION-GATE0-002` §10.1, S-2).
+**Pattern tag:** `control-holds-by-accident` · `cleaning-the-document-would-kill-the-family`
+
+---
+
+## I-205 · 2026-08-12 · The deferred set enumerates to NINE; the CIO's table named four and the Principal's ruling five — a cardinal stated from a table rather than from an enumeration, in the dispatch that ordered the enumeration to prevent exactly this · Severity: MEDIUM · Owner: quant-validation → CIO
+
+**Description.** S3-D-022 required the Gate 0 verdict to enumerate the deferred set exhaustively and
+to state a count taken from the enumeration rather than from either party. Counted under the stated
+membership test — **(a)** in front of the intake by §20 or as a Validation-owned open issue on this
+family, **(b)** unruled by the verdict, **(c)** binding at **Gate 1 evaluation** — the set is **nine**:
+
+C5 · C4 · C6 · C13(g)/I-045 · C13(j)/I-151 · I-173+I-186 (the 27–51 firing count) · I-170 · I-172 ·
+I-076.
+
+**The five neither the CIO nor the Principal named are C4, C6, C13(j), I-170 and I-172**, each a §20
+row or a Validation-owned open issue against this family, and each Gate-1-binding on the test above.
+
+**This is the seventh cardinal in three sprints stated from a table rather than counted from an
+enumeration** (I-150's "six stale sites", I-180's 90-vs-92, I-096's 55, I-186's 24-vs-90, I-185's
+90→55, R25's nine-vs-eight, and now this).
+
+**Resolution:** open — the enumeration and count are at `VALIDATION-GATE0-002` §1 and supersede both
+prior figures. **Pattern is now strong enough to be a rule rather than an observation: no cardinal
+about this family is admissible unless the enumeration it is counted from is printed beside it.**
+**Pattern tag:** `cardinal-from-a-table-not-an-enumeration` · `the-guardrail-failed-in-the-dispatch-that-set-it`
+
+---
+
+## I-206 · 2026-08-12 · Gate 0 criteria (6) and (7) can never be PASS at a Gate 0 evaluation, because both are satisfied by the act the verdict authorizes · Severity: LOW-MEDIUM · Owner: quant-validation → Principal (Charter clarification)
+
+**Description.** Charter §4.3(6) requires the trial counter *"opened and instrumented"* — A2 defines
+that as the family existing in `book/registry.db`. §4.3(7) requires the holdout *"defined and
+locked."* **`TrialRegistry.open_hypothesis` computes `prereg_sha256` on first registration —
+registration and sealing are one operation — and `HoldoutVault.seal()` is bound by C8 to the same
+session and UTC day.**
+
+**So a Gate 0 verdict that required (6) and (7) to be PASS could never issue for any family, ever.**
+The criteria are satisfied by the act the verdict authorizes. `VALIDATION-GATE0-001` evaluated these
+criteria without naming the circularity.
+
+`VALIDATION-GATE0-002` records both as **PENDING BY CONSTRUCTION** — neither PASS, FAIL, nor
+INSUFFICIENT-DATA — with §10.1's conditions making the act mechanical.
+
+**Resolution:** open — **remedy is the Principal's**: either §4.3(6)–(7) read *"instrumented and
+executable"*, or Gate 0's output is defined as **authorizing** the opening and the locking. Filed as
+a clarification request, not a defect in any seat's work.
+**Pattern tag:** `criterion-cannot-be-met-before-the-verdict-that-authorizes-it`
+
+---
+
+## I-207 · 2026-08-12 · Two literals will freeze stale under P7 at the Principal-ruled span, both in the conservative direction, and they are accepted rather than missed · Severity: LOW-MEDIUM · Owner: director-of-research
+
+**Description.** At the settled span **6.6093** [Principal-ruled, 2,414 days, `[2020-01-01,
+2026-08-11]`], two sealed literals no longer equal the quantities they name [all measured this
+session]:
+
+| Literal | Sites | Value at 6.571 | **Value at 6.6093** |
+|---|---|---:|---:|
+| `109` — the absolute admissible ceiling | §10.4 table, §10.4.1, §10.4.3's mandatory render string, §18 family-exit trigger, §1 box | 109 | **112** |
+| `0.034` — the binding AR(1) `ρ̂` | §10.4.2, `success_criteria` | 0.034241 | **0.037143** |
+
+**Both are stale in the CONSERVATIVE direction** — they understate what the arithmetic permits — and
+both are inert on anything that binds, since the declared ceiling (86) and the authorized Stage 1
+ceiling (54) do not move and `86 < 109 < 112`. **`gates.py` recomputes both from `oos_index` and the
+measured VIF at evaluation time and reads neither literal.**
+
+**Resolution:** **ACCEPTED SEALED.** `VALIDATION-GATE0-002` §7.2 declines to authorize a second
+hashed-field edit to improve the family's stated headroom. Filed so the record shows the two literals
+were seen and accepted, not missed by an eighth revision.
+**Pattern tag:** `stale-but-conservative` · `sealed-literal-that-nothing-reads`
+
+---
+
+## I-208 · 2026-08-12 · `success_criteria` is a 42,056-character binding field with a 15,577-character gap between its two canonicalizations, and it is not auditable by the seat required to audit it · Severity: MEDIUM · Owner: director-of-research → quant-validation
+
+**Description.** Measured this session: `success_criteria` is **42,056 characters verbatim / 26,479
+dedented** and carries **14 dated sites** plus an entire nested revision history — including a marker
+(`[R20 ...]`) running 1,400+ characters inside another marker's scope — inside one string hashed into
+`prereg_sha256`. `forward_kill_condition` is **23,283 / 14,514** with **36 sites**.
+
+**I-170's `source_offset` problem is a symptom, not the disease.** The 15,577-character gap between
+the two readings is what makes 88 of 90 offsets differ; a short field would have a small gap and no
+ambiguity worth ruling. **I-181 and I-182 are the same symptom**: a bracket goes unclosed and stays
+unnoticed through seven revisions because no reader can hold 42,000 characters of one field.
+
+**This bears directly on this seat's own function.** Validation is required to audit the binding set,
+and the binding set includes a field longer than most of this firm's complete documents.
+
+**Resolution:** open — remedy is a **length ceiling on binding prose fields**, with commentary,
+provenance and revision history carried in `model_prior_provenance` and in the document. Routed to
+the Director for the document side and held by this seat for the specification side.
+**Pattern tag:** `binding-field-longer-than-a-document` · `unauditable-by-the-seat-that-must-audit-it`
+
+---
+
+## I-209 · 2026-08-12 · The two A4 `data_restatement` events carry `family = NULL` and are uncommitted, so under A3 the book of record does not contain them at all · Severity: MEDIUM · Owner: quant-validation → head-of-data-infra
+
+**Description.** Two facts, both measured this session, and the severity rests on both.
+
+**(1) `family = NULL`.** `book/registry.db` events 2 and 3 — I-190's `binanceusdm` restatement of the
+`2026-07-29` perp bar on BTC and ETH, three fields each — carry a NULL family key. `PITStore.ingest`
+auto-logs under A4 correctly and had no family to name (the family is unregistered). **Consequence:
+no `family_stats` call, no `predecessor_chain` walk, and no Gate report will ever surface these events
+to `funding-carry-conditioning-002`, whose primary universe they restate.** They are discoverable only
+by reading the events table by hand.
+
+**(2) Uncommitted.** `git show HEAD:book/registry.db` carries **1 event** (`book_open`); the working
+copy carries **3**. **Under A3 the git repository is the book of record — so the book of record does
+not contain the A4 restatement events at all.**
+
+Blast radius today is genuinely zero (0 hypotheses / 0 trials). **The defect is that the mechanism
+that would surface a restatement to a family, once one exists, does not connect** — and A4's whole
+purpose is that a leak or restatement discovered late invalidates every result derived from it.
+
+**Resolution:** open. Two remedies, both head-of-data-infra's with this seat's specification:
+back-fill a family key at registration for restatement events whose symbol is in a registered
+family's universe, **or** have `evaluate_gate1` scan `data_restatement` events by symbol against the
+family's universe and print the count on every report face (§4.7.4(ii): including when it is zero).
+The second is preferred — it puts the control where the machine reads it.
+**Pattern tag:** `event-with-no-family-key` · `book-of-record-does-not-hold-the-event` · `restatement-surfaces-to-nobody`
