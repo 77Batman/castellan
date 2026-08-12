@@ -4444,3 +4444,70 @@ costs correctness**, and the tree in question is the document about to be sealed
 §5 dead-man: **9 remain** since the 2026-08-13 checkpoint.
 
 **Review date:** on the I-173 execution's return.
+
+---
+
+## S3-D-018 · 2026-08-13 · I-173 executed · §4 INTERRUPT — I-185 · the CIO's acceptance number was wrong
+
+**1 · §4 HARD INTERRUPT — I-185, HIGH**, the execution/status update to I-173: **27 of 35 relocated,
+8 named exceptions, extraction 92 → 65.** Verified independently by the CIO: **the extractor returns
+65**, and **§21.1 sits at line 3396, after the fence closes at 3392 — outside what the extractor
+reads, therefore outside `prereg_sha256`'s input.** Registry **0/0**. Severities on disk: 1 HIGH,
+3 MEDIUM, 3 LOW.
+
+**2 · THE COMMITTED ACCEPTANCE NUMBER WAS THE CIO'S AND IT WAS UNREACHABLE. Filed as I-096.**
+
+The brief committed **55 = 90 − 35**. The true pre-edit baseline was **92** — R-007's
+`[R38 … RATIFIED BY THE PRINCIPAL]` insert added two sites **after `site_roster.json` was generated,
+in the same revision that generated it.** **Even a flawless execution lands at 57.**
+
+**The second error is worse than the first.** Guardrail 2 exists because *"acceptance is computed,
+not narrated."* **The CIO derived 55 by arithmetic on a cached file instead of re-running the
+extractor — which takes seconds, and which the executing seat did as its first act.** *The control
+against narrated acceptance was itself narrated from a cache.*
+
+**Third cardinal error of the sprint by the CIO** — I-141, I-150, and this — **all three a count
+taken from a document rather than from the thing the document describes**, which is `GATES.md`
+§4.7.3 violated in the CIO's own arithmetic. **Corrective in force: an acceptance number is computed
+live at dispatch time from the artifact the seat will measure, never from a cached derivative.**
+
+**The committed 55 is not amended.** A pre-commitment revised after its outcome is not a
+pre-commitment. **The record shows 55 committed, 65 delivered, and why.**
+
+**3 · The seat did the three things the brief was designed to test, and did all three.** It **did not
+chase the number** — *"this is a finding, not an adjustment target."* It **decomposed the gap
+exactly** rather than reporting a miss. And it **stopped on 8 of 35 rather than deciding**, naming
+each:
+
+- **`success_criteria`'s R13–R17 marker has no closing `]` anywhere in the field** — the field's only
+  unbalanced bracket, confirmed by exhaustive depth accounting. **A pre-existing defect in a string
+  about to be hashed** (I-181).
+- **Four brackets entangle a true revision date with a substantive `stamp:false` date**, so
+  relocating the bracket would carry subject matter out of the field with it (I-183).
+- **Two bare-prose dates** sit inside load-bearing sentences, unbracketed (I-184).
+- **Two sites the roster never classified** — the `[R38]` pair — **left untouched under "the roster
+  decides, you do not."**
+
+**4 · The firing count could not be computed, and the seat refused to fabricate one.** `VALIDATION-SPEC-004`
+specifies `harness/scripts/evaluate_dated_clauses.py`; **only its unimplemented test file exists** —
+which **the CIO knew and required output from anyway.** The seat hand-applied E-10 row 4, reported
+**27 of 65 mechanically FIRED**, **declined to count 24 unresolvable `FORMULA`/bare-`C` sites**
+though I-173's own pre-edit accounting had counted analogous ones, gave the honest bound **27–51**,
+and named the exact figure **Validation's call, not its own** (I-186).
+
+**A seat that reports a range and says whose decision the point estimate is has done something
+harder than reporting a number.**
+
+**5 · What this means for the seal, stated plainly.** **Stamp removal was necessary and is not
+sufficient** — exactly as the CIO's brief predicted in advance. **Firings remain nonzero**, the
+8 exceptions remain in the hashed fields, and **I-181's unbalanced bracket is a defect in a string
+that is about to be frozen.** **C2 now has more to rule on than the diff.**
+
+**6 · Sequence unchanged, and C2 still waits on the ingest.** Next: **Sonnet ingest-and-conform**
+(§11.1 to the disk, direction-blind) → **row 3, C2, the last free Opus unit**, absorbing C13(k),
+C5's mechanics, **the executed diff, the 8 exceptions, and the firing-count call.**
+
+**7 · Budget.** **10 of 30 invocations · 8 of 12 Opus.** Free **1**; insurance 2; DA reserve 1.
+Headroom last known **22% / 12%**, fresh. §5 dead-man: **8 remain.**
+
+**Review date:** on the ingest-and-conform's return.

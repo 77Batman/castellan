@@ -2058,10 +2058,7 @@ mechanism                         = "Perpetual funding is the rental price of le
 
                                      WHY THIS IS NOT ITSELF AN EDGE, stated at Gate 0: a premium that
                                      persists because it is a fair price for a service is not alpha.
-                                     [R1, 2026-08-04, PRE-SEAL - WITHDRAWN AND REPLACED. The withdrawn
-                                     sentence read: 'The ~11%/yr baseline is approximately the
-                                     market-clearing price of three risks a carry supplier genuinely
-                                     bears.' It is not supportable and this seat withdraws it.] Binance's
+                                     Binance's
                                      documented formula is F = [P_avg + clamp(interest - P_avg, -0.05%,
                                      +0.05%)] / (8/N) with interest FIXED at 0.01% per 8h, so whenever the
                                      premium sits inside [-4bp, +6bp] the funding rate equals the interest
@@ -2094,9 +2091,7 @@ mechanism                         = "Perpetual funding is the rental price of le
                                      own classification rather than on an unverifiable equality is the
                                      stronger of the two.
 
-                                     THE ACTUAL CLAIM: [R2, 2026-08-04, PRE-SEAL - RESTATED. The prior
-                                     text read 'funding is a DIRECT OBSERVABLE of long-side positioning
-                                     crowding'.] FUNDING IS A CENSORED OBSERVATION OF LONG-SIDE
+                                     THE ACTUAL CLAIM: FUNDING IS A CENSORED OBSERVATION OF LONG-SIDE
                                      POSITIONING CROWDING - censored to the administered interest rate
                                      whenever the premium sits inside the +/-5bp clamp band, and therefore
                                      informative about crowding ONLY OUTSIDE THAT BAND. Consequence for
@@ -2241,9 +2236,7 @@ universe                          = "Venue: binance (spot) and binanceusdm (perp
                                      legs. UNIVERSE: BTC/USDT and ETH/USDT spot paired against
                                      BTC/USDT:USDT and ETH/USDT:USDT perpetuals, common span 2020-01-01 to
                                      C = 6.571 years, zero gaps [measured]. THERE IS NO SECONDARY
-                                     UNIVERSE. [R3, 2026-08-04, PRE-SEAL - SOL IS DROPPED ENTIRELY. The
-                                     prior text made SOL a SECONDARY member reported separately on its own
-                                     5.87-year span with its own N and its own verdict, never pooled.]
+                                     UNIVERSE. 
                                      REASON, per I-045: Binance changed SOLUSDT's funding settlement
                                      frequency and raised its Capped Funding Rate Multiplier from 0.75 to
                                      1 - taking the cap to +/-2.00%, roughly 40x the default +/-0.05% band
@@ -2324,8 +2317,7 @@ universe                          = "Venue: binance (spot) and binanceusdm (perp
                                        9: (0) CHOSEN - exclude nothing; (1) COVID; (2) May-2021; (3) LUNA;
                                        (4) FTX; (5) 2022 bear; (6) pre-ETF; (7) first n months post-
                                        listing as illiquid; (8) negative-funding regimes.
-                                     K4 ASSET UNIVERSE. [R3, 2026-08-04: selection MOVED WITHIN the
-                                       already-declared menu, from (2) to (4). The menu did NOT grow.]
+                                     K4 ASSET UNIVERSE. 
                                        Chosen: BTC+ETH ONLY, SOL DISCARDED ENTIRELY.
                                        Menu of 5, UNCHANGED: (1) BTC only; (2) BTC+ETH primary with SOL
                                        reported separately [WAS CHOSEN, now superseded]; (3) BTC+ETH+SOL
@@ -2333,12 +2325,7 @@ universe                          = "Venue: binance (spot) and binanceusdm (perp
                                        alt universe (not ingested).
                                      K5 VENUE. Chosen: binance/binanceusdm only. Menu of 5: (1) CHOSEN;
                                        (2) coinbase; (3) bybit; (4) kraken; (5) cross-venue pooled.
-                                     K6 BAR GRANULARITY. Chosen: DAILY UTC. [R4, 2026-08-04: THE CADENCE
-                                       CONSTANT IS DELETED. The prior text read 'funding aggregated as the
-                                       sum of the day's three prints'. That asserted a cadence constant
-                                       which is MEASURED FALSE - up to 12 prints in one day, on 11 of
-                                       2,145 days [measured - VALIDATION-RULING-003 section A2] - and
-                                       Validation has already specified its replacement.] Funding is
+                                     K6 BAR GRANULARITY. Chosen: DAILY UTC. Funding is
                                        aggregated as the EXACT ARITHMETIC SUM of all realized funding_rate
                                        prints whose event_time falls in the bar's window, LEFT-OPEN
                                        RIGHT-CLOSED (t-1, t], with NO assumed cadence, no mean, no
@@ -2358,13 +2345,7 @@ universe                          = "Venue: binance (spot) and binanceusdm (perp
                                        Menu of 4, UNCHANGED: (1) CHOSEN; (2) 8h (the
                                        funding-print cadence); (3) 1h; (4) 1m.
                                      K7 TREATMENT OF A DOCUMENTED FUNDING-PARAMETER CHANGE ON A UNIVERSE
-                                       SYMBOL. [R5, 2026-08-04: NEW CHOICE, declared pre-measurement
-                                       against a registry holding 0 families and 0 trials. The pre-R5
-                                       document made this choice SILENTLY, its implicit selection being
-                                       option (5) - pool across the change - and I-045 IS THE FINDING THAT
-                                       OPTION (5) IS WRONG. An implicit selection is exactly the defect
-                                       the conditioning declaration exists to prevent, and it was present
-                                       inside the section that prevents it.]
+                                       SYMBOL. 
                                        Chosen (1): on ANY documented change to the funding formula, or to
                                        a universe symbol's per-contract funding parameters (settlement
                                        interval, clamp cap, or interest rate), THAT SYMBOL'S STATE
@@ -2411,26 +2392,8 @@ universe                          = "Venue: binance (spot) and binanceusdm (perp
                                        ETH - I-045's control tests only '>3 prints' and only on BTC, so a
                                        cadence LENGTHENING would not have been caught and ETH was never
                                        measured at all.
-                                     N CONTRIBUTION: [R5/R6, 2026-08-04: 6 -> 7] 7 - one per choice, K1
-                                     through K7. [R19, 2026-08-10, PRE-SEAL: THE 7 IS NOW REGISTERED,
-                                     NOT MERELY DECLARED. It is sealed as n_inherited = 7, a binding
-                                     field with four consumers - family_stats.n_trials, DSR's N,
-                                     MinBTL's N, and declared_ceiling_base = n_inherited + sealed
-                                     budget, which is the base of VALIDATION-SPEC-003 B-18's
-                                     contingent-unlock arithmetic [measured - gates.py]. Section
-                                     10.5.2's own unlock table is reproduced ONLY at a base of
-                                     7 + 47 = 54, which is the base SPEC-003's own test_tbe_15 fixes;
-                                     at n_inherited = 0 the base is 47 and the same mechanism admits
-                                     30 where this document declares 23 and 8 where it declares 1 -
-                                     PERMISSIVE at the two rungs that bind. This is not the GATES.md
-                                     4.7.1 defect: the registry cannot compute N_conditioning, and
-                                     4.7.1 governs inheritance from a predecessor this family does
-                                     not have (predecessor_family = None, so the chain summation and
-                                     InheritedCountDoubleCountError's guard are both inapplicable).
-                                     The cost is taken deliberately and runs against the family:
-                                     registry-enforced N is 54 at full Stage 1 and 86 at full Stage 2,
-                                     so section 10.3's 0.13-year I-027 residual is PAID rather than
-                                     mitigated.] K4's change is NOT a new contribution: its selection
+                                     N CONTRIBUTION: 7 - one per choice, K1
+                                     through K7. K4's change is NOT a new contribution: its selection
                                      moved WITHIN its already-declared menu of 5, before any measurement,
                                      against a registry holding 0 families and 0 trials [measured] - the
                                      menu did not grow, nothing was searched over, and K4 continues to
@@ -2445,33 +2408,7 @@ universe                          = "Venue: binance (spot) and binanceusdm (perp
                                      and is BINDING; a choice involving no search over results contributes
                                      1, not the menu size, and the menu declaration is what makes that
                                      checkable.
-                                     BINDING ESCALATION. [R9, 2026-08-05, PRE-SEAL - STRUCK AND REPLACED
-                                     ON THREE HEADS. The struck rule read: 'any revision to any of K1-K6
-                                     after any result on this family is seen is refused by P3 and requires
-                                     a SUCCESSOR FAMILY opened with n_inherited >= (menu size of the
-                                     revised choice) x this family's final n_trials, or the PRODUCT of the
-                                     menu sizes if more than one is revised.' HEAD (i) SCOPE: it covered
-                                     K1-K6 and NOT K7, which R5 declared and R6 discounted to 1 on the
-                                     same reasoning - a choice discounted by a rule it is not subject to
-                                     is discounted for nothing. HEAD (ii) QUANTITY: family_stats computes
-                                     n_trials = SUM n_inherited(chain incl. self) + SUM logged(chain incl.
-                                     self), summing TRANSITIVELY across predecessor_chain [measured -
-                                     registry.py], so the predecessor's total is ALREADY inside the
-                                     successor's denominator; declaring menu_size x chain_total on top
-                                     yields (menu_size + 1) x chain_total. The correct declaration for a
-                                     target denominator of menu_size x chain_total is (menu_size - 1) x
-                                     chain_total. The error ran CONSERVATIVE, which is why it survived, and
-                                     it is a defect regardless - filed I-055, and addressed to Validation
-                                     as well because RULING-004 ML-17 copies the same formula citing this
-                                     document as its source. HEAD (iii) EXECUTABILITY (I-053): open_
-                                     hypothesis raises InheritedCountDoubleCountError whenever a successor
-                                     declares n_inherited >= chain_total [measured - registry.py], and BOTH
-                                     the struck and the corrected forms exceed chain_total for every menu
-                                     size >= 2 - K1-K7's sizes are 10, 3, 9, 5, 5, 4, 5, all >= 3 - so the
-                                     rule could not be executed on any of its seven choices, ever. THE
-                                     GUARD IS NOT WRONG; what is missing is the continuation, there being
-                                     no argument, event or authorized route by which Validation, having
-                                     adjudicated the escalation, can then permit the registration.]
+                                     BINDING ESCALATION. 
                                      THE REPLACEMENT, BINDING: any revision to any of K1-K7 after any
                                      result on this family is seen is refused by P3 and requires a
                                      SUCCESSOR FAMILY under predecessor_family opened with
@@ -2503,7 +2440,7 @@ universe                          = "Venue: binance (spot) and binanceusdm (perp
                                      because this sealed text already names that quantity.
                                      COUNTERFACTUAL, recorded so
                                      the rider's value is legible: had K1-K7 been selected AFTER seeing
-                                     results, the product would be [R5, 2026-08-04] 10 x 3 x 9 x 5 x 5 x
+                                     results, the product would be 10 x 3 x 9 x 5 x 5 x
                                      4 x 5 = 135,000 [arithmetic on declared menu sizes; NO market data
                                      touched, NO new statistic computed]. MinBTL is MONOTONE INCREASING in
                                      N, so the measured MinBTL(27,000, SR 1.0) = 16.79 years against 6.571
@@ -2563,10 +2500,7 @@ horizon                           = "CONTINUOUS. No event trigger, no target, no
                                      point-in-time KNOWLEDGE for dates before its ingest session; it tests
                                      point-in-time ORDERING, which is what the hypothesis needs."
 
-success_criteria                  = "[R11, 2026-08-05, PRE-SEAL - THE ML-2 ASSERTION, ADDED VERBATIM AND
-                                     PLACED FIRST BECAUSE RULING-004 ML-2 MAKES ITS ABSENCE A GATE 0
-                                     REJECTION RATHER THAN A DEFERRAL, AND BECAUSE 'SILENCE IS NOT THAT
-                                     ASSERTION'.]
+success_criteria                  = "
                                      NO NUMBER REPORTED BY THIS FAMILY IS SELECTED BY COMPARING CANDIDATES
                                      ON A QUANTITY COMPUTED FROM THE SAMPLE.
                                      This family is NOT a fitted family under RULING-004 ML-1 and ML-3
@@ -2769,7 +2703,7 @@ success_criteria                  = "[R11, 2026-08-05, PRE-SEAL - THE ML-2 ASSER
                                      OUTCOME IS PARK-WITH-TRIGGER, NOT PROCEED. This does NOT change the
                                      section 19 verdict: that case rests on a VERDICT being reachable, and
                                      F-002 and KC-002 both deliver one without touching a t.
-                                     [R11, 2026-08-05] TWO HARNESS LEAKAGE DEFECTS ARE CARRIED RATHER THAN
+                                     TWO HARNESS LEAKAGE DEFECTS ARE CARRIED RATHER THAN
                                      ASSUMED AWAY, because one of them is sized against THIS family's own
                                      parameter: walk_forward_windows applies NO purge and NO embargo at
                                      all, and purged_kfold_splits embargoes ceil(0.01*T) = 24 BARS on a
@@ -2783,10 +2717,7 @@ success_criteria                  = "[R11, 2026-08-05, PRE-SEAL - THE ML-2 ASSER
                                      excess of its 30-day lookback over the 24-bar embargo, IN THE
                                      PERMISSIVE DIRECTION, until I-051 is repaired. Named at Gate 0 so a
                                      WFE number is not read as clean.
-                                     [R21, 2026-08-10, PRE-SEAL - THE GATES.md 4.7.2 AUDIT, RECORDED IN
-                                     THE SEALED TEXT INCLUDING ITS UNFLATTERING HALF, BECAUSE A
-                                     DOCUMENT THAT DESCRIBES CONTROLS IT DOES NOT HAVE IS I-046'S
-                                     COSTUME ON THE RESEARCH SIDE AND P7 MAKES IT PERMANENT.]
+                                     
                                      NINE OF THE SIXTEEN BINDING FIELDS ARE SEALED AND READ BY NOTHING
                                      [measured - zero non-registry.py consumers for universe, horizon,
                                      success_criteria, model_prior_provenance,
@@ -2826,8 +2757,7 @@ success_criteria                  = "[R11, 2026-08-05, PRE-SEAL - THE ML-2 ASSER
                                      two that COULD be mechanised are the 50% haircut and the
                                      conditioning floor; the second is mechanised at R19 and the first
                                      is filed and is not this seat's.
-                                     [R24/R25/R28, 2026-08-10, PRE-SEAL - THE CLASS REGISTER, AND THE
-                                     TWO CORRECTIONS THE AUDIT ABOVE GOT WRONG.] EVERY LIMIT THIS
+                                     EVERY LIMIT THIS
                                      DOCUMENT CLAIMS NOW CARRIES ITS CLASS AT SECTION 10.11: (a)
                                      HARNESS-ENFORCED, named field where one exists and named code
                                      path always; (b) PROCEDURE-ENFORCED, named executor, named
@@ -2870,11 +2800,7 @@ success_criteria                  = "[R11, 2026-08-05, PRE-SEAL - THE ML-2 ASSER
                                      denominator; it also moved one disclosure line from (c) to (a),
                                      and nobody noticed until R-005.
                                      RECORDED AT PRE-REGISTRATION, all [measured] from castellan.stats:
-                                     ~~n_inherited = 0 (no prior search exists)~~ [R19, 2026-08-10:
-                                     n_inherited = 7 - REGISTERED, not declared. No prior EXTERNAL
-                                     search exists; the 7 is N_conditioning, the K1-K7 floor, sealed in
-                                     the field built for that quantity. See the N CONTRIBUTION note in
-                                     `universe` and section 10.3.]; [R5/R6, 2026-08-04]
+                                     ~~n_inherited = 0 (no prior search exists)~~ ; 
                                      N_conditioning = 7 (was 6; K7 adds one); trial
                                      budget 79 (was 80; the 'SOL on its own span' diagnostic is struck
                                      with the asset); CEILING N = 86 IN BOTH ACCOUNTINGS - THE
@@ -2894,13 +2820,7 @@ success_criteria                  = "[R11, 2026-08-05, PRE-SEAL - THE ML-2 ASSER
                                      87 and MinBTL(87, SR 1.0) must be computed before sealing; it is
                                      BOUNDED BY ALREADY-MEASURED FIGURES in [6.14, 6.574] years, MinBTL
                                      being monotone increasing in N, so the Gate 1 length criterion clears
-                                     either way and the margin lies between 0.00 and 0.43 years. [R8,
-                                     2026-08-05, PRE-SEAL - THE ABSOLUTE CEILING IS CORRECTED FROM 110 TO
-                                     109. The prior text read: 'ABSOLUTE ADMISSIBLE CEILING N = 110, at
-                                     which MinBTL = 6.574 = the entire available span and margin is zero.'
-                                     That was a MISLABEL OF THIS DOCUMENT'S OWN MEASURED NUMBER, in the
-                                     PERMISSIVE direction: MinBTL(110) = 6.574 EXCEEDS the 6.571 available,
-                                     so 110 FAILS by 0.003 years and is not 'exactly at the span'.]
+                                     either way and the margin lies between 0.00 and 0.43 years. 
                                      ABSOLUTE ADMISSIBLE CEILING N = 109 - the true maximum satisfying
                                      MinBTL(N, 1.0) <= 6.571 years [cited - VALIDATION-RULING-004 section
                                      2.2 by bisection, and section 12: 'The true maximum is 109 and I am
@@ -2915,10 +2835,7 @@ success_criteria                  = "[R11, 2026-08-05, PRE-SEAL - THE ML-2 ASSER
                                      and the absolute one falls from 24 trials to 23 (109 - 86 = 23,
                                      arithmetic on two integers, no market data touched). The margin the
                                      length criterion turns on is untouched; the margin for being wrong
-                                     about the budget is one trial smaller. [R3, 2026-08-04: the clause 'On the SOL-inclusive
-                                     5.87-year span the ceiling is 74' is MOOT - no SOL-inclusive span
-                                     exists and the 74 ceiling never binds. Retained struck because it is
-                                     part of the record of why K4 was originally selected as it was.] The
+                                     about the budget is one trial smaller. The
                                      ceiling relaxes on a higher realized Sharpe (MinBTL(110,1.5)=2.92 -
                                      [R8] measured at the superseded 110 and retained unrecomputed because
                                      it is quoted only qualitatively and MinBTL is monotone, so the value
@@ -2945,12 +2862,7 @@ success_criteria                  = "[R11, 2026-08-05, PRE-SEAL - THE ML-2 ASSER
                                      same gap as I-023(b)); and scaled(2.0) doubles funding_bps_annual to
                                      2190, so Charter 4.4's 2x cost-robustness criterion stress-tests the
                                      SIGN ERROR rather than the costs.
-                                     [R29(b), 2026-08-11, PRE-SEAL - THE WHOLE OF THE PRECEDING COST-
-                                     STACK PARAGRAPH DESCRIBES A COST MODEL THAT NO LONGER EXISTS AND
-                                     IS RETAINED ONLY AS THE RECORD OF THE DEFECT. IT IS NOT A
-                                     STATEMENT OF HARNESS FACT AND MUST NOT BE READ AS ONE. R-005
-                                     CORRECTED THIS DIAGNOSIS IN SECTION 12'S PROSE AND DID NOT REACH
-                                     THIS FIELD, WHICH IS THE ONE THAT GETS HASHED.] The sentence
+                                     The sentence
                                      that stood here - "CONDITION PRECEDENT C1: Validation specifies
                                      the repair - a signed carry term, or a synthetic perp total-
                                      return leg with funding_bps_annual = 0.0 - and rules whether the
@@ -2979,7 +2891,7 @@ success_criteria                  = "[R11, 2026-08-05, PRE-SEAL - THE ML-2 ASSER
                                      mandate - which is CLASS (c), C-25 in the section 10.11.4
                                      register, disclosed on the face of every artifact, and NOT a
                                      condition precedent because there is nothing to wait for.
-                                     HOUSE RULE 5, AND THE COST IS NOT ONE TRIAL [R30, 2026-08-11]:
+                                     HOUSE RULE 5, AND THE COST IS NOT ONE TRIAL :
                                      carry.carry_breakeven_bps_annual is the instrument and it takes
                                      a CALLABLE, evaluating it once at bracket[0], once at
                                      bracket[1], and once per bisection step - 42 evaluations at the
@@ -3195,7 +3107,7 @@ forward_kill_condition            = "KC-002. Observation date = C + 187 days, fi
                                      subset, not the version we would have run. (2) No post-C exclusions -
                                      any regime filter, date exclusion, asset exclusion, venue change or
                                      universe restriction not present in the sealed pre-registration is
-                                     inadmissible in this computation; this clause is the [R9, 2026-08-05]
+                                     inadmissible in this computation; this clause is the 
                                      K1-K7 declaration
                                      made enforceable, and any of K1-K7 revised in order to change this
                                      computation's answer is refused by P3 and, if pursued, [R9]
@@ -3206,10 +3118,7 @@ forward_kill_condition            = "KC-002. Observation date = C + 187 days, fi
                                      name. (3) No restatement as
                                      continuation - a hypothesis restated after the observation date
                                      C + 187 days [R32, 2026-08-11: literal "2027-01-31" STRUCK] is a NEW family
-                                     [R9, 2026-08-05: the prior text read 'opened with n_inherited >= the
-                                     killed family's final n_trials plus its own', which was REDUNDANT AND
-                                     UNEXECUTABLE from the same misreading of family_stats as head (ii)
-                                     above] opened with predecessor_family = this family and n_inherited =
+                                     opened with predecessor_family = this family and n_inherited =
                                      ITS OWN NEW SEARCH ONLY, inheriting neither schedule nor allocation
                                      nor narrative. family_stats sums n_inherited and logged trials
                                      TRANSITIVELY across predecessor_chain [measured - registry.py], so
@@ -3220,8 +3129,7 @@ forward_kill_condition            = "KC-002. Observation date = C + 187 days, fi
                                      count - is delivered by predecessor_family alone and is delivered
                                      BETTER, because the harness enforces it instead of the sponsor
                                      asserting it.
-                                     [R32, 2026-08-11, PRE-SEAL - THE SECOND C1, AND IT IS IN CLAUSE
-                                     5 BELOW. FILED I-153, HIGH.] This field's opening declares the
+                                     This field's opening declares the
                                      observation date to be C + 187 days and states that THE DRAFTED
                                      DATE IS NOT BINDING - THE FORMULA IS. Clause 5 as drafted read
                                      "if the computation is not performed ON 2027-01-31 for ANY
@@ -3289,8 +3197,7 @@ forward_kill_condition            = "KC-002. Observation date = C + 187 days, fi
                                      condition. This clause is copied deliberately from KC-001, and the
                                      seat that would benefit most from softening it is the seat that wrote
                                      it.
-                                     [R29(b), 2026-08-11, PRE-SEAL - STRUCK IN THIS FIELD, WHICH IS
-                                     WHERE IT MATTERED AND WHERE R-005 DID NOT REACH.] The sentence
+                                     The sentence
                                      that stood here - "CONDITION PRECEDENT, separately binding: the
                                      C1 cost-model repair is specified by Validation and implemented
                                      by 2026-08-11; if unresolved by that date the family is
@@ -3329,10 +3236,7 @@ forward_kill_condition            = "KC-002. Observation date = C + 187 days, fi
                                      formality. Separately, per C-001 E3: the family's <= 22 forward-window
                                      trials are N_forward, they are LOGGED AS TRIALS, and NO REPORTED
                                      RESULT MAY BE SELECTED FROM AMONG THEM.
-                                     [R21, 2026-08-10, PRE-SEAL - WHAT THE HARNESS DOES WITH THIS
-                                     FIELD, RECORDED ON KC-002'S OWN FACE BECAUSE THE ANSWER IS
-                                     NOTHING, AND BECAUSE THE SEAT THAT WOULD PREFER NOT TO SAY SO IS
-                                     THE SEAT THAT WROTE CLAUSE 5.] NO HARNESS PATH EVALUATES A KILL
+                                     NO HARNESS PATH EVALUATES A KILL
                                      CONDITION, ON ANY DATE, FOR ANY FAMILY [measured - zero
                                      non-registry.py consumers of forward_kill_condition]. For a
                                      FORWARD classification this field is not even PRESENCE-CHECKED:
@@ -3357,10 +3261,7 @@ forward_kill_condition            = "KC-002. Observation date = C + 187 days, fi
                                      is not a thing this firm has, and GATES.md 4.7.2's instruction is
                                      to NAME THE FIELD OR SAY THERE IS NONE - not to demand one be
                                      built.
-                                     [R24/R26, 2026-08-10, PRE-SEAL - KC-002 IS CLASS (b), AND ITS
-                                     THREE FIELDS ARE NAMED. THIS IS THE PART R21 LEFT UNDONE:
-                                     'ENFORCED BY THE CALENDAR AND BY SEATS' IS NOT AN ANSWER, IT IS
-                                     THE ABSENCE OF ONE.]
+                                     
                                      CLASS (b) - PROCEDURE-ENFORCED. EXECUTOR: THE PRINCIPAL. CADENCE:
                                      THE WEEKLY FRIDAY RITUAL, ALONGSIDE THE PULL-AND-MERGE. ARTIFACT:
                                      THE PASTED EVALUATION ATTACHED TO THE RECORD, PER TEMPLATES.md
@@ -3374,8 +3275,7 @@ forward_kill_condition            = "KC-002. Observation date = C + 187 days, fi
                                      SIGNATURE-REQUIRED CLAUSE. This seat wrote clause 5, defended it,
                                      and now labels it (b): the honest repair is to name WHO runs it,
                                      HOW OFTEN, and WHAT THE RUNNING PRODUCES - not to hope.
-                                     [R26, 2026-08-10, PRE-SEAL - THE CONDITION PRECEDENT IS
-                                     SATISFIED AND THE DOWNGRADE MUST NOT FIRE.] The C1 cost-model
+                                     The C1 cost-model
                                      repair is SPECIFIED (VALIDATION-RULING-003, whose header names
                                      'Blocks: PREREG-002 condition precedent C1') AND IMPLEMENTED
                                      (DATA-IMPL-004 sections 5-6, 'All nineteen T-cases are
@@ -3490,6 +3390,78 @@ published_signal_haircut_applied  = 0.50     # [R21, 2026-08-10] NOTHING IN THE 
                                              # NUMBER NO CODE PATH READS. I-019 named this; R21 sizes it
                                              # against this family by name. Filed I-134.
 ```
+
+---
+
+### 21.1 REVISION MARKERS RELOCATED FROM THE SEALED FIELDS — I-173 repair, dispatch S3-D-016
+
+**Why this subsection exists.** `VALIDATION-SPEC-004`'s dated-clause extractor (E-2) reads the eight prose fields of §21 by literal form, not by meaning, and cannot distinguish a revision timestamp from a substantive date. Section 21's fenced block previously carried inline `[Rn, date, ...]` revision markers inside the strings that get hashed into `prereg_sha256`, so every marker date fired as a "dated site" — I-173. **Per dispatch S3-D-016, `head-of-data-infra` relocated 27 of the 35 marker sites flagged `stamp: true` in `research/work/site_roster.json` out of the hashed §21 block and into this subsection, verbatim, word for word, removing them from the field text they previously sat inside.** The remaining 8 flagged-true sites were **not** relocated — they are entangled with adjacent `stamp: false` (substantive) text in the same bracket or sentence, or sit inside a bracket this document itself never closes (§10.4's `[R13/R14/R15/R16/R17...` marker in `success_criteria` has no closing `]` anywhere in the field — a pre-existing document defect, not something this seat introduced or repaired). Every one of the 8, plus 2 additional dated sites discovered inside a marker not covered by the roster at all (`[R38, PRE-SEAL...]` in `forward_kill_condition`, added to the document after the roster was generated), is named in the Issue Log rather than edited. This subsection is **outside** the fence that `extract_dated_sites.py` reads for §21, and therefore outside `prereg_sha256`'s input — the audit trail below is not hashed and never will be under the current seal mechanism (P2).
+
+**Nothing below is new. Every word is copied unedited from the field named, at the position named.** No word was added, paraphrased or summarized; only the hard line-wrapping (presentation, not content) is removed for readability outside the fixed-width fence.
+
+**Field `mechanism`:**
+
+> [R1, 2026-08-04, PRE-SEAL - WITHDRAWN AND REPLACED. The withdrawn sentence read: 'The ~11%/yr baseline is approximately the market-clearing price of three risks a carry supplier genuinely bears.' It is not supportable and this seat withdraws it.]
+
+> [R2, 2026-08-04, PRE-SEAL - RESTATED. The prior text read 'funding is a DIRECT OBSERVABLE of long-side positioning crowding'.]
+
+**Field `universe`:**
+
+> [R3, 2026-08-04, PRE-SEAL - SOL IS DROPPED ENTIRELY. The prior text made SOL a SECONDARY member reported separately on its own 5.87-year span with its own N and its own verdict, never pooled.]
+
+> [R3, 2026-08-04: selection MOVED WITHIN the already-declared menu, from (2) to (4). The menu did NOT grow.]
+
+> [R4, 2026-08-04: THE CADENCE CONSTANT IS DELETED. The prior text read 'funding aggregated as the sum of the day's three prints'. That asserted a cadence constant which is MEASURED FALSE - up to 12 prints in one day, on 11 of 2,145 days [measured - VALIDATION-RULING-003 section A2] - and Validation has already specified its replacement.]
+
+> [R5, 2026-08-04: NEW CHOICE, declared pre-measurement against a registry holding 0 families and 0 trials. The pre-R5 document made this choice SILENTLY, its implicit selection being option (5) - pool across the change - and I-045 IS THE FINDING THAT OPTION (5) IS WRONG. An implicit selection is exactly the defect the conditioning declaration exists to prevent, and it was present inside the section that prevents it.]
+
+> [R5/R6, 2026-08-04: 6 -> 7]
+
+> [R19, 2026-08-10, PRE-SEAL: THE 7 IS NOW REGISTERED, NOT MERELY DECLARED. It is sealed as n_inherited = 7, a binding field with four consumers - family_stats.n_trials, DSR's N, MinBTL's N, and declared_ceiling_base = n_inherited + sealed budget, which is the base of VALIDATION-SPEC-003 B-18's contingent-unlock arithmetic [measured - gates.py]. Section 10.5.2's own unlock table is reproduced ONLY at a base of 7 + 47 = 54, which is the base SPEC-003's own test_tbe_15 fixes; at n_inherited = 0 the base is 47 and the same mechanism admits 30 where this document declares 23 and 8 where it declares 1 - PERMISSIVE at the two rungs that bind. This is not the GATES.md 4.7.1 defect: the registry cannot compute N_conditioning, and 4.7.1 governs inheritance from a predecessor this family does not have (predecessor_family = None, so the chain summation and InheritedCountDoubleCountError's guard are both inapplicable). The cost is taken deliberately and runs against the family: registry-enforced N is 54 at full Stage 1 and 86 at full Stage 2, so section 10.3's 0.13-year I-027 residual is PAID rather than mitigated.]
+
+> [R9, 2026-08-05, PRE-SEAL - STRUCK AND REPLACED ON THREE HEADS. The struck rule read: 'any revision to any of K1-K6 after any result on this family is seen is refused by P3 and requires a SUCCESSOR FAMILY opened with n_inherited >= (menu size of the revised choice) x this family's final n_trials, or the PRODUCT of the menu sizes if more than one is revised.' HEAD (i) SCOPE: it covered K1-K6 and NOT K7, which R5 declared and R6 discounted to 1 on the same reasoning - a choice discounted by a rule it is not subject to is discounted for nothing. HEAD (ii) QUANTITY: family_stats computes n_trials = SUM n_inherited(chain incl. self) + SUM logged(chain incl. self), summing TRANSITIVELY across predecessor_chain [measured - registry.py], so the predecessor's total is ALREADY inside the successor's denominator; declaring menu_size x chain_total on top yields (menu_size + 1) x chain_total. The correct declaration for a target denominator of menu_size x chain_total is (menu_size - 1) x chain_total. The error ran CONSERVATIVE, which is why it survived, and it is a defect regardless - filed I-055, and addressed to Validation as well because RULING-004 ML-17 copies the same formula citing this document as its source. HEAD (iii) EXECUTABILITY (I-053): open_ hypothesis raises InheritedCountDoubleCountError whenever a successor declares n_inherited >= chain_total [measured - registry.py], and BOTH the struck and the corrected forms exceed chain_total for every menu size >= 2 - K1-K7's sizes are 10, 3, 9, 5, 5, 4, 5, all >= 3 - so the rule could not be executed on any of its seven choices, ever. THE GUARD IS NOT WRONG; what is missing is the continuation, there being no argument, event or authorized route by which Validation, having adjudicated the escalation, can then permit the registration.]
+
+> [R5, 2026-08-04]
+
+**Field `success_criteria`:**
+
+> [R11, 2026-08-05, PRE-SEAL - THE ML-2 ASSERTION, ADDED VERBATIM AND PLACED FIRST BECAUSE RULING-004 ML-2 MAKES ITS ABSENCE A GATE 0 REJECTION RATHER THAN A DEFERRAL, AND BECAUSE 'SILENCE IS NOT THAT ASSERTION'.]
+
+> [R11, 2026-08-05]
+
+> [R21, 2026-08-10, PRE-SEAL - THE GATES.md 4.7.2 AUDIT, RECORDED IN THE SEALED TEXT INCLUDING ITS UNFLATTERING HALF, BECAUSE A DOCUMENT THAT DESCRIBES CONTROLS IT DOES NOT HAVE IS I-046'S COSTUME ON THE RESEARCH SIDE AND P7 MAKES IT PERMANENT.]
+
+> [R24/R25/R28, 2026-08-10, PRE-SEAL - THE CLASS REGISTER, AND THE TWO CORRECTIONS THE AUDIT ABOVE GOT WRONG.]
+
+> [R19, 2026-08-10: n_inherited = 7 - REGISTERED, not declared. No prior EXTERNAL search exists; the 7 is N_conditioning, the K1-K7 floor, sealed in the field built for that quantity. See the N CONTRIBUTION note in `universe` and section 10.3.]
+
+> [R5/R6, 2026-08-04]
+
+> [R8, 2026-08-05, PRE-SEAL - THE ABSOLUTE CEILING IS CORRECTED FROM 110 TO 109. The prior text read: 'ABSOLUTE ADMISSIBLE CEILING N = 110, at which MinBTL = 6.574 = the entire available span and margin is zero.' That was a MISLABEL OF THIS DOCUMENT'S OWN MEASURED NUMBER, in the PERMISSIVE direction: MinBTL(110) = 6.574 EXCEEDS the 6.571 available, so 110 FAILS by 0.003 years and is not 'exactly at the span'.]
+
+> [R3, 2026-08-04: the clause 'On the SOL-inclusive 5.87-year span the ceiling is 74' is MOOT - no SOL-inclusive span exists and the 74 ceiling never binds. Retained struck because it is part of the record of why K4 was originally selected as it was.]
+
+> [R29(b), 2026-08-11, PRE-SEAL - THE WHOLE OF THE PRECEDING COST- STACK PARAGRAPH DESCRIBES A COST MODEL THAT NO LONGER EXISTS AND IS RETAINED ONLY AS THE RECORD OF THE DEFECT. IT IS NOT A STATEMENT OF HARNESS FACT AND MUST NOT BE READ AS ONE. R-005 CORRECTED THIS DIAGNOSIS IN SECTION 12'S PROSE AND DID NOT REACH THIS FIELD, WHICH IS THE ONE THAT GETS HASHED.]
+
+> [R30, 2026-08-11]
+
+**Field `forward_kill_condition`:**
+
+> [R9, 2026-08-05]
+
+> [R9, 2026-08-05: the prior text read 'opened with n_inherited >= the killed family's final n_trials plus its own', which was REDUNDANT AND UNEXECUTABLE from the same misreading of family_stats as head (ii) above]
+
+> [R32, 2026-08-11, PRE-SEAL - THE SECOND C1, AND IT IS IN CLAUSE 5 BELOW. FILED I-153, HIGH.]
+
+> [R29(b), 2026-08-11, PRE-SEAL - STRUCK IN THIS FIELD, WHICH IS WHERE IT MATTERED AND WHERE R-005 DID NOT REACH.]
+
+> [R21, 2026-08-10, PRE-SEAL - WHAT THE HARNESS DOES WITH THIS FIELD, RECORDED ON KC-002'S OWN FACE BECAUSE THE ANSWER IS NOTHING, AND BECAUSE THE SEAT THAT WOULD PREFER NOT TO SAY SO IS THE SEAT THAT WROTE CLAUSE 5.]
+
+> [R24/R26, 2026-08-10, PRE-SEAL - KC-002 IS CLASS (b), AND ITS THREE FIELDS ARE NAMED. THIS IS THE PART R21 LEFT UNDONE: 'ENFORCED BY THE CALENDAR AND BY SEATS' IS NOT AN ANSWER, IT IS THE ABSENCE OF ONE.]
+
+> [R26, 2026-08-10, PRE-SEAL - THE CONDITION PRECEDENT IS SATISFIED AND THE DOWNGRADE MUST NOT FIRE.]
+
+---
 
 **Vault seal, same session, same UTC day:**
 

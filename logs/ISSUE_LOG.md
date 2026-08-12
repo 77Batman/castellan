@@ -4791,3 +4791,244 @@ Validation at C2.
 **Resolution:** open — escalated under house rule 7, not resolved. Payload at
 `research/REGISTRATION-PAYLOAD-DATED-CLAUSES-PREREG-002.md`.
 **Pattern tag:** `prose-clause-outside-the-registered-surface` · `two-remedies-that-conflict`
+
+---
+
+## I-180 · 2026-08-11 · S3-D-016 execution baseline was already stale: live re-extraction returned 92 sites, not the CIO-committed 90, independently confirming I-178 · Severity: LOW · Owner: head-of-data-infra
+
+**Description.** Before making any edit, this seat re-ran `research/work/extract_dated_sites.py`
+against `PREREG-002` as it stood at dispatch time and got **92 sites**, not the 90 that dispatch
+S3-D-016's acceptance numbers (55 expected after stamp removal) were computed against. **This is not a
+new defect — it is I-178, independently reproduced**: R-007's `[R38, PRE-SEAL: RATIFIED BY THE
+PRINCIPAL...]` insert into `forward_kill_condition` (recording the Principal's ratification of I-153)
+added two dated sites — `FORMULA 'C + 187 days'` ("conformed clause 5 to C + 187 days himself") and
+`ISO '2027-01-31'` ("the drafted literal 2027-01-31 and a shortened window") — after `site_roster.json`
+was generated. **`site_roster.json` classifies neither as `stamp: true` nor `stamp: false`; it does not
+mention them.** Per the roster-decides guardrail this seat was dispatched under, both are STOP-AND-QUEUE
+by construction: not relocated, not touched, reported here.
+
+**Why LOW.** No new fact — I-178 already named this mechanism and this number. Filed separately only
+because S3-D-016's acceptance arithmetic (committed **before** execution, per the dispatch) was computed
+against the stale 90, and the gap between 90 and the actual 92 needed to be shown to be I-178 and not a
+second, independent drift.
+
+**Resolution:** open — carried by I-178's resolution (I-173's remedy). The 2 unclassified sites remain
+in `forward_kill_condition` untouched; `research/work/site_roster.json` needs a regeneration pass
+against the current document text before I-173 can be called fully closed.
+**Pattern tag:** `roster-generated-then-document-moved` · `stop-and-queue-by-absence-not-by-flag`
+
+---
+
+## I-181 · 2026-08-11 · `success_criteria`'s `[R13/R14/R15/R16/R17, 2026-08-06, PRE-SEAL...` revision marker has no closing `]` anywhere in the field — a pre-existing document defect, not something this seat introduced · Severity: MEDIUM · Owner: director-of-research
+
+**Description.** Exhaustive bracket-depth accounting over `success_criteria`'s dedented text
+[measured, this session] finds exactly one unbalanced `[` in the entire field: the one that opens the
+consolidated `R13/R14/R15/R16/R17` marker at `§10.4`–`§10.9`'s new material. Every other bracket in the
+field — including every other revision marker, and every `[cited]` / `[measured]` citation nested
+inside them — closes correctly. **This one does not close before the field ends** (confirmed: the field's
+last 300 characters are ordinary prose about venue survivorship, not a closing bracket).
+
+**Consequence for I-173's repair.** The `2026-08-06` site this marker carries cannot be relocated
+"preserving every word" because its own word boundary — where the marker was meant to end — is not
+recoverable from the text. Guessing a boundary would be exactly the judgment call Guardrail 1 forbids.
+**STOP-AND-QUEUED, not edited.**
+
+**Why MEDIUM.** It blocks full discharge of I-173 (8 of 35 flagged sites, including this one, remain
+in the hashed block — see I-185) and it is a defect in a document heading toward seal; P7 will freeze a
+missing bracket exactly as it freezes anything else once `open_hypothesis` is called.
+
+**Resolution:** open — repair is the Director's: either close the marker at its intended point (requires
+knowing where R13's content ends and R14 begins, which this seat cannot determine from the text alone)
+or split R13–R17 into five separately-closed markers as its sibling markers already are.
+**Pattern tag:** `unclosed-bracket-defeats-mechanical-relocation` · `roster-cannot-flag-what-it-cannot-bound`
+
+---
+
+## I-182 · 2026-08-11 · `success_criteria`'s `[R20, 2026-08-10, PRE-SEAL - I-105's DISCHARGE...` marker's true closing boundary is unresolvable — a direct consequence of I-181 · Severity: LOW · Owner: director-of-research
+
+**Description.** `R20`'s marker opens inside the still-unclosed `R13` scope (I-181) and runs past 1,400
+characters of continuous prose (registration-act mechanics, `trial_budget_extension` predicate detail,
+B-16/B-17/B-21 references) without this seat locating a discoverable close within a reasonable read
+window. Because I-181 already establishes the field has exactly one broken bracket and this marker sits
+inside its still-open scope, this seat cannot rule out that R20's own close is the missing one, or that
+R20 is independently well-formed further down than checked. Either way, precision is not achievable
+without guessing. **STOP-AND-QUEUED, not edited.**
+
+**Why LOW.** Narrower than I-181 (one marker, not a field-wide defect) and shares its remedy.
+
+**Resolution:** open — carried by I-181.
+**Pattern tag:** `unclosed-bracket-defeats-mechanical-relocation`
+
+---
+
+## I-183 · 2026-08-11 · Four sealed-field brackets pair a `stamp: true` revision date with a `stamp: false` substantive date inside the same bracket, so the bracket cannot be relocated as a unit without moving a site the roster forbids touching · Severity: MEDIUM · Owner: director-of-research
+
+**Description.** `site_roster.json` marks each date occurrence independently, but four `[Rn, ...]`
+brackets in the sealed fields carry **two** date occurrences each, one `stamp: true` and one
+`stamp: false`, inside the identical bracket: **`falsifier`**'s `[R29, 2026-08-11: "after C1 lands"
+STRUCK - C1 is DISCHARGED, the repair landed 2026-07-29, ...]` (true `2026-08-11` + false `2026-07-29`,
+the repair-landed date), and **three** instances in `forward_kill_condition` of the pattern `[R32,
+2026-08-11: ... literal "2027-01-31" ...]` (true `2026-08-11` + false `2027-01-31`, the struck-literal
+date the marker is itself describing). Relocating any of these four brackets whole would carry the
+`stamp: false` date out of the hashed field along with the marker — a site the dispatch is explicit this
+seat may not touch. Splitting the bracket to keep only the true-dated fragment is not something the
+roster decided with the precision Guardrail 1 requires (it decided per-date, not per-clause), and doing
+it anyway would be exactly the "one judgment I made" that guardrail 3 sends to Validation. **All four
+brackets left completely untouched — not partially edited.**
+
+**Why MEDIUM.** Structural, recurring (4 of 35 flagged sites, all in the same `[R32/R29, date:
+"struck-literal-date"...]` idiom), and it will recur every time this document's revision apparatus
+records what a struck clause used to say using the struck value's own date.
+
+**Resolution:** open — repair is the Director's: the struck date would need to be paraphrased
+(e.g. "the repair-landing date already recorded elsewhere") rather than restated inside the revision
+marker, so the marker can be relocated without carrying substantive content with it.
+**Pattern tag:** `revision-marker-quotes-the-substantive-date-it-replaces` · `bracket-is-not-the-unit-of-classification`
+
+---
+
+## I-184 · 2026-08-11 · Two `stamp: true` dates sit in unbracketed prose entangled with load-bearing substantive sentences, not inside a discrete `[Rn, ...]` marker · Severity: LOW · Owner: director-of-research
+
+**Description.** Two of the 35 flagged sites are not inside any `[Rn, ...]` bracket at all: (1)
+`success_criteria`, "...MinBTL(86, SR 1.0) = 6.14 years against 6.571 available, clearing with 0.43
+years of margin, STANDS UNEDITED AND THE 2026-08-04 REVISION PRODUCED NO NEW NUMBER, which is what A2
+requires..." — the date is a bare adjective inside a sentence about MinBTL margin arithmetic that is
+itself substantive (`stamp: false` material sits in the same sentence). (2) `forward_kill_condition`,
+inside `[R29(b), 2026-08-11, PRE-SEAL - STRUCK IN THIS FIELD...]`'s own explanation: "The sentence that
+stood here - \"CONDITION PRECEDENT, separately binding: the C1 cost-model repair is specified by
+Validation and implemented by **2026-08-11**; if unresolved by that date...\"" — a *quoted, struck*
+sentence preserved for the record, whose date the roster flags true even though the quoting sentence
+around it is not bracket-delimited and its true extent is not obviously bounded. Relocating either
+requires deciding where "revision apparatus" ends and substantive prose resumes inside a single
+run-on sentence — a precision the roster does not supply. **Both left untouched.**
+
+**Why LOW.** Two sites, both narrow, neither propagates.
+
+**Resolution:** open — repair is the Director's: recast both as discrete bracketed markers so the
+boundary is unambiguous.
+**Pattern tag:** `revision-marker-without-a-bracket` · `roster-flags-the-date-not-the-clause-boundary`
+
+---
+
+## I-185 · 2026-08-11 · S3-D-016 executed: 27 of 35 flagged sites relocated out of §21's hashed fields; extraction falls from the actual 92 to 65, not the committed 90→55; 8 named exceptions (I-181–I-184) left in place by design · Severity: HIGH (status update to I-173) · Owner: head-of-data-infra → quant-validation
+
+**Description.** Per dispatch S3-D-016, this seat relocated the 27 of 35 `stamp: true` sites in
+`research/work/site_roster.json` that resolved to a single, self-contained, non-entangled `[Rn, ...]`
+bracket — `mechanism` (2 of 2), `universe` (8 of 8), `success_criteria` (10 of 13), `forward_kill_condition`
+(7 of 11) — verbatim, into a new non-hashed subsection `§21.1` inserted after `§21`'s fenced block closes
+(outside `extract_dated_sites.py`'s fence, therefore outside `prereg_sha256`'s input). The 8 not
+relocated are I-181 through I-184, above. `falsifier`'s one flagged site (I-183) was also left in place.
+Re-running `extract_dated_sites.py` after the edit returns **65 sites**, not the 55 the CIO's acceptance
+arithmetic committed to before execution (see full printed output in this seat's session report to the
+CIO). **The gap is exactly explained: 92 (actual pre-edit, I-180) − 27 (relocated) = 65.** The 90→55
+arithmetic committed in the dispatch was computed against the stale 90 (I-180); against the actual
+pre-edit 92, a full clean relocation of all 35 flagged sites would still only reach 92−35 = 57, not 55,
+because 8 of the 35 could not be relocated at all (I-181–I-184).
+
+**Verified:** `book/registry.db` still reads 0 hypotheses / 0 trials [measured, this session].
+`research/work/site_roster.json` was not edited. `harness/`, `book/vaults/`,
+`research/REGISTRATION-PAYLOAD-PREREG-002.md`, and all `VALIDATION-*` documents are untouched
+[measured — `git status`]. No `stamp: false` site's text was altered; spot-checked the four I-183
+brackets and both I-184 sites remain byte-identical to their pre-dispatch text.
+
+**Why HIGH.** This is the operative status of I-173, which is HIGH. It is not closed: 8 flagged sites
+plus the 2 unclassified I-180 sites remain inside the hashed block, and I-186 records that the post-edit
+firing count is still nonzero, as the CIO's dispatch predicted it would be.
+
+**Resolution:** open — I-173 partially discharged. Full discharge needs I-181, I-182, I-183 and I-184
+repaired by the Director (bracket boundary and quoting-idiom fixes named in each), `site_roster.json`
+regenerated against the current text (I-180), and a second relocation pass.
+**Pattern tag:** `partial-execution-is-the-success-condition` · `guardrail-1-worked-as-designed`
+
+---
+
+## I-186 · 2026-08-11 · The E-10 firing checker `harness/scripts/evaluate_dated_clauses.py` that `VALIDATION-SPEC-004` specifies does not exist in the repo; the post-repair firing count in this seat's session report is a hand-application of the documented rule, not a harness-verified number · Severity: MEDIUM · Owner: quant-validation
+
+**Description.** `GATES.md` §4.7.4(ii) and dispatch S3-D-016 both require "the checker's printed output"
+as the deliverable for a firing count. `VALIDATION-SPEC-004` §E-10 specifies exactly one evaluator for
+this — `harness/scripts/evaluate_dated_clauses.py` — and it is not present [measured — `find
+harness -iname '*dated_clause*'` returns only the spec's own test file, `test_dated_clause_evaluator.py`,
+which this seat did not run per the dispatch's instruction to stay away from the suite]. No script in
+this repo, run today, can produce an authoritative `FIRED`/`DISCHARGED`/`PENDING` verdict against
+`PREREG-002`. This seat instead applied E-10 row 4 (`discharge_event_kind == ''` and `resolved_date <=
+T` ⇒ `FIRED`) by hand to the 65 sites `extract_dated_sites.py` (the only extractor that does exist)
+currently returns, using the Director's own `research/work/emit_rows.py` clause-bearing classification
+(18 of 65 sites carry an assigned `discharge_event_kind`; the other 47 do not). Of the 65: 27 `ISO`
+sites carry no assigned kind and resolve to a date on or before today — mechanically `FIRED` under row 4
+with no interpretation required. 24 more are `FORMULA` sites resolving against `C`, which is undefined
+for an unregistered family (`hypothesis_sealed` has not fired) — this seat could not resolve them at all
+and did not count them as `FIRED`, though I-173's own pre-edit accounting (75 fire = 59 ISO + 16
+FORMULA) treated analogous `FORMULA` sites as firing, which this seat's hand-count does not reproduce.
+The remaining 18 are `stamp`-adjacent clause-bearing sites (`IS-START`, `F002-IS-START`, `K7-TRIGGER`,
+etc.) that this seat did not count as firing because they carry an assigned kind, though nothing in the
+registry (0 events beyond `book_open`) discharges any of them either, so under E-10's rows 2/3 they may
+also fire — that reading is Validation's, not this seat's to make.
+
+**Why MEDIUM.** The number this seat can state with confidence (27, mechanically certain) is a floor,
+not the answer; the true post-repair firing count is somewhere between 27 and 51 depending on how
+`FORMULA`/undefined-`C` sites and clause-bearing-but-undischarged sites are read, and only Validation's
+evaluator — once it exists — can state it exactly.
+
+**Resolution:** open — belongs with I-165/I-166's checker-implementation gap. Until
+`evaluate_dated_clauses.py` exists, every firing count quoted for this family, including this seat's own
+27, is provisional.
+**Pattern tag:** `checker-specified-not-built` · `hand-applied-rule-is-not-a-harness-number`
+
+---
+
+## I-096 · 2026-08-13 · The CIO's committed acceptance number was computed from a stale artifact and was unreachable by construction — the guardrail against narrated acceptance was itself narrated · Severity: MEDIUM · Owner: CIO
+
+**Description.** S3-D-016's brief committed, before execution, that the dated-site extraction would
+be **55** after the edit — derived as **90 − 35** from `research/work/site_roster.json`.
+
+**The number was unreachable.** Measured [the executing seat, reproduced independently by the CIO]:
+
+| | |
+|---|---:|
+| Baseline the CIO used | 90 |
+| **True pre-edit baseline, live** | **92** |
+| Cleanly relocatable of 35 stamped | **27** |
+| Actual post-edit | **65** |
+| **Best possible outcome against the true baseline** | **57 — never 55** |
+
+**Even a flawless execution could not have hit the committed number.**
+
+**Two errors, and the second is worse than the first.**
+
+**(1) The roster was stale when the CIO read it.** R-007's `[R38 … RATIFIED BY THE PRINCIPAL]`
+insert added two dated sites to `forward_kill_condition` **after `site_roster.json` was generated,
+in the same revision that generated it.** The Director had already filed this as **I-178**. **The
+CIO recorded R-007 in the decision record and then read its by-product as current.**
+
+**(2) The CIO narrated an acceptance number the guardrail existed to compute.** Guardrail 2's whole
+purpose — the Principal's words — is that *"acceptance is computed, not narrated."* **The CIO
+derived 55 by arithmetic on a cached file instead of re-running the extractor**, which takes seconds
+and which **the executing seat did as its first act.** *The control against narrated acceptance was
+itself narrated from a cache.*
+
+**Third cardinal error of the sprint by the CIO**, and the pattern is now unambiguous: **I-141**
+(nine zero-consumer fields when the roster said eight — propagated into a CIO brief), **I-150**
+("six sites" when the roster said seven and the truth was fourteen — propagated into a CIO brief),
+and this one. **All three are a count taken from a document rather than from the thing the document
+describes.** The firm has a doctrine for exactly this — `GATES.md` §4.7.3, *put the control where
+the machine reads* — and the CIO has now violated it three times in its own arithmetic.
+
+**A related miss in the same brief.** The CIO required *"the checker's printed output"* for the
+firing count, per §4.7.4(ii). **No such checker exists** — `VALIDATION-SPEC-004` specifies
+`harness/scripts/evaluate_dated_clauses.py` and only its unimplemented test file is present, which
+the CIO knew and had recorded. **The seat refused to fabricate a verdict**, hand-applied E-10 row 4,
+reported **27 mechanically FIRED of 65**, declined to count 24 unresolvable `FORMULA`/bare-`C` sites,
+gave the honest bound **27–51**, and named the exact figure as Validation's call. Filed by that seat
+as **I-186.**
+
+**What the CIO is NOT doing.** Not adjusting the committed number retroactively. **The record shows
+55 committed, 65 delivered, and why** — a pre-commitment amended after its outcome is not a
+pre-commitment.
+
+**Corrective, effective immediately: an acceptance number stated in a brief is computed live at
+dispatch time, from the artifact the executing seat will measure, never from a cached derivative.**
+If the measurement cannot be made at dispatch time, the brief states the method and requires the
+seat to compute and commit the number **before** it edits.
+
+**Resolution:** open — corrective in force; the three-instance pattern goes to the §7 audit.
+**Pattern tag:** `count-from-the-document-not-the-thing` · `narrated-acceptance`
