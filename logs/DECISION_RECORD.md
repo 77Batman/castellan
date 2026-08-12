@@ -4334,3 +4334,80 @@ inherited from R-006's claim.
 §5 dead-man: **4 invocations remain.**
 
 **Review date:** immediately — the Principal's ruling is required before any further dispatch.
+
+---
+
+## S3-D-016 · 2026-08-13 · New slip ruled honestly · I-173 execution dispatched with computed acceptance
+
+**1 · Pricing countersigned in full.** The Principal's summary of why it mattered: *"'Without appeal.
+Not appealed' is the ratchet working on its author, which is the only proof a ratchet ever offers."*
+
+**2 · THE BUDGET SHORTFALL IS RULED AS A NEW SLIP, NOT SQUEEZED UNDER THE OLD ONE.**
+
+> *"The pre-ruled slip named two conditions; this arrived by a third route and reaches all three
+> objectives, and filing it dishonestly would spend the credibility the pre-ruling bought."*
+
+**Amended ruling: objective 3 slips as already ruled; objectives 1 and 2 remain in scope via the
+path below; if that path stops, they slip too, and the sprint closes on what it honestly holds.**
+All three of the CIO's rejections adopted — **no ceiling raise, no insurance release, no ratchet
+suspension.**
+
+**The CIO records the principle, because it is the more transferable half:** a pre-commitment's
+value is destroyed the first time an outcome is filed under it that does not fit. **Two honest slips
+are worth more than one tidy one.**
+
+**3 · I-173's Sonnet execution dispatched under three guardrails, and the CIO derived guardrail 2's
+numbers itself rather than accept any report.**
+
+Read directly from `site_roster.json` [measured]: **90 sites · 35 flagged `stamp: true` · 55
+substantive.** Sampled to confirm the flag marks `[Rn, date, PRE-SEAL …]` revision apparatus and not
+subject matter — the unflagged set includes the sample start `2020-01-01`, SOL's break
+`2022-11-09`, and the `2025-09-18` formula change. **Committed before execution: expected extraction
+after the edit = 55.**
+
+**And one thing the CIO put in the brief that no report supplied.** Stamp removal takes extraction
+90 → 55; **it will almost certainly not take firings to zero**, because surviving dates like
+`2020-01-01` and `2022-11-09` still fire under E-10 row 4. **The brief states this in advance and
+rules it a finding rather than a failure** — *"so you do not treat the expected outcome as your own
+failure and go looking for more to cut."* **A seat told only "make the number go down" cuts
+substance to reach it.**
+
+Guardrail 1 is stated as: **a partial execution with the ambiguous sites named is a success; a
+complete execution containing one judgment you made is a failure.** Guardrail 3 forbids
+self-certification — **the diff goes to C2, where the Director's classification gets Opus-graded
+exactly once, in the place it was already going to be read.**
+
+**Per `GATES.md` §4.7.4(ii), the checker's printed output is the deliverable, clean-run output
+included.**
+
+**4 · §11.1 — the window conforms to the disk, direction-blind, at seal.** *"A document describing
+data that doesn't exist."* **Ingest-to-current authorized as ordinary Sonnet data work** — and the
+Principal names why it is not peeking: **the forward window begins at `C`, which is the seal.** The
+sealed declaration then states the measured span with its measurement date, **whichever way the
+number moved.**
+
+**The hidden margin is recorded as never having existed. §10.4's margin is exact and is reported as
+exact.** The Principal's formulation, which the CIO expects to reuse: **"a margin believed into
+existence is I-141's cardinal error wearing a calendar."**
+
+**5 · §5 dead-man — the CIO reports the accurate figure rather than the conservative one.** The
+Principal's message states *"dead-man is at 4."* **§5 runs the count from the last Principal
+checkpoint, and this ruling is one, so the clock reset: 10 invocations, of which this dispatch
+spends 1 — nine remain.** The CIO reported a stale, over-conservative dead-man figure twice in
+Sprint 2 and was corrected for it; **reporting a tighter number than the rule gives is the same
+error in the other direction, and it distorts planning the same way.** Flagged for correction if the
+Principal meant the Opus margin, which **is** one termination wide.
+
+**6 · §2.2 headroom: this ruling carried no `[usage:]` line.** The Principal's own instruction is
+that *"the headroom line travels on every message"* and that **any Opus dispatch that can wait for a
+fresh window, waits.** Headroom is **UNKNOWN**. **This dispatch is Sonnet, so the posture does not
+bite — and the CIO notes that row 3, the last free Opus unit, is exactly the dispatch that should
+wait for a fresh reading rather than proceed under an unknown one.**
+
+**7 · Sequence.** Sonnet I-173 execution *(running)* → Sonnet ingest-and-conform → **row 3: C2, the
+last free Opus unit, absorbing C13(k), C5's mechanics, and the executed diff** → C3 on the reserve →
+registration-as-seal → trials at Sonnet.
+
+**8 · Budget.** **9 of 30 invocations · 8 of 12 Opus.** Free **1**; insurance 2; DA reserve 1.
+
+**Review date:** on the I-173 execution's return.
