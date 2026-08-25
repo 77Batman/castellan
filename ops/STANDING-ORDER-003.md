@@ -1,6 +1,6 @@
 # STANDING ORDER 003 — PRINCIPAL DELEGATION PROTOCOL, SPRINT 4
 
-**DRAFT — prepared by the CIO 2026-08-25 for the Principal's signature. Unsigned, and not in force until signed.**
+**SIGNED AND IN FORCE — 2026-08-25.**
 
 *Issued by the Principal · Effective at Sprint 4 open · Calibration mode, third sprint · Supplements Charter Part IX; amends nothing*
 
@@ -28,7 +28,7 @@
 
 ## §2 · Budget
 
-**[PRINCIPAL TO SET.]** Sprint 3's composition, offered as the base and not as a presumption:
+**SET BY THE PRINCIPAL 2026-08-25: ceiling 12, composition 9 / 2 / 1.**
 
 | | Units | |
 |---:|---:|---|
@@ -95,6 +95,12 @@ The interrupt set may be **widened by any seat** and **narrowed only by the Prin
 
 ---
 
-*Signed: the Principal. The Principal has the last say — this order changes where the say is exercised, not who holds it.*
+*Signed: the Principal, 2026-08-25. The Principal has the last say — this order changes where the say is exercised, not who holds it.*
 
-**Signature block — unsigned. Draft prepared by the CIO, 2026-08-25.**
+> **§2 answered on the record.** The CIO recommended holding at 12 and filed the counter-argument against its own recommendation. The Principal's answer: **"Sprint 3's tier ran out one dispatch from the seal because the pricing was correct — a ceiling that binds at the worst moment and holds is the only kind that ever protected anything."**
+>
+> **§3.1 countersigned as the order's best new sentence** — the CIO may not fund out-of-scope work by absorbing it into a dispatch scoped for something else.
+>
+> **§1 CLARIFIED, 2026-08-25, on I-224.** *"The first trial is logged"* means **logged against a family whose Gate verdict is reachable.** A trial spent into a permanent `INSUFFICIENT-DATA` is **objective 1's letter destroying objective 2's substance**, and this clarification forecloses that reading.
+>
+> **§2.2 ADDED, 2026-08-25 — the projection comparator rule.** Two consecutive deliveries at ~2× their own projection, both under ceiling, mean **projections are no longer estimates — they are hopes.** The I-096 principle applied to sizing: **a dispatch's line projection must be derived from a named comparable artifact and stated in the brief with its comparator. A projection without a comparator is treated as over-threshold and prices accordingly.** The ratchet's ceiling trigger is unchanged.
