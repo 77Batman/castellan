@@ -376,6 +376,12 @@ Binary. Evaluated by Validation at intake, before any compute is spent. **A sing
 6. Trial counter opened and instrumented — **which means: the hypothesis family exists in `book/registry.db` (`TrialRegistry.open_hypothesis`) and every backtest routes through `harness` `run_backtest`. A backtest number produced outside the engine is inadmissible in any document.** *(Amendment A2, v1.1.)*
 7. Holdout period defined and locked.
 
+> **Criteria 6 and 7 are satisfied by the act Gate 0 authorizes, not before it.** `TrialRegistry.open_hypothesis` computes `prereg_sha256` on first registration — **registration is the seal** — and the holdout is locked at the same moment under C8. A family awaiting its intake verdict therefore cannot have an open trial counter or a locked holdout, and **no Gate 0 evaluation in this firm can record either as PASS.**
+>
+> **They are recorded PENDING BY CONSTRUCTION and are not failures.** "A single failure is fatal at this stage" governs criteria 1–5 and any later criterion whose satisfaction does not require the registration act. **An intake verdict may be ADMITTED or ADMITTED-CONDITIONAL with 6 and 7 pending; it may not be so with any of 1–5 unmet.**
+>
+> *(Amendment A6, v1.3. Signed by the Principal 2026-08-25, verbatim as drafted. Raised as **I-206** by Validation inside `VALIDATION-GATE0-002`. **Retroactive finding, recorded and travelling with the clause: `VALIDATION-GATE0-001` issued this firm's first intake verdict against a criterion that could not be satisfied** — a defect in that verdict's rule, not in its judgment. No re-adjudication of a dead family follows.)*
+
 Output: an **Intake Verdict** — ADMITTED / REJECTED (with reason) / ADMITTED-AS-EXPLORATORY (may be researched but is pre-declared ineligible for Gate 1, used for known-unvalidatable but interesting lines).
 
 ### 4.4 Gate 1 — Paper capital
@@ -740,6 +746,7 @@ House rule 6 applies to the Charter itself. Every number asserted above traces t
 | 1.1 | 2026-07-28 | **A2** — §4.3(6): "trial counter opened and instrumented" defined as: family registered in `book/registry.db`, all backtests through `run_backtest`; numbers produced outside the engine are inadmissible. | Principal |
 | 1.1 | 2026-07-28 | **A3** — Part VIII: the git repository is the book of record; Oracle stores pointers, summaries, and decisions only. | Principal |
 | 1.1 | 2026-07-28 | **A4** — §4.6: prices consumed only through the PIT store (`pit_adjusted_close`); vendor pre-adjusted series are inadmissible inputs. | Principal |
+| 1.3 | 2026-08-25 | **A6** — §4.3: Gate 0 criteria 6 and 7 are satisfied by the act Gate 0 authorizes and are recorded PENDING BY CONSTRUCTION, not as failures; "a single failure is fatal" governs criteria 1–5 and any criterion not requiring the registration act. | Principal (signed verbatim, I-206) |
 | 1.2 | 2026-08-10 | **A5** — §3.1: while the book is paper, the firm holds no credential with trade scope; paper is a property of credentials and network topology, never of an instruction; any credential grant with trade scope is a §2 reserved act requiring a Principal decision record. | Principal (§2 authority, effective immediately) |
 
 **A5 is enforced by what does not exist**, not by a checker — the firm holds no funded key, so there is nothing to misuse. It is therefore **class-(a)-adjacent by construction** rather than class (a) proper: no code evaluates it, and its enforcement degrades to class (b) the moment a credential with trade scope is created. **The moment of the grant is the moment the control needs an executor.** Source: Watchtower cycle 2026-08-10, item E1 — Anthropic's post-mortem of three cybersecurity-eval sandbox escapes in which the eval prompt stated no internet access while the infrastructure was live. The clause exists because *"this is a paper book"* is an instruction, and instructions of that exact shape failed.
