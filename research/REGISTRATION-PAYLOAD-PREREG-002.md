@@ -280,6 +280,24 @@ per-trial ordering walk, and on B-23 [measured]. **The literal `True` §4 quotes
 **prevention: none; detection and refusal: automatic, per trial, with the offending trial named.**
 Filed **I-142**.
 
+### 3.3 What R-008 changed inside the §21 block **[added 2026-08-25 · dispatch S4-D-001]**
+
+> ### **NO LITERAL IN §1's TABLE OF SIXTEEN CHANGES. `trial_budget` = 47. `n_inherited` = 7. `published_signal_haircut_applied` = 0.50.**
+>
+> **But three prose fields change VALUE, not merely wording, and this section exists because that is the trigger this payload recognizes.** R-008 discharges **I-210** (seal-blocking) and **I-213**, and discloses `REDTEAM-002` §2.1's inertness finding without redesigning the rule. **The mechanism is unchanged: §21 post-R-008 IS the payload for the eight prose fields, and there is no second copy to drift.**
+
+| Field | Changed? | The delta |
+|---|---|---|
+| `statement` | **Yes — three edits, all value-bearing** | (i) **`k` = 0.5, `d` = 1.0, `band` = 0.10 named as NUMERIC LITERALS**, with `lookback` = 30 and `w_max` = 1.0, plus the one-sentence reading of the rule and `w`'s zero point at `z` = 3.0; (ii) the right edge *"over 2020-01-01 to C"* conformed to **"the last settled common bar of the primary universe at the first run"** — `C` is not redefined; (iii) the **mechanical register** of the inertness disclosure |
+| `mechanism` | **Yes — one insertion** | The **economic register**: the field that names hedgers as the mechanism of funding inversion now states in the same field that the rule holds benchmark weight through inversion, on roughly a quarter of in-sample days [cited — `REDTEAM-002` §2.1, measured by that seat], and that this is a risk posture and **not** tail reduction |
+| `falsifier` | **Yes — two edits** | (i) the in-sample right edge conformed as above; (ii) the **evidential register**, binding on how leg (ii) may be read: no leg (ii) result may be presented as tail protection in the inversion regime |
+| `horizon` | **Yes — one edit, value-bearing** | **`band` = 0.10** as a numeric literal, with its cost derivation and the disclosure that the `0.10 < 0.25` check on KC-002 clause (b) was run **after** the choice |
+| `universe` · `success_criteria` · `forward_kill_condition` · `model_prior_provenance` | **No** | Byte-identical to R-007. **In particular the struck `2027-01-31` literals are NOT removed — I-204's standing prohibition holds** |
+
+**R-008 adds ZERO new dated sites to the E-2 obligation and REMOVES TWO** — no ISO date or `C`-form expression appears in any replacement text inside a field, and R43 deletes the `FORMULA C` right-edge site from both `statement` and `falsifier`. **The first revision of this document that does not grow the obligation** — and the first draft of it grew the obligation by four before this seat's own check caught it (**I-226**).
+
+**One defect in this payload's own record, filed rather than back-filled: §3 carries deltas for R-004 and R-005 and none for R-006 or R-007**, both of which moved prose-field bodies (`forward_kill_condition`'s three date literals at R32; `universe` and `model_prior_provenance` at R-007). Their revision blocks record it; this file does not. **Filed I-225. Not reconstructed here — a delta table back-filled two revisions late by a seat reading its own revision blocks is a record of what the blocks say, not of what the fields did.**
+
 ---
 
 ## 4. STAGE 2 — NOT A FIELD. A SEPARATE, POST-SEAL REGISTRY ACT.

@@ -1862,3 +1862,314 @@ write it is telling you the container is wrong, not the writing.**
 
 *Director of Research · Castellan Capital · **addendum §13 added 2026-08-12 for revision R-007***
 *Dispatch S3-D-014. Trial budget ZERO.*
+
+---
+
+# ADDENDUM — REVISION R-008 · 2026-08-25 · PRE-SEAL · **THE THREE LITERALS**
+
+*Dispatch **S4-D-001**. Trial budget **ZERO**. `book/registry.db` read **0 hypotheses / 0 trials /
+3 events** at open [measured, read-only `SELECT COUNT(*)`]. No backtest, no `run_backtest`, no grid,
+no `open_hypothesis`, no registration, no seal, no commit. No `harness/`, `book/`, `VALIDATION-*` or
+`REDTEAM-*` file was opened for writing.*
+
+## 14. `k`, `d` AND `band` — CHOSEN FROM THE MECHANISM, BEFORE ANY OUTPUT EXISTS
+
+### 14.0 What this section is, and the one property that makes it worth anything
+
+**`REDTEAM-002` §2.2 / I-210 is correct and this seat does not contest one word of it.** The sealed
+`statement` freezes `w(t) = clip(1.0 − k·max(0, z(t) − d), 0, w_max)` and **no numeric literal is
+assigned to `k`, `d` or `band` anywhere in `PREREG-002`, its payload, or its seal block** — in a
+document that binds `lookback = 30` and `w_max = 1.0` in the same breath. §6.2's *"made now, before
+any measurement"*, §10.5's *"fixed at pre-registration"* and §11.5's *"parameter centres"* each
+asserted a fixing that did not exist. **Three sentences claimed a specification the document did not
+contain, and it took one grep.**
+
+**The one property that makes choosing them here worth anything is temporal and it expires.** The
+registry holds **0 hypotheses and 0 trials**; no backtest has ever run in this firm; **no output of
+any kind exists on this family for a parameter to be fitted to.** A choice made now is provably
+pre-output in a way no later choice can be. That guarantee is not a claim about this seat's
+discipline — it is a claim about the state of `book/registry.db`, and it is verifiable by anyone.
+
+### 14.1 THE TRAP, NAMED BEFORE THE DERIVATION RATHER THAN AFTER
+
+The obvious way to choose `d` is to look at the in-sample distribution of `z(t)` and pick a deadband
+that leaves a sensible fraction of days outside it. **That is choosing a parameter from the data it
+will be tested on.** It is not a trial by this firm's own rulings — a count over stored funding
+prints has twice been ruled not a trial (`DATA-VERIFY-001` §5.2; `REDTEAM-002` §2.1) — **and it is
+still exactly the operation pre-registration exists to forbid.** It is I-029(d) performed on a
+continuum, where the cardinality of the search is not 73 but uncountable, and no `n_inherited` can
+price it.
+
+**The discipline adopted here, stated as a rule and then obeyed:** every one of the three literals is
+derived from a quantity **already inside this document or already cited in it**, or from estimator
+arithmetic on the declared 30-day lookback. **No query was run against `book/pit.db` this session.
+No distribution of `z(t)` was inspected, at any point, in any form.** §14.8 states what was
+consulted, in full, including the two figures that are in-sample facts.
+
+**A defensible parameter with a stated mechanism beats a well-fitted one.** Where the arithmetic
+brackets a range rather than delivering a point, this section says so and names the judgment.
+
+---
+
+### 14.2 `d` = **1.0** — the deadband
+
+**What `d` means.** `d` is the level of standardized excess funding below which this seat declines to
+treat a departure from baseline as information. It is a **noise filter on the crowding signal**, and
+the noise it must filter is not the market's — it is **the estimation noise of the rule's own
+reference level.**
+
+**The derivation, which uses only the declared lookback.** `z(t)` normalizes against a trailing
+**30-day** mean and standard deviation (§6.2, K1). Suppose the funding series sits *exactly* at its
+true baseline on day `t`. The 30-day sample mean `μ̂` is still estimated with standard error
+`σ/√30 = 0.183σ`, so `z(t) = (μ − μ̂)/σ̂` has dispersion of order **0.18 z-units on a day when
+nothing has happened** [inferred — standard estimator arithmetic on n = 30; no market data]. The
+trailing `σ̂` carries its own relative error of `1/√(2·29) ≈ 0.13`, which widens this modestly and
+in both directions.
+
+**Therefore the deadband is bracketed, not free:**
+
+| Candidate `d` | In units of the baseline's own SE | Verdict |
+|---:|---:|---|
+| 0.2 | ~1.1 | **Rejected.** The rule fires on the sampling error of its own 30-day mean. A conditioning rule triggered by where the baseline happened to land is not conditioning on crowding |
+| **1.0** | **~5.5** | **SELECTED** |
+| 3.0 | ~16 | **Rejected.** Restricts the rule to a state that may not occur; that is not a deadband choice, it is a decision to make KC-002 clause (b) fire, taken on the parameter axis where it is invisible |
+
+**The arithmetic delivers an order of magnitude — `d` must be O(1), not O(0.1) and not O(3). The
+choice of 1.0 inside that bracket is a judgment and this seat labels it as one**, taken at the round
+number that carries an independent reading requiring no reference to this family: **one trailing
+standard deviation richer than its own recent baseline** is the ordinary meaning of "elevated" for a
+standardized variable.
+
+**What is NOT claimed, and this is the part that matters.** This seat does **not** know what fraction
+of in-sample days satisfy `z(t) > 1.0`, has not computed it, and will not. Under a normal reference
+distribution it would be ~16%; **the reference distribution is known to be wrong** — §3.4/R2
+establishes the series is *censored*, with ~35% of prints at the administered floor [cited —
+`DATA-VERIFY-001` §5.2], so it is a mixture with a point mass and its true active fraction is
+unknown and plausibly much lower. **That figure is a disclosure of what the choice implies under a
+stated and admittedly false reference, not a reason for the choice.** Had the active fraction been
+the criterion, this would be the trap at §14.1 with an extra step.
+
+---
+
+### 14.3 `k` = **0.5** — the de-scale slope
+
+**What `k` means, and why the interpretable quantity is `1/k`.** `w = 1 − k·(z − d)` reaches zero at
+`z = d + 1/k`. **`1/k` is the width, in z-units above the deadband, over which conviction decays from
+full size to flat.** That is the quantity a mechanism can speak to; `k` is its reciprocal and is
+chosen only after it.
+
+**Three mechanism constraints, none of them measured:**
+
+1. **The hypothesis is about sizing, not timing.** §4 states the family's claim as *"the crowd is
+   wrong about how to **size** it,"* and §19.1 rests on nothing else. A narrow ramp (`1/k` small,
+   `k` large) converts a sizing rule into an on/off switch, maximizes turnover per unit of signal,
+   and makes the family a timing strategy the document explicitly disclaims.
+2. **Zero is a floor the design chose deliberately and it should be reached only in an extreme.**
+   K2's declared menu carried *"(2) up-scale at extremes"* and *"(3) sign-flip to long-perp"*, and
+   **neither was selected** — `w ∈ [0, 1]` is the whole admissible range. Reaching the bottom of that
+   range is the strongest statement the rule can make, and it should correspond to a state the
+   trailing baseline itself calls extreme.
+3. **A ramp too wide cannot deliver the mechanism's own product.** If `w` never approaches zero
+   inside any reachable state, the rule gives up little exposure and can produce no material tail
+   reduction — F-002 leg (ii) then measures nothing, and KC-002 clause (b) is near-certain death.
+
+**Selected: `1/k` = 2.0 z-units above the deadband ⇒ `k` = 0.5.** The resulting rule states in one
+sentence, which is the test this seat applied to it:
+
+> **Full size at or below one trailing standard deviation of excess funding · half size at two ·
+> flat at three.**
+
+**The width of 2.0 is this seat's judgment and is labelled as one** [inferred]. Its content: the
+distance the rule takes to travel from full size to flat is **twice** the distance it took to begin
+acting at all — a decay that is deliberate rather than abrupt, in a family whose entire claim is
+that the *marginal* premium stops paying for the *marginal* tail. A convex tail against a linear
+premium argues for a monotone give-up, not a step.
+
+---
+
+### 14.4 `band` = **0.10** — the turnover band
+
+**`REDTEAM-002` §3.1 is the reason this parameter must be derived from something other than either
+survival condition.** Widening `band` lowers cost and makes F-002 leg (i) easier while making KC-002
+clause (b) harder; narrowing it does the reverse. **A parameter whose two survival tests pull it in
+opposite directions cannot honestly be chosen from either.** It is therefore chosen from **cost
+arithmetic alone**, which is indifferent to both.
+
+**The principle:** the smallest rebalance the band authorizes must cost less than the daily carry it
+is adjusting. A rebalance that costs more than a day of the revenue line is a rebalance the mechanism
+cannot pay for, whatever it does to the tail.
+
+| Input | Value | Provenance |
+|---|---:|---|
+| Round-trip friction, both legs | **~24 bp** | [cited — D-013 §4, carried at `PREREG-002` §5.3] |
+| Annualized mean funding, BTC / ETH | **11.86% / 14.07%** | [measured — `DATA-INGEST-002` §4, carried at `PREREG-002` §5.3 and already inside the sealed text] |
+| ⇒ daily carry on perp notional | **~3.25 / ~3.86 bp** | [inferred — division by 365, the declared `periods_per_year`] |
+
+Only the perp leg moves (spot notional is fixed at 1.0), so a rebalance of size `Δw` costs roughly
+`Δw × 24` bp round-trip. Requiring that to sit inside one day of the thinner asset's carry:
+`Δw × 24 ≤ 3.25` ⇒ **`Δw ≤ 0.135`**. **Rounded down to `band` = 0.10**, at which the smallest
+authorized trade costs `0.10 × 24 = 2.4` bp — **about three-quarters of one day of BTC carry.**
+
+**Two checks run AFTER the choice, disclosed as post-hoc and one of them favourable:**
+
+- **`band` = 0.10 < 0.25, so the turnover band cannot suppress a KC-002 clause-(b) day.** Clause (b)
+  counts days on which notional moved by more than ±25%; any such target move is more than twice the
+  band and is therefore always executed. **This runs in the family's favour and this seat states it
+  ran the check second, not first.**
+- **Had the cost arithmetic delivered `band` > 0.25**, the two survival conditions would have been in
+  direct conflict and this seat would have escalated the conflict rather than picked a side. **It did
+  not, and the absence of the conflict is luck rather than design.**
+
+---
+
+### 14.5 WHAT THE THREE LITERALS NOW FIX DOWNSTREAM
+
+**(1) The ±50% grid has a centre, chosen before any output exists — I-212's substance discharged.**
+`run_parameter_grid` / `grid_from_center(fraction=0.5, steps=5)` on §10.5's two gridded parameters
+now evaluates:
+
+| Parameter | Centre | The five points |
+|---|---:|---|
+| `lookback` | 30 | 15 · 22.5 · **30** · 37.5 · 45 |
+| `k` | 0.5 | 0.25 · 0.375 · **0.5** · 0.625 · 0.75 |
+
+**§15 still runs the grid at step 6, after F-002 at steps 2–3 — and that no longer matters**, because
+the centre is a sealed literal rather than a value chosen when step 6 arrives. The I-029(d) operation
+relocated to the parameter axis is closed by fixing the centre, not by reordering the steps.
+**`lookback`'s grid produces non-integer day counts (22.5, 37.5), which is a live specification
+question this revision does not resolve** — filed **I-222**.
+
+**(2) KC-002 clause (b) is now a computable rule — I-211's computability discharged, its sensitivity
+made visible.** `|Δw| > 0.25` ⟺ `k·(z − d) > 0.25` ⟺ `z > d + 0.25/k`. At the sealed literals:
+
+> ### **Clause (b) evaluates to: fewer than 30 days in the 187-day forward window on which `z(t) > 1.5`.**
+
+**The direction the Devil's Advocate named is real and is now visible instead of invisible.** Larger
+`k` and smaller `d` lower that threshold and make the sponsor's own pre-registered expected cause of
+death easier to survive: `(k = 1.0, d = 0.5)` would give `z > 0.75`; `(k = 0.25, d = 2.0)` would give
+`z > 3.0` and near-certain death. **The selected pair sits between them, and this seat states plainly
+that it does not know whether `z > 1.5` occurs thirty times in a hundred and eighty-seven days.**
+That is what a pre-registration is for. §14.2's expectation at R7 — that clause (b) is not merely the
+most likely killer but the expected outcome — **is unchanged and is not softened by having numbers.**
+
+**(3) The Devil's Advocate's cheapest kill is now executable and this seat endorses it in the DA's
+own ordering.** DA(2) — count the in-sample days with `|w(t) − 1| > 0.25`, i.e. `z(t) > 1.5`, and
+take the maximum over any rolling 187-day in-sample window; kill below 30 — **can be run the moment
+the literals are sealed. It has NOT been run and must not be, until they are.** Reversed, it is the
+§14.1 trap.
+
+---
+
+### 14.6 THE INERTNESS FINDING — DISCLOSED IN THREE REGISTERS, NOT REDESIGNED
+
+**`REDTEAM-002` §2.1 is this seat's strongest objection received and it is correct.** `max(0, z − d)`
+is zero whenever `z ≤ d`, so **the rule can act only when funding is rich relative to its own trailing
+baseline, and does nothing at all when funding is cheap or negative** — while §3.2 population 3,
+§3.3 risk 3 and §7.4 all place this family's left tail in funding **inversion**. The DA measured
+**619 of 2,415 BTC days (25.63%)** and **609 of 2,415 ETH days (25.22%)** carrying at least one
+negative funding print [cited — `REDTEAM-002` §2.1, measured by that seat, read-only count over
+stored prints; **not re-measured here and not this seat's number**].
+
+**The Principal has ruled that this is disclosed and not repaired, and this seat does not seek to
+reopen it.** K2 remains option (1); option (3) — sign-flip on inversion — remains declared,
+considered and not selected; **the rule is unchanged.** Changing K2 now would be a post-hoc
+conditioning move made in response to an argument, which is the operation §7.2's escalation rule
+exists to price, and it would cost the line.
+
+**Why three registers and not one.** R29(b) is this document's own hardest-won lesson: *a correction
+exists where the seal reads it, and nowhere else* — R-005 struck a condition where readers meet it
+and left it standing where the seal meets it. **The disclosure is therefore placed in three binding
+fields, so that no reader of any frozen string meets the rule without meeting the regime it cannot
+act in:**
+
+| Register | Field | What it says there |
+|---|---|---|
+| **Economic** | `mechanism` | The field that names hedgers as the mechanism of inversion now says, in the same field, that the sizing rule holds **benchmark weight** through inversion — a deliberate risk posture, **not** tail reduction |
+| **Mechanical** | `statement` | On the face of the frozen rule: `max(0, z − d) = 0` for `z ≤ d`, so `w = 1.0` whenever funding is at or below baseline, including throughout a negative-funding regime, and the 30-day trailing baseline holds `w` at benchmark for up to thirty days after a cascade has collapsed `z` |
+| **Evidential** | `falsifier` | On leg (ii): whatever tail improvement leg (ii) measures **cannot originate in the inversion regime**, and a leg (ii) pass must not be read as tail protection in the regime where the mechanism places the tail |
+
+**What the disclosure costs the family, stated plainly:** it removes the reading under which F-002
+leg (ii) certifies tail protection generally. **The claim under test narrows to tail reduction on the
+approach to crowding, and the document now says so in the three places that get hashed.**
+
+---
+
+### 14.7 THE TWO `[2020-01-01, C]` SITES — CONFORMED TO THE DA's REMEDY
+
+**`REDTEAM-002` §8 / I-213 is adopted in full and it needs no Principal act.** `C` has been doing two
+jobs — the freeze instant and the in-sample right edge — and R23, R33, R34, R37 and I-097 are five
+repairs of the instances and none of the cause. **There is no seal date at which `[2020-01-01, C]` is
+true**, because the window is bounded by the last *ingested settled* bar and `C` is bounded by the
+calendar.
+
+**Both binding sites are conformed to "the last settled common bar of the primary universe at the
+first run"** — which is exactly what `oos_index` already carries, exactly what Validation §7.3 has
+already ruled governs, and **not a change to `C`**, which keeps its meaning as the freeze instant and
+keeps defining `forward_window_start`, the holdout and KC-002's window.
+
+| Field | Was | Now |
+|---|---|---|
+| `statement` | *"over 2020-01-01 to C"* | *"over 2020-01-01 to the last settled common bar of the primary universe at the first run"* |
+| `falsifier` | *"over the full in-sample [2020-01-01, C]"* | *"over the full in-sample [2020-01-01, the last settled common bar of the primary universe at the first run]"* |
+
+**The `universe` field carries a third instance** — *"common span 2020-01-01 to C = 6.571 years
+[SUPERSEDED …]"* — which the DA's remedy did not name and which this revision does **not** touch.
+It is a span *measurement* with its own superseding note, not a computation window any seat runs.
+**Named rather than repaired**, per this dispatch's scope rule. Filed **I-221**.
+
+**R-008 introduces ZERO new dated sites.** The replacement text contains no ISO date and no `C`-form
+expression, and none of the three literals is a date. **This is the first revision of this document
+of which that is true**, and it is stated because R-007's own lesson was that recording a correct
+ruling in-field added two sites to an obligation that was already unfinishable.
+
+---
+
+### 14.8 DID THIS SEAT CONSULT THE DATA? — THE FULL ANSWER
+
+**No query was run against `book/pit.db` this session, and no distribution, moment, quantile or count
+of `z(t)` was inspected in any form.** The only database read was `book/registry.db`, read-only,
+`SELECT COUNT(*)` on three tables, at open and at close.
+
+**Two in-sample facts were used, both already inside the sealed text before this revision, and this
+seat names them rather than leaving them to be discovered:**
+
+1. **Annualized mean funding, BTC 11.86% / ETH 14.07%** [measured — `DATA-INGEST-002` §4], used only
+   to price a *cost* against the *level* of the revenue line in §14.4. It is a first moment of the
+   funding series, not a property of `z(t)`'s dispersion, and no threshold on the signal is set from
+   it.
+2. **The ~35% floor share** [cited — `DATA-VERIFY-001` §5.2], used only in §14.2 to say why the
+   normal-reference active fraction is *not* a valid basis for choosing `d`. **It is used to reject
+   an argument, not to build one.**
+
+**An honest "I looked" beats a concealed one, and this is the honest version: the two figures above
+are in-sample, they were already sealed, and they were used for a cost and for a refusal.** If
+Validation regards either as contaminating, the remedy is available and cheap — re-derive `band` from
+the 24 bp friction and a stated assumed carry floor, which moves the answer by less than the rounding
+already applied. **This seat does not think that is necessary and states the exposure rather than
+arguing it away.**
+
+### 14.9 WHAT §14 DID NOT DO
+
+- **No trial, no backtest, no `run_backtest`, no grid, no `open_hypothesis`, no registration, no
+  seal, no vault, no registry write, no commit.** Registry read 0/0/3 at open and 0/0/3 at close.
+- **No change to the sizing rule, to K2, or to any declared menu or selection.** `N_conditioning`
+  remains 7; `trial_budget` remains 47; `n_inherited` remains 7.
+- **No repair of I-214, I-215, I-216, I-218, or of the `universe` third instance at §14.7.** All
+  named, none touched.
+- **No removal of the struck `2027-01-31` literals** — I-204's standing prohibition holds; they are
+  load-bearing and E-14's `DIVERGENT` fires only because they are there.
+- **No re-measurement of the DA's 25.6% / 25.2%.** Carried with that seat's provenance.
+
+### 14.10 Issues filed by §14
+
+**I-220** (the three literals, and what a specification that does not specify cost seven revisions to
+notice) · **I-221** (`universe`'s third `2020-01-01 to C` instance, unrepaired by design) ·
+**I-222** (`lookback`'s ±50% grid produces non-integer day counts) · **I-223** (`band`'s derivation
+uses two already-sealed in-sample figures — disclosed exposure) · **I-224** (the first trial is not
+blocked; the first *verdict* is, and the firm should choose knowingly) · **I-225** (the payload's
+delta record skipped R-006 and R-007).
+
+---
+
+*Director of Research · Castellan Capital · **addendum §14 added 2026-08-25 for revision R-008***
+*Dispatch S4-D-001. Trial budget ZERO. Registry 0 / 0 / 3 at open and at close.*

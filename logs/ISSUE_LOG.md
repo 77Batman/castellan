@@ -5445,3 +5445,168 @@ unprompted**).
 **Resolution:** open — the pointer stands as the index until the DA files; the propagation failure is
 the CIO's to have caught earlier and the DA's to repair.
 **Pattern tag:** `finding-never-reached-the-index` · `seal-blocking-and-invisible`
+
+---
+
+## I-220 · 2026-08-25 · The three literals are chosen and sealed pre-output — and a document that described a trading rule it did not specify survived seven revisions, a Gate 0 verdict, two Validation specifications and ~200 issues · Severity: HIGH → **RESOLVED (the parameter half); the process finding stands** · Owner: director-of-research
+
+**Description.** `PREREG-002` R-008, 2026-08-25, discharges **I-210** by naming **`k` = 0.5,
+`d` = 1.0, `band` = 0.10** as numeric literals in binding fields (`statement`, `horizon`), alongside
+the already-bound `lookback` = 30 and `w_max` = 1.0. Derivation at
+`research/DIR-RESTATE-001-prereg002-mechanism.md` §14.2–§14.4.
+
+**Each is derived from the mechanism, not from the series** [inferred, with the arithmetic exposed]:
+`d` from the sampling error of the rule's own 30-day reference level (`1/√30 = 0.18` z-units on a day
+when nothing has happened, so the deadband must be O(1)); `k` from `1/k` = the z-width from deadband
+to flat, set at 2.0 because the hypothesis is about **sizing** and K2 refused both up-scaling and the
+sign-flip; `band` from cost arithmetic alone, because the two survival conditions pull it in opposite
+directions and neither may choose it. **No query was run against `book/pit.db`; no distribution,
+moment, quantile or count of `z(t)` was inspected.** Registry read **0/0/3 at open and at close.**
+
+**The process finding, which is not resolved by the repair.** Three separate sentences — §6.2's
+*"made now, before any measurement"*, §10.5's *"fixed at pre-registration"*, §11.5's *"parameter
+centres"* — asserted a fixing that did not exist, for twenty-eight days. **`statement` is class (a)
+on existence and (c) on content, so P3, P4 and P7 could not have seen a post-seal choice.** The eighth
+instrument found it with one grep. **The first seven were pointed at the document's dates,
+denominators, classes and harness facts; none at whether its specification specifies.**
+
+**Resolution:** the parameter half is closed by R-008. **The process half is `REDTEAM-002` §7.1's base
+rate confirmed and is left open against this seat.**
+**Pattern tag:** `specification-that-does-not-specify` · `assertion-of-a-fixing-that-does-not-exist` · `every-instrument-aimed-at-metadata`
+
+---
+
+## I-221 · 2026-08-25 · `universe` carries a third `2020-01-01 to C` instance that the Devil's Advocate's remedy did not name, and R-008 deliberately did not touch it · Severity: LOW-MEDIUM · Owner: director-of-research → quant-validation
+
+**Description.** R-008 conformed the two binding sites `REDTEAM-002` §8 named — `statement` and
+`falsifier` — to *"the last settled common bar of the primary universe at the first run."* **The
+`universe` field carries a third instance**, *"common span 2020-01-01 to C = 6.571 years
+[SUPERSEDED — S3-D-019 …]"*, which the DA's remedy did not reach.
+
+**Why it was not repaired, stated rather than left to be discovered.** It is a span *measurement*
+carrying its own superseding note, not a computation window any seat runs, and the dispatch's scope
+was the withdrawal condition exactly. **The honest position is that the conflation of `C`'s two
+meanings is now repaired in the two places it is computed and survives in the one place it is
+described.**
+
+**Resolution:** open. Repair is one prose edit and is free while the document is unsealed; **it is
+also the sixth instance of `conforming-pass-did-not-reach-every-instance` and this one was named
+before the pass rather than after.**
+**Pattern tag:** `C-denotes-two-objects` · `conforming-pass-did-not-reach-every-instance` · `named-not-repaired`
+
+---
+
+## I-222 · 2026-08-25 · The ±50% grid on `lookback` produces non-integer day counts and the document does not specify the rounding · Severity: LOW-MEDIUM · Owner: director-of-research → head-of-data-infra
+
+**Description.** With the grid centre now fixed (R-008, I-212's substance),
+`grid_from_center(fraction=0.5, steps=5)` on `lookback` = 30 evaluates **15, 22.5, 30, 37.5, 45**.
+**A 22.5-day trailing window is not a specification** — it rounds up, rounds down, or truncates, and
+the three give different state variables at two of the five grid points, hence different
+`plateau_centroid_params`.
+
+**Consequence if unaddressed.** §4.4's parameter-surface criterion requires ≥ 60% of the ±50% grid
+net-profitable, and the plateau centroid is what advances. **Two of five points on one axis being
+under-specified is a researcher degree of freedom at exactly the step whose purpose is to detect
+one.** It costs nothing to fix pre-seal and is unfixable after P7.
+
+**Resolution:** open. Named, not repaired — outside S4-D-001's scope. **The cheapest fix is a
+rounding rule stated in the sealed `horizon` or `success_criteria` field, not a code convention**,
+per §4.7.3.
+**Pattern tag:** `grid-point-that-is-not-a-specification` · `named-not-repaired`
+
+---
+
+## I-223 · 2026-08-25 · `band`'s derivation consumes two in-sample figures that were already inside the sealed text — disclosed exposure, not concealed · Severity: LOW-MEDIUM · Owner: director-of-research → quant-validation
+
+**Description.** `band` = 0.10 is derived from ~24 bp round-trip friction [cited — D-013 §4] against
+~3.25 bp/day of carry, the latter from **measured annualized funding of 11.86% (BTC) / 14.07% (ETH)**
+[measured — `DATA-INGEST-002` §4]. **That second figure is an in-sample fact.** It was measured in a
+prior artifact, is already carried inside `PREREG-002` §5.3, and predates the parameter question — but
+it is in-sample and this seat names it rather than leaving it to be found.
+
+**Why this seat judges it admissible, and the judgment is Validation's to overturn.** It is a **first
+moment of the revenue line**, used to price a **cost**, not a property of `z(t)`'s dispersion, and no
+threshold on the signal is set from it. The `~35%` floor share [cited — `DATA-VERIFY-001` §5.2] is
+used only to **reject** an argument (that the normal-reference active fraction could justify `d`), not
+to build one.
+
+**Remedy if Validation disagrees, and it is cheap.** Re-derive `band` from the 24 bp friction against
+a **stated assumed** carry floor; the answer moves by less than the rounding already applied
+(`Δw ≤ 0.135` → 0.10).
+
+**Resolution:** open, for Validation. **An honest "I looked" beats a concealed one, and this is the
+honest version.**
+**Pattern tag:** `in-sample-figure-used-for-a-cost` · `disclosed-exposure`
+
+---
+
+## I-224 · 2026-08-25 · The first TRIAL is not blocked; the first VERDICT is — and the firm should log trial 1 knowing which · Severity: MEDIUM · Owner: director-of-research → CIO → Principal
+
+**Description.** S4-D-001 asked whether anything other than the withdrawal condition genuinely blocks
+the first trial. **Nothing does.** With R-008 the family is specifiable, its falsifier is computable
+from the sealed text, and its grid has a centre.
+
+**What is blocked is the first verdict, and it is document-side.**
+`harness/scripts/evaluate_dated_clauses.py` **does not exist** [measured — this session, directory
+listing]. Under **E-24** a nonzero exit makes the Gate verdict a permanent **INSUFFICIENT-DATA**, and
+`REGISTRATION-PAYLOAD-DATED-CLAUSES` measures **90 sites of which 75 fire on the first invocation**,
+because the sealed prose fields carry their own revision history. That is I-173 / I-186, it is
+Validation's D-6, and `REDTEAM-002` DA(3) attaches a 90-day park to it.
+
+**The consequence for Sprint 4's objective, stated without softening.** Trials logged into that state
+are spent on a family that cannot receive a verdict, **and trials cannot be unspent** (V-5).
+**"Log the first trial" and "log the first trial against `funding-carry-conditioning-002`" are not the
+same instruction**, and the difference is the CIO's compute call and the Principal's to ratify. **This
+seat names it and does not resolve it** — house rule 7.
+
+**Resolution:** open, escalated. **Named and not repaired**, per S4-D-001's scope rule.
+**Pattern tag:** `verdict-unreachable-while-trials-are-spendable` · `escalated-not-resolved`
+
+---
+
+## I-225 · 2026-08-25 · The registration payload's delta record skips R-006 and R-007 · Severity: LOW · Owner: director-of-research
+
+**Description.** `REGISTRATION-PAYLOAD-PREREG-002.md` §3 carries *"What R-004 changed inside the §21
+block"* (§3.1) and *"What R-005 changed"* (§3.2), and **nothing for R-006 or R-007**, both of which
+moved prose-field bodies — R32's three `2027-01-31` literals inside `forward_kill_condition`, and
+R-007's inserts into `universe` and `model_prior_provenance`. R-008 adds §3.3 and files this rather
+than back-filling the gap.
+
+**Why not back-filled.** A delta table reconstructed two revisions late, by a seat reading its own
+revision blocks, records **what the blocks say, not what the fields did.** The two are the same only
+if no conforming pass was missed — and `conforming-pass-did-not-reach-every-instance` is this
+document's most frequently recurring defect class (R8(c), R22, R25, I-140, R33, and I-221 today).
+
+**Resolution:** open. **The correct repair is a diff of §21 across revisions, which is a mechanical
+act against git history and not a memory act.**
+**Pattern tag:** `delta-record-with-holes` · `reconstruction-is-not-observation`
+
+---
+
+## I-226 · 2026-08-25 · R-008's first draft added four new ISO dated sites inside four hashed strings, in the same pass that asserted it added none — caught in-session by the author · Severity: MEDIUM · Owner: director-of-research
+
+**Description.** Writing R-008, this seat tagged its inserts inside the binding fields `statement`,
+`mechanism`, `falsifier` and `horizon` as **`[R41, 2026-08-25 — …]`**. **Four new ISO sites inside
+four strings that get hashed into `prereg_sha256`** — against an E-2 obligation already measured at
+**90 sites, 75 of which fire on the first invocation**, and under E-24, which makes a nonzero exit a
+permanent INSUFFICIENT-DATA.
+
+**The revision block asserting *"R-008 adds ZERO new dated sites"* was written in the same pass.**
+The assertion was false when written and this seat's own grep of its own diff is what found it. The
+dates are stripped; the `R41` / `R42` / `R43` tags remain and are not dates.
+
+**Why this is filed at MEDIUM rather than closed as a caught typo.** It is **R-007's lesson committed
+by the seat quoting R-007's lesson, one screen after quoting it** — *"recording the Principal's
+ratification in-field added two more sites to the obligation on the day the register was written."*
+**The reflex to stamp provenance inside the object is not a lapse of attention; it is the document's
+form, and the form is about to be frozen and copied.** `REDTEAM-002` §9's paragraph on what the firm
+has stopped being able to see applies to this seat and to this session.
+
+**The structural remedy, which is not this dispatch's to take:** provenance belongs in
+`model_prior_provenance`, in the revision block, and in the reasoning memo — **never inside a field
+whose string is hashed.** Until the revision apparatus leaves the six prose fields, every conforming
+insert creates rows for a register that can never be finished (I-178).
+
+**Resolution:** the four instances are removed. **The class is open and is the reason this family
+cannot presently reach a Gate 1 verdict (I-224).**
+**Pattern tag:** `provenance-inside-the-hashed-string` · `asserted-in-the-same-pass-that-violated-it` · `caught-by-the-author-and-reported`

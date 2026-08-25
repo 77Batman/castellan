@@ -15,6 +15,46 @@ House rule 6 applies throughout: **[measured]** = read or executed in this repos
 
 ---
 
+## REVISION BLOCK — R-008 · 2026-08-25 · PRE-SEAL · **THE THREE LITERALS**
+
+> **UNSEALED. `book/registry.db` reads 0 hypotheses / 0 trials / 3 events [measured — read-only `SELECT COUNT(*)`, at open and at close]. Trial budget ZERO. NO NUMBER WAS COMPUTED FROM MARKET DATA: no query was run against `book/pit.db`, no distribution, moment, quantile or count of `z(t)` was inspected in any form, no backtest ran, no grid ran, no `harness/`, `book/`, `VALIDATION-*` or `REDTEAM-*` file was opened for writing, no test was run, and nothing was committed.**
+>
+> **The property that makes this revision worth making now, and which expires the moment it is used: the registry holds ZERO trials and no backtest has ever run in this firm, so a parameter chosen today is provably pre-output. That guarantee is a fact about `book/registry.db`, verifiable by anyone, not a claim about this seat's discipline.**
+
+**Authority:** dispatch **S4-D-001** · the Principal's Sprint 4 §1 objective 1 (*"the first trial is logged; everything else is its dependency"*) · the Principal's ruling that the inertness finding is **disclosed and not redesigned**.
+**Occasion:** `research/REDTEAM-002-funding-carry-seal.md` — **I-210, HIGH, seal-blocking** — and the Devil's Advocate's stated withdrawal condition, which is same-day on these three items and nothing else.
+**Reasoning memo:** `research/DIR-RESTATE-001-prereg002-mechanism.md` **§14** — the full derivation of each literal, the trap named before the derivation, and the honest account of what was consulted.
+**Payload:** `research/REGISTRATION-PAYLOAD-PREREG-002.md` — **no literal in the table of sixteen moves. `trial_budget` = 47, `n_inherited` = 7, `published_signal_haircut_applied` = 0.50, all unchanged.** Three prose-field bodies change **value**, by the R-004 mechanism, and §3.3 of the payload records the deltas.
+
+| # | Clause changed | What changed | Why |
+|---|---|---|---|
+| **R41** | §6.2 sizing row and the parameter note; §10.5 grid note; §11.5 R4(a) row; §21 `statement`; §21 `horizon` | **`k` = 0.5, `d` = 1.0, `band` = 0.10 — NUMERIC LITERALS IN BINDING FIELDS.** Each is derived from the mechanism or from estimator arithmetic on the already-declared 30-day lookback, never from the series. **`d`:** a day sitting exactly at its true baseline still produces `\|z\|` of order `1/√30 = 0.18` from the sampling error of the rule's own 30-day reference level, so the deadband must be several multiples of that — O(1), not O(0.1) and not O(3); **1.0 is the round number in that bracket and the choice inside it is a declared judgment.** **`k`:** the interpretable quantity is `1/k`, the z-width from deadband to flat; selected at 2.0 because the hypothesis is about **sizing** and not timing, because K2 refused both up-scaling and the sign-flip so zero is the floor and should be reached only in an extreme, and because the resulting rule states in one sentence — **full size at or below one trailing standard deviation of excess funding, half size at two, flat at three.** **`band`:** derived from cost arithmetic alone, because `REDTEAM-002` §3.1 shows the two survival conditions pull it in **opposite** directions and neither may choose it — the smallest authorized rebalance must cost less than the daily carry it adjusts: `Δw × 24 bp ≤ ~3.25 bp/day` ⇒ `Δw ≤ 0.135`, rounded down. | **`REDTEAM-002` §2.2 / I-210 is correct and is not contested.** The sealed `statement` froze a sizing rule with two free symbols; §6.2's *"made now, before any measurement"*, §10.5's *"fixed at pre-registration"* and §11.5's *"parameter centres"* each asserted a fixing that did not exist. **`statement` is class (a) on existence and (c) on content, so P3, P4 and P7 could not have seen a post-seal choice** — the family's most consequential dial would have been set by whoever ran §15 step 3, invisibly to `prereg_sha256`, on the same day the grid centre and KC-002 clause (b)'s survival were decided. **Derivation in full: `DIR-RESTATE-001` §14.2–§14.4, including the two in-sample figures used and why.** |
+| **R41(b)** | §10.5 grid note; §15 step 6 reading | **THE ±50% GRID NOW HAS A CENTRE, FIXED PRE-SEAL — I-212's SUBSTANCE DISCHARGED.** `lookback` centred at 30 → {15, 22.5, **30**, 37.5, 45}; `k` centred at 0.5 → {0.25, 0.375, **0.5**, 0.625, 0.75}. **§15 still runs the grid at step 6, after F-002 at steps 2–3, and that no longer matters**, because the centre is a sealed literal rather than a value chosen when step 6 arrives. | **I-029(d) relocated to the parameter axis is closed by fixing the centre, not by reordering the steps.** The plateau centroid still advances and `argmax` is still reported alongside it and never carried forward. **One residual, named and not repaired: `lookback`'s grid produces non-integer day counts (22.5, 37.5)** and this document does not specify the rounding. Filed **I-222**. |
+| **R41(c)** | §14.2 (this note); §10.5 | **KC-002 CLAUSE (b) IS NOW COMPUTABLE — I-211's COMPUTABILITY DISCHARGED AND ITS SENSITIVITY MADE VISIBLE.** `\|Δw\| > 0.25` ⟺ `k·(z − d) > 0.25` ⟺ `z > d + 0.25/k`. **At the sealed literals: clause (b) kills on fewer than 30 days in the 187-day forward window with `z(t) > 1.5`.** | **The direction the Devil's Advocate named is real:** larger `k` and smaller `d` lower that threshold and make the sponsor's own pre-registered expected cause of death easier to survive — `(1.0, 0.5)` gives `z > 0.75`, `(0.25, 2.0)` gives `z > 3.0`. **The selected pair sits between them and this seat states plainly that it does not know whether `z > 1.5` occurs thirty times in a hundred and eighty-seven days.** §14.2's R7 expectation — clause (b) is the expected outcome, and the reason is the clamp rather than the market — **is unchanged and is not softened by having numbers.** **`band` = 0.10 is strictly below 0.25, so the turnover band cannot suppress a clause-(b) day; that check was run AFTER the choice and it ran in the family's favour, and this seat says so rather than presenting it as design.** |
+| **R42** | §21 `mechanism`; §21 `statement`; §21 `falsifier` | **THE INERTNESS FINDING IS DISCLOSED IN THREE BINDING FIELDS AND THE RULE IS NOT CHANGED.** `max(0, z − d)` is zero whenever `z ≤ d`, so the rule acts only when funding is **rich** relative to its own baseline and does nothing when funding is cheap or negative — while §3.2 population 3, §3.3 risk 3 and §7.4 all place this family's left tail in funding **inversion**. **619 of 2,415 BTC days (25.63%) and 609 of 2,415 ETH days (25.22%) carry at least one negative funding print** [cited — `REDTEAM-002` §2.1, **measured by that seat**, read-only count over stored prints; **not re-measured here and not this seat's number**]. **Economic register — `mechanism`:** the field that names hedgers as the mechanism of inversion now says in the same field that the rule holds **benchmark weight** through inversion, a deliberate risk posture and **not** tail reduction. **Mechanical register — `statement`:** on the face of the frozen rule, including that the 30-day trailing baseline holds `w` at benchmark for up to thirty days after a cascade has collapsed `z`. **Evidential register — `falsifier`, on leg (ii):** whatever tail improvement leg (ii) measures cannot originate in the inversion regime, and a leg (ii) pass must not be read as tail protection there. | **The Principal ruled disclosure, not redesign, and this seat does not seek to reopen it.** K2 remains option (1); option (3) — sign-flip on inversion — remains declared, considered and not selected. **Changing K2 in response to an argument is a post-hoc conditioning move, priced by §7.2's escalation rule, and it costs the LINE.** **Three registers and not one because R29(b) is this document's own hardest-won lesson:** a correction exists where the seal reads it and nowhere else, and R-005 struck a condition where readers meet it and left it standing where the seal meets it. **What it costs the family, stated plainly: it removes the reading under which leg (ii) certifies tail protection generally. The claim under test narrows to tail reduction on the APPROACH to crowding, and the document now says so in the three strings that get hashed.** |
+| **R43** | §21 `statement`; §21 `falsifier` | **THE TWO `[2020-01-01, C]` SITES ARE CONFORMED TO "THE LAST SETTLED COMMON BAR OF THE PRIMARY UNIVERSE AT THE FIRST RUN" — I-213's REMEDY, ADOPTED IN FULL.** `statement`'s *"over 2020-01-01 to C"* and `falsifier`'s *"over the full in-sample [2020-01-01, C]"* both move. **`C` is NOT redefined** and keeps its meaning as the freeze instant, still defining `forward_window_start`, the holdout and KC-002's window. | **The Devil's Advocate's remedy supersedes the CIO's three options and needs no Principal act.** `C` has been doing two jobs — the freeze instant and the in-sample right edge — and R23, R33, R34, R37 and I-097 are five repairs of the instances and none of the cause. **There is no seal date at which `[2020-01-01, C]` is true**, which is the whole finding. The replacement is (i) exactly what `oos_index` carries, (ii) exactly what Validation §7.3 has already ruled governs, and (iii) not a change to `C`. **The `universe` field carries a THIRD instance which the DA's remedy did not name and which this revision does not touch** — a span *measurement* with its own superseding note, not a computation window any seat runs. **Named rather than repaired.** Filed **I-221**. |
+
+**WHAT R-008 COSTS THIS FAMILY, AND FOR THE FIFTH REVISION RUNNING IT MOVES IN BOTH DIRECTIONS.**
+
+**For the family:** the seal's single blocking objection is discharged and the Devil's Advocate's withdrawal condition is met in full. **No source of death is removed.** Clause (b) is not made easier by having a number — it is made *visible*, and the visible number is one this seat cannot predict.
+
+**Against the document, which is the half that matters:** **this document has been describing a trading rule it did not specify since 2026-07-28, through seven revisions, a 590-line Gate 0 verdict, two Validation specifications and roughly two hundred issues.** Three separate sentences asserted the fixing. **The eighth instrument found it with one grep, and the reason the first seven did not is that all seven were pointed at the document's metadata — its dates, denominators, classes and harness facts — and none at whether its specification specifies.** That is `REDTEAM-002` §7.1's base rate arriving exactly as that memo predicted, and this seat records it against itself.
+
+**WHAT R-008 DOES TO THE DATED-CLAUSE OBLIGATION: IT ADDS NOTHING AND REMOVES TWO.** No replacement text inside a binding field carries an ISO date or a `C`-form expression, and none of the three literals is a date. **And R43 deletes the `FORMULA C` right-edge site from both `statement` and `falsifier`**, so the obligation falls by two. **This is the first revision of this document that does not grow it.**
+
+> **AND THE FIRST DRAFT OF THIS REVISION DID GROW IT, BY FOUR, AND THIS SEAT CAUGHT IT IN THE SAME SESSION AND SAYS SO.** The R41/R42/R43 tags were first written into `statement`, `mechanism`, `falsifier` and `horizon` as **`[R41, 2026-08-25 — …]`** — **four new ISO sites inside four hashed strings, in the same pass that asserted zero were being added.** That is R-007's lesson committed by the seat quoting it, one screen after quoting it. **The dates are stripped; the R-numbers stay, and they are not dates.** Filed **I-226**. *A seat that only reports the version of its work that survived its own check is reporting a fiction.*
+
+**What was NOT done, and why, so the absence is legible:**
+
+- **No seal, no registration, no `open_hypothesis`, no registry write, no vault, no commit.** The seal is the Principal's act and follows this repair. Registry 0 / 0 / 3 at open and at close.
+- **No trial, no backtest, no grid, no query against `book/pit.db`.** The Devil's Advocate's DA(2) dynamic-range test **is now executable at `(k, d) = (0.5, 1.0)` — `z > 1.5` — and this seat has NOT run it and endorses running it in the DA's own ordering: literals first, query second.** Reversed, it is selection over a continuum.
+- **No change to the sizing rule, to K2, or to any declared menu or selection.** `N_conditioning` remains **7**.
+- **No removal of the struck `2027-01-31` literals** — **I-204's standing prohibition holds.** They are load-bearing; E-14's `DIVERGENT` fires only because they are there, and the prohibition retires only when a test proves otherwise.
+- **No repair of I-214, I-215, I-216 or I-218**, and no repair of the `universe` third instance. All named; none touched. **Out of scope by default under Sprint 4 §1.**
+- **Nothing else that genuinely blocks the FIRST TRIAL was found. What is blocked is the first VERDICT** — I-173 / I-186, `harness/scripts/evaluate_dated_clauses.py` does not exist [measured, this session] and E-24 makes a nonzero exit a permanent INSUFFICIENT-DATA. **Trials may be logged into that state and cannot be unspent.** Filed **I-224**, addressed to the CIO and the Principal, **named and not repaired.**
+
+---
+
 ## REVISION BLOCK — R-001 · 2026-08-04 · PRE-SEAL
 
 > **This document remains UNSEALED. Every change below was made before `open_hypothesis` was called, against a registry holding 0 families and 0 trials [measured — `DATA-INGEST-002` §7], and therefore before any result on this family existed to select on. P7 has not yet bitten. Nothing here is an amendment to a sealed document; there is no sealed document.**
@@ -536,7 +576,7 @@ F-002's leg (i) tests the **pre-haircut** `t(α)`. Gate 1's `t ≥ 3.0` applies 
 | Element | Specification |
 |---|---|
 | Signal | `z(t)` = deviation of the trailing-24h realized funding rate from its own trailing **30-day** mean, in units of that window's standard deviation, computed from `event_time ≤ t` funding prints only. |
-| Sizing rule | `w(t) = clip(1.0 − k · max(0, z(t) − d), 0, w_max)`, with `d` = deadband, `k` = de-scale slope, `w_max` = 1.0. **Size falls monotonically as funding gets rich relative to its own baseline; it never rises above the benchmark.** |
+| Sizing rule | `w(t) = clip(1.0 − k · max(0, z(t) − d), 0, w_max)`, **with `k` = 0.5, `d` = 1.0, `w_max` = 1.0 [R41 · 2026-08-25 · NUMERIC LITERALS].** In words: **full size at or below one trailing standard deviation of excess funding, half size at two, flat at three** (`w` reaches 0 at `z = d + 1/k = 3.0`). **Size falls monotonically as funding gets rich relative to its own baseline; it never rises above the benchmark.** **[R42] And it is INERT below the baseline:** `max(0, z − d) = 0` for `z ≤ d`, so `w = 1.0` whenever funding is cheap or negative — roughly a quarter of in-sample days [cited — `REDTEAM-002` §2.1] — which is the regime §3.2, §3.3 and §7.4 name as where the left tail lives. **Disclosed, not redesigned (the Principal's ruling); K2 is unchanged.** |
 | Entry / exit | Continuous. `run_backtest(execution_lag=1)`. The weight decided at bar `t`'s close earns returns from `t+1`. §4.6's minimum-one-bar rule is satisfied by the engine and is **not** waivable [measured — `SameBarFillError` is raised for `execution_lag < 1`]. |
 | Rebalance | Daily, subject to a turnover band: no trade unless `|w_target − w_held| > band`. |
 | `periods_per_year` | **365.** Crypto trades every calendar day; there are no session gaps on either leg. Matches the `CRYPTO_PERP_TAKER` preset. |
@@ -544,7 +584,7 @@ F-002's leg (i) tests the **pre-haircut** `t(α)`. Gate 1's `t ≥ 3.0` applies 
 | **Why R4 is a defect repair and not a design change** | The struck clause asserted a **cadence constant that is measured false**: up to **12 prints in one day**, on **11 of 2,145 days** [measured — `VALIDATION-RULING-003` §A2]. Acceptance test **T-9** exists specifically to fail any implementation that multiplies by a fixed prints-per-day constant [cited — same, §4]. **The harness path was already correct; this document's prose was not.** Sealing the struck clause would have frozen a binding field whose text contradicts the sanctioned implementation, with no admissible way to reconcile them afterwards. **This repair is NOT confined to SOL and does not go away with SOL:** Binance states verbatim that *"there may be further adjustments to the funding rate settlement frequency... there will be no further announcement on such adjustments"* [cited — official, `DATA-VERIFY-001` §3.2], so a cadence change on **BTC or ETH inside the forward window** — the window KC-002 is computed over — is a live exposure that the struck clause would have mis-specified. **K7 (§7.1) governs what happens to the state variable when it occurs; R4 governs the arithmetic.** |
 | Holding period | **None.** There is no target, no stop, and no maximum hold. A stop on a delta-neutral carry position would convert a mean-reverting basis excursion into a realized loss at the worst possible moment, which is the second-order effect Charter §5.2 names explicitly. Risk is controlled by **size**, which is what the hypothesis is about. |
 
-**On the parameter values.** `lookback = 30 days`, `d`, `k`, `band` and `w_max = 1.0` are **this seat's choices, made now, before any measurement, from no prior work.** There is no inherited tuning to declare and no `N_inherited` to charge — a genuine difference from `forward-lag-001` and the single largest reason this family's arithmetic works (§10). Three of them go into the ±50% grid (§10.5); `w_max` does not, and §10.5 says why.
+**On the parameter values.** ~~`lookback = 30 days`, `d`, `k`, `band` and `w_max = 1.0` are~~ **[R41 · 2026-08-25 — THE SENTENCE ASSERTED A FIXING THAT DID NOT EXIST AND IS NOW TRUE.** Two of the five carried no value from 2026-07-28 until today, in a sentence claiming all five were fixed; `REDTEAM-002` §2.2 / **I-210** found it with one grep after seven revisions. **The values are: `lookback` = 30 days, `d` = 1.0, `k` = 0.5, `band` = 0.10, `w_max` = 1.0.** Derivation — from the mechanism and from estimator arithmetic on the declared 30-day lookback, never from the series — at `DIR-RESTATE-001` §14.2–§14.4.**]** These are **this seat's choices, made now, before any measurement, from no prior work** — and *now* means against a registry holding **0 hypotheses and 0 trials**, which is what makes the claim checkable rather than merely asserted. There is no inherited tuning to declare and no `N_inherited` to charge — a genuine difference from `forward-lag-001` and the single largest reason this family's arithmetic works (§10). Three of them go into the ±50% grid (§10.5); `w_max` does not, and §10.5 says why.
 
 ### 6.3 Success criteria — stated before the first run
 
@@ -1101,7 +1141,9 @@ fall. It is not a budget.
 
 `grid_from_center(fraction=0.5, steps=5, max_points=200)` **raises `ValueError` above 200 points** [measured — `grid.py:27`], and independently §10.4 caps total `N` at ~~110~~ **[R8 · 2026-08-05] 109**. A 3-parameter grid is 5³ = **125 points**, which alone would put `N` at 125 + 2 + 8 = 135 and **fail the length criterion outright** — **[R8]** and fails it against 109 by more, not less, so the constraint that fixed the grid at 2 parameters is strengthened rather than disturbed. A 4-parameter grid is 625 points and the harness refuses it.
 
-> **Therefore: `lookback` and `k` (the de-scale slope) are gridded at ±50%, 5 steps each = 25 points. `d` (the deadband) and `band` (the turnover band) are fixed at pre-registration and are not gridded. `w_max = 1.0` is not a free parameter — it is the statement that the strategy never exceeds the benchmark's size, which is part of K2 and not a tuning knob.**
+> **[R41(b) · 2026-08-25 · THE GRID NOW HAS A CENTRE, AND UNTIL TODAY IT DID NOT.** `grid_from_center(fraction=0.5, steps=5)` requires a centre; §15 runs the grid at **step 6, after F-002 at steps 2–3**, so the centre would have been chosen with F-002's output in hand — **I-029(d) relocated from the lag axis to the parameter axis, in the family whose §5.5 table exists to certify it committed no such operation. I-212.** **The centres are sealed literals: `lookback` = 30 → {15, 22.5, 30, 37.5, 45}; `k` = 0.5 → {0.25, 0.375, 0.5, 0.625, 0.75}.** Fixing the centre closes it; reordering the steps was never the remedy. **Residual, named and not repaired: `lookback`'s grid produces non-integer day counts (22.5, 37.5) and this document does not specify the rounding — filed I-222.**]**
+>
+> **Therefore: `lookback` and `k` (the de-scale slope) are gridded at ±50%, 5 steps each = 25 points. `d` = 1.0 (the deadband) and `band` = 0.10 (the turnover band) are fixed at pre-registration — **[R41] with values, which is a claim this sentence could not previously support** — and are not gridded. `w_max = 1.0` is not a free parameter — it is the statement that the strategy never exceeds the benchmark's size, which is part of K2 and not a tuning knob.**
 >
 > **The choice of which two to grid is itself pre-committed here, from a menu of the four candidates, and falls under the §7.2 escalation rule if revised.**
 
@@ -1476,7 +1518,7 @@ Which seats originated or ratified each binding design field, with model and sta
 | Falsifier F-002 (§5) | **Director of Research** | — | Opus | unknown [assumed] |
 | Conditioning declarations ~~K1–K6~~ **[R9 · 2026-08-05] K1–K7** and their menus (§7) — **K7 was declared at R5 and this provenance row was not extended with it** | **Director of Research** | **the Principal** (the rider requiring them) | Opus / human | unknown [assumed] |
 | The §7.2 pre-commitment rule and its escalation | **Director of Research** | — | Opus | unknown [assumed] |
-| Universe, sizing rule, parameter centres (§6) | **Director of Research** | — | Opus | unknown [assumed] |
+| Universe, sizing rule, parameter centres (§6) — **[R41 · 2026-08-25] the phrase "parameter centres" claimed a provenance for objects that did not exist until today; `k` = 0.5, `d` = 1.0 and `band` = 0.10 are named at §6.2 and derived at `DIR-RESTATE-001` §14** | **Director of Research** | — | Opus | unknown [assumed] |
 | Trial budget and the ~~`N ≤ 110`~~ **[R8 · 2026-08-05] `N ≤ 109`** ceiling (§10.4–10.5) | **Director of Research**, on `castellan.stats` output; **[R8] the ceiling's correction from 110 to 109 originates with Quant Validation** [cited — `VALIDATION-RULING-004` §2.2, §12] | Quant Validation | Opus | unknown [assumed] |
 | KC-002 (§14) | **Director of Research**, adopting KC-001's shape (Devil's Advocate, REDTEAM-001 §B.5) including the silence clause | **requires the Principal's signature before any capital** | Opus / human | unknown [assumed] |
 | `CRYPTO_PERP_TAKER` audit (§12) | **Director of Research** [measured from source] | — | Opus | unknown [assumed] |
@@ -1760,6 +1802,14 @@ Costing both legs at the perp preset's 5.0 bp commission understates the spot le
 
 > **[R7 · 2026-08-04 — clause (b)'s prediction now has a named mechanism and this seat raises its own stated probability.]** §3.4's R2 restatement establishes that realized funding is **censored** to the interest rate whenever the premium sits inside the ±5 bp clamp band, and that **roughly 35% of prints sit exactly at the 1.00 bp floor** [measured — `DATA-VERIFY-001` §5.2]. **The state variable is therefore a mixture with a point mass, and its entire dynamic range lives in the off-floor subset.** A z-score computed on a series that is *identically constant* on about a third of its observations has a compressed numerator and a denominator inflated by the off-floor tail — both of which push `z(t)` toward the deadband and `w(t)` toward 1.0.
 >
+> ### **[R41(c) · 2026-08-25 · CLAUSE (b) IS NOW COMPUTABLE, AND ITS SENSITIVITY TO THE PARAMETERS IS NOW VISIBLE RATHER THAN INVISIBLE.]**
+>
+> `|Δw| > 0.25` ⟺ `k·(z − d) > 0.25` ⟺ `z > d + 0.25/k`. **At the sealed literals `k` = 0.5 and `d` = 1.0, clause (b) evaluates to: KILL on fewer than 30 days in the 187-day forward window with `z(t) > 1.5`.**
+>
+> **The Devil's Advocate's I-211 is correct and the direction is knowable a priori without running anything:** larger `k` and smaller `d` lower the threshold and make the sponsor's own pre-registered expected cause of death easier to survive. `(k, d) = (1.0, 0.5)` would give `z > 0.75`; `(0.25, 2.0)` would give `z > 3.0` and near-certain death. **The selected pair sits between them, was chosen from the mechanism before any output existed (§14 of the reasoning memo), and this seat states plainly that it DOES NOT KNOW whether `z > 1.5` occurs thirty times in a hundred and eighty-seven days and has not measured it.** That is what a pre-registration is for.
+>
+> **The Devil's Advocate's DA(2) is now executable at `z > 1.5` and this seat endorses it in the DA's own ordering — literals first, query second. It has not been run.**
+>
 > **This seat therefore states, pre-seal: clause (b) is not merely the most likely killer, it is the expected outcome, and the reason is the clamp rather than the market.** [inferred — from the formula's structure and the measured floor share; **not measured**, because measuring it is a trial and the registry is at 0.] If clause (b) fires, the correct reading is *"the administered floor censors the signal on a third of days,"* and the successor named at §19.3 should condition on the **uncensored premium index** (`premiumIndexKlines`, available and not ingested [cited — `DATA-VERIFY-001` §6.3]) rather than merely on finer bars.
 
 ---
@@ -2036,12 +2086,36 @@ statement                         = "On binance/binanceusdm, a delta-neutral lon
                                      test is narrower: de-scaling that position as the realized funding
                                      rate rises above its own trailing 30-day baseline produces POSITIVE
                                      ALPHA to the unconditioned position, at the firm's own t >= 3.0
-                                     hurdle, over 2020-01-01 to C, net of the full Charter 4.6 cost stack
-                                     on both legs. Position: long 1.0 unit spot notional, short w(t) units
-                                     perp notional, w(t) = clip(1.0 - k*max(0, z(t) - d), 0, 1.0), where
-                                     z(t) is the deviation of the trailing-24h realized funding rate from
-                                     its own trailing 30-day mean in units of that window's standard
-                                     deviation. w never exceeds 1.0 and the position is NEVER long perp."
+                                     hurdle, over 2020-01-01 to THE LAST SETTLED COMMON BAR OF THE PRIMARY
+                                     UNIVERSE AT THE FIRST RUN [R43 - the window is bounded by the last
+                                     ingested settled bar, which is what oos_index carries and what
+                                     Validation section 7.3 has ruled governs; C is NOT redefined and keeps
+                                     its meaning as the freeze instant], net of the full Charter 4.6 cost
+                                     stack on both legs. Position: long 1.0 unit spot notional, short w(t)
+                                     units perp notional, w(t) = clip(1.0 - k*max(0, z(t) - d), 0, 1.0),
+                                     where z(t) is the deviation of the trailing-24h realized funding rate
+                                     from its own trailing 30-day mean in units of that window's standard
+                                     deviation. w never exceeds 1.0 and the position is NEVER long perp.
+                                     PARAMETERS, AS NUMERIC LITERALS [R41]: k = 0.5, d = 1.0, band = 0.10,
+                                     lookback = 30 days, w_max = 1.0. In words: FULL SIZE at or below one
+                                     trailing standard deviation of excess funding, HALF SIZE at two, FLAT
+                                     at three. Each literal is derived from the mechanism or from estimator
+                                     arithmetic on the declared 30-day lookback and NOT from the series;
+                                     derivation at DIR-RESTATE-001 section 14.2-14.4. w reaches 0 at
+                                     z = d + 1/k = 3.0.
+                                     DISCLOSURE, MECHANICAL REGISTER [R42 - the rule is DISCLOSED, not
+                                     redesigned, by the Principal's ruling]: max(0, z - d) is ZERO whenever
+                                     z <= d, so w = 1.0 - BENCHMARK WEIGHT, FULL SIZE - whenever realized
+                                     funding is at or below its own trailing baseline, INCLUDING throughout
+                                     a negative-funding regime. THIS RULE CANNOT ACT WHEN FUNDING IS CHEAP
+                                     OR INVERTED. And the 30-day trailing baseline extends that: after a
+                                     run of rich funding the baseline is high, so a cascade that collapses
+                                     z holds w pinned at benchmark weight for up to thirty days AFTER the
+                                     event. The rule reduces exposure to the APPROACH to crowding and holds
+                                     full exposure through the REALIZATION. This is a deliberate risk
+                                     posture under K2 option (1) - option (3), sign-flip to long-perp on
+                                     inversion, was declared, considered and NOT selected - and it is NOT
+                                     tail reduction in the inversion regime."
 
 mechanism                         = "Perpetual funding is the rental price of leverage, not a mispricing.
                                      Who pays: (1) leveraged directional retail, for whom the perp is the
@@ -2138,12 +2212,43 @@ mechanism                         = "Perpetual funding is the rental price of le
                                      kills escape (c). Open interest is NOT in pit.db and NO LOADER
                                      EXISTS; this falsifier is declared unmeasured, not satisfied.
                                      REJECTED AS MECHANISM: 'leveraged longs are impatient' - a
-                                     restatement of the observation, not an explanation."
+                                     restatement of the observation, not an explanation.
+                                     DISCLOSURE, ECONOMIC REGISTER [R42 - the finding is
+                                     DISCLOSED, not redesigned, by the Principal's ruling]: population (3)
+                                     above - hedgers of illiquid crypto exposure - is named in this same
+                                     field as THE MECHANISM OF FUNDING INVERSION IN DRAWDOWNS, and the
+                                     document's risk section places this family's left tail in exactly
+                                     that regime. THE SIZING RULE CANNOT ACT THERE. It is one-sided by
+                                     K2's selection: it de-scales only into funding that is RICH relative
+                                     to its own trailing baseline, and holds BENCHMARK WEIGHT when funding
+                                     is cheap or negative. A liquidation cascade is the event that
+                                     DESTROYS the crowding the rule is keyed to - longs are force-closed,
+                                     hedgers pile in short, realized funding collapses and inverts - so
+                                     the rule carries FULL SIZE into and through it. Roughly a QUARTER of
+                                     in-sample days sit in that state: 619 of 2,415 BTC days (25.63%) and
+                                     609 of 2,415 ETH days (25.22%) carry at least one negative funding
+                                     print [cited - REDTEAM-002 section 2.1, MEASURED BY THE DEVIL'S
+                                     ADVOCATE by read-only count over stored prints; NOT this seat's
+                                     number and NOT re-measured here]. HOLDING BENCHMARK WEIGHT THROUGH AN
+                                     INVERSION IS A DEFENSIBLE RISK POSTURE AND IT IS THIS FAMILY'S. IT IS
+                                     NOT TAIL REDUCTION, and no artifact from this family may present it
+                                     as one. K2 option (3), sign-flip to long-perp when funding inverts,
+                                     was declared in the menu, considered, and NOT selected; changing that
+                                     selection now would be a post-hoc conditioning move priced by the
+                                     section 7.2 escalation rule."
 
 falsifier                         = "F-002. Computed from THREE runs through castellan.run_backtest
                                      against this family, on the same daily UTC index over the full
-                                     in-sample [2020-01-01, C], all net of the full Charter 4.6 cost stack
-                                     AS REPAIRED PER CONDITION PRECEDENT C1:
+                                     in-sample [2020-01-01, THE LAST SETTLED COMMON BAR OF THE PRIMARY
+                                     UNIVERSE AT THE FIRST RUN] [R43 - conformed from the
+                                     former right edge 'C'. The in-sample window is bounded by the last
+                                     ingested SETTLED bar, which is what oos_index carries and what
+                                     Validation section 7.3 has already ruled governs; C is NOT redefined
+                                     and keeps its meaning as the freeze instant, still defining
+                                     forward_window_start, the holdout and KC-002's window. There is no
+                                     seal date at which the former text was true, which is why the fix is
+                                     to the right edge and not to C], all net of the full Charter 4.6 cost
+                                     stack AS REPAIRED PER CONDITION PRECEDENT C1:
                                      R_bench = the UNCONDITIONED benchmark (delta-neutral long-spot /
                                        short-perp, CONSTANT notional w == 1.0, equal-weight, daily
                                        rebalance inside the turnover band);
@@ -2193,6 +2298,22 @@ falsifier                         = "F-002. Computed from THREE runs through cas
                                        or sign-randomization of the conditioning schedule against the
                                        realized R_bench with average exposure held fixed, and this seat
                                        RECOMMENDS Validation require it before sealing].
+                                       DISCLOSURE, EVIDENTIAL REGISTER, BINDING ON HOW LEG (ii) MAY BE
+                                       READ [R42]: the sealed sizing rule is ONE-SIDED -
+                                       max(0, z - d) is zero whenever funding is at or below its own
+                                       trailing baseline - so the rule holds BENCHMARK WEIGHT throughout
+                                       the negative-funding regime, which is roughly a quarter of
+                                       in-sample days [cited - REDTEAM-002 section 2.1, measured by that
+                                       seat] and is the regime this document's own mechanism and risk
+                                       sections name as where the left tail lives. THEREFORE: whatever
+                                       tail improvement leg (ii) measures CANNOT ORIGINATE IN THE
+                                       INVERSION REGIME, and leg (ii) failing to fire MUST NOT be read,
+                                       in any artifact from this family, as evidence of tail protection
+                                       in inversion. What leg (ii) can establish is narrower and is the
+                                       claim actually under test: tail reduction on the APPROACH to
+                                       crowding, achieved by choosing WHEN to be small. The rule is
+                                       disclosed here and is NOT redesigned - the Principal's ruling - and
+                                       K2 is unchanged.
                                      Any single leg firing is sufficient. NO LEG CONTAINS AN ARGMAX, A
                                      PEAK, A GRID SEARCH, OR ANY SELECTION OVER CANDIDATES; there is no
                                      lag dimension because the strategy holds both legs simultaneously and
@@ -2485,7 +2606,21 @@ horizon                           = "CONTINUOUS. No event trigger, no target, no
                                      moment, the second-order effect Charter 5.2 names explicitly. Risk is
                                      managed by SIZE, which is what the hypothesis is about. Daily
                                      rebalance subject to a turnover band: no trade unless
-                                     |w_target - w_held| > band. run_backtest(execution_lag=1): the weight
+                                     |w_target - w_held| > band, where band = 0.10 [R41 -
+                                     NUMERIC LITERAL. Derived from cost arithmetic ALONE, because the two
+                                     survival conditions pull this parameter in OPPOSITE directions -
+                                     widening it lowers cost and eases F-002 leg (i) while making KC-002
+                                     clause (b) harder - and neither may therefore choose it. The
+                                     principle: the smallest rebalance the band authorizes must cost less
+                                     than the daily carry it adjusts. Only the perp leg moves, at roughly
+                                     24 bp round-trip [cited, D-013 section 4] against roughly 3.25 bp/day
+                                     of carry on that notional at the measured 11.86%/yr BTC funding
+                                     [measured, DATA-INGEST-002 section 4], giving delta-w <= 0.135;
+                                     rounded down. At 0.10 the smallest authorized trade costs 2.4 bp,
+                                     about three-quarters of one day of carry. NOTED AND RUN AFTER THE
+                                     CHOICE, NOT BEFORE: 0.10 < 0.25, so the band cannot suppress a KC-002
+                                     clause-(b) day; that check ran in the family's favour and is
+                                     disclosed as post-hoc]. run_backtest(execution_lag=1): the weight
                                      decided at bar t's close earns returns from t+1; execution_lag < 1
                                      raises SameBarFillError and is not waivable. periods_per_year = 365 -
                                      crypto trades every calendar day and there are no session gaps on

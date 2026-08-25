@@ -5171,3 +5171,85 @@ of which are real and none of which is on the trial's critical path.
 number. Insurance 2; DA reserve 1. §5 dead-man: **9 remain** since this checkpoint.
 
 **Review date:** on the repair's return.
+
+---
+
+## S4-D-002 · 2026-08-25 · R-008: the parameters are bound · §4 INTERRUPT — I-220 · SPEC-004 dispatched
+
+**1 · §4 HARD INTERRUPT — I-220, HIGH.** *"Parameter half resolved; process finding stands."* The
+DA's withdrawal condition is met on the parameters; **its process finding — seven revisions, none
+originating in the sponsor noticing — is not a thing a repair can discharge.**
+
+**2 · THE PARAMETERS ARE BOUND, verified singly** [measured]: **`k = 0.5`, `d = 1.0`,
+`band = 0.10`.** A second apparent `k = 3.0` is `1/k = 3.0`, the derived zero-crossing at
+`d + 1/k` — **the CIO's own grep caught it and checked the context rather than filing it.**
+
+**Each is justified from the mechanism, and the `d` argument is the one worth keeping:**
+
+> A day sitting **exactly at its true baseline** still produces `|z|` of order **`1/√30 = 0.18`**
+> purely from the sampling error of the 30-day trailing mean. **`d = 0.2` is ~1 such SE — the rule
+> would fire on its own estimation noise.** `d = 3.0` is ~16 — *"not a deadband choice, it is a
+> decision to make clause (b) fire, taken where it is invisible."*
+
+**The arithmetic brackets `d` at O(1) without touching the data at all**, and the choice of 1.0
+inside that bracket is declared as judgment rather than derivation. **`band = 0.10` comes from cost
+arithmetic alone** — *"`REDTEAM-002` §3.1 shows the two survival conditions pull it in opposite
+directions and neither may choose it"* — so the smallest authorized rebalance costs 2.4 bp against
+~3.25 bp/day of carry.
+
+**3 · THE TRAP THE CIO NAMED WAS AVOIDED, AND THE SEAT DISCLOSED THE NEAR EDGE OF IT.** No query was
+run against `book/pit.db`; **no distribution, moment, quantile or count of `z(t)` was inspected.**
+
+**But two in-sample figures already sealed in the document were used, and the seat named them rather
+than letting them be found** — annualized mean funding 11.86% / 14.07%, to price a **cost** against
+the revenue line's level, and the ~35% floor share **used only to reject an argument.** Filed as
+**I-223** with its own remedy attached. **"An honest 'I looked' beats a concealed one"** — the CIO's
+brief said so and the seat took it literally.
+
+**4 · Two consequences discharged as the brief required.** **The grid centre is fixed pre-seal** —
+`k` → {0.25, 0.375, **0.5**, 0.625, 0.75}, `lookback` → {15, 22.5, **30**, 37.5, 45} — and **I-212
+closes by fixing the centre, not by reordering steps.** *"§15 still runs the grid at step 6 after
+F-002, and that no longer matters."*
+
+**KC-002 clause (b) is now a rule: `z(t) > 1.5`, kill on fewer than 30 such days in 187.** The seat
+states plainly: ***"I do not know whether `z > 1.5` occurs thirty times in 187 days and have not
+measured it"*** — and declined to run the DA's own executable test, **endorsing the DA's ordering:
+literals first, query second.**
+
+**5 · I-224 IS THE FINDING THAT MATTERS FOR §1, AND IT IS A DISTINCTION THE OBJECTIVE DID NOT
+MAKE.**
+
+> **"Log the first trial" and "log it against this family" are not the same instruction.**
+
+`harness/scripts/evaluate_dated_clauses.py` **does not exist** [CIO-verified — only the test file].
+**E-24 makes a nonzero exit a permanent `INSUFFICIENT-DATA` Gate verdict, and trials cannot be
+unspent.** **So sealing and logging trials now satisfies objective 1's letter while spending `N`
+against a verdict that cannot be reached — destroying objective 2 to achieve objective 1.**
+
+**The CIO dispatched Seat 9 to implement `VALIDATION-SPEC-004` (Sonnet, S4-D-002), and states why
+this is in scope under §1's default-out rule:** it is **not document work**; the **read-only half is
+bound by Principal ruling to land *before first trials log***, which is objective 1's own gate; and
+the **evaluator half is objective 2's.** **One spec, already written, 46 red tests waiting. Both
+halves are on the critical path and neither is a defect hunt.**
+
+**6 · The seat introduced a defect and caught it in the same pass.** Its first draft stamped
+`[R41, 2026-08-25 — …]` **inside four hashed strings — four new dated sites, in the very pass
+asserting that zero were added.** Stripped; **filed as I-226 anyway**, and the reason is the finding:
+***"the reflex is the document's form, not an attention lapse."*** **R-007's lesson committed one
+screen after quoting it.**
+
+**7 · The line budget missed by 2× and was disclosed as such.** Projected **~305**, delivered
+**~657** — inside the ~800 ratchet, so **it prices as one**, but the §14 derivation ran **311 against
+135 projected.** **Second consecutive dispatch to overrun its own projection while staying under the
+ceiling.** The ratchet fires on the ceiling, not the projection — **but a projector that is 2× low is
+a projector, and the CIO records the pattern without acting on it, because acting on it is the
+Principal's under the ratchet's own terms.**
+
+**8 · The struck `2027-01-31` literals were NOT removed.** I-204 holds. Registry **0 hypotheses / 0
+trials / 3 events** at open and close.
+
+**9 · Budget.** **2 of 30 invocations · 1 of 12 Opus** — S4-D-002 is Sonnet. Insurance 2; DA reserve
+1. §5 dead-man: **8 remain.** **`STANDING-ORDER-003-DRAFT.md` still awaits signature and §2's tier
+number.**
+
+**Review date:** on SPEC-004's implementation returning.
