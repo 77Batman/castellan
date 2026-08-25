@@ -437,9 +437,54 @@
         "No": "54486775799097073350117703852347837482875366875903455982474565064932741563538"
       },
       "tier": "thin",
+      "status": "resolved",
+      "first_tracked_utc": 1785787899.38918,
+      "resolved_detected_utc": 1786632381.482655
+    },
+    "0x7fe482b17cdbebf643b23d2e2cccb53e6b2f9049327a9f0ba6526aef6d047d82": {
+      "condition_id": "0x7fe482b17cdbebf643b23d2e2cccb53e6b2f9049327a9f0ba6526aef6d047d82",
+      "question": "Hamburg: Andrej Nedic vs Carlos Taberner",
+      "slug": "atp-nedic-taberne-2026-08-13",
+      "volume24hr": 362247.954779,
+      "end_date": "2026-08-20",
+      "tokens": {
+        "Andrej Nedic": "15193470559634242142226724177127445163868943338987793172905299119802419528130",
+        "Carlos Taberner": "90381526890819779985319060626403069801713842152005992386478078969825789947555"
+      },
+      "tier": "thin",
+      "status": "resolved",
+      "first_tracked_utc": 1786632381.8615942,
+      "resolved_detected_utc": 1786634186.753925
+    },
+    "0x3a2ef65b2988a853b16ca1b00cabaef5d425e6962b657bba49140f9bc94c7c88": {
+      "condition_id": "0x3a2ef65b2988a853b16ca1b00cabaef5d425e6962b657bba49140f9bc94c7c88",
+      "question": "National Bank Open: Ben Shelton vs Brandon Nakashima",
+      "slug": "atp-shelton-nakashi-2026-08-13",
+      "volume24hr": 261219.1997510001,
+      "end_date": "2026-08-21",
+      "tokens": {
+        "Ben Shelton": "62060634784623357369508887927739082118611089931743416553772906573972299212419",
+        "Brandon Nakashima": "38837696048823211858645589856593434736104277176125205870323924943432397599889"
+      },
+      "tier": "thin",
+      "status": "resolved",
+      "first_tracked_utc": 1786634186.9682639,
+      "resolved_detected_utc": 1786715157.702691
+    },
+    "0xefa17dee3af09f69f9ddf245b969aa4efbe7c71cdf06ee49d694408bc33e2ed2": {
+      "condition_id": "0xefa17dee3af09f69f9ddf245b969aa4efbe7c71cdf06ee49d694408bc33e2ed2",
+      "question": "Will Shakhtar Donetsk win the 2026-27 UEFA Champions League Championship?",
+      "slug": "will-shakhtar-donetsk-win-the-2026-27-uefa-champions-league-championship-20260701202025578",
+      "volume24hr": 420883.2,
+      "end_date": "2027-05-30",
+      "tokens": {
+        "Yes": "33339798372916037220786136133406478491116150628220441951753426683441228279665",
+        "No": "104057763218510615367140802415589642126328786949880639432107896044654185136344"
+      },
+      "tier": "thin",
       "status": "active",
-      "first_tracked_utc": 1785787899.38918
+      "first_tracked_utc": 1786715157.92496
     }
   },
-  "last_refreshed_utc": 1786147228.5344372
+  "last_refreshed_utc": 1787695366.824596
 }
