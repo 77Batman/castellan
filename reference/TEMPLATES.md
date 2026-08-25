@@ -89,3 +89,27 @@ carry no individually attached output. Their execution is nonetheless **evidence
 downstream health checks they gate are not obtainable without them — a passing VPS health check
 is impossible without account, droplet, key, and transfer. **That is evidence, not compliance**,
 and the distinction is recorded rather than smoothed. The convention binds prospectively.
+
+---
+
+### 7.10 Dispatch practice — bought with three terminations and 42% of a tier
+
+*Promoted from Standing Order 002 §2.2, §3.1 and §6.1 under §7.3's promotion path, 2026-08-25. Recorded here because the orders expire with their sprints and these do not.*
+
+**Origin.** Sprint 2 lost **three Opus dispatches to infrastructure termination** — 42% of the tier, producing two complete artifacts and one partial (I-049). Sprint 3 ran **nine Opus dispatches with zero terminations** under the rules below. That is the whole evidence base, and it is why these are practice rather than preference.
+
+**1 · Analysis before synthesis.** Every long dispatch **writes its analysis to disk before synthesis begins.** Measured: two terminations without the instruction preserved **0 lines**; the one with it preserved **817**.
+
+**2 · Pre-split at scale.** Any dispatch **projected past ~800 authored lines** is split at dispatch time and **priced as two.** The projection is stated in the brief so the judgment is auditable, and the seat is instructed to **stop and say so rather than truncate** if the projection is wrong.
+
+> **The ratchet:** a projection that lands over threshold **prices as two without appeal.** A single overrun is noise; **a sizing control whose projections keep grazing the line stops being conservative**, and the second data point decides that.
+
+**"Authored lines" includes tooling the seat wrote.** §2.2 sizes a dispatch by **what a termination would destroy**, and 264 lines of analysis script lost to a termination is work lost. **An undefined term here resolves against the firm.**
+
+**3 · Acceptance is computed, not narrated.** An acceptance number stated in a brief is **computed live at dispatch time, from the artifact the executing seat will measure — never from a cached derivative.** I-096: a CIO committed `55 = 90 − 35` from a stale roster in a brief whose entire point was that acceptance is computed; **the true baseline was 92 and the number was unreachable by construction.**
+
+**4 · Headroom and staleness.** Every Principal message opens with a usage reading. **A reading older than ~2 hours, or any termination since it arrived, means headroom is UNKNOWN** and the conservative posture applies. **The figures are consumption, not remaining** — established by two consecutive readings across known one-directional activity, after a five-reading historical series proved only suggestive.
+
+**5 · Standing policies are disclosed at adoption, not at their first failure.** Where a seat adopts a **standing operating policy** — as distinct from a per-dispatch judgment — it is recorded when adopted. Origin: worktree isolation ran undisclosed for two weeks until it produced I-054 and I-072.
+
+**6 · Session-close disposition.** At every session close, **`git status` is reviewed and every dirty path explicitly dispositioned** — staged by name, or **named in the record as deliberately unstaged with its reason.** Origin: I-054's corrective (*stage named paths only*) produced the opposite failure at **I-209**, because **a named-path discipline omits whatever nobody thought to name** — and `book/registry.db`, written by a seat, fell through it. **Seat-written files are the motivating case.**

@@ -247,3 +247,19 @@ observation.
 
 *Both are §4.7.3's principle applied to the control's own reporting surface: **put the evidence
 where the machine writes it, not where the reader would have to infer it.***
+
+---
+
+#### 4.7.5 · The estimator asymmetry — corrections tighten without ceremony, loosenings interrupt
+
+**Promoted from Standing Order 001 §8 / Standing Order 002 §4.2 under §7.3's promotion path, 2026-08-25. The orders expire; this does not.**
+
+> **Estimator corrections *toward* a statistic's stated assumptions belong to Validation and need no Principal act. Any estimator change that *loosens* — relaxes an assumption, widens a tolerance, swaps to a more permissive construction — is a §2 threshold matter and interrupts, regardless of framing.**
+
+**Operative test:** **does the corrected statistic measure more of what it always claimed to measure, or less?** Toward the stated assumption → Validation's, no interrupt. Away from it, by any framing → **reserved, and it queues.**
+
+**Why the asymmetry rather than a single rule.** The Principal's stated reason when he wrote it: *"so this ruling can't be cited sideways later."* The precedent it guards is **I-050** — a `t`-statistic that assumed serial independence the firm's own data violated at ρ = 0.83, repaired without ceremony because the repair ran toward the assumption. **Left unqualified, that precedent is exactly the shape a future seat would cite to wave a loosening through as "just an estimator change."** The direction of the change, not its vocabulary, decides which side it falls on.
+
+**Worked applications.** `min(t_NW, t_raw)` and the one-sided lag floor (I-050) — a caller may raise the lag, never lower it. `N_max = min(109, corrected-MinBTL ceiling at ρ̂)` (I-057) — measurement can only tighten. `z_serial = z_iid/√(max(vif, 1.0))` (I-065) — **and note that one was a *correction* that an implementer found and correctly declined to adopt unilaterally, which is the asymmetry's procedural half working.**
+
+**The construction to prefer:** where the conservative direction can be made the **only structurally available** one, do that instead of writing a rule against the other. **A rule someone must remember to apply fails the first time nobody remembers.**
