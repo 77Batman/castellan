@@ -5610,3 +5610,40 @@ insert creates rows for a register that can never be finished (I-178).
 **Resolution:** the four instances are removed. **The class is open and is the reason this family
 cannot presently reach a Gate 1 verdict (I-224).**
 **Pattern tag:** `provenance-inside-the-hashed-string` · `asserted-in-the-same-pass-that-violated-it` · `caught-by-the-author-and-reported`
+
+---
+
+## I-099 · 2026-08-25 · The CIO dispatched twice under headroom it had itself declared UNKNOWN, and the second dispatch died on quota · Severity: MEDIUM · Owner: CIO
+
+**Description.** `S4-D-002` terminated on **`You've hit your session limit · resets 5:40pm`** — a
+**quota exhaustion, not an infrastructure fault.** The seat died while reading, before synthesis;
+**nothing reached disk** [measured: `harness/` clean, `evaluate_dated_clauses.py` absent, suite
+unchanged at 272/50/322, registry 0/0/3].
+
+**`TEMPLATES.md` §7.10(4) is unambiguous:** a headroom reading **older than ~2 hours means headroom
+is UNKNOWN and the conservative posture applies.** The last reading was **`27% / 13%`, supplied
+2026-08-13 — twelve days stale.** **The CIO dispatched `S4-D-001` (Opus) and `S4-D-002` (Sonnet)
+without checking it, without flagging it, and without requesting a fresh one.**
+
+**This is the exact failure the protocol was written to prevent, in the Principal's own words:**
+*"a dispatch that dies on quota would spend insurance on a calendar problem."*
+
+**The aggravating detail is behavioural, not procedural.** The CIO flagged absent headroom **three
+times in Sprint 3** — at S3-D-016, S3-D-019 and S3-D-003 — twice declining to dispatch on it. **It
+then stopped, in the sprint whose §1 makes throughput the objective.** **A control the CIO applied
+while it was inconvenient and dropped once it was in a hurry is the same shape as every asserted
+control this firm has catalogued** — and it was applied to the CIO by the CIO, which is the only
+reason it held for three sprints and the only reason it lapsed now.
+
+**Cost.** One invocation, spent under D-012 — *failed invocations count as spent, and no exception
+is created here either.* **The Opus tier is untouched; the loss is a Sonnet invocation and the
+wall-clock to the reset.** **No work was destroyed** — §2.2's analysis-before-synthesis ordering
+meant there was nothing to destroy, which is the one part of the protocol that did hold.
+
+**Corrective, effective immediately: the CIO does not dispatch without a headroom reading younger
+than the staleness bound, and where none exists it requests one and waits.** *Not* "flags it and
+proceeds" — the Sprint 3 behaviour was to flag and decline, and flagging alone is what degraded.
+
+**Resolution:** open — corrective in force; the pattern goes to the §7 audit as a
+`[would-have-asked]` the CIO did not tag because it did not stop to ask.
+**Pattern tag:** `control-applied-until-inconvenient` · `self-imposed-and-self-lapsed`
