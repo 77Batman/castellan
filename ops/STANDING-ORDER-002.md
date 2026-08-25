@@ -117,6 +117,16 @@ The Principal reviews: the **Friday Research Review**, the **Monthly Letter**, a
 
 ---
 
+**§6.1 · Session-close disposition [NEW — 2026-08-14, I-209's missing half]**
+
+At every session close, **`git status` is reviewed and every dirty path is explicitly dispositioned** — **staged by name, or named in the record as deliberately unstaged with its reason.**
+
+**Why it exists.** I-054's corrective was *stage named paths only, never `git add -A` while a dispatch is in flight.* That fix produced the opposite failure at **I-209**: `book/registry.db` carried two A4 restatement events in the working copy and one in `HEAD`, so **under A3 the book of record did not contain them** — because a named-path discipline **omits whatever nobody thought to name**, and that file was written by a seat rather than by the CIO.
+
+**Seat-written files are the motivating case.** The Principal: *"a discipline that omits what nobody thought to name now has to name what it omits."*
+
+---
+
 ## §7 · Calibration audit, findings index, and graduation
 
 At sprint close the Principal audits every `[would-have-asked]` entry. Each one the Principal would have decided differently is a calibration finding, discussed on the record.

@@ -5362,3 +5362,44 @@ family's universe, **or** have `evaluate_gate1` scan `data_restatement` events b
 family's universe and print the count on every report face (§4.7.4(ii): including when it is zero).
 The second is preferred — it puts the control where the machine reads it.
 **Pattern tag:** `event-with-no-family-key` · `book-of-record-does-not-hold-the-event` · `restatement-surfaces-to-nobody`
+
+---
+
+## I-097 · 2026-08-25 · The data is 13 days stale and `C` has moved — the in-sample window would claim data that is not on disk, S3-D-019's finding in reverse · Severity: MEDIUM · Owner: CIO → devils-advocate → Principal
+
+**Description.** Measured today, read-only [measured]: **today is 2026-08-25; the last bar on every
+primary leg (`binance` BTC/ETH spot, `binanceusdm` BTC/ETH perp and funding) is 2026-08-12.**
+
+The span was measured 2026-08-12 and sealed at **6.6093 years, `[2020-01-01, 2026-08-11]` settled
+bars only.** **`C` is the seal date.** If the family seals today, the in-sample window is
+`[2020-01-01, C = 2026-08-25]` — **and the document claims 13 days of data that are not in
+`book/pit.db`.**
+
+**This is S3-D-019's own finding in reverse, and the Principal's words then apply unchanged:** *"the
+declared in-sample window running 15 days past the last bar is a document describing data that
+doesn't exist."* **That instance ran 15 days past; this one runs 13.** The remedy then was ingest to
+current and conform, direction-blind.
+
+**Why the CIO is filing it rather than dispatching a fix.** The remedy is a Sonnet ingest, and the
+CIO could run one — **but the last ingest produced two A4 restatement incidents (I-190) on the
+primary universe, and a re-ingest days before a seal would very likely produce more.** Whether the
+firm wants fresh data with fresh restatements, or a stale-but-settled window it has already
+adjudicated, **is a seal-quality judgment, not a data-cleaning task.**
+
+**And it recurs by construction.** Ingesting today makes the window current today and stale again
+tomorrow. **The gap closes only at the moment of sealing, or never** — which means the honest
+options are (a) ingest immediately before the seal act and accept whatever restates, (b) seal
+against the settled window and **declare the gap in-document as a class-(c) disclosure**, or (c)
+define `C` as the last settled bar rather than the seal date, **which is a definitional change to a
+term the Charter's house rule 7 fixes and is therefore the Principal's.**
+
+**The CIO does not choose among them.** It has handed the finding to the **Devil's Advocate at
+S3-D-024, inside the memo that reviews the document as it will seal**, with the instruction that if
+it is fatal the DA says so.
+
+**Nothing is presently wrong.** Registry reads **0 hypotheses / 0 trials**; nothing is sealed;
+`prereg_sha256` does not exist. **The defect exists only at the moment of sealing, which is exactly
+when P7 would freeze it.**
+
+**Resolution:** open — before the Devil's Advocate, then the Principal.
+**Pattern tag:** `window-claims-data-that-does-not-exist` · `recurs-by-construction`
