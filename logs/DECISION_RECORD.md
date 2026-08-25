@@ -4903,3 +4903,88 @@ current head — **the CIO's own 3392/3396 line numbers had drifted, the propert
 act.** C7 and C8 resolve alongside.
 
 **Review date:** on the Principal's rulings, then C3.
+
+---
+
+## S3-D-024 · 2026-08-25 · C2's acceptance items ruled · C3 DISPATCHED on the sealed reserve
+
+**1 · C5 COMPLETE, to Validation's own standard, on the Sprint 4 path where it binds.** Ratification,
+application, executor, artifact — all four named: the haircut is a **design-time discount on the
+declared expected effect**, applied at **§5.4's power/α arithmetic**, executed by **Validation at
+Gate 1 evaluation as class (b)**, with the **Gate 1 memo as the named artifact, showing the
+discounted effect driving the evaluation in three-register form.** **No realized statistic is ever
+scaled; the "statistically incoherent" branch stays struck.**
+
+**Validation declined part 1 in isolation** — *"a point of application without ratification and
+executor is a class-(c) no-op"* — **and was right to: a ruling that names where a control applies
+but not who runs it produces exactly the class-(c) commitment the labeling mandate exists to
+expose.**
+
+**2 · I-206 — the sentence is supplied below for signature on quoted words.** The Principal's own
+corrective this sprint is that he cites only from pasted artifacts, **"and a Charter edit is the last
+place to breach it."** The CIO has **not** applied it; it is pasted in the report for his sight, and
+`FUND_CHARTER.md` is unedited.
+
+**3 · I-204's prohibition endorsed WITH ITS EXIT NAMED, and the exit is stricter than the CIO would
+have written:**
+
+> The struck literals stay in-field until E-2's recognizer goes case-insensitive **and a test proves
+> `DIVERGENT` still fires on their removal** — *"the accident is now a rule, and the rule retires
+> only when a computed control replaces the accident, not when the code claims to."*
+
+**A code change that claims to replace an accidental control is not evidence that it does.** The
+CIO's own framing was "until the amendment lands"; the Principal's requires the amendment to be
+*demonstrated on the exact case the accident was covering.*
+
+**4 · The deferred count: NINE, and the method is the ruling.** The Principal's five and the CIO's
+four are **both corrected in the record**; the verdict names all nine. *"Sixth and seventh cardinal
+errors of the fortnight, both caught by the same corrective: count the roster, not the memory of
+it."*
+
+**5 · I-209 — completeness check, not reversion.** Named-path staging **stands** (I-054's fix) and
+**gains its missing half**, now in `ops/STANDING-ORDER-002.md` **§6.1**: at every session close,
+`git status` is reviewed and **every dirty path explicitly dispositioned — staged by name, or named
+in the record as deliberately unstaged with its reason.** *"A discipline that omits what nobody
+thought to name now has to name what it omits."* **Seat-written files are the motivating case.**
+
+**6 · C13(k) entered with Validation's reasoning quoted in full**, and the Principal names the second
+sentence **the sprint's epitaph for anyone who thinks adversarial review means reflexive refusal**:
+
+> *"a count, not a rate — that is not tightening, it is randomizing"*
+> **"refusing the conformance would have been the permissive act wearing the adversarial seat's
+> clothes."**
+
+**7 · C3 DISPATCHED ON THE SEALED RESERVE.** Held since Sprint 1, **protected by the Principal four
+times, unspent by design. This is what it was reserved for.** The memo runs **against the document as
+it will seal** — scoped verdict, nine deferrals named, settled span, struck literals in-field.
+
+**Three requirements the CIO added to Charter §4.4's form:**
+
+- **Do not mistake a pessimistic sponsor for an honest one.** §19.3 pre-declares PARK-WITH-TRIGGER,
+  and **a family sponsored under low expectations is one nobody argued hard against.**
+- **Attack the process, not only the product** — and the question the CIO put to it having no answer
+  of its own: *"does a document that needed seven revisions and three last-minute saves deserve to be
+  sealed at all, or is the revision count itself the finding?"* **I-140 would have downgraded it on a
+  stale sentence; I-153 would have killed it with certainty; I-130 would have sealed a permissive
+  unlock table.** **The CIO supplied no answer and said so.**
+- **Name what the firm has stopped being able to see.** Every seat has read this document a dozen
+  times. **The DA is the only seat whose job is to be unpersuaded by that.**
+
+**8 · I-097 handed to the DA rather than resolved — and the CIO states why it did not simply fix
+it.** The data is **13 days stale**; `C` is the seal date; **sealing today gives an in-sample window
+claiming 13 days not on disk.** S3-D-019's finding in reverse.
+
+**The remedy is a Sonnet ingest the CIO could run. It did not, for two reasons.** The last ingest
+produced **two A4 restatements on the primary universe** (I-190), and a re-ingest days before a seal
+would likely produce more — **whether the firm prefers fresh data with fresh restatements or a
+stale-but-settled window it has already adjudicated is a seal-quality judgment, not a data-cleaning
+task.** And **it recurs by construction**: ingesting today makes the window stale again tomorrow.
+**The gap closes at the moment of sealing or never.**
+
+**9 · Budget.** **14 of 30 invocations · 10 of 12 Opus. FREE OPUS: ZERO. The DA reserve is now
+spent.** Remaining: **2 termination-insurance units.** §5 dead-man: **3 remain.**
+
+**10 · Sequence:** C3 *(running)* → **registration-as-seal, a §4 interrupt and the Principal's act.**
+**C7 and C8 are the only remaining seal-blocking conditions.**
+
+**Review date:** on C3's return.
