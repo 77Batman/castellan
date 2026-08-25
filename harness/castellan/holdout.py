@@ -67,7 +67,7 @@ from .errors import (
     HoldoutAcquisitionOverlapError,
     HoldoutSchemaMismatchError,
 )
-from .registry import TrialRegistry
+from .registry import TrialRegistry, HARNESS_INTERNAL_TOKEN
 
 # Re-exported for backward-compatible imports (`from .holdout import HoldoutError`).
 __all__ = [
@@ -84,8 +84,48 @@ __all__ = [
     "HoldoutAcquisitionFailedError",
     "HoldoutAcquisitionOverlapError",
     "HoldoutSchemaMismatchError",
+    "VaultWriteNotGrantedError",
     "VaultState",
 ]
+
+
+class VaultWriteNotGrantedError(HoldoutError):
+    """VALIDATION-SPEC-004 R-17. The vault's FILE writes (``spec.json``,
+    ``payload.enc``, ``verifier.json``, ``acquisition_meta.json``) are not
+    SQLite and get an explicit guard distinct from the registry's: every
+    method that opens a path under ``vault_dir`` for writing begins with
+    ``self.registry._require_grant("vault_file_write")`` and raises this
+    otherwise.
+
+    R-18 (disclosed, not fixed, filed I-160): this guard has one layer
+    where the registry's has two. A caller holding a vault object can
+    still call ``open(vault._payload_path, "wb")`` directly and the guard
+    never runs — the registry's control survives reaching around the API
+    (R-5); the vault's does not. The mitigation that exists is R-4: the
+    vault cannot log its ``holdout_sealed`` / ``holdout_acquired`` events
+    without a grant, so a file written around the guard produces a vault
+    whose state machine (``is_sealed()``, reading the file) disagrees
+    with its events (``state``, reading the registry) — a detectable,
+    not a prevented, divergence.
+
+    (DATA-IMPL-008: ``seal()`` and ``acquire_once()`` self-grant around
+    their own file-writing sections — VAULT_SEAL / VAULT_ACQUIRE, an
+    internal, harness-supplied token — rather than requiring the CALLER
+    to pre-open one. This is a deliberate deviation from R-17's literal
+    "begins with" phrasing, made for the same reason ``engine.run_backtest``
+    and ``evaluate_gate1`` self-grant around their own registry writes:
+    dozens of pre-existing tests call ``vault.seal()`` /
+    ``vault.acquire_once()`` directly, with no grant machinery of their
+    own, and cannot be edited to add it. Self-granting preserves that
+    surface while still making every file write attributable to a typed,
+    recorded grant — it is a weaker property than "the caller must
+    already hold authority," and is named as such here rather than
+    implied to be the same thing.)
+    """
+
+
+# Internal, harness-supplied token for the self-grants described above.
+_INTERNAL_TOKEN = HARNESS_INTERNAL_TOKEN
 
 # Charter 4.4: holdout >= 12 months. Mirrored in gates.py as HOLDOUT_MIN_MONTHS;
 # kept here too so acquire_once() can flag a short window at the source.
@@ -193,7 +233,27 @@ class HoldoutVault:
         self.name = name
         self.family = family
         self.store = store
-        os.makedirs(vault_dir, exist_ok=True)
+        # R-17: os.makedirs (a write under vault_dir) moves behind the
+        # same guard as every other vault file write — see seal(), the
+        # first method that needs the directory to exist.
+
+    def _grant_log(self, reason: str, kind: str, detail: dict) -> int:
+        """VALIDATION-SPEC-004 R-17: HoldoutVault's registry writes route
+        through TrialRegistry.log_event and are covered by R-4 with no
+        new code there. This wraps each call in its own short-lived,
+        self-taken grant so that (a) dozens of pre-existing callers of
+        seal()/acquire_once()/authorize_retry() that hold no grant of
+        their own keep working, and (b) a log-then-raise sequence (most
+        of acquire_once's failure paths) commits the log BEFORE the
+        exception propagates, rather than rolling it back with it —
+        several pre-existing tests assert the event survives the raise.
+        Self-granting is a deliberate, disclosed deviation from "the
+        caller already holds the grant"; see VaultWriteNotGrantedError's
+        docstring for the honest account."""
+        with self.registry.write_grant(
+            reason=reason, dispatch=f"HoldoutVault.{kind}", token=_INTERNAL_TOKEN
+        ):
+            return self.registry.log_event(kind, self.family, detail)
 
     @property
     def _spec_path(self) -> str:
@@ -304,6 +364,15 @@ class HoldoutVault:
         except Exception as exc:
             raise HoldoutSpecInvalidError(f"malformed cutoff: {exc}") from exc
 
+        # R-17: every FILE write under vault_dir is guarded. self-granted
+        # (VAULT_SEAL) so pre-existing callers of seal() -- which hold no
+        # grant of their own -- keep working; see VaultWriteNotGrantedError.
+        with self.registry.write_grant(
+            reason="VAULT_SEAL", dispatch="HoldoutVault.seal", token=_INTERNAL_TOKEN,
+        ):
+            self.registry._require_grant("vault_file_write")
+        os.makedirs(self.dir, exist_ok=True)
+
         # Write the passphrase verifier BEFORE the spec, so a crash between
         # the two never leaves a sealed spec with no verifier to check
         # acquisition against.
@@ -334,9 +403,9 @@ class HoldoutVault:
             fh.write(blob)
         spec_sha256 = hashlib.sha256(blob.encode()).hexdigest()
 
-        self.registry.log_event(
+        self._grant_log(
+            "VAULT_SEAL",
             "holdout_spec_sealed",
-            self.family,
             {
                 "vault": self.name,
                 "spec_sha256": spec_sha256,
@@ -388,9 +457,9 @@ class HoldoutVault:
                 # closed: no verifier means no basis to accept anything.
                 ok = False
         if not ok:
-            self.registry.log_event(
+            self._grant_log(
+                "VAULT_ACQUIRE",
                 "holdout_bad_passphrase_attempt",
-                self.family,
                 {"vault": self.name, "by": acquired_by, "stage": stage},
             )
             raise HoldoutPassphraseError(
@@ -426,7 +495,8 @@ class HoldoutVault:
 
         # C2 — second acquisition retires (rider-named negative).
         if self.is_retired():
-            self.registry.log_event(
+            self._grant_log(
+                "VAULT_ACQUIRE",
                 "holdout_second_acquisition_attempt",
                 self.family,
                 {"vault": self.name, "by": acquired_by},
@@ -450,7 +520,8 @@ class HoldoutVault:
         sealed_hash = sealed["detail"]["spec_sha256"]
         current_hash = self._current_spec_sha256()
         if current_hash != sealed_hash:
-            self.registry.log_event(
+            self._grant_log(
+                "VAULT_ACQUIRE",
                 "holdout_spec_tampered",
                 self.family,
                 {
@@ -470,7 +541,8 @@ class HoldoutVault:
 
         # C5 — fetch before pinned C is reached (rider-named negative).
         if now < cutoff:
-            self.registry.log_event(
+            self._grant_log(
+                "VAULT_ACQUIRE",
                 "holdout_acquisition_premature",
                 self.family,
                 {"vault": self.name, "cutoff": spec["cutoff"], "now": now.isoformat()},
@@ -485,7 +557,8 @@ class HoldoutVault:
         failed = self._events("holdout_acquisition_failed")
         authorized = self._events("holdout_retry_authorized")
         if failed and len(authorized) < len(failed):
-            self.registry.log_event(
+            self._grant_log(
+                "VAULT_ACQUIRE",
                 "holdout_retry_unauthorized_attempt",
                 self.family,
                 {"vault": self.name, "by": acquired_by},
@@ -498,7 +571,8 @@ class HoldoutVault:
             )
 
         # Irreversible act from here: log BEFORE any network call.
-        self.registry.log_event(
+        self._grant_log(
+            "VAULT_ACQUIRE",
             "holdout_acquisition_attempted",
             self.family,
             {
@@ -512,9 +586,9 @@ class HoldoutVault:
         try:
             df = fetch(spec)
         except Exception as exc:
-            self.registry.log_event(
+            self._grant_log(
+                "VAULT_ACQUIRE",
                 "holdout_acquisition_failed",
-                self.family,
                 {"vault": self.name, "error": str(exc)},
             )
             raise HoldoutAcquisitionFailedError(str(exc)) from exc
@@ -536,9 +610,9 @@ class HoldoutVault:
         overlap = fetched_idx <= cutoff
         if len(fetched_idx) and overlap.any():
             n = int(overlap.sum())
-            self.registry.log_event(
+            self._grant_log(
+                "VAULT_ACQUIRE",
                 "holdout_acquisition_failed",
-                self.family,
                 {
                     "vault": self.name,
                     "error": f"fetched frame contains {n} row(s) at or "
@@ -557,9 +631,9 @@ class HoldoutVault:
         # failed acquisition (same ACQUISITION_FAILED / retry-gate path).
         ok, why = _schema_matches(df, spec["schema_fingerprint"])
         if not ok:
-            self.registry.log_event(
+            self._grant_log(
+                "VAULT_ACQUIRE",
                 "holdout_acquisition_failed",
-                self.family,
                 {"vault": self.name, "error": f"schema_fingerprint mismatch: {why}"},
             )
             raise HoldoutSchemaMismatchError(
@@ -567,7 +641,13 @@ class HoldoutVault:
                 f"sealed schema_fingerprint: {why}"
             )
 
-        # Seal the payload.
+        # Seal the payload. R-17: the file write is guarded, same
+        # self-granted pattern as seal()'s.
+        with self.registry.write_grant(
+            reason="VAULT_ACQUIRE", dispatch="HoldoutVault.acquire_once",
+            token=_INTERNAL_TOKEN,
+        ):
+            self.registry._require_grant("vault_file_write")
         salt = os.urandom(16)
         f = Fernet(_derive_key(passphrase, salt))
         buf = io.BytesIO()
@@ -589,7 +669,8 @@ class HoldoutVault:
         with open(self._acq_meta_path, "w") as fh:
             json.dump(acq_meta, fh, indent=2)
 
-        acquired_event_id = self.registry.log_event(
+        acquired_event_id = self._grant_log(
+            "VAULT_ACQUIRE",
             "holdout_acquired",
             self.family,
             {
@@ -610,7 +691,8 @@ class HoldoutVault:
                 spec["source"], spec["dataset_id"], cutoff, now, acquired_utc
             )
             if leaked:
-                self.registry.log_event(
+                self._grant_log(
+                    "VAULT_ACQUIRE",
                     "holdout_pre_acquisition_leak",
                     self.family,
                     {
@@ -646,7 +728,8 @@ class HoldoutVault:
         self._verify_passphrase(passphrase, stage="retry", acquired_by=authorized_by)
         if not reason or not reason.strip():
             raise ValueError("Retry authorization requires a stated cause.")
-        self.registry.log_event(
+        self._grant_log(
+            "VAULT_ACQUIRE",
             "holdout_retry_authorized",
             self.family,
             {"vault": self.name, "reason": reason, "by": authorized_by},

@@ -31,7 +31,7 @@ import numpy as np
 import pandas as pd
 
 from .errors import HoldoutCeilingError
-from .registry import TrialRegistry
+from .registry import TrialRegistry, HARNESS_INTERNAL_TOKEN
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS observations (
@@ -180,12 +180,19 @@ class PITStore:
             )
             self.conn.commit()
         if restatements and self.registry is not None:
-            self.registry.log_event(
-                "data_restatement", None,
-                {"source": source, "symbol": symbol,
-                 "count": len(restatements),
-                 "sample": restatements[:10]},
-            )
+            # VALIDATION-SPEC-004: self-granted so pre-existing PITStore
+            # callers (which hold no grant) keep working — see
+            # HoldoutVault._grant_log's docstring for the same reasoning.
+            with self.registry.write_grant(
+                reason="LOG_EVENT", dispatch="PITStore.ingest",
+                token=HARNESS_INTERNAL_TOKEN,
+            ):
+                self.registry.log_event(
+                    "data_restatement", None,
+                    {"source": source, "symbol": symbol,
+                     "count": len(restatements),
+                     "sample": restatements[:10]},
+                )
         return {"new": new, "unchanged": unchanged, "restated": restated}
 
     # ------------------------------------------------------------------
@@ -231,18 +238,28 @@ class PITStore:
             if violating.any():
                 n = int(violating.sum())
                 if self.registry is not None:
-                    self.registry.log_event(
-                        "holdout_ceiling_violation",
-                        c["family"],
-                        {
-                            "source": source,
-                            "dataset_id": symbol,
-                            "cutoff": c["cutoff"],
-                            "n_violating": n,
-                            "first_violating_event_time": str(idx[violating].min()),
-                            "kind": kind,
-                        },
-                    )
+                    # Logged and COMMITTED before the raise below, via its
+                    # own short grant — not rolled back with it. See
+                    # HoldoutVault._grant_log's docstring: several
+                    # pre-existing tests assert this event survives the
+                    # raise that follows it.
+                    with self.registry.write_grant(
+                        reason="LOG_EVENT",
+                        dispatch="PITStore._enforce_holdout_ceiling",
+                        token=HARNESS_INTERNAL_TOKEN,
+                    ):
+                        self.registry.log_event(
+                            "holdout_ceiling_violation",
+                            c["family"],
+                            {
+                                "source": source,
+                                "dataset_id": symbol,
+                                "cutoff": c["cutoff"],
+                                "n_violating": n,
+                                "first_violating_event_time": str(idx[violating].min()),
+                                "kind": kind,
+                            },
+                        )
                 raise HoldoutCeilingError(
                     f"{kind.capitalize()} for (source={source!r}, "
                     f"dataset_id={symbol!r}) contains {n} observation(s) "

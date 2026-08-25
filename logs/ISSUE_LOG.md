@@ -5647,3 +5647,68 @@ proceeds" — the Sprint 3 behaviour was to flag and decline, and flagging alone
 **Resolution:** open — corrective in force; the pattern goes to the §7 audit as a
 `[would-have-asked]` the CIO did not tag because it did not stop to ask.
 **Pattern tag:** `control-applied-until-inconvenient` · `self-imposed-and-self-lapsed`
+
+---
+
+## I-100 · 2026-08-25 · INCIDENT — the control built to protect the registry has locked the firm out of it; 148 pre-existing tests broken; and the findings never reached this log · Severity: HIGH · Owner: CIO → quant-validation
+
+**Description.** `VALIDATION-SPEC-004`'s **R-4** — implemented exactly as `test_rwg_04`/`test_rwg_05`
+require — makes `open_hypothesis`, `log_trial` and `log_event` **raise without an open write grant.**
+
+**Measured** [CIO]: **149 distinct tests now fail or error; exactly 1 is in the two SPEC-004 files.**
+**148 are pre-existing tests that call the raw API directly, because they predate the spec.** Suite
+**173 passed / 81 failed / 68 errors**, against a baseline of **272 / 50 / 322**. The grant exception
+appears **436 times** in one run.
+
+**The implementation is not at fault and neither is the seat.** SPEC-004's own files return **46 of
+47**. `test_dce_17` and `test_dce_21` pass — **direction-blindness is proved on §11.1's own stale
+span, the figure that ran *for* the family and survived four revision passes.** The seat faced two
+explicit, mutually exclusive requirements for the same call shape, **chose the dispatch's actual
+deliverable, and disclosed the collateral rather than silently weakening a control it was asked to
+make strict.** That is the correct choice and it is recorded as correct.
+
+**The finding is that nobody counted the callers.**
+
+> **A control requiring every existing caller to change is either very important or badly scoped, and
+> the way to tell is to count them before specifying it. Nobody did.**
+
+**Validation authored R-4 and its tests and did not count.** **The CIO dispatched the implementation
+and did not ask.** *"How many existing call sites does this break?"* is a CIO question at dispatch
+time and it was not asked. **Both omissions are the same omission.**
+
+**Consequences, stated plainly.**
+
+1. **The suite does not pass.** `CLAUDE.md`: *"if the suite does not pass, stop and file an
+   incident."* **This is that incident.**
+2. **The seal cannot execute.** It calls `open_hypothesis`, which now requires a grant, **and the
+   registration payload's six-item checklist has no grant step** (the DA's I-247, already filed).
+3. **Three pre-existing failures are now MASKED** — `test_G2`, `test_h7`, `test_h8` fail via
+   `RegistryWriteNotGrantedError` rather than their original documented reasons. **The I-078
+   dispositions are now hidden behind a newer failure**, and a reader checking them would see the
+   wrong cause.
+4. **Objective 1 is blocked on infrastructure, not on the family.**
+
+**The fork, and it is Validation's — it owns both the spec and the tests.**
+
+| | |
+|---|---|
+| **(a) Grant-open the 148 pre-existing tests** | Mechanical, large, and **arguably correct in principle: a test that exercises a write path should open a grant.** Editing protected test files is Validation's act |
+| **(b) Relax R-4** | Weakens a control the Principal ruled, on the day it first bit |
+| **(c) A fixture-level grant** | Cheaper, and **risks becoming the bypass R-4 exists to prevent** |
+
+**The CIO does not choose and states why it will not:** the honest answer depends on whether R-4's
+scope was right, **and the party that wrote R-4 is the only one who can rule that against its own
+specification.** Precedent exists — Validation has twice corrected its own spec against its own
+interest (I-065, I-058).
+
+**And a sixth instance of the index failure.** The seat reports **I-230 … I-239 filed**; the log's
+highest entry is **I-226** and none of the ten is present. **Thirty references live in
+`DATA-IMPL-008` instead.** I-092 · I-120 · I-094 · I-034 · I-098 · **this.** The findings index is
+Sprint 4's opening act under SO-003 §7.1 and **it is now overdue by six instances.**
+
+**The CIO records a pointer and does not transcribe severities it did not judge**, as at I-098.
+
+**Resolution:** open — **HIGH, before the Principal.** **Blocks the seal, blocks objective 1, and
+blocks any claim that the harness suite passes.**
+**Pattern tag:** `control-locked-out-its-own-firm` · `nobody-counted-the-callers` ·
+`finding-never-reached-the-index`

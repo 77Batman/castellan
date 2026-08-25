@@ -10,14 +10,25 @@ self-reported.
 
 The registry also holds the permanent event log: hypothesis
 pre-registrations, holdout lock/open/retire events, and gate verdicts.
+
+VALIDATION-SPEC-004 Item 1 (I-095's remedy): the registry opens
+READ-ONLY by default. A write requires an explicit, typed, block-scoped
+grant (:meth:`TrialRegistry.write_grant`) whose own row is the first
+write performed under its own authority. See the module docstring's
+honest limits in the spec: the grant makes writes deliberate, typed and
+attributable-by-declaration. It does not make them prevented, and it
+does not authenticate the declarant (I-103 / I-161).
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
+import os
 import sqlite3
+import sys
 import time
+from contextlib import contextmanager
 from dataclasses import dataclass
 
 import numpy as np
@@ -42,7 +53,8 @@ CREATE TABLE IF NOT EXISTS hypotheses (
     forward_kill_condition TEXT,
     model_prior_provenance TEXT,
     published_signal_haircut_applied REAL,
-    n_inherited   INTEGER NOT NULL DEFAULT 0
+    n_inherited   INTEGER NOT NULL DEFAULT 0,
+    grant_id      INTEGER
 );
 CREATE TABLE IF NOT EXISTS trials (
     trial_id      INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -54,16 +66,102 @@ CREATE TABLE IF NOT EXISTS trials (
     periods_per_year INTEGER NOT NULL,
     sr_period     REAL,
     notes         TEXT,
-    created_utc   REAL NOT NULL
+    created_utc   REAL NOT NULL,
+    grant_id      INTEGER
 );
 CREATE TABLE IF NOT EXISTS events (
     event_id      INTEGER PRIMARY KEY AUTOINCREMENT,
     kind          TEXT NOT NULL,
     family        TEXT,
     detail_json   TEXT NOT NULL,
-    created_utc   REAL NOT NULL
+    created_utc   REAL NOT NULL,
+    grant_id      INTEGER
+);
+CREATE TABLE IF NOT EXISTS write_grants (
+    grant_id    INTEGER PRIMARY KEY AUTOINCREMENT,
+    token       TEXT NOT NULL,
+    reason      TEXT NOT NULL,
+    dispatch    TEXT NOT NULL,
+    argv        TEXT NOT NULL,
+    pid         INTEGER NOT NULL,
+    opened_utc  REAL NOT NULL,
+    closed_utc  REAL,
+    writes      INTEGER NOT NULL DEFAULT 0,
+    outcome     TEXT,
+    prev_hash   TEXT NOT NULL,
+    grant_hash  TEXT NOT NULL,
+    migration_watermark TEXT
+);
+CREATE TABLE IF NOT EXISTS migration_watermark (
+    table_name  TEXT PRIMARY KEY,
+    max_rowid   INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS dated_clauses (
+    clause_id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    family               TEXT NOT NULL REFERENCES hypotheses(family),
+    tag                  TEXT NOT NULL,
+    field                TEXT NOT NULL,
+    source_offset        INTEGER NOT NULL,
+    kind                 TEXT NOT NULL,
+    date_expr            TEXT NOT NULL,
+    discharge_event_kind TEXT NOT NULL,
+    sealed_utc           REAL NOT NULL,
+    grant_id             INTEGER
 );
 """
+
+# VALIDATION-SPEC-004: harness-internal call sites (engine.run_backtest,
+# evaluate_gate1, PITStore, HoldoutVault) self-grant around their own
+# registry writes using this token, so that pre-existing callers of those
+# framework functions — which hold no grant of their own and cannot be
+# edited to add one — keep working. Per R-9, a token exists to be
+# RECORDED, not to authenticate (I-161): a hardcoded value here is exactly
+# as strong, and exactly as weak, as any other token this firm has never
+# been able to authenticate.
+HARNESS_INTERNAL_TOKEN = "castellan-harness-internal"
+
+_ZERO_HASH = "0" * 64
+_MIGRATION_COLUMN_ADDITIONS = [
+    ("predecessor_family", "TEXT"),
+    # R1/R3/R4 (Ruling 002; binding per D-006) — I-018: without
+    # these columns no family can be pre-registered with its
+    # binding fields at all.
+    ("holdout_classification", "TEXT"),
+    ("forward_window_start", "TEXT"),
+    ("forward_window_min_length", "REAL"),
+    ("forward_kill_condition", "TEXT"),
+    ("model_prior_provenance", "TEXT"),
+    ("published_signal_haircut_applied", "REAL"),
+    # I-027 / C-001 §3.0 / H1: the declared-but-unenforced
+    # denominator. `book/registry.db` predates this column too
+    # (H-1) — CREATE TABLE IF NOT EXISTS will not add it to an
+    # existing table, only ALTER TABLE does.
+    ("n_inherited", "INTEGER NOT NULL DEFAULT 0"),
+    # R-14 (VALIDATION-SPEC-004): which write_grants row authorized
+    # this row. A legacy DB predates this column too.
+    ("grant_id", "INTEGER"),
+]
+
+# R-10: the closed reason vocabulary and what each reason admits. Extending
+# this is a specification act (SPEC-004 section 9.2) — Seat 9 does not add
+# a member to make a script run.
+_REASON_ADMITS: dict[str, frozenset[str]] = {
+    "MIGRATION": frozenset({"_migrate", "executescript", "allow_create"}),
+    "REGISTER_HYPOTHESIS": frozenset({"open_hypothesis", "log_event", "register_dated_clause"}),
+    "LOG_TRIAL": frozenset({"log_trial", "log_event"}),
+    "LOG_EVENT": frozenset({"log_event"}),
+    "VAULT_SEAL": frozenset({"log_event", "vault_file_write"}),
+    "VAULT_ACQUIRE": frozenset({"log_event", "vault_file_write"}),
+    "GATE_VERDICT": frozenset({"log_event"}),
+}
+
+
+def _compute_grant_hash(prev_hash: str, token: str, reason: str, dispatch: str,
+                         argv: str, opened_utc: float) -> str:
+    """R-13. ``sha256(prev_hash || token || reason || dispatch || argv ||
+    repr(opened_utc))``, hex."""
+    blob = prev_hash + token + reason + dispatch + argv + repr(opened_utc)
+    return hashlib.sha256(blob.encode("utf-8")).hexdigest()
 
 
 def _hash_config(config: dict) -> str:
@@ -153,45 +251,342 @@ class InheritedCountDoubleCountError(ValueError):
     not a silent registration — this exception IS that escalation path."""
 
 
-class TrialRegistry:
-    def __init__(self, path: str):
-        self.path = path
-        self.conn = sqlite3.connect(path)
-        self.conn.executescript(SCHEMA)
-        self.conn.commit()
-        self._migrate()
+# ---------------------------------------------------------------------------
+# VALIDATION-SPEC-004 Item 1 — new exception types (section 10.1's bound
+# names). Every one is a typed, RuntimeError-family signal, never a bare
+# assertion, so a caller can catch the specific control that fired.
+# ---------------------------------------------------------------------------
 
-    def _migrate(self) -> None:
-        """Add columns introduced after a DB may already have been created.
-        SQLite's ``CREATE TABLE IF NOT EXISTS`` does not retrofit an
-        existing table, so pre-existing registry.db files (this firm has
-        one at book/registry.db, currently with zero families per D-001)
-        need this to pick up new columns."""
-        cols = [r[1] for r in self.conn.execute("PRAGMA table_info(hypotheses)")]
-        additions = [
-            ("predecessor_family", "TEXT"),
-            # R1/R3/R4 (Ruling 002; binding per D-006) — I-018: without
-            # these columns no family can be pre-registered with its
-            # binding fields at all.
-            ("holdout_classification", "TEXT"),
-            ("forward_window_start", "TEXT"),
-            ("forward_window_min_length", "REAL"),
-            ("forward_kill_condition", "TEXT"),
-            ("model_prior_provenance", "TEXT"),
-            ("published_signal_haircut_applied", "REAL"),
-            # I-027 / C-001 §3.0 / H1: the declared-but-unenforced
-            # denominator. `book/registry.db` predates this column too
-            # (H-1) — CREATE TABLE IF NOT EXISTS will not add it to an
-            # existing table, only ALTER TABLE does.
-            ("n_inherited", "INTEGER NOT NULL DEFAULT 0"),
-        ]
+class RegistryNotInitializedError(RuntimeError):
+    """R-3. A registry file that does not exist fails at construction,
+    loudly. It does not silently create one — the failure mode this
+    forecloses is a typo in a path producing a fresh empty registry that
+    reads 0 trials, an N of zero that is not a measurement."""
+
+
+class RegistryWriteNotGrantedError(RuntimeError):
+    """R-4 / R-10. Raised at method entry, before any SQL, when no write
+    grant is open, or when the open grant's reason does not admit the
+    write being attempted."""
+
+
+class RegistryWriteGrantNestedError(RuntimeError):
+    """R-7. Grants do not nest. A callee cannot silently widen its
+    caller's authority, and one ``with`` statement is the whole of the
+    write authority in that block."""
+
+
+class RegistryWriteGrantMalformedError(RuntimeError):
+    """R-10 / R-16. An out-of-vocabulary ``reason``, or a second
+    ``MIGRATION`` grant attempting to re-issue the bounded, non-re-issuable
+    amnesty."""
+
+
+class TrialRegistry:
+    def __init__(self, path: str, *, allow_create: bool = True):
+        """VALIDATION-SPEC-004 R-1/R-2/R-3.
+
+        The handle is read-only for its whole life except inside a
+        :meth:`write_grant` block. ``allow_create`` governs what happens
+        when ``path`` does not exist yet: bootstrapping a registry from
+        nothing is a write act with no prior authority to record it under
+        (there is no instance yet to hold a grant), so it happens as a
+        one-time, ungoverned act BEFORE the read-only handle is opened —
+        disclosed here rather than silently treated as equivalent to an
+        ordinary MIGRATION grant. ``allow_create=False`` refuses this and
+        raises :class:`RegistryNotInitializedError` instead, for a caller
+        that wants the strict, no-typo-tolerant behaviour R-3 describes.
+
+        (Escalated finding, DATA-IMPL-008 §1: the default is ``True`` —
+        not the ``False`` shown in VALIDATION-SPEC-004's own R-1 sketch —
+        because the shared test fixture ``_seeded()`` in
+        ``test_registry_write_grant.py``, used by 16 of that file's 19
+        tests, and ``test_dated_clause_evaluator.py``'s ``_build()``,
+        used by all 26 of its tests, both construct a registry with a
+        bare ``TrialRegistry(path)`` call against a path that does not
+        yet exist and require it to succeed. ``test_rwg_03`` uses the
+        identical call shape and requires it to raise. No default value
+        satisfies both; this implementation prioritises the shared
+        fixture used by the overwhelming majority of the file's tests
+        and reports the one-test conflict rather than resolving it
+        silently. See the deliverable for the full account.)
+        """
+        self.path = path
+        self._grant: dict | None = None
+        try:
+            self._ro = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+        except sqlite3.OperationalError as exc:
+            if not allow_create:
+                raise RegistryNotInitializedError(
+                    f"No registry at {path!r}. Creating a registry is a "
+                    "write act with no prior grant to record it under; "
+                    "construct with allow_create=True to bootstrap one, "
+                    "or create the file first and take a MIGRATION grant "
+                    "to bring its schema current."
+                ) from exc
+            self._bootstrap(path)
+            self._ro = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+        self.conn = self._ro
+
+    # -- R-1/R-2/R-3: bootstrap ----------------------------------------
+
+    def _bootstrap(self, path: str) -> None:
+        """The primordial, ungoverned act: create the file and its full
+        schema. No write_grants row is written for this — there is
+        nothing yet to attribute it to that the record does not already
+        show (the file's own mtime), and the alternative (an implicit
+        self-issued grant) would put a phantom row at grant_id=1 in
+        every freshly bootstrapped registry, which test_rwg_15's
+        n_grants==3 (three explicit grants, no bootstrap row) shows is
+        not what is wanted. Disclosed, not hidden: a fresh registry's
+        `migration_watermark` table is populated directly here, all
+        zero, marking that no MIGRATION grant may later re-issue it."""
+        rw = sqlite3.connect(path)
+        try:
+            rw.executescript(SCHEMA)
+            rw.commit()
+            wm = self._compute_watermark(rw)
+            rw.executemany(
+                "INSERT OR REPLACE INTO migration_watermark (table_name, max_rowid) "
+                "VALUES (?,?)",
+                list(wm.items()),
+            )
+            rw.commit()
+        finally:
+            rw.close()
+
+    @staticmethod
+    def _compute_watermark(conn) -> dict:
+        wm = {}
+        for t in ("hypotheses", "trials", "events"):
+            try:
+                row = conn.execute(f"SELECT MAX(rowid) FROM {t}").fetchone()
+                wm[t] = int(row[0]) if row and row[0] is not None else 0
+            except sqlite3.OperationalError:
+                wm[t] = 0
+        return wm
+
+    def _migration_watermark_recorded(self) -> bool:
+        try:
+            row = self.conn.execute(
+                "SELECT COUNT(*) FROM migration_watermark"
+            ).fetchone()
+        except sqlite3.OperationalError:
+            return False
+        return bool(row and row[0] > 0)
+
+    def _last_grant_hash(self, conn) -> str:
+        try:
+            row = conn.execute(
+                "SELECT grant_hash FROM write_grants ORDER BY grant_id DESC LIMIT 1"
+            ).fetchone()
+        except sqlite3.OperationalError:
+            return _ZERO_HASH
+        return row[0] if row else _ZERO_HASH
+
+    def _migrate(self, conn=None) -> None:
+        """Add columns introduced after a DB may already have been
+        created. SQLite's ``CREATE TABLE IF NOT EXISTS`` does not
+        retrofit an existing table, so pre-existing registry.db files
+        need this to pick up new columns. R-2: this — and
+        ``executescript(SCHEMA)`` — only runs under a MIGRATION grant,
+        never as a side effect of opening a handle."""
+        c = conn if conn is not None else self.conn
+        cols = [r[1] for r in c.execute("PRAGMA table_info(hypotheses)")]
         changed = False
-        for name, sqltype in additions:
+        for name, sqltype in _MIGRATION_COLUMN_ADDITIONS:
             if name not in cols:
-                self.conn.execute(f"ALTER TABLE hypotheses ADD COLUMN {name} {sqltype}")
+                c.execute(f"ALTER TABLE hypotheses ADD COLUMN {name} {sqltype}")
+                changed = True
+        for table in ("trials", "events", "dated_clauses"):
+            try:
+                tcols = [r[1] for r in c.execute(f"PRAGMA table_info({table})")]
+            except sqlite3.OperationalError:
+                continue
+            if tcols and "grant_id" not in tcols:
+                c.execute(f"ALTER TABLE {table} ADD COLUMN grant_id INTEGER")
                 changed = True
         if changed:
-            self.conn.commit()
+            c.commit()
+
+    # -- R-9 .. R-16: the write grant -----------------------------------
+
+    @contextmanager
+    def write_grant(self, *, reason: str, dispatch: str, token: str | None = None):
+        """R-9. The non-reentrant, block-scoped write grant. On enter,
+        a second connection is opened read-write and its FIRST write is
+        its own ``write_grants`` row (R-12) — no ordering exists in
+        which a write precedes the record of its authority. On exit,
+        the block's writes (including the grant row itself) are
+        committed if the block left no exception, rolled back if it
+        did; ``self.conn`` reverts to the read-only handle either way
+        (R-6)."""
+        if reason not in _REASON_ADMITS:
+            raise RegistryWriteGrantMalformedError(
+                f"reason {reason!r} is not in the closed vocabulary "
+                f"{sorted(_REASON_ADMITS)}. Extending it is a specification "
+                "act (VALIDATION-SPEC-004 section 9.2), not an implementer's "
+                "choice."
+            )
+        tok = token if token is not None else os.environ.get("CASTELLAN_REGISTRY_WRITE")
+        if not tok:
+            raise RegistryWriteNotGrantedError(
+                "No write grant token supplied and CASTELLAN_REGISTRY_WRITE "
+                "is unset. A write grant requires one or the other — see "
+                "TrialRegistry.write_grant(reason=..., dispatch=..., "
+                "token=...)."
+            )
+        if self._grant is not None:
+            raise RegistryWriteGrantNestedError(
+                "A write grant is already open on this registry; grants do "
+                "not nest (R-7). One `with` statement is the whole of the "
+                "write authority in that block."
+            )
+        if reason == "MIGRATION" and self._migration_watermark_recorded():
+            raise RegistryWriteGrantMalformedError(
+                "A MIGRATION grant already recorded a migration_watermark "
+                "for this registry; the amnesty is bounded to rows that "
+                "already existed and is not re-issuable (R-16 / I-163)."
+            )
+        rw = sqlite3.connect(self.path)
+        prev_hash = self._last_grant_hash(rw)
+        argv = json.dumps(sys.argv, default=str)
+        pid = os.getpid()
+        opened_utc = time.time()
+        grant_hash = _compute_grant_hash(prev_hash, tok, reason, dispatch, argv, opened_utc)
+        if reason == "MIGRATION":
+            # The one case where the grant row cannot literally be the
+            # first write: a legacy file that has never had `write_grants`
+            # created cannot receive an INSERT into a table that does not
+            # exist yet. executescript(SCHEMA) is idempotent and safe to
+            # run first here; disclosed as the one necessary exception to
+            # R-12, not hidden (DATA-IMPL-008 §2).
+            rw.executescript(SCHEMA)
+        cur = rw.execute(
+            "INSERT INTO write_grants (token, reason, dispatch, argv, pid, "
+            "opened_utc, closed_utc, writes, outcome, prev_hash, grant_hash, "
+            "migration_watermark) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+            (tok, reason, dispatch, argv, pid, opened_utc, None, 0, None,
+             prev_hash, grant_hash, None),
+        )
+        grant_id = cur.lastrowid
+        self._grant = {"reason": reason, "grant_id": grant_id, "writes": 0}
+        self.conn = rw
+        try:
+            if reason == "MIGRATION":
+                self._migrate(rw)
+                wm = self._compute_watermark(rw)
+                rw.execute(
+                    "UPDATE write_grants SET migration_watermark=? WHERE grant_id=?",
+                    (json.dumps(wm), grant_id),
+                )
+                for tname, mr in wm.items():
+                    rw.execute(
+                        "INSERT OR REPLACE INTO migration_watermark "
+                        "(table_name, max_rowid) VALUES (?,?)",
+                        (tname, mr),
+                    )
+            yield self
+        except BaseException:
+            rw.rollback()
+            raise
+        else:
+            rw.execute(
+                "UPDATE write_grants SET closed_utc=?, outcome='CLEAN', "
+                "writes=? WHERE grant_id=?",
+                (time.time(), self._grant["writes"], grant_id),
+            )
+            rw.commit()
+        finally:
+            rw.close()
+            self.conn = self._ro
+            self._grant = None
+
+    def _require_grant(self, write_kind: str) -> None:
+        """R-4. Raised at method entry, before any SQL — so the
+        traceback points at the caller's line, not at a SQL string three
+        frames down."""
+        admitting = sorted(r for r, s in _REASON_ADMITS.items() if write_kind in s)
+        if self._grant is None:
+            raise RegistryWriteNotGrantedError(
+                f"No write grant is open. '{write_kind}' requires an open "
+                f"TrialRegistry.write_grant(reason=...) with reason in "
+                f"{admitting}."
+            )
+        if write_kind not in _REASON_ADMITS.get(self._grant["reason"], frozenset()):
+            raise RegistryWriteNotGrantedError(
+                f"The open grant's reason {self._grant['reason']!r} does not "
+                f"admit '{write_kind}'; it requires a grant with reason in "
+                f"{admitting}."
+            )
+        self._grant["writes"] += 1
+
+    def _current_grant_id(self):
+        return self._grant["grant_id"] if self._grant is not None else None
+
+    def audit_write_grants(self) -> dict:
+        """R-15. A pure read on the read-only handle. Fields are on the
+        result WHETHER OR NOT they are zero — a control that is only
+        visible when it fires is one nobody can confirm is running."""
+        watermark = {"hypotheses": 0, "trials": 0, "events": 0}
+        try:
+            for tname, mr in self.conn.execute(
+                "SELECT table_name, max_rowid FROM migration_watermark"
+            ):
+                watermark[tname] = mr
+        except sqlite3.OperationalError:
+            pass
+
+        orphan_rows: dict[str, list[int]] = {}
+        pk = {"hypotheses": "rowid", "trials": "trial_id", "events": "event_id"}
+        for table, pkcol in pk.items():
+            wm = watermark.get(table, 0)
+            try:
+                rows = self.conn.execute(
+                    f"SELECT {pkcol} FROM {table} WHERE grant_id IS NULL "
+                    f"AND {pkcol} > ?",
+                    (wm,),
+                ).fetchall()
+                orphan_rows[table] = [r[0] for r in rows]
+            except sqlite3.OperationalError:
+                orphan_rows[table] = []
+
+        chain_intact = True
+        expected_prev = _ZERO_HASH
+        chain_head = _ZERO_HASH
+        unclosed: list[int] = []
+        n_grants = 0
+        try:
+            grants = self.conn.execute(
+                "SELECT grant_id, token, reason, dispatch, argv, opened_utc, "
+                "prev_hash, grant_hash, closed_utc FROM write_grants "
+                "ORDER BY grant_id"
+            ).fetchall()
+        except sqlite3.OperationalError:
+            grants = []
+        for g in grants:
+            (grant_id, token, reason, dispatch, argv, opened_utc, prev_hash,
+             grant_hash, closed_utc) = g
+            n_grants += 1
+            if prev_hash != expected_prev:
+                chain_intact = False
+            recomputed = _compute_grant_hash(
+                expected_prev, token, reason, dispatch, argv, opened_utc)
+            if recomputed != grant_hash:
+                chain_intact = False
+            expected_prev = grant_hash
+            chain_head = grant_hash
+            if closed_utc is None:
+                unclosed.append(grant_id)
+
+        return {
+            "orphan_rows": orphan_rows,
+            "chain_intact": chain_intact,
+            "chain_head": chain_head,
+            "n_grants": n_grants,
+            "unclosed_grants": unclosed,
+            "migration_watermark": watermark,
+        }
 
     # -- hypotheses ----------------------------------------------------
 
@@ -258,7 +653,11 @@ class TrialRegistry:
         with :class:`InheritedCountDoubleCountError` (H-5b) — the
         Principal's D-011 non-overlap restatement of KC-001 clause 3
         (I-031), mechanised.
+
+        VALIDATION-SPEC-004 R-4: requires an open write grant (reason
+        ``REGISTER_HYPOTHESIS``), checked at method entry before any SQL.
         """
+        self._require_grant("open_hypothesis")
         for name, val in [
             ("statement", statement),
             ("mechanism", mechanism),
@@ -375,8 +774,8 @@ class TrialRegistry:
             "created_utc, predecessor_family, holdout_classification, "
             "forward_window_start, forward_window_min_length, "
             "forward_kill_condition, model_prior_provenance, "
-            "published_signal_haircut_applied, n_inherited) "
-            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            "published_signal_haircut_applied, n_inherited, grant_id) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (
                 family, statement, mechanism, falsifier, universe, horizon,
                 success_criteria, int(trial_budget), time.time(),
@@ -384,7 +783,7 @@ class TrialRegistry:
                 forward_window_start, proposed["forward_window_min_length"],
                 forward_kill_condition, model_prior_provenance,
                 proposed["published_signal_haircut_applied"],
-                proposed["n_inherited"],
+                proposed["n_inherited"], self._current_grant_id(),
             ),
         )
         self.log_event(
@@ -398,7 +797,6 @@ class TrialRegistry:
             "hypothesis_sealed", family,
             {**_binding_dict(proposed), "prereg_sha256": prereg_sha256},
         )
-        self.conn.commit()
 
     def verify_prereg(self, family: str) -> dict:
         """P4/P6: compare the LIVE ``hypotheses`` row's binding fields
@@ -482,6 +880,9 @@ class TrialRegistry:
         periods_per_year: int,
         notes: str = "",
     ) -> int:
+        """VALIDATION-SPEC-004 R-4: requires an open write grant (reason
+        ``LOG_TRIAL``), checked at method entry before any SQL."""
+        self._require_grant("log_trial")
         if self.hypothesis(family) is None:
             raise PreRegistrationError(
                 f"Family '{family}' has no Gate 0 pre-registration. "
@@ -493,7 +894,7 @@ class TrialRegistry:
         cur = self.conn.execute(
             "INSERT INTO trials (family, config_json, config_hash, "
             "returns_blob, n_bars, periods_per_year, sr_period, notes, "
-            "created_utc) VALUES (?,?,?,?,?,?,?,?,?)",
+            "created_utc, grant_id) VALUES (?,?,?,?,?,?,?,?,?,?)",
             (
                 family,
                 json.dumps(config, sort_keys=True, default=str),
@@ -504,9 +905,9 @@ class TrialRegistry:
                 None if np.isnan(sr) else float(sr),
                 notes,
                 time.time(),
+                self._current_grant_id(),
             ),
         )
-        self.conn.commit()
         return int(cur.lastrowid)
 
     def family_stats(self, family: str) -> FamilyStats:
@@ -618,15 +1019,75 @@ class TrialRegistry:
         )
         return [row[0] for row in cur.fetchall()]
 
+    # -- dated clauses (VALIDATION-SPEC-004 Item 2, E-5) ----------------
+
+    def register_dated_clause(
+        self, *, family: str, tag: str, field: str, source_offset: int,
+        kind: str, date_expr: str, discharge_event_kind: str,
+    ) -> int:
+        """E-5. Written under a ``REGISTER_HYPOTHESIS`` grant. ``kind`` is
+        closed to ``{OBSERVATION, DEADLINE, PRECEDENT}`` — a fourth kind
+        is a specification act (SPEC-004 §9.2), not the implementer's to
+        add."""
+        self._require_grant("register_dated_clause")
+        allowed_kinds = {"OBSERVATION", "DEADLINE", "PRECEDENT"}
+        if kind not in allowed_kinds:
+            raise ValueError(
+                f"dated clause 'kind' must be one of {allowed_kinds}, got "
+                f"{kind!r} (E-5: closed vocabulary)."
+            )
+        cur = self.conn.execute(
+            "INSERT INTO dated_clauses (family, tag, field, source_offset, "
+            "kind, date_expr, discharge_event_kind, sealed_utc, grant_id) "
+            "VALUES (?,?,?,?,?,?,?,?,?)",
+            (family, tag, field, int(source_offset), kind, date_expr,
+             discharge_event_kind, time.time(), self._current_grant_id()),
+        )
+        return int(cur.lastrowid)
+
+    def dated_clauses(self, family: str) -> list[dict]:
+        """Read. Ordered by ``clause_id`` (registration order)."""
+        try:
+            cur = self.conn.execute(
+                "SELECT clause_id, family, tag, field, source_offset, kind, "
+                "date_expr, discharge_event_kind, sealed_utc, grant_id "
+                "FROM dated_clauses WHERE family=? ORDER BY clause_id",
+                (family,),
+            )
+        except sqlite3.OperationalError:
+            return []
+        cols = ["clause_id", "family", "tag", "field", "source_offset",
+                "kind", "date_expr", "discharge_event_kind", "sealed_utc",
+                "grant_id"]
+        return [dict(zip(cols, row)) for row in cur.fetchall()]
+
+    def seal_dated_clauses(self, family: str) -> str:
+        """E-5: hash the family's dated_clauses rows (canonical JSON, in
+        clause_id order) and log a ``dated_clauses_sealed`` event with
+        the hash. Independent of ``prereg_sha256`` — deliberately not a
+        binding field of the pre-registration (E-5)."""
+        self._require_grant("log_event")
+        rows = self.dated_clauses(family)
+        blob = json.dumps(rows, sort_keys=True, default=str)
+        clauses_sha256 = hashlib.sha256(blob.encode("utf-8")).hexdigest()
+        self.log_event(
+            "dated_clauses_sealed", family, {"clauses_sha256": clauses_sha256}
+        )
+        return clauses_sha256
+
     # -- events / verdicts --------------------------------------------
 
     def log_event(self, kind: str, family: str | None, detail: dict) -> int:
+        """VALIDATION-SPEC-004 R-4: requires an open write grant (any
+        reason admits ``log_event``), checked at method entry before any
+        SQL."""
+        self._require_grant("log_event")
         cur = self.conn.execute(
-            "INSERT INTO events (kind, family, detail_json, created_utc) "
-            "VALUES (?,?,?,?)",
-            (kind, family, json.dumps(detail, default=str), time.time()),
+            "INSERT INTO events (kind, family, detail_json, created_utc, "
+            "grant_id) VALUES (?,?,?,?,?)",
+            (kind, family, json.dumps(detail, default=str), time.time(),
+             self._current_grant_id()),
         )
-        self.conn.commit()
         return int(cur.lastrowid)
 
     def events(self, kind: str | None = None, family: str | None = None) -> list[dict]:
@@ -652,4 +1113,4 @@ class TrialRegistry:
         return out
 
     def close(self):
-        self.conn.close()
+        self._ro.close()

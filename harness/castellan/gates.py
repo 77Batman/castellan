@@ -23,7 +23,7 @@ import numpy as np
 import pandas as pd
 
 from . import stats
-from .registry import TrialRegistry
+from .registry import TrialRegistry, HARNESS_INTERNAL_TOKEN
 
 # Firm constants — Charter 4.2. Changing these is a Charter amendment.
 T_STAT_HURDLE = 3.0
@@ -133,6 +133,14 @@ class ValidationReport:
     trial_budget_effective: int | None = None
     n_own_logged: int | None = None
     budget_extensions: list | None = None
+    # VALIDATION-SPEC-004 R-15 / E-24: on the face of every report,
+    # whether or not they fire (§4.7.4(ii): a control that is only
+    # visible when it fires is one nobody can confirm is running).
+    write_grant_chain_head: str | None = None
+    write_grant_chain_intact: bool | None = None
+    write_grant_orphan_rows: dict | None = None
+    dated_clause_exit_code: int | None = None
+    dated_clause_render: str | None = None
 
     def to_json(self) -> str:
         d = asdict(self)
@@ -242,6 +250,19 @@ class ValidationReport:
                 f"Breakeven cost multiplier (t falls below {T_STAT_HURDLE:g}): "
                 f"**{self.breakeven_cost_multiplier:.2f}×** modelled costs."
             )
+        if self.write_grant_chain_head is not None:
+            lines.append("")
+            lines.append(
+                f"Write-grant audit: chain_head=`{self.write_grant_chain_head[:16]}…` "
+                f"chain_intact={self.write_grant_chain_intact} "
+                f"orphan_rows={self.write_grant_orphan_rows}"
+            )
+        if self.dated_clause_exit_code is not None:
+            lines.append("")
+            lines.append(f"Dated-clause evaluator exit code: **{self.dated_clause_exit_code}**")
+            if self.dated_clause_render:
+                lines.append("")
+                lines.append(self.dated_clause_render)
         lines += ["", f"## Overall verdict: **{self.overall}**", ""]
         fails = [c for c in self.criteria if c.verdict != PASS]
         if fails:
@@ -1151,6 +1172,42 @@ def evaluate_gate1(
     holdout_spec_sha256 = sealed_events[-1]["detail"].get("spec_sha256") if sealed_events else None
     holdout_payload_sha256 = acquired_events[-1]["detail"].get("payload_sha256") if acquired_events else None
 
+    # -- VALIDATION-SPEC-004 R-15: the write-grant audit, on the face of
+    # every report, whether or not it fires. A control that is only
+    # visible when it fires is one nobody can confirm is running (§4.7.4
+    # (ii)) — this prints on EVERY invocation, including the all-zero
+    # case, and the same numbers are on the report object.
+    wg_audit = registry.audit_write_grants()
+    wg_orphan_counts = {k: len(v) for k, v in wg_audit["orphan_rows"].items()}
+    wg_provenance_broken = (
+        any(wg_orphan_counts.values())
+        or not wg_audit["chain_intact"]
+        or bool(wg_audit["unclosed_grants"])
+    )
+    print(
+        "[evaluate_gate1] write-grant audit — "
+        f"chain_head={wg_audit['chain_head'][:16]}... "
+        f"chain_intact={wg_audit['chain_intact']} "
+        f"n_grants={wg_audit['n_grants']} "
+        f"unclosed={wg_audit['unclosed_grants']} "
+        f"orphans={wg_orphan_counts}"
+    )
+
+    # -- VALIDATION-SPEC-004 E-24: the dated-clause evaluator's Gate
+    # teeth. Runs for the family under evaluation on every invocation; a
+    # nonzero exit makes the Gate verdict INSUFFICIENT-DATA and the
+    # evaluator's full finding table is reproduced on the report,
+    # unfiltered.
+    from .dated_clauses import evaluate_dated_clauses
+    dce_report = evaluate_dated_clauses(registry, family=family)
+    dated_clause_exit_code = dce_report.exit_code
+    dated_clause_render = dce_report.render()
+    print(f"[evaluate_gate1] dated-clause evaluator — exit={dated_clause_exit_code}")
+    print(dated_clause_render)
+
+    if wg_provenance_broken or dated_clause_exit_code != 0:
+        overall = INSUFF
+
     report = ValidationReport(
         strategy=strategy,
         family=family,
@@ -1191,9 +1248,21 @@ def evaluate_gate1(
         trial_budget_effective=trial_budget_fields["trial_budget_effective"],
         n_own_logged=trial_budget_fields["n_own_logged"],
         budget_extensions=trial_budget_fields["budget_extensions"],
+        write_grant_chain_head=wg_audit["chain_head"],
+        write_grant_chain_intact=wg_audit["chain_intact"],
+        write_grant_orphan_rows=wg_orphan_counts,
+        dated_clause_exit_code=dated_clause_exit_code,
+        dated_clause_render=dated_clause_render,
     )
-    registry.log_event("gate1_verdict", family, {
-        "strategy": strategy, "overall": overall,
-        "n_trials": fam.n_trials, "returns_sha256": sha,
-    })
+    # VALIDATION-SPEC-004: self-granted so pre-existing callers of
+    # evaluate_gate1 (which hold no grant of their own) keep working —
+    # see HoldoutVault._grant_log's docstring for the same reasoning.
+    with registry.write_grant(
+        reason="GATE_VERDICT", dispatch="gates.evaluate_gate1",
+        token=HARNESS_INTERNAL_TOKEN,
+    ):
+        registry.log_event("gate1_verdict", family, {
+            "strategy": strategy, "overall": overall,
+            "n_trials": fam.n_trials, "returns_sha256": sha,
+        })
     return report
