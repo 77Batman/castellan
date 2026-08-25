@@ -2173,3 +2173,181 @@ delta record skipped R-006 and R-007).
 
 *Director of Research · Castellan Capital · **addendum §14 added 2026-08-25 for revision R-008***
 *Dispatch S4-D-001. Trial budget ZERO. Registry 0 / 0 / 3 at open and at close.*
+
+---
+
+# ADDENDUM — REVISION R-009 · 2026-08-25 · PRE-SEAL · **THE LEG COUNT**
+
+*Dispatch **S4-D-007**. Trial budget **ZERO**. `book/registry.db` read **0 hypotheses / 0 trials /
+3 events** at open [measured, read-only `SELECT COUNT(*)`]. No query against `book/pit.db`. No
+backtest, no grid, no `open_hypothesis`, no registration, no seal, no commit. `harness/` not opened.*
+
+## 15. `band` RE-DERIVED — THE LEG COUNT WAS WRONG, THE METHOD WAS NOT
+
+### 15.1 The error, conceded without qualification
+
+**`REDTEAM-002A` §3.1 / I-240 is correct and this seat does not contest one word of it.** §14.4 wrote
+*"Only the perp leg moves … so a rebalance of size `Δw` costs roughly `Δw × 24` bp round-trip"* — and
+**24 bp is `PREREG-002` §12.4's TWO-leg round trip: 4 sides × 6.0 bp per side** [measured — §12.4,
+line 1636, in this document since 2026-08-04]. The sentence names the one-leg construction and then
+charges the two-leg constant. **A cited number carried across a change in its unit of account** —
+I-141 / I-150 / I-096's family, committed in the derivation of a literal rather than in a summary.
+
+### 15.2 The corrected charge — **12 bp**, and why not 6
+
+`w(t)` scales **perp** notional; spot is fixed at 1.0 unit [measured — the sealed `statement`]. A band
+rebalance is therefore one trade on one leg. The DA offers two corrected charges and the choice
+between them is not free of consequence, so it is made explicitly:
+
+| Charge | Composition | `Δw ≤ 3.25 / charge` |
+|---|---|---:|
+| 24 bp — **as sealed, wrong** | 2 legs × 2 sides × 6.0 bp | 0.135 |
+| **12 bp — SELECTED** | **1 leg × 2 sides × 6.0 bp** | **0.2708** |
+| 6 bp — declined | 1 leg × 1 side × 6.0 bp | 0.542 |
+
+**12 bp is the leg-count correction and nothing else.** It divides the sealed constant by the factor
+that was wrong — the leg count, 2 → 1 — and leaves the round-trip framing, the carry input, the
+inequality and the rounding step exactly where §14.4 put them. **Moving to 6 bp would additionally
+change the *method*** from a round trip to a single side, which this dispatch did not authorize and
+which §14.4's own principle argues against: the inequality prices the increment against **one day**
+of carry, and an increment adjusted daily is put on and taken off inside that horizon, so a round
+trip of the increment is the term that matches the day it is compared to.
+
+> **This seat states the direction of the choice it made, because the choice is on the axis
+> `REDTEAM-002` §3.1 ruled unchooseable from either survival condition. 12 bp yields the SMALLER
+> corrected band (0.27 against 0.54), and the smaller band is the one that is EASIER on this family's
+> own expected cause of death.** The reason for 12 is the leg count and the matching horizon, stated
+> above and independent of that. **It remains a survival-relevant convention chosen by the sponsor,
+> and this seat does not think it should stand on the sponsor's say-so. Filed I-252 to Validation.**
+
+### 15.3 The arithmetic, in full
+
+```
+per-side cost, CRYPTO_PERP_TAKER      = 5.0 commission + 1.0 half-spread = 6.0 bp   [measured, §12.4]
+perp-leg round trip                   = 2 x 6.0                          = 12.0 bp  [inferred]
+BTC annualized mean funding           = 11.86%                                      [measured, DATA-INGEST-002 §4]
+=> daily carry on perp notional       = 1186 / 365                        = 3.249 bp/day [inferred]
+constraint: smallest authorized trade costs less than one day of the carry it adjusts
+=> band x 12.0 <= 3.249               =>  band <= 0.27083                            [inferred]
+SELECTED band = 0.27  (truncation at the precision of the inputs, downward; NO round-number snap)
+smallest authorized trade at 0.27     = 3.240 bp against 3.249 bp/day of carry  -> margin 0.3%
+```
+
+**ETH is not used**: at 14.07% the bound is 0.321, and §14.4's original choice of the thinner asset's
+carry is the tighter of the two and is retained unchanged.
+
+### 15.4 THE ROUNDING RULE IS NOW DECISION-RELEVANT, AND TWO ROUTES TO 0.25 WERE FOUND AND DECLINED
+
+**§14.4 said "rounded down" and stated no rule.** 0.135 → 0.10 is a snap to the nearest 0.05 below,
+a 26% reduction, and nothing in the document says so. At R-008 that discretion cost nothing. **At
+R-009 it decides whether this seat's own escalation trigger fires**, and this seat found **two**
+independently-arguable routes that land the answer at exactly 0.25 — where the trigger reads
+`band > 0.25` and therefore does **not** fire, and where the favourable post-hoc check is restored:
+
+1. **Apply §14.4's own unstated snap.** The nearest 0.05 below 0.2708 is **0.25**.
+2. **Substitute the administered carry baseline for the measured mean** — the remedy §14.8 itself
+   offered against I-223. Charter Seat 7's 0.01%/8h baseline is 10.95%/yr [cited], `1095 / 365` =
+   **3.000 bp/day exactly**, and `3.000 / 12` = **0.2500 exactly.**
+
+> **Both are declined and both are disclosed, which is the whole of this subsection.** Route 2 is
+> the more dangerous because it is *independently justifiable* — it removes an in-sample figure from
+> a binding literal, which is a real improvement — and it silences the trigger as a side effect. **A
+> rounding rule or an input substitution selected after the threshold is known, whose effect is to
+> land on the threshold, is the operation this dispatch forbids by name, and the fact that route 2
+> has a good argument attached is what would have made it survive review.**
+
+**The rule adopted, whose justification makes no reference to 0.25:** take the derived bound at the
+precision its inputs support and truncate downward. That is the least-discretion option available —
+the null rounding — and it is stated here so that the next revision inherits a rule rather than a
+habit. **Filed I-250.** The 0.3% margin this leaves is thin and is itself a finding: **filed I-254.**
+
+### 15.5 THE ESCALATION TRIGGER FIRES. THIS SECTION IS THE ESCALATION.
+
+§14.4 committed this seat, in writing, before the correction existed:
+
+> *"Had the cost arithmetic delivered `band` > 0.25, the two survival conditions would have been in
+> direct conflict and **this seat would have escalated the conflict rather than picked a side.**"*
+
+**`band` = 0.27 > 0.25. The trigger fires as written, and this seat escalates rather than picking a
+side.** The Principal has ruled the handling in advance — *"a pre-registered trigger that fires
+during drafting is the system working at the cheapest possible moment"* — so what follows is the
+conflict stated at its exact size, not an argument for relief from it.
+
+**The conflict, quantified.** KC-002 clause (b) counts days on which the conditioning moved notional
+by more than **±25% from the benchmark's constant notional** — `|w − 1| > 0.25`, i.e. `z > 1.5` at
+the sealed `(k, d)` [measured — §21 `forward_kill_condition`, line 1743]. The turnover band gates
+whether `w_held` tracks `w_target` at all. **From the benchmark state `w_held` = 1.0, a target
+deviation of `x` executes only if `x > band`. So target deviations in `(0.25, band]` qualify for
+clause (b) and never execute, and the day is not counted.**
+
+| `band` | Suppression window, target deviation | In `z` | Width |
+|---:|---|---|---:|
+| 0.10 (sealed, wrong) | — none, `band < 0.25` | — | 0 |
+| **0.27 (corrected, 12 bp)** | **(0.25, 0.27]** | **1.50 < z ≤ 1.54** | **0.02** |
+| 0.54 (corrected, 6 bp) | (0.25, 0.54] | 1.50 < z ≤ 2.08 | 0.29 |
+
+**Three honest qualifications, none of which this seat treats as grounds to decline the escalation:**
+
+- **The window at 12 bp is narrow** — 0.02 of deviation, 0.04 of `z`. The conflict is real and small.
+- **It is a delay, not a permanent loss, for a persistently-elevated `z`:** if the target deviation
+  keeps growing past `band` the trade executes and the day counts thereafter.
+- **It bites hardest where the family actually lives.** The inertness finding puts `w_held` at 1.0
+  through the ~25% of days in inversion and for up to thirty days after a cascade [cited —
+  `REDTEAM-002` §2.1], and the suppression is exactly a property of the benchmark state. **A defect
+  that only bites from `w = 1.0` is not thereby rare in this family.**
+
+**At 6 bp the conflict is not narrow: 0.29 of deviation, and clause (b) would be materially
+suppressed.** That is the second reason I-252 is Validation's and not this seat's.
+
+**What this seat asks, and it asks for a ruling rather than proposing the answer:** whether the
+cost-accounting convention is 12 bp or 6 bp (I-252), and — consequentially, and **not** this seat's
+to touch — whether KC-002 clause (b) should count *target* deviations rather than *executed* ones,
+which would decouple a kill condition from a cost parameter entirely (**I-253, named and not
+repaired**; a clause-(b) restatement is a hard interrupt and is not in this dispatch's scope).
+
+### 15.6 `d` = 1.0 — DISCLOSURE, NOT RE-DERIVATION
+
+**`d` seals as chosen at 1.0 and this seat does not re-derive it**, per the Principal's ruling:
+*"pre-registration does not require the parameter to be right; it requires the choice to be visible
+— and now it is doubly so."*
+
+**The correction against this seat's own argument, published in the binding field:** §14.2 measured
+`d` against `σ/√30 = 0.183`, **the estimation noise of the reference level.** The quantity a deadband
+on `z` must clear is `z`'s **own null dispersion**, and day `t` is itself a draw with the trailing
+window ending strictly before it, so under an iid null `Var(x_t − μ̂) = σ²(1 + 1/30)` and
+**`sd(z | null) = √(1 + 1/30) ≈ 1.017`** [cited — `REDTEAM-002A` §2.1; estimator arithmetic, no
+market data]. **`d` = 1.0 is therefore ~1.0 null SD, not the ~5.5 §14.2 claims — the same position on
+the scale at which §14.2 rejects `d` = 0.2**, and the DA's characterization travels with it verbatim:
+*"a rounder number in the same class as 3.0."*
+
+**§14.2's table is superseded on its safety-margin column by this paragraph and is not rewritten** —
+the derivation as delivered is part of the record. What changes is that the document now carries the
+argument against its own parameter **in the string that gets hashed**, which is R29(b) applied: a
+correction exists where the seal reads it, and nowhere else.
+
+### 15.7 WHAT §15 DID NOT DO
+
+- **No trial, no backtest, no grid, no `open_hypothesis`, no seal, no vault, no registry write, no
+  commit, no `book/pit.db` query.** Registry 0 / 0 / 3 at open and 0 / 0 / 3 at close.
+- **No change to `k`, `d`, `lookback`, `w_max`, K1–K7, `trial_budget` (47) or `n_inherited` (7).**
+- **No repair of I-242 (`σ̂` degeneracy) or I-243 (leg-(ii) directional unfairness).** Both are the
+  DA's, both are real, **neither blocks the seal in this seat's judgment**, and SO-003 §3.1 forbids
+  absorbing them here. Named and untouched.
+- **No removal of the struck `2027-01-31` literals** — I-204's prohibition holds.
+- **No re-derivation of `d`**, and no change to KC-002 in any clause, threshold or date.
+
+### 15.8 Issues filed by §15
+
+**I-250** (the rounding rule was never stated, and became decision-relevant) · **I-251** (the
+escalation trigger fired; the conflict is live and unresolved at the seal — **HIGH**) · **I-252**
+(the 6-vs-12 bp convention is survival-relevant and was chosen by the sponsor — **HIGH**) ·
+**I-253** (clause (b) counts executed moves, so any `band` > 0.25 couples a kill condition to a cost
+parameter; named, not repaired) · **I-254** (the corrected literal sits 0.3% inside its constraint,
+so an in-sample measured mean now sets it almost exactly — I-223 escalated) · **I-255** (the whole
+derivation is contingent on the one-leg rebalance; a future two-leg construction reverts the charge
+to 24 bp and the band to ~0.135, and nothing in the document flags the coupling).
+
+---
+
+*Director of Research · Castellan Capital · **addendum §15 added 2026-08-25 for revision R-009***
+*Dispatch S4-D-007. Trial budget ZERO. Registry 0 / 0 / 3 at open and at close.*

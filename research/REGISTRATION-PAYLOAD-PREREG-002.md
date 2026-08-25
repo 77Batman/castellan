@@ -298,6 +298,22 @@ Filed **I-142**.
 
 **One defect in this payload's own record, filed rather than back-filled: §3 carries deltas for R-004 and R-005 and none for R-006 or R-007**, both of which moved prose-field bodies (`forward_kill_condition`'s three date literals at R32; `universe` and `model_prior_provenance` at R-007). Their revision blocks record it; this file does not. **Filed I-225. Not reconstructed here — a delta table back-filled two revisions late by a seat reading its own revision blocks is a record of what the blocks say, not of what the fields did.**
 
+### 3.4 What R-009 changed inside the §21 block **[added 2026-08-25 · dispatch S4-D-007]**
+
+> ### **NO LITERAL IN §1's TABLE OF SIXTEEN CHANGES. `trial_budget` = 47. `n_inherited` = 7. `published_signal_haircut_applied` = 0.50.**
+>
+> **Two prose fields change VALUE. `band` is a numeric literal living inside two of the eight prose fields, not a field of its own, which is exactly why §3.3's trigger applies again one revision later.** R-009 discharges **I-240** and discloses **I-241** without re-deriving `d`. **§21 post-R-009 IS the payload for the eight prose fields, and there is no second copy to drift.**
+
+| Field | Changed? | The delta |
+|---|---|---|
+| `statement` | **Yes — two edits, both value-bearing** | (i) **`band` 0.10 → 0.27** in the numeric-literal roster; **`k` = 0.5, `d` = 1.0, `lookback` = 30, `w_max` = 1.0 byte-identical**; (ii) the **noise-scale register** — the DA's I-241 correction published beside `d` = 1.0 in the hashed field: `sd(z \| null) = √(1 + 1/30) ≈ 1.017`, not the `0.183` reference-level noise, so `d` = 1.0 sits at **~1.0 null SD, not ~5.5**, the position at which §14.2 rejects `d` = 0.2, and is *"a rounder number in the same class as 3.0"*. **`d` seals as chosen** |
+| `horizon` | **Yes — one edit, value-bearing** | **`band` 0.10 → 0.27**, with the leg-count error named before the corrected arithmetic (24 bp is §12.4's **two-leg** round trip; a band rebalance moves **one** leg; corrected charge **12.0 bp**; `band × 12.0 ≤ 3.249` ⇒ `≤ 0.27083`, truncated to **0.27**), the declined 6 bp alternative and its direction, and **the escalation on the face of the field**: R41's favourable post-hoc check inverts, suppression window `1.50 < z ≤ 1.54`, unresolved at the seal |
+| `mechanism` · `falsifier` · `universe` · `success_criteria` · `forward_kill_condition` · `model_prior_provenance` | **No** | Byte-identical to R-008. **KC-002 is unchanged in every clause, threshold and date, and the struck `2027-01-31` literals are NOT removed — I-204 holds** |
+
+**R-009 adds ZERO new dated sites and no `[Rn, <date>]` stamp appears inside any hashed field** — R-numbers only, per I-226.
+
+> **THE ONE THING THIS PAYLOAD MUST CARRY TO WHOEVER EXECUTES THE SEAL: `band` = 0.27 IS ESCALATED, NOT SETTLED.** The sponsor's own pre-registered trigger — *"had the cost arithmetic delivered `band` > 0.25 … this seat would have escalated"* — **fired**, and two live questions belong to Validation before the act: **I-252**, whether the perp-leg charge is 12 bp (round trip, giving 0.27) or 6 bp (one side, giving ~0.54), which moves the suppression window from `1.50 < z ≤ 1.54` to `1.50 < z ≤ 2.08`; and **I-253**, whether KC-002 clause (b) should count *target* rather than *executed* deviations, which would decouple a kill condition from a cost parameter. **Neither is repaired here. A ruling that moves `band` moves two hashed strings and requires an R-010 before the seal, not after it.**
+
 ---
 
 ## 4. STAGE 2 — NOT A FIELD. A SEPARATE, POST-SEAL REGISTRY ACT.

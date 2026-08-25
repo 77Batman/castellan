@@ -112,4 +112,12 @@ and the distinction is recorded rather than smoothed. The convention binds prosp
 
 **5 · Standing policies are disclosed at adoption, not at their first failure.** Where a seat adopts a **standing operating policy** — as distinct from a per-dispatch judgment — it is recorded when adopted. Origin: worktree isolation ran undisclosed for two weeks until it produced I-054 and I-072.
 
+**7 · Count the callers before altering a call contract.** *(Added 2026-08-25, from I-100.)*
+
+> **A control requiring every existing caller to change is either very important or badly scoped, and the way to tell is to count them before specifying it.**
+
+**Any spec that alters a call contract states its measured caller count in the spec itself. Any dispatch implementing one states it in the brief.**
+
+**Origin.** `VALIDATION-SPEC-004`'s R-4 made three registry methods raise without a write grant. **149 tests broke; exactly 1 was in SPEC-004's own files; 148 were pre-existing callers.** The suite went **272/50 → 173/81/68**. **The specifying seat did not count. The dispatching seat did not ask.** Both omissions were the same omission, and the count takes one command.
+
 **6 · Session-close disposition.** At every session close, **`git status` is reviewed and every dirty path explicitly dispositioned** — staged by name, or **named in the record as deliberately unstaged with its reason.** Origin: I-054's corrective (*stage named paths only*) produced the opposite failure at **I-209**, because **a named-path discipline omits whatever nobody thought to name** — and `book/registry.db`, written by a seat, fell through it. **Seat-written files are the motivating case.**

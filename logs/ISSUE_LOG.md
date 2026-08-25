@@ -5712,3 +5712,68 @@ Sprint 4's opening act under SO-003 §7.1 and **it is now overdue by six instanc
 blocks any claim that the harness suite passes.**
 **Pattern tag:** `control-locked-out-its-own-firm` · `nobody-counted-the-callers` ·
 `finding-never-reached-the-index`
+
+---
+
+## I-101 · 2026-08-25 · The document's §20 blocking table is two sprints stale, so the seat that reads it reports a set the firm already resolved · Severity: MEDIUM · Owner: CIO → director-of-research
+
+**Description.** R-009's return lists seal-blocking as **"C2, C3, C7, C8, C11."** **Three of the five
+are resolved** [measured against the rulings]: **C2** delivered **ADMIT-CONDITIONAL** (S3-D-023);
+**C3 WITHDRAWN** (S4-D-006); **C11 removed as circular** — it required trials whose precondition was
+the act it blocked (S3-D-023 §6). **Seal-blocking per the rulings is C7 and C8.**
+
+**The seat is not careless.** `PREREG-002` §20 still carries **C2 as `BLOCKING` at line 2038** and
+**C3 at 2039** [measured]. **It read its own document and reported what the document says.**
+
+**This is the index failure in a third form.** I-092: closures never propagated to the log. I-098 /
+I-100: findings that never reached it. **This: rulings that never reached the artifact the seats
+actually consult.** §20 is what a seat opens when it asks *what blocks the seal*, and **the decision
+record is not that artifact.**
+
+**Why it is worse than a stale table.** **§20 is inside the document about to be sealed. Under P7 it
+freezes** — the firm would seal a table asserting its own Gate 0 verdict is still outstanding, and a
+later reader could not distinguish that from a genuine open condition without cross-reading three
+sprints of decision record.
+
+**Not repaired here.** Editing §20 is a document act on the seal's own content and **SO-003 §3.1
+forbids the CIO absorbing it into a dispatch scoped for something else.** It rides the **R-010 the
+Director already owes** for I-252's ruling — *a ruling that moves `band` moves two hashed strings and
+requires an R-010 before the seal* — **so the vehicle exists, and this rides it or rides nothing.**
+
+**The CIO's own share.** It has reported the corrected blocking set **five times** and **never once
+asked whether the document agreed.** *"Count the roster, not the memory of it"* was aimed at
+cardinals; **it applies to rosters of conditions exactly as well.**
+
+**Resolution:** open — rides R-010, before the seal.
+**Pattern tag:** `ruling-never-reached-the-artifact` · `stale-inside-the-thing-being-frozen`
+
+---
+
+## I-102 · 2026-08-25 · Seventh instance — R-009's seven findings, two HIGH and one a live pre-seal dependency, never reached this log · Severity: HIGH · Owner: CIO → director-of-research
+
+**Description.** R-009 reports **I-250 … I-256 filed.** Measured: this log holds **zero** entries in
+that range; its highest is **I-226**.
+
+**Absent among them: I-251 (HIGH — the escalation trigger fired; the conflict is live and unresolved
+at the seal) and I-252 (HIGH — the 6-vs-12 bp convention is survival-relevant and was chosen by the
+sponsor on the axis ruled unchooseable from either survival condition).** **I-252 is a new pre-seal
+dependency by the filing seat's own judgment.**
+
+**Seventh instance:** I-092 · I-120 · I-094 · I-034 · I-098 · I-100 · this. **Three have been
+seal-blocking or carried a dated consequence.** **This is no longer a bookkeeping defect — it is the
+firm's most reliable way of losing a finding it paid an Opus unit to produce.**
+
+**The sequencing was the CIO's and it was wrong.** SO-003 §7.1 made the findings index Sprint 4's
+opening act; **the CIO scheduled it behind the seal because the seal looked imminent. The seal has
+not happened and the index has cost two further instances in the interval.** The Principal has now
+ruled it **the next Sonnet dispatch after the R-4 resolution**, with scope: **the I-230+ range
+transcribed from `DATA-IMPL-008`, the DA's ten from the memo pointer, and the append-only format per
+I-098's design note.**
+
+**Pointer, ratings as the Director assigned them — the CIO does not transcribe severities it did not
+judge:** `research/DIR-RESTATE-001` §15 and the R-009 block — **I-251 HIGH · I-252 HIGH** · I-250 MED
+· I-253 MED · I-254 MED · I-255 LOW · I-256 LOW.
+
+**Resolution:** open — **HIGH.** **The index is now the binding constraint on the firm's ability to
+know what it has found.**
+**Pattern tag:** `finding-never-reached-the-index` · `seventh-instance`
