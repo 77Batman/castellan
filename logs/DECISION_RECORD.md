@@ -5253,3 +5253,88 @@ trials / 3 events** at open and close.
 number.**
 
 **Review date:** on SPEC-004's implementation returning.
+
+---
+
+## S4-D-003 · 2026-08-25 · SPEC-004 died on quota · I-099 filed against the CIO · resumed after reset
+
+**1 · The termination was a session quota limit, not an infrastructure fault.** The CIO records the
+distinction rather than filing it under I-049's pattern: **I-049 is infrastructure and has insurance;
+a quota death is a calendar problem, and the control that prevents it is headroom, not insurance.**
+
+**2 · Nothing was lost, and the reason is the part of the protocol that held.** Verified [measured]:
+`harness/` clean · `evaluate_dated_clauses.py` absent · suite **272/50/322** unchanged · registry
+**0/0/3**. **The seat died during reading, before synthesis — exactly the ordering
+`TEMPLATES.md` §7.10(1) requires, so there was nothing to destroy.**
+
+**3 · I-099 FILED AGAINST THE CIO, and the behavioural detail is worse than the procedural one.**
+§7.10(4): a reading older than ~2 hours means headroom is **UNKNOWN**. The last was **`27% / 13%`,
+2026-08-13 — twelve days stale.** The CIO dispatched twice without checking, flagging, or requesting
+one.
+
+> **The CIO flagged absent headroom three times in Sprint 3 — twice declining to dispatch on it —
+> then stopped, in the sprint whose §1 makes throughput the objective.**
+
+**A control the CIO applied while it was inconvenient and dropped once it was in a hurry is the same
+shape as every asserted control this firm has catalogued.** Corrective, stated in the stronger form
+because the weaker one is what degraded: **request a fresh reading and wait — not flag and proceed.**
+
+**4 · Cost under D-012, no exception: one Sonnet invocation for nothing.** Opus untouched, insurance
+untouched at 2. **The real cost was wall-clock to the reset — which in a sprint whose objective is
+the forward clock is the cost that actually stings.**
+
+**5 · Resumed rather than re-dispatched**, and the brief told the seat **the failure was the CIO's
+and is filed against the CIO** — *a seat that believes it caused a termination it did not cause will
+over-correct on its next dispatch.*
+
+---
+
+## S4-D-004 · 2026-08-25 · Vacation-span merge · the integrity control at scale · the span held
+
+**1 · Merge complete and Principal-committed at `f82155f`** — **1,443,878 new observations,
+5,238 unchanged, 0 RESTATED, exit 0**, watermark advanced. VPS coverage **97.92% over 476 hours.**
+`book/pit.db` **200 MB → 966 MB**; **1,923,062 Polymarket observations.**
+
+**2 · THE CHECK THAT MATTERED: the crypto legs did not move.** Verified [measured] — `binance
+BTC/USDT` and `binanceusdm BTC/USDT:USDT` **both still terminate at 2026-08-12.** **The sealed span
+of 6.6093 years is unaffected and I-097 stands exactly as filed.** A 766 MB merge days before a seal
+is precisely the event that could have moved an in-sample window silently; **it did not, because the
+Polymarket capture and the crypto legs are separate sources and the merge is source-scoped.**
+
+**3 · The cross-host integrity control at scale, and it is now the firm's best-evidenced asset.**
+**5,238 further agreements, zero disagreements** — against 932 at the parallel-run close.
+**Cumulative: 6,170 observations independently captured by two hosts on two networks, with not one
+disagreement.**
+
+**This is the by-product that justified declining the laptop's retirement**, and the case is now
+**6.6× stronger than when the CIO made it.** The control exists only while both hosts run.
+
+**4 · The snapshot regime ran unattended through the entire span and kept up.** `pit`, `registry`
+and `book` all **OK, last good 2.1h, 7 retained each** — **the full weekly retention, achieved
+without a human present.** Rider B's whole purpose was to remove dependence on somebody remembering,
+and **a thirteen-day absence is the only real test that design could have had.** It passed.
+
+**5 · One stale figure, flagged not actioned.** `DATA-INFRA-003`'s retention arithmetic budgeted
+**~69 MB today, ~157 MB per week-window** against measured growth of ~36 MB/day. **Seven daily
+snapshots of a 966 MB store run ~2.0 GB — roughly 13× the budgeted window.** Against **1.6 TB free**
+this is not a constraint and the CIO is not spending an invocation on it; **but the figure in the
+document no longer describes the regime it governs**, and the growth model it rests on did not
+anticipate a merge that arrives in one shot rather than accruing daily.
+
+**6 · I-093 confirmed in the wild, by the Principal's own commit.** The pasted script output reads
+**"merged 33404 round(s)"**; the commit message reads **"1,675 rounds."** Both are correct —
+**token-rounds versus poll rounds, the ~20× unit mismatch I-093 documented** — and here it is
+producing exactly the ambiguity the issue predicted, **in the record, at the decision moment.** The
+one-line remedy remains unactioned and remains correct.
+
+**7 · The Friday ritual resumes on cadence.** Its four items stand: pull-and-merge · dated-clause
+review · I-095 gap review · version-floor verification.
+
+**8 · Budget.** **3 of 30 invocations · 1 of 12 Opus.** Insurance 2; DA reserve 1. §5 dead-man:
+**7 remain.** SPEC-004's implementation is resumed and in flight.
+
+**9 · Outstanding on the Principal:** `STANDING-ORDER-003-DRAFT.md` awaits signature and §2's tier
+number — **and a current headroom reading is now a precondition of the CIO's next dispatch, not a
+courtesy.**
+
+**Review date:** on SPEC-004's return.
