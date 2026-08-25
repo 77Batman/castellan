@@ -5527,3 +5527,91 @@ from the bias it was built to detect** (I-246).
 still held for the Gate 1 packet.** §5 dead-man: **8 remain.**
 
 **Review date:** the Principal's ruling on I-240 before the seal, and SPEC-004's return.
+
+---
+
+## S4-D-007 · 2026-08-25 · I-240 repair funded and dispatched · §2.2 gains its comparator class
+
+**1 · I-240 FUNDED — one Director unit from free, before the seal.** The Principal's reasoning, and
+the CIO records that **it is the asymmetry doctrine applied to a decision the firm was about to make
+consciously rather than to one it had already made by accident:**
+
+> The error's direction **eases the family's pre-registered expected cause of death**, on the one
+> parameter ruled unchooseable from either survival condition. **Sealing it knowingly would be the
+> stale-term-that-favours-us pattern executed deliberately under P7 — worse than every accidental
+> instance the doctrine was written against.**
+
+**Funded without strain under §1's scope rule**, because *it is the seal's content* — the narrowest
+possible reading of "on the trial's critical path," and correct.
+
+**2 · THE ESCALATION TRIGGER FIRES, AND THE PRINCIPAL RULED ITS HANDLING BEFORE IT DID.** The
+corrected band is **0.27–0.54** against the Director's own written trigger at **0.25.**
+
+> **A pre-registered trigger that fires during drafting is the system working at the cheapest
+> possible moment, not an obstacle.**
+
+**The CIO wrote the anti-tuning instruction into the brief in the sharpest form available:** *"do not
+tune the arithmetic to land under 0.25, and do not reason that the trigger was meant for a different
+situation. **An arithmetic that lands just under your own trigger after the trigger was known to
+exist is exactly what this firm would file against you.**"* The DA had already found that **the
+favourable post-hoc check inverts under the correction** — so the seat now knows both that the
+trigger exists and which direction relief would lie in. **That is the moment the instruction has to
+be explicit.**
+
+**3 · I-241 travels as DISCLOSURE, not re-derivation, and the ruling is the sharpest statement of
+what pre-registration is for that this firm has produced:**
+
+> **Pre-registration does not require the parameter to be right; it requires the choice to be
+> visible — and now it is doubly so.**
+
+`d = 1.0` seals as chosen. **The DA's correction against the Director's own argument — that the null
+dispersion is `√(1+1/30) ≈ 1.017`, not the `0.183` reference-level noise, so `d = 1.0` sits at ~1.0
+null SD, "a rounder number in the same class as 3.0," at the position §14.2 rejects `d = 0.2`** — is
+**published beside it in the field that gets hashed.** The document carries the argument against its
+own parameter, sealed.
+
+**4 · The checklist dependency is adopted into the ruled sequence, with one clause that is the
+I-096 principle in a new place:**
+
+> SPEC-004 green → Seat 9 supplies the actual grant-call signature → **checklist amended from the
+> implemented API, never from the spec's anticipation of it** → then the seal.
+
+**A checklist promising "no judgment" while omitting a required step is CASE-9 in miniature** — and
+the Principal names why the reserve earned its keep twice: **the DA caught a payload written against
+an API being replaced underneath it, which is what verification against *files* rather than
+*accounts* buys.**
+
+**5 · §2.2 EXTENDED with the class gap the DA's reservation named** — written into
+`ops/STANDING-ORDER-003.md` rather than left in the record. **Verification-that-may-generate-findings
+is a distinct artifact class**; both comparators the CIO named verify conditions **authored
+elsewhere**, while S4-D-005 verified its own terms and **produced two HIGHs and an incident the
+bracket's shape does not price.** Until a measured member exists, such dispatches **state both bounds
+and flag the gap** — which is what S4-D-005 honestly did.
+
+**6 · This dispatch's own projection, derived and stated per §2.2:** comparator **R-008, measured from
+its commit rather than its self-report** — `git show --numstat 16ada81`: **478 authored lines** for
+three literals, two conformances and a three-register disclosure. **This repair is one literal plus
+one disclosure — projection ~180.** The brief tells the seat that **its own R-008 projected ~305 and
+delivered ~657**, and that **a projection derived from a comparator and stated with it is compliant
+even if it turns out low; what is not compliant is discovering the overrun at the end.**
+
+**7 · The DA's conduct entered on the record in its own words**, as the Principal directed:
+*"a seat that blocks on findings discovered while verifying its own terms teaches the firm that
+satisfying it is unachievable."* **Withdrawal issued on the terms as written; findings filed at full
+severity without being converted into leverage.** *"That is the difference between an adversarial
+check and a veto, demonstrated on the day the seat had the standing to be either."*
+
+**8 · I-245 joins the cardinal series at nine.** Corrective unchanged and **now doubly binding:
+numbers are quoted from checks, never from memory of checks.** The CIO applied it in this dispatch —
+**the comparator was measured from the commit, not taken from the seat's report of it.**
+
+**9 · Out of scope and named as such: I-242 and I-243.** Both real, both the DA's, neither on the
+trial's critical path. **§3.1 forbids absorbing them**, and the brief says so.
+
+**10 · Budget.** **6 of 30 invocations · 4 of 12 Opus.** Free **5** · insurance 2 · **DA reserve 1,
+held for the Gate 1 packet.** §5 dead-man: **9 remain** since this checkpoint.
+
+**11 · Sequence:** **I-240 repair *(running)* → SPEC-004 green *(in flight)* → checklist from the
+implemented API → registration-as-seal, the Principal's.**
+
+**Review date:** on the repair's return.
