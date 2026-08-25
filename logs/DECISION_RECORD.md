@@ -5101,3 +5101,73 @@ Remaining: **2 termination-insurance units, and insurance is not working capacit
 I-210 requires is a Director act, and the Opus tier cannot fund it.** §5 dead-man: **2 remain.**
 
 **Review date:** immediately — the Principal's ruling is required.
+
+---
+
+# ═══ SPRINT 4 ═══
+
+## S4-D-001 · 2026-08-25 · §1 adopts the trial as the objective · repair dispatched · SO-002's rules promoted
+
+**1 · The Principal has made the first trial the objective and everything else its dependency.** The
+CIO's close-report recommendation — *"make the first trial the objective, and make everything else
+its dependency. Not the seal — the trial"* — **adopted, with a scope rule the CIO did not propose and
+which is the sharper half:**
+
+> **Document work not on the trial's critical path is out of scope by default and requires a
+> Principal act to fund** — *"the pipeline has proven it can find defects forever; the exit is the
+> forward clock."*
+
+**That inverts three sprints of revealed preference.** The firm has treated defect-finding as
+product; §1 now makes it a cost. **The CIO records that it asked to be held to this standard and is
+now held to it**, and that **§3.1 of the draft order forbids the CIO from funding out-of-scope work
+by absorbing it into a dispatch scoped for something else** — the obvious evasion, closed in advance.
+
+**2 · The repair dispatched as Sprint 4's first act — seat, tier and scope all named by the
+Principal, so the authorization is unambiguous.** Withdrawal condition exactly: three literals, two
+field conformances, the inertness finding **disclosed in three-register form and not redesigned.**
+
+**The CIO added one constraint the instruction implies but does not state, and it is the one the seat
+is most likely to walk into.** *"Chosen without F-002 output"* forbids more than reading a backtest:
+
+> **The obvious way to pick `d` is to look at the in-sample distribution of `z(t)` and choose a
+> deadband putting a sensible fraction of days outside it. That is choosing a parameter from the
+> data it will be tested on.** It is **not a trial** by this firm's own twice-made ruling on counts
+> over stored prints — **and it is still exactly what pre-registration exists to forbid.**
+
+The brief requires justification **from the mechanism**, and states that **an honest "I looked" beats
+a concealed one.** The guarantee is currently **structural** — registry 0/0, no backtest has ever run
+— **and it exists only until the first run.**
+
+**Two consequences the brief makes the seat state: fixing the literals fixes the ±50% grid's centre**
+(I-212, previously chosen with F-002's output in hand at §15 step 6) **and makes KC-002 clause (b)
+computable** (I-211) — *the family's pre-registered expected cause of death is set by what it chooses
+here.*
+
+**3 · §7.3's promotion pass executed — SO-002 expired with Sprint 3 and its durable rules would have
+died with it.**
+
+- **`GATES.md` §4.7.5** — the estimator asymmetry, with its operative test, its three worked
+  applications, and the preference the sprint established: **where the conservative direction can be
+  made the only structurally available one, do that instead of writing a rule against the other.**
+- **`TEMPLATES.md` §7.10** — dispatch practice, with its evidence base stated: **three terminations
+  and 42% of Sprint 2's tier bought it; Sprint 3 ran nine Opus dispatches with zero terminations
+  under it.**
+
+**Three rules were hand-rescued in Sprint 2 for want of this pass. It is now executed as a mechanism,
+which is what §7.3 was written to produce.**
+
+**4 · `STANDING-ORDER-003-DRAFT.md` prepared for signature, and it is deliberately SHORTER than its
+predecessor.** What survived promotion is no longer the order's to keep alive. **§2's tier is left
+for the Principal to set**, with Sprint 3's 9/2/1 offered as base and **the counter-argument against
+the CIO's own recommendation stated in the order**: Sprint 3 ran out of free Opus with the seal one
+dispatch away, and the pricing that exhausted it was correct.
+
+**5 · Two things the CIO will not do without an act.** **It does not propose graduation** and will
+not until a trial is logged — Sprint 3's verdicts were to be the evidence and there were none. And it
+**will not fund out-of-scope document work**, including the DA's I-214, I-215, I-216 and I-218, all
+of which are real and none of which is on the trial's critical path.
+
+**6 · Budget.** **1 of 30 invocations · 1 of 12 Opus** on the fresh tier, pending the Principal's
+number. Insurance 2; DA reserve 1. §5 dead-man: **9 remain** since this checkpoint.
+
+**Review date:** on the repair's return.
