@@ -5411,3 +5411,119 @@ withdrawal). **Free 7 · insurance 2 · DA reserve 1, held for Gate 1.** §5 dea
 this checkpoint.
 
 **Review date:** on the withdrawal's return.
+
+---
+
+## S4-D-006 · 2026-08-25 · **WITHDRAWN** — the seal is unblocked · §4 INTERRUPT — four HIGH · but it must not execute today
+
+**1 · `REDTEAM-002`'s DO NOT SEAL is WITHDRAWN. From the Devil's Advocate, nothing blocks the seal.**
+Verified against the sealed strings rather than the sponsor's account: `k = 0.5`, `d = 1.0`,
+`band = 0.10` as numeric literals in binding fields; both `[2020-01-01, C]` sites carry the DA's own
+wording verbatim; registry 0/0/3 at open and close — *"so the pre-output guarantee is a property of a
+file anyone can read, not a claim about the Director's discipline."*
+
+**2 · §4 HARD INTERRUPT — four HIGH: I-240, I-241, I-242, I-247.**
+
+**3 · THE SEAL MUST NOT EXECUTE TODAY, and the CIO's reason is sharper than the red tree.**
+
+The DA flagged **I-247** on a suite reading **106 failed / 148 passed / 68 errors** with five
+`harness/castellan/` modules uncommitted. **Verified — and the CIO supplies the context the DA could
+not have had: that tree is `S4-D-002`'s SPEC-004 implementation, dispatched by the CIO and still in
+flight.** A red tree mid-implementation under a red-first regime **is the intended state, not an
+incident**, and the CIO does not file it as one.
+
+**But the DA's second finding survives the implementation landing entirely, and it is the one that
+matters:**
+
+> **`open_hypothesis` will raise `RegistryWriteNotGrantedError` without an open write grant — and
+> the registration payload's "PRE-EXECUTION CHECKLIST — mechanical, six items, no judgment" contains
+> no such item.** [CIO-verified: six items read, none mentions a grant; `write_grant` has **0
+> occurrences at `HEAD`**.]
+
+**So the seal act, executed exactly as the payload specifies, will fail the moment SPEC-004 lands.**
+The payload was written against an API that is being replaced underneath it. **A checklist that
+promises "no judgment" and omits a required step is worse than one that asks for judgment**, and the
+firm has a name for it: **a control described as complete that is not.**
+
+**Sequencing consequence, and it is a new dependency the ruled sequence did not carry:**
+**SPEC-004 lands → the payload checklist is updated with the actual grant call → *then* the seal.**
+**The CIO cannot write that step now** — the API does not exist at `HEAD` and its signature is
+whatever Seat 9 implements.
+
+**4 · Three HIGH findings the DA deliberately did NOT make conditions, and the restraint is the
+finding.**
+
+**I-240 — `band`'s derivation charges 24 bp for a rebalance the same sentence says moves only the
+perp leg.** Correct charge **6–12 bp**; corrected band **0.27–0.54** against the sealed **0.10**. **At
+0.27 the sponsor's own written escalation trigger fires** — *"had the cost arithmetic delivered
+band > 0.25 … this seat would have escalated"* — **and the favourable post-hoc check inverts.** The
+error's direction **eases the family's own pre-registered expected cause of death**, on the one
+parameter the DA had ruled unchooseable from either survival condition. **Free today, permanent after
+P7.**
+
+**I-241 — `d`'s bracket is derived from the wrong noise scale, by 5.5×.** The `0.183` is the
+estimation noise of the **reference level**; the null dispersion of the **statistic being
+thresholded** is `√(1 + 1/30) ≈ 1.017`, because day `t` is itself a draw and the window ends strictly
+before it. **`d = 1.0` is ~1.0 null SD, not ~5.5 — the same position on the scale at which §14.2
+rejects `d = 0.2`.**
+
+**The DA's answer to the CIO's first question is therefore: a rounder number in the same class as
+3.0 — and it withdrew anyway**, on the ground that **1.0 arrives with its consequence (`z > 1.5`) and
+its comparison pairs published in a binding field**, where 3.0 would not have. *"That is the entire
+difference and it is the one that matters. Pre-registration does not require the parameter to be
+right."*
+
+**I-242 — `σ̂` degeneracy, quantitative for the first time because `1/k = 2.0` is now fixed.** In a
+floor-dominated window `σ̂` collapses and **two z-units can be a fraction of a basis point: the rule
+can go full-size-to-flat on a sub-bp move in the calmest regime.** No variance floor anywhere.
+
+**Why the DA withdrew despite finding three HIGHs while verifying:** *"my block was about invisibility
+and post-hoc selection, and that harm is cured. **A seat that blocks on findings discovered while
+verifying its own terms teaches the firm that satisfying it is unachievable.**"*
+
+**The CIO records that as the sprint's most important governance sentence.** A red team whose
+conditions cannot be met is not a check — **it is a veto with extra steps**, and this seat declined to
+become one on the day it had the standing to.
+
+**5 · The Principal's decision, stated as the DA framed it and not softened.** *"**I-240 is what I
+would most want fixed before the freeze and I deliberately did not make it a condition** — the
+difference between a seat that holds a condition and one that keeps finding new ones is the only
+thing that makes the first kind useful."*
+
+**So the choice is the Principal's: seal with `band = 0.10` and a known 2.7–5.4× cost-arithmetic
+error frozen under P7, or fund one Director repair first.** The CIO does not recommend, and notes
+only that **I-240 is repairable on the same terms as I-210 was** — a literal, chosen from arithmetic,
+before any output exists.
+
+**6 · Inertness: the disclosure "discharges the concealment, not the measurement."** The evidential
+register governs how leg (ii) is **read** and changes nothing about how it is **computed** — on
+inversion days `w ≡ 1.0` while `R_bench_scaled = R_bench × c`, `c < 1`, **so `R_strat` is strictly
+larger there**, and the mechanism asserts the 20 worst days come from exactly that regime. **A leg
+(ii) fire could be the exposure match plus the inertness rather than timing** (I-243). **The DA
+accepts the Principal's ruling, does not reopen it, and states it would now oppose a redesign.**
+
+**7 · I-245 IS THE CIO'S, and it is the ninth of its class.** The CIO's brief restated its own
+verification as *"a second apparent `k = 3.0` is `1/k = 3.0`."* **The document says `z = d + 1/k =
+3.0`, with `1/k = 2.0`.** **The document is right; the CIO's summary of its own grep was garbled.**
+Same family as I-141, I-150, I-096: **a number restated from memory of a check rather than from the
+check.**
+
+**8 · The line budget: projected ~320, delivered 446 — 1.39×, over, and recorded as a miss not
+excused.** **The comparator was accepted with a reservation stated in-artifact rather than used as
+licence:** both comparators verify conditions **authored elsewhere**, while this dispatch produced
+**two original findings plus an incident the bracket's shape does not price.** **That is a real
+limitation of the CIO's comparator and the CIO adopts it** — §2.2's rule needs a comparator class for
+*verification that may generate original findings*, which neither `DATA-VERIFY-002` nor
+`VALIDATION-ACCEPTANCE-001` is.
+
+**9 · The DA declined to re-file the `universe` third `[2020-01-01, C]` instance** — *"the sponsor
+filed it against itself as I-221, and recycling that is how this seat becomes ceremonial."*
+
+**10 · Base rate, unprompted again: trials · backtests · verdicts · seals still 0 · 0 · 0 · 0.**
+Appendix B **#9** remains the live failure mode; I-025's Opus-by-origin metric **remains inverted away
+from the bias it was built to detect** (I-246).
+
+**11 · Budget.** **5 of 30 invocations · 3 of 12 Opus.** Free **6** · insurance 2 · **DA reserve 1,
+still held for the Gate 1 packet.** §5 dead-man: **8 remain.**
+
+**Review date:** the Principal's ruling on I-240 before the seal, and SPEC-004's return.
