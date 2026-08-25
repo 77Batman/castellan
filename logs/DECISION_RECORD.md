@@ -4988,3 +4988,116 @@ spent.** Remaining: **2 termination-insurance units.** §5 dead-man: **3 remain.
 **C7 and C8 are the only remaining seal-blocking conditions.**
 
 **Review date:** on C3's return.
+
+---
+
+## S3-D-025 · 2026-08-25 · THE RED TEAM SAYS DO NOT SEAL · §4 INTERRUPT · the reserve earned itself
+
+**1 · §4 HARD INTERRUPT. Triggers: *"any issue filed HIGH"* (I-210, I-211) and *"any finding by the
+Devil's Advocate addressed to the Principal."* The registration interrupt does NOT come to the
+Principal. C3 says the document must not seal, and the CIO has verified the reason.**
+
+**2 · THE DEFECT, VERIFIED INDEPENDENTLY BY THE CIO AT SOURCE** [measured]:
+
+The sealed `statement` field freezes the sizing rule
+**`w(t) = clip(1.0 − k·max(0, z(t) − d), 0, w_max)`** — and **`k`, `d` and `band` have no numeric
+value anywhere in `PREREG-002` or in the registration payload.** Grepped for every literal form;
+**zero hits.**
+
+**The same document binds `lookback = 30` and `w_max = 1.0`.** It knows how to fix a parameter. **It
+did not fix these three.**
+
+**Why P3, P4 and P7 cannot see it:** `statement` is **(a) on existence, (c) on content** — the
+harness raises on the empty string and reads no further. **The seal would prove a sizing rule was
+written, not what its parameters are.** Three sentences assert a fixing that does not exist (§6.2
+*"made now, before any measurement"*; §10.5 *"fixed at pre-registration"*; §11.5's *"parameter
+centres"*).
+
+**And the CIO verified the consequence the DA drew from it, which is worse than the defect:** the
+**±50% grid sits at §15 step 6**, while **F-002's legs run at steps 2–3.** **So the grid's centre
+would be chosen with F-002's output in hand** — on a continuum, with no sealed centre to depart
+from. **That is the I-029(d) operation on the parameter axis**, and the document's own ordering
+makes it available.
+
+**KC-002 clause (b) — the sponsor's pre-registered expected cause of death — is a pure function of
+`k` and `d`.** The family's declared most-likely failure mode is set by a dial the seal does not
+fix.
+
+**3 · THE RESERVE EARNED ITSELF.** This unit was held from Sprint 1, protected by the Principal four
+times, and spent here. **Seven revisions, a Gate 0 intake verdict, two Validation specifications and
+roughly two hundred issues did not find this.** The DA found it, in its own words, **with one grep**
+— because it was the only seat that read the specification instead of the blocker table.
+
+**Its own account of why: "§20's blocker table has handed the red team its target four revisions
+running. I refused all four and read the specification instead."** **A red team that accepts the
+firm's list of what to worry about is auditing the list.**
+
+**4 · The strongest argument against the family, and it is not about parameters.** **The sizing rule
+is provably inert in the regime where its own tail lives.** `max(0, z−d)` acts only when funding is
+**rich**; §3.2/§3.3/§7.4 place the tail in funding **inversion**. A cascade destroys the crowding the
+rule keys on — funding inverts, `z` collapses, `w` returns to 1.0, **and the 30-day baseline pins it
+there for up to 30 days, through what §3.3 itself calls an "extended interval" of dislocation.**
+
+> **The rule de-scales on the anticipation and holds full size through the realization.**
+
+Measured, count-only: **25.6% / 25.2% of in-sample days carry at least one negative funding print.
+A quarter of the sample sits where the rule cannot act.**
+
+**5 · The argument against the process, which the CIO asked for and could not answer itself.**
+**Seven revisions, and not one originated in the sponsor noticing.** R-001 ← Seat 9's measurement ·
+R-002 ← Validation + Seat 9 · R-003 ← the Principal's I-057 ruling · R-004 ← `GATES.md` §4.7.2 ·
+R-005 ← the Principal's class mandate · R-006 ← an ordered sweep · R-007 ← the Principal's
+instruction.
+
+> **"The document has been *found* seven times, not *checked* seven times"** — and the near-fatal
+> rate **spiked at revisions 4–6 (three HIGHs in 48 hours) rather than converging.**
+
+**"On seven for seven, an eighth instrument pointed at an unexamined dimension finds an eighth
+defect. I-210 is that eighth, and it took one grep."**
+
+**6 · The staleness ruled MATERIAL, not fatal — and the DA declined to escalate it, correctly.** The
+engine is not deceived; `years_calendar` comes from `oos_index`. What freezes is that **two binding
+fields carry `[2020-01-01, C]`**, so the sealed falsifier's window contains 14 nonexistent days
+permanently.
+
+**The DA identified the cause the CIO's three options all missed: `C` denotes two objects** — the
+freeze instant and the in-sample right edge — **and R23/R33/R34/R37/I-097 are five repairs of
+instances, none of the cause.** **Its remedy needs no Principal act and none of the CIO's three
+options:** conform the two fields to *"the last settled common bar at the first run,"* which is what
+`oos_index` already carries. **One prose edit; never recurs.** The CIO's I-097 framing is superseded.
+
+**7 · I-219, unprompted, and it is the sprint's real finding.** Appendix B #1's metric is **undefined
+at n = 0 Gate 1 verdicts** and the DA makes no claim from it. **The live failure mode is Appendix B
+#9: throughput is zero.**
+
+> **28 days · four Opus seats · ~200 issues · 0 trials · 0 backtests · 0 verdicts · 0 seals — and no
+> artifact in three sprints has stated the throughput number the Charter requires stated.**
+
+> **"I-210 is real and it blocks the seal; it is also the eighth defect found in a *document* by a
+> firm that has yet to find its first defect in a *hypothesis*, because it has yet to test one."**
+
+**The CIO endorses this without qualification and records that it should have been the CIO's finding
+three sprints ago.**
+
+**8 · I-098 filed against the CIO and the DA jointly: the ten findings never reached the Issue Log.**
+The memo is 54 KB and references `I-21x` eighteen times; **the log is clean at I-209.** **Fifth
+instance of I-092's class and the most dangerous** — *had the seal proceeded on the CIO's report of
+the memo rather than on the memo, the Issue Log would have shown no seal-blocking issue at the
+moment of sealing.* **The CIO recorded a pointer and refused to transcribe the DA's severities as
+its own.**
+
+**9 · The line budget: planned 650, delivered 725 — over its own plan by 11.5%, under the ratchet
+with 75 to spare. Prices as ONE.** The DA disclosed that it **found the overage on completion rather
+than mid-write** — *"I did not cut, because the overage was discovered on completion."* **That is the
+exact failure the requirement was imposed to prevent, disclosed by the seat that committed it.**
+
+**10 · Seal status: BLOCKED, and not by C7 or C8.** **I-210 is seal-blocking and repairable in one
+dispatch.** The DA's condition for withdrawal is exact and cheap: **numeric literals for `k`, `d`,
+`band`, plus the two `[2020-01-01, C]` sites conformed — *"nothing else moves the seal verdict, and I
+withdraw it the same day."***
+
+**11 · Budget.** **15 of 30 invocations · 11 of 12 Opus. FREE OPUS: ZERO. DA RESERVE: SPENT.**
+Remaining: **2 termination-insurance units, and insurance is not working capacity.** **The repair
+I-210 requires is a Director act, and the Opus tier cannot fund it.** §5 dead-man: **2 remain.**
+
+**Review date:** immediately — the Principal's ruling is required.
