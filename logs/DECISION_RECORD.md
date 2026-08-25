@@ -5338,3 +5338,76 @@ number — **and a current headroom reading is now a precondition of the CIO's n
 courtesy.**
 
 **Review date:** on SPEC-004's return.
+
+---
+
+## S4-D-005 · 2026-08-25 · SO-003 SIGNED at 12 / 9-2-1 · repair accepted · withdrawal dispatched under the new comparator rule
+
+**1 · Standing Order 003 SIGNED**, `ops/STANDING-ORDER-003.md`, commit `c03f772`. **Ceiling 12,
+composition 9 / 2 / 1.**
+
+**The CIO's counter-argument against its own recommendation is answered on the record**, and the
+answer is better than the argument: **"Sprint 3's tier ran out one dispatch from the seal because the
+pricing was correct — a ceiling that binds at the worst moment and holds is the only kind that ever
+protected anything."**
+
+**§3.1 countersigned as the order's best new sentence** — the self-closed evasion. The CIO notes what
+that means about the clause: **it was written by the party it constrains, against the loophole that
+party would have used**, and it is the only sentence in the order of that kind.
+
+**2 · §1 CLARIFIED, and the clarification changes what "done" means.**
+
+> ***"The first trial is logged"* means logged against a family whose Gate verdict is REACHABLE.** A
+> trial spent into a permanent `INSUFFICIENT-DATA` is **objective 1's letter destroying objective 2's
+> substance.**
+
+**I-224 adopted.** The SPEC-004 dispatch is **confirmed in scope on the CIO's own justification**,
+and the Principal restates it more precisely than the CIO did: **the read-only control is objective
+1's gate by prior ruling; the evaluator is objective 2's precondition by E-24's arithmetic; neither
+is a defect hunt.**
+
+**3 · THE REPAIR IS ACCEPTED.** `k = 0.5`, `d = 1.0`, `band = 0.10`, singly bound. **The
+`d`-bracketing argument goes to the casebook queue as the worked example of "justification from the
+mechanism"** — sampling error of the 30-day mean puts `O(1/√30)` noise in `z`, so `d` must sit well
+above one SE and well below the fire-never threshold, **derived without touching the data.**
+
+**I-223 accepted as disclosed** — *"the honest 'I looked'."* **I-226's stamp reflex — four new dated
+sites inside hashed strings, committed one screen after quoting the lesson — is named the
+document-form pathology's best evidence yet that the exit is the forward clock.**
+
+**4 · §2.2 ADDED — THE PROJECTION COMPARATOR RULE, and this dispatch is its first test.**
+
+> **A line projection must be derived from a named comparable artifact and stated in the brief with
+> its comparator. A projection without one is treated as over-threshold and prices accordingly.**
+
+Issued **before a third instance** — two consecutive deliveries at ~2× their own projection, both
+under ceiling. *"Projections are no longer estimates — they are hopes."* **The I-096 principle applied
+to sizing**, and the CIO records that it is the same correction twice now: **a number stated in a
+brief must be derived from a measured artifact, not from the CIO's sense of the work.**
+
+**Compliance, first application, with its honest difficulty stated in the brief:** **this firm has
+never issued a withdrawal, so no exact comparable exists.** The CIO measured the two nearest
+**verification-shaped** artifacts and used them as a bracket — **`DATA-VERIFY-002` at 79 lines (one
+condition, clean verdict) as the floor, `VALIDATION-ACCEPTANCE-001` at 492 (acceptance conditions
+with a verdict) as the ceiling — projection ~300.** **Rulings were rejected as comparators** because a
+withdrawal adjudicates nothing, and the brief tells the seat **a rejected comparator is a legitimate
+return.**
+
+**5 · The withdrawal dispatched from FREE, not the DA reserve.** The reserve's purpose is the Gate 1
+packet's memo; **spending it on a withdrawal would leave the actual submission unfunded**, which is
+the reserve convention read backwards.
+
+**And the brief refuses to presuppose the outcome:** *"You are not obliged to withdraw… **a due
+withdrawal is not an owed one.**"* Four questions put to it, of which the CIO judges the first
+sharpest: **the bracket is `O(1)` and the bracket does not pick 1.0** — the seat wrote that `d = 3.0`
+would be *"a decision taken where it is invisible,"* and is asked whether **1.0 is a decision taken
+where it is visible, or merely a rounder number in the same class.**
+
+**6 · Sequence, ruled:** **DA withdrawal → registration-as-seal (the Principal's) → SPEC-004 green →
+first trial, evaluable.**
+
+**7 · Budget under SO-003.** **4 of 30 invocations · 2 of 12 Opus** — 2 of 9 free spent (repair,
+withdrawal). **Free 7 · insurance 2 · DA reserve 1, held for Gate 1.** §5 dead-man: **9 remain** since
+this checkpoint.
+
+**Review date:** on the withdrawal's return.
