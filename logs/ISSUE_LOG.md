@@ -5403,3 +5403,45 @@ when P7 would freeze it.**
 
 **Resolution:** open — before the Devil's Advocate, then the Principal.
 **Pattern tag:** `window-claims-data-that-does-not-exist` · `recurs-by-construction`
+
+---
+
+## I-098 · 2026-08-25 · The Red-Team memo's ten findings — including the one blocking the seal — were written into the memo and never into this log · Severity: HIGH · Owner: CIO → devils-advocate
+
+**Description.** `S3-D-024`'s return reports **I-210 through I-219 filed.** Measured [CIO]: the memo
+exists at `research/REDTEAM-002-funding-carry-seal.md` (54 KB) and **references `I-21x` eighteen
+times**; `logs/ISSUE_LOG.md` **is clean, unmodified, and its highest entry is I-209.** **None of the
+ten was ever appended.**
+
+**Among them is I-210, which the memo rates HIGH and seal-blocking**, and which the CIO has
+independently verified as correct: **`k`, `d` and `band` have no numeric value anywhere in
+`PREREG-002` or the registration payload**, while `lookback = 30` and `w_max = 1.0` are bound in the
+same document.
+
+**Fifth instance of I-092's class, and the most dangerous one yet.** I-092 (closures never
+propagated) · I-120 (a defect narrated as filed, never written) · I-094 (findings that were never
+issues) · **I-034 (a closure announced in the commit message that did the work, unpropagated for
+thirteen days, which nearly cost the family its Gate 1 eligibility on a stale condition precedent)**
+— **and now a seal-blocking finding that exists only inside the document that reports it.**
+
+**Had the seal proceeded on the CIO's report of the memo rather than on the memo, the Issue Log
+would have shown no seal-blocking issue at the moment of sealing.** That is precisely I-034's
+failure with the arrow pointing the other way.
+
+**What the CIO is doing, and what it is refusing to do.** It **records a pointer** to the ten
+findings and to their source, so the index resolves. It **does not transcribe the DA's severity
+ratings as its own** — a rating is the filing seat's act, and a CIO that restates ten severities it
+did not judge has substituted itself for the seat. **The DA appends its own entries; until it does,
+this pointer is the index.**
+
+**Pointer — ten findings at `research/REDTEAM-002-funding-carry-seal.md`, ratings as the DA
+assigned them:** **I-210 HIGH, seal-blocking** (`k`/`d`/`band` unbound) · **I-211 HIGH** (KC-002
+clause (b) is a function of the unsealed parameters) · I-212 (the ±50% grid has no centre and runs
+after F-002) · I-213 (`C` denotes two objects) · I-214 (leg (ii) first-moment match) · I-215 (§19.1
+contradicted by D-6) · I-216 (escape (c)) · I-217 (C12's 26 symbol-days — **swept by the DA, clean,
+no action requested**) · I-218 (revision provenance seven-for-seven external) · I-219 (**base rate,
+unprompted**).
+
+**Resolution:** open — the pointer stands as the index until the DA files; the propagation failure is
+the CIO's to have caught earlier and the DA's to repair.
+**Pattern tag:** `finding-never-reached-the-index` · `seal-blocking-and-invisible`
