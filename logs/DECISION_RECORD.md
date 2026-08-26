@@ -5709,3 +5709,85 @@ Principal's ruling)** → checklist from the implemented grant API → **`write_
 book of record** → seal.
 
 **Review date:** on the remediation's return.
+
+---
+
+## S4-D-009 · 2026-08-25 · The suite recovers 173 → 301 · the masked-population rule pays on its first use · findings index dispatched
+
+**1 · The harness is back.** Verified [measured]: **323 collected · 301 passed · 22 failed · 0
+errors**, from **173 / 81 / 68**. `test_grant_meta.py`'s anti-bypass check **passes with 0 offenders
+across 20 files.** Registry **0 / 0 / 3.**
+
+**2 · PHASE 1 PRODUCED ZERO SUITE DELTA, AND THAT IS THE FINDING RATHER THAN A DISAPPOINTMENT.**
+The `holdout.py` arity fix — 8 sites, AST-verified, all 13 now passing three arguments — **moved the
+suite not at all**, because the `TypeError` was **masked behind the fixture-level grant error that
+fires first.**
+
+> **`TEMPLATES.md` §7.10(8) demonstrated itself on its first application: a real defect, fixed, with
+> no observable effect until the mask came off.** Had the seat measured its own work by suite delta —
+> the obvious metric — **it would have concluded the fix did nothing.**
+
+**3 · 76 grant blocks against Validation's projected 71, with every delta traced to a named cause** —
+R-7 nesting forcing splits around self-granting framework calls, and raw-SQL writes invisible to the
+99-call-site AST walk. **No test assertion was touched anywhere.** `test_G2`, `test_h7` and `test_h8`
+**left failing, with tracebacks matching their documented reasons including the cited figures**
+(`4.974674880219028`, `181.67`).
+
+**4 · SEVENTEEN newly unmasked failures — COUNTED, not sampled**, exactly as the rule requires:
+
+- **16 in `test_carry_accounting.py`** — `TrialRegistry(":memory:")` is **structurally incompatible
+  with `write_grant()`.** **I-270, HIGH, escalated rather than fixed** because the root cause is in
+  `registry.py`, outside Phase 2's test-file scope.
+- **1 in `test_minbtl_serial.py::test_mbs_11`** — **I-273, HIGH: a previously undiscovered sibling of
+  the already-ruled I-075 defect**, grading unregistered family `"hac"` where the registered family
+  is `"S"`. **CIO-verified at source** — `test_minbtl_serial.py:294`, `evaluate_gate1("S", "hac", …)`.
+
+**Both escalated, neither patched.** **A seat inside a remediation dispatch, handed seventeen fresh
+failures, fixed none of them** — which is precisely the temptation Validation reversed the dispatch
+order to avoid, and the seat did not need the guardrail in the end.
+
+**5 · I-273 is the more interesting of the two.** **I-075 was found, ruled and repaired by Validation
+in Sprint 3.** Its sibling sat undetected in a different file **until a control unrelated to it forced
+the whole suite to run clean enough to see it.** **The firm did not find this by looking for it. It
+found it by removing something else that was in the way** — which is the argument for unmasking as a
+method rather than as a remedy.
+
+**6 · §4 HARD INTERRUPT — I-103, EIGHTH instance, and it is the one the CIO now treats as binding.**
+`logs/ISSUE_LOG.md`'s highest entry has been **I-226 for four consecutive dispatches** while the firm
+produced roughly thirty findings above it. **Two of the missing are HIGH.**
+
+**And it compounds: `ops/CASEBOOK.md`'s harvest reads the Issue Log, so every finding since I-226 is
+currently unharvestable.** The index failure has become the learning failure — **I-094 arriving by the
+route I-094 predicted.**
+
+**7 · THE FINDINGS INDEX IS DISPATCHED, and the CIO widened the Principal's scope because the backlog
+grew after he ruled it.** He named `I-230+` and the DA's ten; **six ranges have accumulated** —
+I-210–219, I-230–239, I-240–249, I-250–256, I-260–269, I-270–279 — **and the brief names all six with
+their source memos.**
+
+**Three instructions the CIO judges load-bearing:**
+
+- **"You transcribe. You do not re-rate, re-word, or adjudicate."** Every severity is the filing
+  seat's. **The CIO refused to transcribe severities at I-098, I-100, I-102 and I-103 for exactly
+  this reason — and that refusal is why the job exists rather than being already done.**
+- **"Report the count you actually find in each range. Do not assume ten."** Ranges were allocated
+  generously and seats were told not to pad. **A cardinal taken from an allocation rather than an
+  enumeration is this firm's most repeated error, and the brief forecloses it.**
+- **The design question, not the transcription: "does a reader querying this log for open HIGH
+  findings now get a right answer? If your format cannot answer that question, it has not fixed the
+  thing it was built for."**
+
+**8 · One thing the brief deliberately does not fund.** I-101 found that **rulings** never reach
+`PREREG-002` §20's blocking table. **The index is for findings.** The seat is asked whether its format
+*could* carry ruling-status **and told not to build it** — that is a scope question for the Principal,
+and **§3.1 forbids the CIO absorbing it into a dispatch scoped for something else.**
+
+**9 · What the seal still needs, unchanged by today's recovery:** the **`write_grants` migration on
+`book/registry.db`** (the table does not exist on the book of record) · **the checklist's grant step,
+written from the implemented API** · **I-252's 6-vs-12 bp ruling**, which the Director calls a live
+pre-seal dependency · **C7 and C8.**
+
+**10 · Budget.** **7 of 30 invocations · 5 of 12 Opus.** Free **4** · insurance 2 · DA reserve 1.
+§5 dead-man: **7 remain.**
+
+**Review date:** on the findings index's return.
