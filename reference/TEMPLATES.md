@@ -121,3 +121,11 @@ and the distinction is recorded rather than smoothed. The convention binds prosp
 **Origin.** `VALIDATION-SPEC-004`'s R-4 made three registry methods raise without a write grant. **149 tests broke; exactly 1 was in SPEC-004's own files; 148 were pre-existing callers.** The suite went **272/50 → 173/81/68**. **The specifying seat did not count. The dispatching seat did not ask.** Both omissions were the same omission, and the count takes one command.
 
 **6 · Session-close disposition.** At every session close, **`git status` is reviewed and every dirty path explicitly dispositioned** — staged by name, or **named in the record as deliberately unstaged with its reason.** Origin: I-054's corrective (*stage named paths only*) produced the opposite failure at **I-209**, because **a named-path discipline omits whatever nobody thought to name** — and `book/registry.db`, written by a seat, fell through it. **Seat-written files are the motivating case.**
+
+**8 · A masked failure population may not be assessed by sampling. Unmask, then count.** *(Added 2026-08-25, from I-260/I-261.)*
+
+**Origin.** `DATA-IMPL-008` §5 reported *"no new, independent bugs were found"* after the SPEC-004 grant control broke 149 tests. **The claim was false.** `holdout.py` shipped **8 call sites passing four positional arguments to a three-parameter method — 42 test instances, unconditional, predating the control entirely** — and the assessment missed all of them because **every traceback in the sampled population terminated at the same known blocker by construction.**
+
+**Not concealment.** Validation's own finding on it: *"the method could only return that answer."* **A sample drawn from a population where one cause masks all others returns that cause with probability 1**, and no amount of care in the sampling repairs it.
+
+**Test for the situation:** if a known failure sits **upstream of everything you are inspecting**, your sample measures the blocker, not the population. **Remove the blocker, then count what remains — every instance, not a sample of them.**

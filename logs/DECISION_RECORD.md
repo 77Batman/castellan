@@ -5615,3 +5615,97 @@ held for the Gate 1 packet.** §5 dead-man: **9 remain** since this checkpoint.
 implemented API → registration-as-seal, the Principal's.**
 
 **Review date:** on the repair's return.
+
+---
+
+## S4-D-008 · 2026-08-25 · R-4 governs ALL WRITERS · **the CIO's fork was not real** · two HIGH found beneath the mask
+
+**1 · RULING: R-4 governs ALL WRITERS.** *"A test exercising a write path is a caller like any other;
+R-4's text has no caller in it, and could not have — it is a property of the method, not of who
+invoked it."*
+
+**2 · THE FORK THE CIO PRESENTED WAS NOT REAL, AND VALIDATION MEASURED THAT RATHER THAN ARGUING
+IT.** The CIO offered three options and said *"I do not choose."* **Option (b) — relax R-4 — does not
+exist:**
+
+- **Relaxing R-4 restores ZERO tests.** The write dies one layer down at **R-5's read-only handle** —
+  `OperationalError: attempt to write a readonly database`.
+- **The relaxation that would work is relaxing R-1** — **which is I-095's remedy itself, the
+  Principal's S3-D-009 ruling in code.**
+- **And with both relaxed, rows land `grant_id IS NULL`, so R-15 makes 60 pre-existing
+  `evaluate_gate1` sites return INSUFFICIENT-DATA.**
+
+> **The CIO presented a branch that would have required undoing the Principal's own ruling, as a
+> neutral third option, without checking whether it was reachable.** *"I do not choose"* is only
+> honest when the options are real. **Filing a fork is itself an analytical act and the CIO performed
+> it without measuring.**
+
+**3 · The load-bearing number is 71, not 148**, and the CIO's framing was the wrong unit. Validation's
+count, stated because the ruling alters a call contract: **99 direct call sites · 48 functions (38
+test bodies + 10 helpers) · 10 files · 71 grant blocks · 148 node IDs.** **The CIO reported "148
+pre-existing tests broken" — that is the node count, not the work unit.**
+
+**4 · §4 HARD INTERRUPT — I-260 and I-261, HIGH, and they were invisible by construction.**
+`harness/castellan/holdout.py` ships **8 of 13 `_grant_log` call sites passing four positional
+arguments to a three-parameter method** — lines 498, 523, 544, 560, 574, 672, 694, 731. **CIO-verified
+at source**, against five correct three-arg sites in the same file. **42 test instances,
+unconditional, unrelated to R-4 and predating it.**
+
+**`DATA-IMPL-008` §5's claim that "no new, independent bugs were found" is FALSE** — and Validation is
+precise about why it is not concealment: **it sampled a population where every traceback terminates at
+the same known blocker by construction.** *"The method could only return that answer."*
+
+**THE RULE THIS EARNED, promoted to `TEMPLATES.md` §7.10(8) rather than left in a memo:**
+
+> **A masked failure population may not be assessed by sampling. Unmask, then count.**
+
+**5 · The dispatch order is REVERSED on Validation's instruction, and the reason is behavioural:**
+*"Seat 9 fixes I-260 before the test remediation, or 42 unexplained `TypeError`s land in a dispatch
+that will be tempted to 'fix' them in test files."* **A seat handed 42 mystery failures inside a
+remediation dispatch will remediate them.** Phase 1 then Phase 2, strictly ordered.
+
+**6 · `test_G2`'s restoration is VERIFIED, not predicted.** One grant block took `test_holdout_p1.py`
+from 0 passed to **32 passed / 34 failed**, and `test_G2` now fails on its original assertion with
+**`crit.value = 4.974674880219028` — the exact figure I-068 recorded on 2026-08-05.** **Validation
+proved the unmasking works before prescribing it**, and **deliberately did not execute I-068's owed
+fixture edits, so the I-078 dispositions stay visible.**
+
+**7 · Grant visibility: "the fixture supplies the ANNOUNCEMENT, the test supplies the AUTHORITY."**
+The `with` appears in each test's own text; **the fixture prints per test including
+`grants_taken=NONE`, so silence is never the signal.** The refused shape — a fixture yielding *inside*
+an open grant — is closed by a static check, **prototyped at 0 offenders across 18 files and 1 in a
+deliberate negative control.**
+
+**8 · R-16's premise is stale and it bears on the seal: `book/registry.db` has NO `write_grants`
+table.** CIO-verified — tables are `hypotheses`, `trials`, `sqlite_sequence`, `events`. **The
+migration has never run on the book of record.** **The seal writes there.**
+
+**9 · Three-register disclosure not triggered** — no relaxation occurs; **ruling (a) extends coverage
+and removes nothing.**
+
+**10 · Line budget: flagged BEFORE overrunning, which is the compliance the rule asks for.**
+Comparator accepted, **scaling rejected — flagged ~300 → ~370 before passing 300.** Delivered **447**.
+**Its revised estimate was also wrong and the document records it as wrong**, with the diagnosis:
+*"Estimating a prescription by its table while forgetting the construction the table presumes is the
+same shape as specifying a clause and not counting its callers — twice in one dispatch."*
+
+**11 · I-264 is filed by Validation against its own document** — **SPEC-004 altered a call contract
+and stated no caller count.** The practice adopted from I-100 applied by its author to its own prior
+work, unprompted.
+
+**12 · To the Principal, and the CIO records it as the sharpest governance sentence of the sprint:**
+
+> *"Your framing was right, and §4.2 derives the same ruling from `GATES.md` §4.7.3 alone — recorded
+> because **a ruling resting on your framing is one you cannot use to check me.**"*
+
+**A seat that deliberately re-derives a conclusion independently of the Principal's steer, so the
+Principal retains an independent check on it, has understood what the independent line is for.**
+
+**13 · Budget.** **6 of 30 invocations · 5 of 12 Opus.** Free **4** · insurance 2 · **DA reserve 1**.
+§5 dead-man: **8 remain.**
+
+**14 · Sequence:** Phase 1 + 2 *(running, Sonnet)* → **findings index (Sonnet, next, per the
+Principal's ruling)** → checklist from the implemented grant API → **`write_grants` migration on the
+book of record** → seal.
+
+**Review date:** on the remediation's return.
