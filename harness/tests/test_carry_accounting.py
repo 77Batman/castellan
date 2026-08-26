@@ -90,16 +90,20 @@ def _new_store(registry: TrialRegistry | None = None) -> PITStore:
 
 
 def _open_family(registry: TrialRegistry, family: str) -> str:
-    registry.open_hypothesis(
-        family=family,
-        statement="carry-accounting acceptance-test fixture family",
-        mechanism="n/a -- harness self-test, Ruling 003",
-        falsifier="n/a -- harness self-test, Ruling 003",
-        universe="n/a",
-        horizon="n/a",
-        success_criteria="n/a",
-        trial_budget=10_000,
-    )
+    # VALIDATION-RULING-006 section 5.1: a helper's own write, wrapped and
+    # closed in the helper's own body.
+    with registry.write_grant(reason="REGISTER_HYPOTHESIS",
+                              dispatch="TEST:_open_family", token="test-token"):
+        registry.open_hypothesis(
+            family=family,
+            statement="carry-accounting acceptance-test fixture family",
+            mechanism="n/a -- harness self-test, Ruling 003",
+            falsifier="n/a -- harness self-test, Ruling 003",
+            universe="n/a",
+            horizon="n/a",
+            success_criteria="n/a",
+            trial_budget=10_000,
+        )
     return family
 
 

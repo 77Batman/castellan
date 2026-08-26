@@ -87,18 +87,19 @@ class FlakyFetch:
 
 
 @pytest.fixture
-def registry(tmp_path):
+def registry(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "registry.db"))
-    reg.open_hypothesis(
-        family="famA",
-        statement="A", mechanism="m", falsifier="f",
-        universe="u", horizon="1d", success_criteria="sc", trial_budget=50,
-    )
-    reg.open_hypothesis(
-        family="famB",
-        statement="B", mechanism="m", falsifier="f",
-        universe="u", horizon="1d", success_criteria="sc", trial_budget=50,
-    )
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis(
+            family="famA",
+            statement="A", mechanism="m", falsifier="f",
+            universe="u", horizon="1d", success_criteria="sc", trial_budget=50,
+        )
+        reg.open_hypothesis(
+            family="famB",
+            statement="B", mechanism="m", falsifier="f",
+            universe="u", horizon="1d", success_criteria="sc", trial_budget=50,
+        )
     return reg
 
 
@@ -710,11 +711,12 @@ def test_F1_legacy_lock_and_open_once_hard_raise(tmp_path, registry, store):
         v.open_once("x", opened_by="anyone")
 
 
-def test_F4_predecessor_family_n_starts_at_predecessor_total(tmp_path):
+def test_F4_predecessor_family_n_starts_at_predecessor_total(tmp_path, grant):
     from castellan import run_backtest, US_EQUITY_LARGE
 
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("gen1", "s", "m", "f", "u", "1d", "sc", 50)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("gen1", "s", "m", "f", "u", "1d", "sc", 50)
     rng = np.random.default_rng(1)
     idx = pd.bdate_range("2020-01-01", periods=300)
     prices = pd.DataFrame(100 * np.exp(np.cumsum(rng.normal(0, 0.01, (300, 2)), axis=0)),
@@ -724,12 +726,13 @@ def test_F4_predecessor_family_n_starts_at_predecessor_total(tmp_path):
         run_backtest(prices, w, US_EQUITY_LARGE, reg, "gen1", {"v": k})
     assert reg.family_stats("gen1").n_trials == 4
 
-    with pytest.raises(ValueError):
-        reg.open_hypothesis("orphan", "s", "m", "f", "u", "1d", "sc", 50,
-                            predecessor_family="does-not-exist")
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        with pytest.raises(ValueError):
+            reg.open_hypothesis("orphan", "s", "m", "f", "u", "1d", "sc", 50,
+                                predecessor_family="does-not-exist")
 
-    reg.open_hypothesis("gen2", "s2", "m", "f", "u", "1d", "sc", 50,
-                        predecessor_family="gen1")
+        reg.open_hypothesis("gen2", "s2", "m", "f", "u", "1d", "sc", 50,
+                            predecessor_family="gen1")
     assert reg.family_stats("gen2").n_trials == 4  # starts at predecessor's total, not 0
     run_backtest(prices, w, US_EQUITY_LARGE, reg, "gen2", {"v": "new"})
     assert reg.family_stats("gen2").n_trials == 5
@@ -804,9 +807,10 @@ def test_G5_pooled_panel_apparent_length_overstated_fails(tmp_path, registry):
 # Group P — pre-registration sealing (Acceptance 001 §5 P1-P8; I-018)
 # ----------------------------------------------------------------------
 
-def test_P1_seal_writes_hash_and_full_field_copy(tmp_path):
+def test_P1_seal_writes_hash_and_full_field_copy(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("famP1", "stmt", "mech", "fals", "uni", "1d", "sc", 10)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("famP1", "stmt", "mech", "fals", "uni", "1d", "sc", 10)
     events = reg.events(kind="hypothesis_sealed", family="famP1")
     assert len(events) == 1
     detail = events[0]["detail"]
@@ -817,12 +821,13 @@ def test_P1_seal_writes_hash_and_full_field_copy(tmp_path):
     assert v["sealed"] and v["match"]
 
 
-def test_P3_amendment_refused_and_named(tmp_path):
+def test_P3_amendment_refused_and_named(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("famP3", "stmt", "mech", "fals", "uni", "1d", "sc", 10)
-    with pytest.raises(PreRegistrationAmendedError):
-        reg.open_hypothesis("famP3", "DIFFERENT STATEMENT", "mech", "fals",
-                            "uni", "1d", "sc", 10)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("famP3", "stmt", "mech", "fals", "uni", "1d", "sc", 10)
+        with pytest.raises(PreRegistrationAmendedError):
+            reg.open_hypothesis("famP3", "DIFFERENT STATEMENT", "mech", "fals",
+                                "uni", "1d", "sc", 10)
     events = reg.events(kind="hypothesis_amendment_refused", family="famP3")
     assert len(events) == 1
     assert "statement" in events[0]["detail"]["differing_fields"]
@@ -830,22 +835,31 @@ def test_P3_amendment_refused_and_named(tmp_path):
     assert reg.hypothesis("famP3")["statement"] == "stmt"
 
 
-def test_P3_byte_identical_reregistration_is_idempotent_no_event(tmp_path):
+def test_P3_byte_identical_reregistration_is_idempotent_no_event(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("famP3b", "stmt", "mech", "fals", "uni", "1d", "sc", 10)
-    reg.open_hypothesis("famP3b", "stmt", "mech", "fals", "uni", "1d", "sc", 10)  # identical
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("famP3b", "stmt", "mech", "fals", "uni", "1d", "sc", 10)
+        reg.open_hypothesis("famP3b", "stmt", "mech", "fals", "uni", "1d", "sc", 10)  # identical
     assert reg.events(kind="hypothesis_amendment_refused", family="famP3b") == []
     sealed_events = reg.events(kind="hypothesis_sealed", family="famP3b")
     assert len(sealed_events) == 1  # not re-sealed
 
 
-def test_P4_raw_sql_update_detected_and_fails_gate(tmp_path):
+def test_P4_raw_sql_update_detected_and_fails_gate(tmp_path, grant):
+    # I-271: reg.conn is R-1's read-only handle outside an open grant; the
+    # tamper-simulation write below is newly unmasked (was previously hidden
+    # behind the open_hypothesis-level RegistryWriteNotGrantedError) and is
+    # not one of the three counted write methods, so it takes its own grant
+    # rather than one of the 71 prescribed blocks. Same reason admits
+    # log_event too, which is all this raw write needs from R-1's read/write
+    # gate (it never calls a gated method).
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("famP4", "stmt", "mech", "original falsifier",
-                        "uni", "1d", "sc", 10)
-    reg.conn.execute("UPDATE hypotheses SET falsifier=? WHERE family=?",
-                     ("TAMPERED", "famP4"))
-    reg.conn.commit()
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("famP4", "stmt", "mech", "original falsifier",
+                            "uni", "1d", "sc", 10)
+        reg.conn.execute("UPDATE hypotheses SET falsifier=? WHERE family=?",
+                         ("TAMPERED", "famP4"))
+        reg.conn.commit()
     v = reg.verify_prereg("famP4")
     assert v["match"] is False
     assert "falsifier" in v["differing_fields"]
@@ -857,9 +871,10 @@ def test_P4_raw_sql_update_detected_and_fails_gate(tmp_path):
     assert rep.overall == "FAIL"
 
 
-def test_P5_report_embeds_prereg_hash(tmp_path):
+def test_P5_report_embeds_prereg_hash(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("famP5", "stmt", "mech", "fals", "uni", "1d", "sc", 10)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("famP5", "stmt", "mech", "fals", "uni", "1d", "sc", 10)
     rep = evaluate_gate1("s", "famP5", reg,
                          np.random.default_rng(1).normal(0.001, 0.01, 1300), 252,
                          backtest_years=1300 / 252)
@@ -867,17 +882,22 @@ def test_P5_report_embeds_prereg_hash(tmp_path):
     assert rep.prereg_sha256[:16] in rep.to_markdown()
 
 
-def test_P6_unsealed_family_is_insufficient_never_pass(tmp_path):
+def test_P6_unsealed_family_is_insufficient_never_pass(tmp_path, grant):
+    # I-271 (same class as test_P4): this raw INSERT was already failing on
+    # R-1's read-only default before this dispatch (verified against the
+    # pre-existing baseline), independent of the grant-block remediation —
+    # not one of the 71 prescribed blocks, added on the same reasoning.
     reg = TrialRegistry(str(tmp_path / "r.db"))
     # Bypass open_hypothesis entirely — models a family that predates the
     # P-series schema (a raw row with no hypothesis_sealed event).
-    reg.conn.execute(
-        "INSERT INTO hypotheses (family, statement, mechanism, falsifier, "
-        "universe, horizon, success_criteria, trial_budget, created_utc) "
-        "VALUES (?,?,?,?,?,?,?,?,?)",
-        ("famP6", "s", "m", "f", "u", "1d", "sc", 10, time.time()),
-    )
-    reg.conn.commit()
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.conn.execute(
+            "INSERT INTO hypotheses (family, statement, mechanism, falsifier, "
+            "universe, horizon, success_criteria, trial_budget, created_utc) "
+            "VALUES (?,?,?,?,?,?,?,?,?)",
+            ("famP6", "s", "m", "f", "u", "1d", "sc", 10, time.time()),
+        )
+        reg.conn.commit()
     v = reg.verify_prereg("famP6")
     assert v["sealed"] is False
     rep = evaluate_gate1("s", "famP6", reg,
@@ -900,9 +920,10 @@ def test_P7_prereg_sealed_after_cutoff_fails_gate(tmp_path, registry, store):
     assert "postdates" in crit.note
 
 
-def test_P7_prereg_sealed_on_or_before_cutoff_passes(tmp_path):
+def test_P7_prereg_sealed_on_or_before_cutoff_passes(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("famP7", "stmt", "mech", "fals", "uni", "1d", "sc", 10)  # sealed "now"
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("famP7", "stmt", "mech", "fals", "uni", "1d", "sc", 10)  # sealed "now"
     st = PITStore(str(tmp_path / "pit.db"), reg)
     future_cutoff = pd.Timestamp.now(tz="UTC") + pd.Timedelta(days=365)
     v = HoldoutVault(str(tmp_path / "vault-p7"), reg, "v-p7", "famP7", st)
@@ -917,11 +938,12 @@ def test_P7_prereg_sealed_on_or_before_cutoff_passes(tmp_path):
     assert crit.verdict == "PASS"
 
 
-def test_P8_report_lists_predecessor_chain_prereg_hashes(tmp_path):
+def test_P8_report_lists_predecessor_chain_prereg_hashes(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("genP1", "s", "m", "f", "u", "1d", "sc", 10)
-    reg.open_hypothesis("genP2", "s2", "m", "f", "u", "1d", "sc", 10,
-                        predecessor_family="genP1")
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("genP1", "s", "m", "f", "u", "1d", "sc", 10)
+        reg.open_hypothesis("genP2", "s2", "m", "f", "u", "1d", "sc", 10,
+                            predecessor_family="genP1")
     rep = evaluate_gate1("s", "genP2", reg,
                          np.random.default_rng(1).normal(0.001, 0.01, 1300), 252,
                          backtest_years=1300 / 252)
@@ -931,23 +953,25 @@ def test_P8_report_lists_predecessor_chain_prereg_hashes(tmp_path):
 
 # -- R1/R3 schema (I-018), spot-checked alongside the P-series ----------
 
-def test_R3_historical_classification_requires_forward_window_fields(tmp_path):
+def test_R3_historical_classification_requires_forward_window_fields(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    with pytest.raises(ValueError):
-        reg.open_hypothesis("famR3", "s", "m", "f", "u", "1d", "sc", 10,
-                            holdout_classification="HISTORICAL")
-    reg.open_hypothesis("famR3b", "s", "m", "f", "u", "1d", "sc", 10,
-                        holdout_classification="HISTORICAL",
-                        forward_window_start="2026-08-01",
-                        forward_window_min_length=6.0,
-                        forward_kill_condition="net Sharpe < 0 for 2 consecutive months")
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        with pytest.raises(ValueError):
+            reg.open_hypothesis("famR3", "s", "m", "f", "u", "1d", "sc", 10,
+                                holdout_classification="HISTORICAL")
+        reg.open_hypothesis("famR3b", "s", "m", "f", "u", "1d", "sc", 10,
+                            holdout_classification="HISTORICAL",
+                            forward_window_start="2026-08-01",
+                            forward_window_min_length=6.0,
+                            forward_kill_condition="net Sharpe < 0 for 2 consecutive months")
     assert reg.hypothesis("famR3b")["holdout_classification"] == "HISTORICAL"
 
 
-def test_R1_report_carries_holdout_classification(tmp_path):
+def test_R1_report_carries_holdout_classification(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("famR1", "s", "m", "f", "u", "1d", "sc", 10,
-                        holdout_classification="FORWARD")
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("famR1", "s", "m", "f", "u", "1d", "sc", 10,
+                            holdout_classification="FORWARD")
     rep = evaluate_gate1("s", "famR1", reg,
                          np.random.default_rng(1).normal(0.001, 0.01, 1300), 252,
                          backtest_years=1300 / 252)
@@ -955,13 +979,14 @@ def test_R1_report_carries_holdout_classification(tmp_path):
     assert "FORWARD" in rep.to_markdown()
 
 
-def test_R1_historical_classification_renders_required_sentence(tmp_path):
+def test_R1_historical_classification_renders_required_sentence(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("famR1b", "s", "m", "f", "u", "1d", "sc", 10,
-                        holdout_classification="HISTORICAL",
-                        forward_window_start="2026-08-01",
-                        forward_window_min_length=6.0,
-                        forward_kill_condition="net Sharpe < 0 for 2 consecutive months")
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("famR1b", "s", "m", "f", "u", "1d", "sc", 10,
+                            holdout_classification="HISTORICAL",
+                            forward_window_start="2026-08-01",
+                            forward_window_min_length=6.0,
+                            forward_kill_condition="net Sharpe < 0 for 2 consecutive months")
     rep = evaluate_gate1("s", "famR1b", reg,
                          np.random.default_rng(1).normal(0.001, 0.01, 1300), 252,
                          backtest_years=1300 / 252)

@@ -15,9 +15,10 @@ from castellan.book import PaperBook, SameBarBookFillError, BookError
 
 
 @pytest.fixture
-def registry(tmp_path):
+def registry(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("fam", "s", "m", "f", "u", "1d", "sc", 100)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("fam", "s", "m", "f", "u", "1d", "sc", 100)
     return reg
 
 

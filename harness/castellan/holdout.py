@@ -498,7 +498,6 @@ class HoldoutVault:
             self._grant_log(
                 "VAULT_ACQUIRE",
                 "holdout_second_acquisition_attempt",
-                self.family,
                 {"vault": self.name, "by": acquired_by},
             )
             raise HoldoutRetiredError(
@@ -523,7 +522,6 @@ class HoldoutVault:
             self._grant_log(
                 "VAULT_ACQUIRE",
                 "holdout_spec_tampered",
-                self.family,
                 {
                     "vault": self.name,
                     "sealed_sha256": sealed_hash,
@@ -544,7 +542,6 @@ class HoldoutVault:
             self._grant_log(
                 "VAULT_ACQUIRE",
                 "holdout_acquisition_premature",
-                self.family,
                 {"vault": self.name, "cutoff": spec["cutoff"], "now": now.isoformat()},
             )
             raise HoldoutNotYetReachedError(
@@ -560,7 +557,6 @@ class HoldoutVault:
             self._grant_log(
                 "VAULT_ACQUIRE",
                 "holdout_retry_unauthorized_attempt",
-                self.family,
                 {"vault": self.name, "by": acquired_by},
             )
             raise HoldoutRetryUnauthorizedError(
@@ -574,7 +570,6 @@ class HoldoutVault:
         self._grant_log(
             "VAULT_ACQUIRE",
             "holdout_acquisition_attempted",
-            self.family,
             {
                 "vault": self.name,
                 "spec_sha256": sealed_hash,
@@ -672,7 +667,6 @@ class HoldoutVault:
         acquired_event_id = self._grant_log(
             "VAULT_ACQUIRE",
             "holdout_acquired",
-            self.family,
             {
                 "vault": self.name,
                 "payload_sha256": payload_sha256,
@@ -694,7 +688,6 @@ class HoldoutVault:
                 self._grant_log(
                     "VAULT_ACQUIRE",
                     "holdout_pre_acquisition_leak",
-                    self.family,
                     {
                         "vault": self.name,
                         "n_rows": len(leaked),
@@ -731,7 +724,6 @@ class HoldoutVault:
         self._grant_log(
             "VAULT_ACQUIRE",
             "holdout_retry_authorized",
-            self.family,
             {"vault": self.name, "reason": reason, "by": authorized_by},
         )
 

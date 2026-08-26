@@ -92,10 +92,14 @@ def registry(tmp_path):
 
 
 def _seed_family(reg, family="F", n_trials=12, rho=0.0, T=1200, mu=0.0006):
-    reg.open_hypothesis(
-        family, "s", "m", "f", "u", "h", "sc", trial_budget=1000)
-    for i in range(n_trials):
-        reg.log_trial(family, {"i": i}, _ar1(T, rho, mu, 400 + i), 252)
+    with reg.write_grant(reason="REGISTER_HYPOTHESIS", dispatch="TEST:_seed_family",
+                         token="test-token"):
+        reg.open_hypothesis(
+            family, "s", "m", "f", "u", "h", "sc", trial_budget=1000)
+    with reg.write_grant(reason="LOG_TRIAL", dispatch="TEST:_seed_family",
+                         token="test-token"):
+        for i in range(n_trials):
+            reg.log_trial(family, {"i": i}, _ar1(T, rho, mu, 400 + i), 252)
 
 
 # ======================================================================
@@ -278,12 +282,13 @@ def test_mbs_10_gate1_length_criterion_is_serial_corrected(registry):
     assert rep.n_max_admissible_serial <= rep.n_max_admissible_iid
 
 
-def test_mbs_11_zero_logged_trials_is_insufficient_data_not_pass(registry):
+def test_mbs_11_zero_logged_trials_is_insufficient_data_not_pass(registry, grant):
     """M-7 / R-11: n_inherited alone carries no return series, so the VIF is
     unmeasurable. A VIF of 1 is NOT a neutral default -- it is the
     permissive assumption this document exists to remove."""
-    registry.open_hypothesis("S", "s", "m", "f", "u", "h", "sc",
-                             trial_budget=500, n_inherited=40)
+    with grant(registry, "REGISTER_HYPOTHESIS"):
+        registry.open_hypothesis("S", "s", "m", "f", "u", "h", "sc",
+                                 trial_budget=500, n_inherited=40)
     r = _ar1(1400, 0.1, 0.0012, 5)
     idx = pd.bdate_range("2016-01-01", periods=1400)
     rep = evaluate_gate1("S", "hac", registry, r, 252,

@@ -72,19 +72,26 @@ def _reg(tmp_path, name="r.db"):
 
 
 def _open(reg, family, budget, *, n_inherited=0, predecessor=None):
-    reg.open_hypothesis(
-        family=family, statement="s", mechanism="m", falsifier="f",
-        universe="u", horizon="1d", success_criteria="sc",
-        trial_budget=budget, n_inherited=n_inherited,
-        predecessor_family=predecessor,
-    )
+    # VALIDATION-RULING-006 section 5.1: a helper's OWN write, wrapped and
+    # closed in the helper's own body (not the `grant` fixture -- that
+    # shape is for test bodies, which supply the announcement).
+    with reg.write_grant(reason="REGISTER_HYPOTHESIS", dispatch="TEST:_open",
+                         token="test-token"):
+        reg.open_hypothesis(
+            family=family, statement="s", mechanism="m", falsifier="f",
+            universe="u", horizon="1d", success_criteria="sc",
+            trial_budget=budget, n_inherited=n_inherited,
+            predecessor_family=predecessor,
+        )
 
 
 def _log(reg, family, k, *, seed0=0, n=200):
     """Log `k` own trials, each with a real return series."""
-    for i in range(k):
-        reg.log_trial(family, {"i": i, "fam": family},
-                      _series_at_sharpe(0.4, n, seed=seed0 + i), 252)
+    with reg.write_grant(reason="LOG_TRIAL", dispatch="TEST:_log",
+                         token="test-token"):
+        for i in range(k):
+            reg.log_trial(family, {"i": i, "fam": family},
+                          _series_at_sharpe(0.4, n, seed=seed0 + i), 252)
 
 
 def _evaluate(reg, family, *, sr_ann=0.4, n=1300, seed=7, with_index=True):
@@ -123,14 +130,18 @@ def _sealed_budget(rep) -> int:
 
 
 def _extension(reg, family, **detail):
-    return reg.log_event("trial_budget_extension", family, detail)
+    with reg.write_grant(reason="LOG_EVENT", dispatch="TEST:_extension",
+                         token="test-token"):
+        return reg.log_event("trial_budget_extension", family, detail)
 
 
 def _countersign(reg, family, extension_event_id, countersigner):
-    return reg.log_event(
-        "trial_budget_extension_countersigned", family,
-        {"extension_event_id": extension_event_id,
-         "countersigner": countersigner})
+    with reg.write_grant(reason="LOG_EVENT", dispatch="TEST:_countersign",
+                         token="test-token"):
+        return reg.log_event(
+            "trial_budget_extension_countersigned", family,
+            {"extension_event_id": extension_event_id,
+             "countersigner": countersigner})
 
 
 def _discretionary(increment, *, issuer="director-of-research",
@@ -423,7 +434,7 @@ def test_tbe_12_malformed_extension_fails_even_inside_budget(tmp_path, bad, why)
         "a reader cannot locate is a malformation nobody repairs.")
 
 
-def test_tbe_13_withdrawal_neutralises_a_malformed_event(tmp_path):
+def test_tbe_13_withdrawal_neutralises_a_malformed_event(tmp_path, grant):
     """B-24. The registry is append-only; nothing is deleted; the error
     and its repair are both permanently on the record.
 
@@ -438,16 +449,18 @@ def test_tbe_13_withdrawal_neutralises_a_malformed_event(tmp_path):
                                   "increment": 0})
     assert _row(_evaluate(reg, "F")).verdict == FAIL
 
-    reg.log_event("trial_budget_extension_withdrawn", "F",
-                  {"extension_event_id": eid, "reason": "typo"})
+    with grant(reg, "LOG_EVENT"):
+        reg.log_event("trial_budget_extension_withdrawn", "F",
+                      {"extension_event_id": eid, "reason": "typo"})
     rep = _evaluate(reg, "F")
     assert _row(rep).verdict == PASS, (
         "B-24 VIOLATED: a withdrawn malformed event must be inert.")
     assert _effective_budget(rep) == 50
 
     # a withdrawal pointing at nothing can only tighten -> disclosed, not FAIL
-    reg.log_event("trial_budget_extension_withdrawn", "F",
-                  {"extension_event_id": 999_999, "reason": "fat finger"})
+    with grant(reg, "LOG_EVENT"):
+        reg.log_event("trial_budget_extension_withdrawn", "F",
+                      {"extension_event_id": 999_999, "reason": "fat finger"})
     assert _row(_evaluate(reg, "F")).verdict == PASS
 
 
@@ -615,7 +628,7 @@ def test_tbe_18_predecessor_chain_spend_is_not_charged_to_the_successor(tmp_path
         f"disclosed on every report, not tracked in a memo. Got: {row.note!r}")
 
 
-def test_tbe_19_unknown_event_kinds_and_narrated_kwargs_cannot_authorize(tmp_path):
+def test_tbe_19_unknown_event_kinds_and_narrated_kwargs_cannot_authorize(tmp_path, grant):
     """B-4 / Acceptance 001 C-6. There is no third route past the budget.
 
     An event kind the criterion does not recognise authorizes nothing and
@@ -627,13 +640,14 @@ def test_tbe_19_unknown_event_kinds_and_narrated_kwargs_cannot_authorize(tmp_pat
     reg = _reg(tmp_path)
     _open(reg, "F", 5)
     _log(reg, "F", 9)
-    for kind in ("budget_grandfathered",
-                 "trial_budget_extension_approved_verbally",
-                 "trial_budget_waived",
-                 "gate1_verdict",
-                 "hypothesis_registered"):
-        reg.log_event(kind, "F", {"increment": 100, "issuer": "principal",
-                                  "mode": "DISCRETIONARY"})
+    with grant(reg, "LOG_EVENT"):
+        for kind in ("budget_grandfathered",
+                     "trial_budget_extension_approved_verbally",
+                     "trial_budget_waived",
+                     "gate1_verdict",
+                     "hypothesis_registered"):
+            reg.log_event(kind, "F", {"increment": 100, "issuer": "principal",
+                                      "mode": "DISCRETIONARY"})
     rep = _evaluate(reg, "F")
     assert _row(rep).verdict == FAIL
     assert _effective_budget(rep) == 5

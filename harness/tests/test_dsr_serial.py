@@ -201,7 +201,7 @@ def test_dsr_06_right_tail_saturation_does_not_launder_a_fail():
 # D-7 / D-8 / D-9 -- coherence, the criterion, and T_eff
 # ======================================================================
 
-def test_dsr_07_gate1_dsr_criterion_is_serial_corrected(registry):
+def test_dsr_07_gate1_dsr_criterion_is_serial_corrected(registry, grant):
     """D-8: renamed, graded on the floored serial figure, and the i.i.d.
     figure, VIF and T_eff all travel on the criterion's face.
 
@@ -209,11 +209,13 @@ def test_dsr_07_gate1_dsr_criterion_is_serial_corrected(registry):
     "hac" against a registry that only carries "F". Retarget authorized by
     Validation; the guard below makes the same slip loud rather than silent.
     """
-    registry.open_hypothesis("F", "s", "m", "f", "u", "h", "sc",
-                             trial_budget=500)
-    for i in range(12):
-        registry.log_trial("F", {"i": i}, _ar1(1400, 0.5, 0.0006, 700 + i),
-                           252)
+    with grant(registry, "REGISTER_HYPOTHESIS"):
+        registry.open_hypothesis("F", "s", "m", "f", "u", "h", "sc",
+                                 trial_budget=500)
+    with grant(registry, "LOG_TRIAL"):
+        for i in range(12):
+            registry.log_trial("F", {"i": i}, _ar1(1400, 0.5, 0.0006, 700 + i),
+                               252)
     assert registry.family_stats("F").n_trials == 12, (
         "I-075 guard: this test grades family 'F' and is meaningless "
         "against an unseeded family")

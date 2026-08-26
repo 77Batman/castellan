@@ -121,13 +121,14 @@ def _ref_bartlett_ar1_ratio(rho, lag):
 
 
 @pytest.fixture
-def registry(tmp_path):
+def registry(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "registry.db"))
-    reg.open_hypothesis(
-        family="hac", statement="s", mechanism="m",
-        falsifier="net Sharpe below 0 for 2 consecutive quarters",
-        universe="u", horizon="1d", success_criteria="Gate 1", trial_budget=50,
-    )
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis(
+            family="hac", statement="s", mechanism="m",
+            falsifier="net Sharpe below 0 for 2 consecutive quarters",
+            universe="u", horizon="1d", success_criteria="Gate 1", trial_budget=50,
+        )
     return reg
 
 

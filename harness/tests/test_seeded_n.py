@@ -122,7 +122,7 @@ def _parse_threshold_number(threshold: str, label: str) -> float:
 # H-1 · test_h1_column_exists_defaults_zero_and_migrates
 # ----------------------------------------------------------------------
 
-def test_h1_column_exists_defaults_zero_and_migrates(tmp_path):
+def test_h1_column_exists_defaults_zero_and_migrates(tmp_path, grant):
     # Fresh registry: PRAGMA table_info(hypotheses) contains n_inherited,
     # type INTEGER, NOT NULL, default 0.
     reg = TrialRegistry(str(tmp_path / "fresh.db"))
@@ -134,7 +134,8 @@ def test_h1_column_exists_defaults_zero_and_migrates(tmp_path):
     assert dflt is not None and int(float(dflt)) == 0
 
     # open_hypothesis(...) omitting the argument -> row reads 0.
-    reg.open_hypothesis("famH1", "s", "m", "f", "u", "1d", "sc", 10)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("famH1", "s", "m", "f", "u", "1d", "sc", 10)
     assert reg.hypothesis("famH1")["n_inherited"] == 0
 
     # Construct a DB from the pre-change SCHEMA literal with one
@@ -154,6 +155,14 @@ def test_h1_column_exists_defaults_zero_and_migrates(tmp_path):
     conn.close()
 
     legacy_reg = TrialRegistry(legacy_path)  # must not raise
+    # I-272: constructing over an existing pre-grant-system file does not
+    # itself migrate the schema (only a MIGRATION-reason write_grant does,
+    # per registry.py's own `_migrate` call site); an empty grant block
+    # triggers it -- not one of the 58 counted call sites (no
+    # open_hypothesis/log_trial/log_event call), added on the same
+    # reasoning as I-271.
+    with grant(legacy_reg, "MIGRATION"):
+        pass
     legacy_cols = [r[1] for r in legacy_reg.conn.execute("PRAGMA table_info(hypotheses)")]
     assert "n_inherited" in legacy_cols
     assert legacy_reg.hypothesis("legacy-fam")["n_inherited"] == 0
@@ -163,35 +172,37 @@ def test_h1_column_exists_defaults_zero_and_migrates(tmp_path):
 # H-2 · test_h2_value_is_validated
 # ----------------------------------------------------------------------
 
-def test_h2_value_is_validated(tmp_path):
+def test_h2_value_is_validated(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    with pytest.raises(ValueError):
-        reg.open_hypothesis("famNeg", "s", "m", "f", "u", "1d", "sc", 10,
-                            n_inherited=-1)
-    with pytest.raises(ValueError):
-        reg.open_hypothesis("famFloat", "s", "m", "f", "u", "1d", "sc", 10,
-                            n_inherited=3.7)
-    reg.open_hypothesis("famZero", "s", "m", "f", "u", "1d", "sc", 10,
-                        n_inherited=0)
-    assert reg.hypothesis("famZero")["n_inherited"] == 0
-    reg.open_hypothesis("famBig", "s", "m", "f", "u", "1d", "sc", 10,
-                        n_inherited=31250)
-    assert reg.hypothesis("famBig")["n_inherited"] == 31250
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        with pytest.raises(ValueError):
+            reg.open_hypothesis("famNeg", "s", "m", "f", "u", "1d", "sc", 10,
+                                n_inherited=-1)
+        with pytest.raises(ValueError):
+            reg.open_hypothesis("famFloat", "s", "m", "f", "u", "1d", "sc", 10,
+                                n_inherited=3.7)
+        reg.open_hypothesis("famZero", "s", "m", "f", "u", "1d", "sc", 10,
+                            n_inherited=0)
+        assert reg.hypothesis("famZero")["n_inherited"] == 0
+        reg.open_hypothesis("famBig", "s", "m", "f", "u", "1d", "sc", 10,
+                            n_inherited=31250)
+        assert reg.hypothesis("famBig")["n_inherited"] == 31250
 
 
 # ----------------------------------------------------------------------
 # H-3a · test_h3_n_inherited_is_binding_and_changes_the_hash
 # ----------------------------------------------------------------------
 
-def test_h3_n_inherited_is_binding_and_changes_the_hash(tmp_path):
+def test_h3_n_inherited_is_binding_and_changes_the_hash(tmp_path, grant):
     from castellan.registry import _BINDING_FIELDS
     assert "n_inherited" in _BINDING_FIELDS
 
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("famA", "s", "m", "f", "u", "1d", "sc", 10,
-                        n_inherited=0)
-    reg.open_hypothesis("famB", "s", "m", "f", "u", "1d", "sc", 10,
-                        n_inherited=5000)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("famA", "s", "m", "f", "u", "1d", "sc", 10,
+                            n_inherited=0)
+        reg.open_hypothesis("famB", "s", "m", "f", "u", "1d", "sc", 10,
+                            n_inherited=5000)
     hash_a = reg.verify_prereg("famA")["sealed_sha256"]
     hash_b = reg.verify_prereg("famB")["sealed_sha256"]
     assert hash_a != hash_b
@@ -205,20 +216,21 @@ def test_h3_n_inherited_is_binding_and_changes_the_hash(tmp_path):
 # H-3b · test_h3_negative_reregistration_with_different_n_inherited_is_refused
 # ----------------------------------------------------------------------
 
-def test_h3_negative_reregistration_with_different_n_inherited_is_refused(tmp_path):
+def test_h3_negative_reregistration_with_different_n_inherited_is_refused(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("famC", "s", "m", "f", "u", "1d", "sc", 10,
-                        n_inherited=31250)
-    with pytest.raises(PreRegistrationAmendedError):
+    with grant(reg, "REGISTER_HYPOTHESIS"):
         reg.open_hypothesis("famC", "s", "m", "f", "u", "1d", "sc", 10,
-                            n_inherited=3125)
-    events = reg.events(kind="hypothesis_amendment_refused", family="famC")
-    assert len(events) == 1
-    assert "n_inherited" in events[0]["detail"]["differing_fields"]
+                            n_inherited=31250)
+        with pytest.raises(PreRegistrationAmendedError):
+            reg.open_hypothesis("famC", "s", "m", "f", "u", "1d", "sc", 10,
+                                n_inherited=3125)
+        events = reg.events(kind="hypothesis_amendment_refused", family="famC")
+        assert len(events) == 1
+        assert "n_inherited" in events[0]["detail"]["differing_fields"]
 
-    # Byte-identical re-call -> no raise, no new event.
-    reg.open_hypothesis("famC", "s", "m", "f", "u", "1d", "sc", 10,
-                        n_inherited=31250)
+        # Byte-identical re-call -> no raise, no new event.
+        reg.open_hypothesis("famC", "s", "m", "f", "u", "1d", "sc", 10,
+                            n_inherited=31250)
     assert len(reg.events(kind="hypothesis_amendment_refused", family="famC")) == 1
 
 
@@ -226,12 +238,16 @@ def test_h3_negative_reregistration_with_different_n_inherited_is_refused(tmp_pa
 # H-3c · test_h3_negative_raw_sqlite_downgrade_is_detected
 # ----------------------------------------------------------------------
 
-def test_h3_negative_raw_sqlite_downgrade_is_detected(tmp_path):
+def test_h3_negative_raw_sqlite_downgrade_is_detected(tmp_path, grant):
+    # I-271-class: the raw downgrade write needs the same open grant as
+    # the preceding open_hypothesis (R-1's read-only default applies to
+    # reg.conn regardless of how the write is issued).
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("famD", "s", "m", "f", "u", "1d", "sc", 10,
-                        n_inherited=31250)
-    reg.conn.execute("UPDATE hypotheses SET n_inherited=0 WHERE family=?", ("famD",))
-    reg.conn.commit()
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("famD", "s", "m", "f", "u", "1d", "sc", 10,
+                            n_inherited=31250)
+        reg.conn.execute("UPDATE hypotheses SET n_inherited=0 WHERE family=?", ("famD",))
+        reg.conn.commit()
 
     v = reg.verify_prereg("famD")
     assert v["match"] is False
@@ -248,19 +264,22 @@ def test_h3_negative_raw_sqlite_downgrade_is_detected(tmp_path):
 # H-4 · test_h4_n_trials_is_seeded_plus_logged
 # ----------------------------------------------------------------------
 
-def test_h4_n_trials_is_seeded_plus_logged(tmp_path):
+def test_h4_n_trials_is_seeded_plus_logged(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("famE", "s", "m", "f", "u", "1d", "sc", 100,
-                        n_inherited=31250)
-    reg.log_trial("famE", {"v": 1}, _returns(0.0005, 0.01, 200, 1), 252)
-    reg.log_trial("famE", {"v": 2}, _returns(0.0006, 0.01, 200, 2), 252)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("famE", "s", "m", "f", "u", "1d", "sc", 100,
+                            n_inherited=31250)
+    with grant(reg, "LOG_TRIAL"):
+        reg.log_trial("famE", {"v": 1}, _returns(0.0005, 0.01, 200, 1), 252)
+        reg.log_trial("famE", {"v": 2}, _returns(0.0006, 0.01, 200, 2), 252)
     fs = reg.family_stats("famE")
     assert fs.n_trials == 31252
     assert fs.n_inherited == 31250
     assert fs.n_logged == 2
 
-    reg.open_hypothesis("famF", "s", "m", "f", "u", "1d", "sc", 100,
-                        n_inherited=31250)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("famF", "s", "m", "f", "u", "1d", "sc", 100,
+                            n_inherited=31250)
     fs2 = reg.family_stats("famF")
     assert fs2.n_trials == 31250
     assert fs2.n_logged == 0
@@ -270,21 +289,27 @@ def test_h4_n_trials_is_seeded_plus_logged(tmp_path):
 # H-5a · test_h5_transitive_sum_across_chain_no_double_count
 # ----------------------------------------------------------------------
 
-def test_h5_transitive_sum_across_chain_no_double_count(tmp_path):
+def test_h5_transitive_sum_across_chain_no_double_count(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("chA", "s", "m", "f", "u", "1d", "sc", 5000,
-                        n_inherited=1000)
-    for i in range(3):
-        reg.log_trial("chA", {"v": i}, _returns(0.0005, 0.01, 100, 10 + i), 252)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("chA", "s", "m", "f", "u", "1d", "sc", 5000,
+                            n_inherited=1000)
+    with grant(reg, "LOG_TRIAL"):
+        for i in range(3):
+            reg.log_trial("chA", {"v": i}, _returns(0.0005, 0.01, 100, 10 + i), 252)
 
-    reg.open_hypothesis("chB", "s", "m", "f", "u", "1d", "sc", 5000,
-                        predecessor_family="chA", n_inherited=50)
-    for i in range(2):
-        reg.log_trial("chB", {"v": i}, _returns(0.0005, 0.01, 100, 20 + i), 252)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("chB", "s", "m", "f", "u", "1d", "sc", 5000,
+                            predecessor_family="chA", n_inherited=50)
+    with grant(reg, "LOG_TRIAL"):
+        for i in range(2):
+            reg.log_trial("chB", {"v": i}, _returns(0.0005, 0.01, 100, 20 + i), 252)
 
-    reg.open_hypothesis("chC", "s", "m", "f", "u", "1d", "sc", 5000,
-                        predecessor_family="chB", n_inherited=0)
-    reg.log_trial("chC", {"v": 0}, _returns(0.0005, 0.01, 100, 30), 252)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("chC", "s", "m", "f", "u", "1d", "sc", 5000,
+                            predecessor_family="chB", n_inherited=0)
+    with grant(reg, "LOG_TRIAL"):
+        reg.log_trial("chC", {"v": 0}, _returns(0.0005, 0.01, 100, 30), 252)
 
     fs_c = reg.family_stats("chC")
     assert fs_c.n_trials == 1056
@@ -299,17 +324,20 @@ def test_h5_transitive_sum_across_chain_no_double_count(tmp_path):
 # H-5b · test_h5_negative_successor_redeclaring_the_chain_is_refused
 # ----------------------------------------------------------------------
 
-def test_h5_negative_successor_redeclaring_the_chain_is_refused(tmp_path):
+def test_h5_negative_successor_redeclaring_the_chain_is_refused(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("chD", "s", "m", "f", "u", "1d", "sc", 5000,
-                        n_inherited=1000)
-    for i in range(3):
-        reg.log_trial("chD", {"v": i}, _returns(0.0005, 0.01, 100, 40 + i), 252)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("chD", "s", "m", "f", "u", "1d", "sc", 5000,
+                            n_inherited=1000)
+    with grant(reg, "LOG_TRIAL"):
+        for i in range(3):
+            reg.log_trial("chD", {"v": i}, _returns(0.0005, 0.01, 100, 40 + i), 252)
     assert reg.family_stats("chD").n_trials == 1003
 
-    with pytest.raises(InheritedCountDoubleCountError) as exc_info:
-        reg.open_hypothesis("chE", "s", "m", "f", "u", "1d", "sc", 5000,
-                            predecessor_family="chD", n_inherited=1003)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        with pytest.raises(InheritedCountDoubleCountError) as exc_info:
+            reg.open_hypothesis("chE", "s", "m", "f", "u", "1d", "sc", 5000,
+                                predecessor_family="chD", n_inherited=1003)
     msg = str(exc_info.value)
     assert "1003" in msg  # chain total AND the declared value, both 1003
 
@@ -318,16 +346,18 @@ def test_h5_negative_successor_redeclaring_the_chain_is_refused(tmp_path):
 # H-6a · test_h6_sigma_sr_uses_logged_trials_only
 # ----------------------------------------------------------------------
 
-def test_h6_sigma_sr_uses_logged_trials_only(tmp_path):
+def test_h6_sigma_sr_uses_logged_trials_only(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("famG", "s", "m", "f", "u", "1d", "sc", 100,
-                        n_inherited=31250)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("famG", "s", "m", "f", "u", "1d", "sc", 100,
+                            n_inherited=31250)
     r1 = _returns(0.0004, 0.01, 250, 51)
     r2 = _returns(0.0009, 0.012, 250, 52)
     s1 = stats.sharpe_period(r1)
     s2 = stats.sharpe_period(r2)
-    reg.log_trial("famG", {"v": 1}, r1, 252)
-    reg.log_trial("famG", {"v": 2}, r2, 252)
+    with grant(reg, "LOG_TRIAL"):
+        reg.log_trial("famG", {"v": 1}, r1, 252)
+        reg.log_trial("famG", {"v": 2}, r2, 252)
 
     fs = reg.family_stats("famG")
     assert fs.sr_period_std == pytest.approx(np.std([s1, s2], ddof=1))
@@ -339,17 +369,19 @@ def test_h6_sigma_sr_uses_logged_trials_only(tmp_path):
 # H-6b · test_h6_negative_no_phantom_rows_are_synthesised
 # ----------------------------------------------------------------------
 
-def test_h6_negative_no_phantom_rows_are_synthesised(tmp_path):
+def test_h6_negative_no_phantom_rows_are_synthesised(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("famH", "s", "m", "f", "u", "1d", "sc", 100,
-                        n_inherited=31250)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("famH", "s", "m", "f", "u", "1d", "sc", 100,
+                            n_inherited=31250)
     n0 = reg.conn.execute(
         "SELECT COUNT(*) FROM trials WHERE family=?", ("famH",)
     ).fetchone()[0]
     assert n0 == 0
 
-    reg.log_trial("famH", {"v": 1}, _returns(0.0005, 0.01, 100, 61), 252)
-    reg.log_trial("famH", {"v": 2}, _returns(0.0005, 0.01, 100, 62), 252)
+    with grant(reg, "LOG_TRIAL"):
+        reg.log_trial("famH", {"v": 1}, _returns(0.0005, 0.01, 100, 61), 252)
+        reg.log_trial("famH", {"v": 2}, _returns(0.0005, 0.01, 100, 62), 252)
     n2 = reg.conn.execute(
         "SELECT COUNT(*) FROM trials WHERE family=?", ("famH",)
     ).fetchone()[0]
@@ -364,11 +396,13 @@ def test_h6_negative_no_phantom_rows_are_synthesised(tmp_path):
 # H-6c · test_h6_negative_one_logged_trial_gives_no_dispersion
 # ----------------------------------------------------------------------
 
-def test_h6_negative_one_logged_trial_gives_no_dispersion(tmp_path):
+def test_h6_negative_one_logged_trial_gives_no_dispersion(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("famI", "s", "m", "f", "u", "1d", "sc", 100,
-                        n_inherited=31250)
-    reg.log_trial("famI", {"v": 1}, _returns(0.0005, 0.01, 300, 71), 252)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("famI", "s", "m", "f", "u", "1d", "sc", 100,
+                            n_inherited=31250)
+    with grant(reg, "LOG_TRIAL"):
+        reg.log_trial("famI", {"v": 1}, _returns(0.0005, 0.01, 300, 71), 252)
     fs = reg.family_stats("famI")
     assert fs.sr_period_std is None
 
@@ -383,19 +417,21 @@ def test_h6_negative_one_logged_trial_gives_no_dispersion(tmp_path):
 # H-7 · test_h7_dsr_consumes_the_seeded_denominator
 # ----------------------------------------------------------------------
 
-def test_h7_dsr_consumes_the_seeded_denominator(tmp_path):
+def test_h7_dsr_consumes_the_seeded_denominator(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("famU", "s", "m", "f", "u", "1d", "sc", 100,
-                        n_inherited=0)
-    reg.open_hypothesis("famS", "s", "m", "f", "u", "1d", "sc", 100,
-                        n_inherited=31250)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("famU", "s", "m", "f", "u", "1d", "sc", 100,
+                            n_inherited=0)
+        reg.open_hypothesis("famS", "s", "m", "f", "u", "1d", "sc", 100,
+                            n_inherited=31250)
 
     # The SAME two logged trials, by construction, in both families.
     trial_r1 = _returns(0.0, 0.01, 200, 81)
     trial_r2 = _returns(0.0, 0.012, 200, 82)
-    for fam in ("famU", "famS"):
-        reg.log_trial(fam, {"v": 1}, trial_r1, 252)
-        reg.log_trial(fam, {"v": 2}, trial_r2, 252)
+    with grant(reg, "LOG_TRIAL"):
+        for fam in ("famU", "famS"):
+            reg.log_trial(fam, {"v": 1}, trial_r1, 252)
+            reg.log_trial(fam, {"v": 2}, trial_r2, 252)
 
     assert reg.family_stats("famU").n_trials == 2
     assert reg.family_stats("famS").n_trials == 31252
@@ -434,15 +470,17 @@ def test_h7_dsr_consumes_the_seeded_denominator(tmp_path):
 # H-8 · test_h8_minbtl_consumes_the_seeded_denominator_and_fails_a_short_backtest
 # ----------------------------------------------------------------------
 
-def test_h8_minbtl_consumes_the_seeded_denominator_and_fails_a_short_backtest(tmp_path):
+def test_h8_minbtl_consumes_the_seeded_denominator_and_fails_a_short_backtest(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("famSeeded", "s", "m", "f", "u", "1d", "sc", 100,
-                        n_inherited=31250)
-    reg.open_hypothesis("famPlain", "s", "m", "f", "u", "1d", "sc", 100,
-                        n_inherited=0)
-    for fam in ("famSeeded", "famPlain"):
-        reg.log_trial(fam, {"v": 1}, _returns(0.0005, 0.01, 200, 91), 252)
-        reg.log_trial(fam, {"v": 2}, _returns(0.0005, 0.01, 200, 92), 252)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("famSeeded", "s", "m", "f", "u", "1d", "sc", 100,
+                            n_inherited=31250)
+        reg.open_hypothesis("famPlain", "s", "m", "f", "u", "1d", "sc", 100,
+                            n_inherited=0)
+    with grant(reg, "LOG_TRIAL"):
+        for fam in ("famSeeded", "famPlain"):
+            reg.log_trial(fam, {"v": 1}, _returns(0.0005, 0.01, 200, 91), 252)
+            reg.log_trial(fam, {"v": 2}, _returns(0.0005, 0.01, 200, 92), 252)
 
     periods_per_year = 365
     n_bars = 1462  # 1461 days span / 365.25 == 4.00 years exactly
@@ -476,12 +514,14 @@ def test_h8_minbtl_consumes_the_seeded_denominator_and_fails_a_short_backtest(tm
 # H-9 · test_h9_pbo_is_computed_on_logged_trials_only_and_the_report_says_so
 # ----------------------------------------------------------------------
 
-def test_h9_pbo_is_computed_on_logged_trials_only_and_the_report_says_so(tmp_path):
+def test_h9_pbo_is_computed_on_logged_trials_only_and_the_report_says_so(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("famJ", "s", "m", "f", "u", "1d", "sc", 100,
-                        n_inherited=31250)
-    for i in range(20):
-        reg.log_trial("famJ", {"v": i}, _returns(0.0004, 0.01, 50, 100 + i), 252)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("famJ", "s", "m", "f", "u", "1d", "sc", 100,
+                            n_inherited=31250)
+    with grant(reg, "LOG_TRIAL"):
+        for i in range(20):
+            reg.log_trial("famJ", {"v": i}, _returns(0.0004, 0.01, 50, 100 + i), 252)
 
     M = reg.returns_matrix("famJ")
     assert M.shape[1] == 20
@@ -502,12 +542,14 @@ def test_h9_pbo_is_computed_on_logged_trials_only_and_the_report_says_so(tmp_pat
 # H-10 · test_h10_negative_seeding_alone_does_not_blow_the_trial_budget
 # ----------------------------------------------------------------------
 
-def test_h10_negative_seeding_alone_does_not_blow_the_trial_budget(tmp_path):
+def test_h10_negative_seeding_alone_does_not_blow_the_trial_budget(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("famK", "s", "m", "f", "u", "1d", "sc", 40,
-                        n_inherited=31250)
-    reg.log_trial("famK", {"v": 1}, _returns(0.0005, 0.01, 100, 111), 252)
-    reg.log_trial("famK", {"v": 2}, _returns(0.0005, 0.01, 100, 112), 252)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("famK", "s", "m", "f", "u", "1d", "sc", 40,
+                            n_inherited=31250)
+    with grant(reg, "LOG_TRIAL"):
+        reg.log_trial("famK", {"v": 1}, _returns(0.0005, 0.01, 100, 111), 252)
+        reg.log_trial("famK", {"v": 2}, _returns(0.0005, 0.01, 100, 112), 252)
 
     rep = evaluate_gate1("s", "famK", reg,
                          np.random.default_rng(6).normal(0.0005, 0.01, 1300), 252,
@@ -515,8 +557,9 @@ def test_h10_negative_seeding_alone_does_not_blow_the_trial_budget(tmp_path):
     crit = next(c for c in rep.criteria if c.name == "Trial count N (registry)")
     assert "OVER BUDGET" not in crit.note
 
-    for i in range(3, 42):
-        reg.log_trial("famK", {"v": i}, _returns(0.0005, 0.01, 100, 200 + i), 252)
+    with grant(reg, "LOG_TRIAL"):
+        for i in range(3, 42):
+            reg.log_trial("famK", {"v": i}, _returns(0.0005, 0.01, 100, 200 + i), 252)
     rep2 = evaluate_gate1("s", "famK", reg,
                           np.random.default_rng(6).normal(0.0005, 0.01, 1300), 252,
                           backtest_years=1300 / 252)
@@ -528,10 +571,11 @@ def test_h10_negative_seeding_alone_does_not_blow_the_trial_budget(tmp_path):
 # H-11 · test_h11_negative_seeded_family_with_no_logged_trials_is_insufficient_data
 # ----------------------------------------------------------------------
 
-def test_h11_negative_seeded_family_with_no_logged_trials_is_insufficient_data(tmp_path):
+def test_h11_negative_seeded_family_with_no_logged_trials_is_insufficient_data(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("famL", "s", "m", "f", "u", "1d", "sc", 40,
-                        n_inherited=31250)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("famL", "s", "m", "f", "u", "1d", "sc", 40,
+                            n_inherited=31250)
     rep = evaluate_gate1("s", "famL", reg,
                          np.random.default_rng(7).normal(0.0005, 0.01, 1300), 252,
                          backtest_years=1300 / 252)
@@ -545,12 +589,14 @@ def test_h11_negative_seeded_family_with_no_logged_trials_is_insufficient_data(t
 # H-12 · test_h12_report_renders_the_decomposition_not_a_bare_total
 # ----------------------------------------------------------------------
 
-def test_h12_report_renders_the_decomposition_not_a_bare_total(tmp_path):
+def test_h12_report_renders_the_decomposition_not_a_bare_total(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("famM", "s", "m", "f", "u", "1d", "sc", 100,
-                        n_inherited=31250)
-    reg.log_trial("famM", {"v": 1}, _returns(0.0005, 0.01, 100, 121), 252)
-    reg.log_trial("famM", {"v": 2}, _returns(0.0005, 0.01, 100, 122), 252)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("famM", "s", "m", "f", "u", "1d", "sc", 100,
+                            n_inherited=31250)
+    with grant(reg, "LOG_TRIAL"):
+        reg.log_trial("famM", {"v": 1}, _returns(0.0005, 0.01, 100, 121), 252)
+        reg.log_trial("famM", {"v": 2}, _returns(0.0005, 0.01, 100, 122), 252)
 
     rep = evaluate_gate1("s", "famM", reg,
                          np.random.default_rng(8).normal(0.0005, 0.01, 1300), 252,
@@ -566,16 +612,18 @@ def test_h12_report_renders_the_decomposition_not_a_bare_total(tmp_path):
 # H-13 · test_h13_negative_an_unseeded_family_is_bit_for_bit_unchanged
 # ----------------------------------------------------------------------
 
-def test_h13_negative_an_unseeded_family_is_bit_for_bit_unchanged(tmp_path):
+def test_h13_negative_an_unseeded_family_is_bit_for_bit_unchanged(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("famOmitted", "s", "m", "f", "u", "1d", "sc", 100)
-    reg.open_hypothesis("famExplicitZero", "s", "m", "f", "u", "1d", "sc", 100,
-                        n_inherited=0)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("famOmitted", "s", "m", "f", "u", "1d", "sc", 100)
+        reg.open_hypothesis("famExplicitZero", "s", "m", "f", "u", "1d", "sc", 100,
+                            n_inherited=0)
 
-    for fam in ("famOmitted", "famExplicitZero"):
-        reg.log_trial(fam, {"v": 1}, _returns(0.0005, 0.01, 200, 131), 252)
-        reg.log_trial(fam, {"v": 2}, _returns(0.0005, 0.01, 200, 132), 252)
-        reg.log_trial(fam, {"v": 3}, _returns(0.0007, 0.011, 200, 133), 252)
+    with grant(reg, "LOG_TRIAL"):
+        for fam in ("famOmitted", "famExplicitZero"):
+            reg.log_trial(fam, {"v": 1}, _returns(0.0005, 0.01, 200, 131), 252)
+            reg.log_trial(fam, {"v": 2}, _returns(0.0005, 0.01, 200, 132), 252)
+            reg.log_trial(fam, {"v": 3}, _returns(0.0007, 0.011, 200, 133), 252)
 
     fs_o = reg.family_stats("famOmitted")
     fs_z = reg.family_stats("famExplicitZero")
@@ -617,9 +665,10 @@ def test_h13_negative_an_unseeded_family_is_bit_for_bit_unchanged(tmp_path):
 # H-14 · test_h14_forward_lag_001_declared_denominator_end_to_end
 # ----------------------------------------------------------------------
 
-def test_h14_forward_lag_001_declared_denominator_end_to_end(tmp_path):
+def test_h14_forward_lag_001_declared_denominator_end_to_end(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis(
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis(
         family="forward-lag-001",
         statement=(
             "On Polymarket, when a high-volume contract reprices by >=20 "
@@ -681,11 +730,12 @@ def test_h14_forward_lag_001_declared_denominator_end_to_end(tmp_path):
             "full price of that search via n_inherited."
         ),
         published_signal_haircut_applied=None,
-    )
-    reg.log_trial("forward-lag-001", {"v": 1},
-                  _returns(0.0004, 0.01, 200, 141), 365)
-    reg.log_trial("forward-lag-001", {"v": 2},
-                  _returns(0.0004, 0.011, 200, 142), 365)
+        )
+    with grant(reg, "LOG_TRIAL"):
+        reg.log_trial("forward-lag-001", {"v": 1},
+                      _returns(0.0004, 0.01, 200, 141), 365)
+        reg.log_trial("forward-lag-001", {"v": 2},
+                      _returns(0.0004, 0.011, 200, 142), 365)
 
     fs = reg.family_stats("forward-lag-001")
     assert fs.n_trials == 31252

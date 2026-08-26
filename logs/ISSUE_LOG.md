@@ -5777,3 +5777,39 @@ judge:** `research/DIR-RESTATE-001` §15 and the R-009 block — **I-251 HIGH ·
 **Resolution:** open — **HIGH.** **The index is now the binding constraint on the firm's ability to
 know what it has found.**
 **Pattern tag:** `finding-never-reached-the-index` · `seventh-instance`
+
+---
+
+## I-103 · 2026-08-25 · EIGHTH instance — the grant remediation's findings, two of them HIGH, never reached this log; the index is now the firm's binding constraint · Severity: HIGH · Owner: CIO
+
+**Description.** `S4-D-009` reports **I-270 … I-279 filed.** Measured [CIO]: this log holds **zero**
+entries in that range and its highest is **I-226. Twelve references live in
+`DATA-IMPL-009-grant-remediation.md` instead.**
+
+**Absent among them: `I-270` (HIGH — `TrialRegistry(":memory:")` is structurally incompatible with
+`write_grant()`, disabling 16 tests) and `I-273` (HIGH — a previously undiscovered sibling of the
+already-ruled I-075 defect).**
+
+**Eighth instance.** I-092 · I-120 · I-094 · I-034 · I-098 · I-100 · I-102 · **this.** **The log's
+highest entry has been I-226 for four consecutive dispatches while the firm has produced roughly
+thirty findings above it.**
+
+**The index is no longer a bookkeeping defect; it is the binding constraint on the firm's ability to
+know what it has found.** Four sprints of work now live in memos that the Issue Log does not point
+to, and **`ops/CASEBOOK.md`'s harvest reads the Issue Log** — so **every finding since I-226 is
+currently unharvestable**, which is I-094 compounding.
+
+**The CIO's sequencing error, restated because it has now cost three further instances.** SO-003 §7.1
+made the index Sprint 4's **opening act.** The CIO scheduled it behind the seal on the reasoning that
+the seal was imminent. **The seal has not happened. The index has cost the firm I-100, I-102 and this
+in the interval**, and the Principal has since ruled it **the next Sonnet dispatch after the R-4
+resolution — which has now landed.** **It goes next, before anything else.**
+
+**Pointer, ratings as Seat 9 assigned them; the CIO does not transcribe severities it did not judge:**
+`research/DATA-IMPL-009-grant-remediation.md` — **I-270 HIGH** (`:memory:` registries vs
+`write_grant`, 16 tests) · **I-273 HIGH** (I-075's sibling — `test_mbs_11` grades unregistered `"hac"`
+where the registered family is `"S"`; **CIO-verified at source, `test_minbtl_serial.py:294`,
+`evaluate_gate1("S", "hac", …)`**) · remainder as filed.
+
+**Resolution:** open — **HIGH.** The findings index is the next dispatch.
+**Pattern tag:** `finding-never-reached-the-index` · `eighth-instance` · `index-is-now-the-constraint`

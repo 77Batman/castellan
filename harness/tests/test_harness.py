@@ -17,18 +17,19 @@ RNG = np.random.default_rng(42)
 
 
 @pytest.fixture
-def registry(tmp_path):
+def registry(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "registry.db"))
-    reg.open_hypothesis(
-        family="demo",
-        statement="Asset A mean-reverts over 1 day",
-        mechanism="Liquidity providers demand a premium after imbalance",
-        falsifier="Rolling 1y net Sharpe below 0 for 2 consecutive quarters",
-        universe="A,B",
-        horizon="1d",
-        success_criteria="Gate 1",
-        trial_budget=50,
-    )
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis(
+            family="demo",
+            statement="Asset A mean-reverts over 1 day",
+            mechanism="Liquidity providers demand a premium after imbalance",
+            falsifier="Rolling 1y net Sharpe below 0 for 2 consecutive quarters",
+            universe="A,B",
+            horizon="1d",
+            success_criteria="Gate 1",
+            trial_budget=50,
+        )
     return reg
 
 
@@ -63,10 +64,11 @@ def test_every_run_increments_n(registry):
     assert fs.sr_period_std is not None  # dispersion available for DSR
 
 
-def test_preregistration_requires_falsifier(tmp_path):
+def test_preregistration_requires_falsifier(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    with pytest.raises(ValueError):
-        reg.open_hypothesis("x", "claim", "mechanism", "  ", "u", "1d", "sc", 10)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        with pytest.raises(ValueError):
+            reg.open_hypothesis("x", "claim", "mechanism", "  ", "u", "1d", "sc", 10)
 
 
 # ----------------------------------------------------------------------
@@ -259,9 +261,10 @@ def test_holdout_ceilings_and_acquires_once_p1(tmp_path, registry):
 # Gate 1
 # ----------------------------------------------------------------------
 
-def test_gate1_insufficient_without_registry_trials(tmp_path):
+def test_gate1_insufficient_without_registry_trials(tmp_path, grant):
     reg = TrialRegistry(str(tmp_path / "r.db"))
-    reg.open_hypothesis("empty", "s", "m", "f", "u", "1d", "sc", 10)
+    with grant(reg, "REGISTER_HYPOTHESIS"):
+        reg.open_hypothesis("empty", "s", "m", "f", "u", "1d", "sc", 10)
     rng = np.random.default_rng(1)
     rep = evaluate_gate1("s", "empty", reg,
                          rng.normal(0.001, 0.01, 1200), 252,

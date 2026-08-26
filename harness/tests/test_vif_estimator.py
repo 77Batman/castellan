@@ -279,16 +279,18 @@ def test_vif_14_high_exclusion_rate_refuses_rather_than_discounts():
 # R-10 -- the registry accessor, and the defect it routes around
 # ======================================================================
 
-def test_vif_15_trial_returns_preserves_full_series_length(registry):
+def test_vif_15_trial_returns_preserves_full_series_length(registry, grant):
     """R-10: one 20-bar logged trial must not truncate the family."""
     if not hasattr(registry, "trial_returns"):
         pytest.fail(
             "NOT IMPLEMENTED: TrialRegistry.trial_returns does not exist. "
             "Required by VALIDATION-SPEC-002 R-10 (I-057).")
-    registry.open_hypothesis("F", "s", "m", "f", "u", "h", "sc",
-                             trial_budget=100)
-    for n in (2000, 1500, 20):
-        registry.log_trial("F", {"n": n}, _ar1(n, 0.3, 0.0, n), 252)
+    with grant(registry, "REGISTER_HYPOTHESIS"):
+        registry.open_hypothesis("F", "s", "m", "f", "u", "h", "sc",
+                                 trial_budget=100)
+    with grant(registry, "LOG_TRIAL"):
+        for n in (2000, 1500, 20):
+            registry.log_trial("F", {"n": n}, _ar1(n, 0.3, 0.0, n), 252)
 
     got = sorted(len(s) for s in registry.trial_returns("F"))
     assert got == [20, 1500, 2000], (
@@ -296,15 +298,17 @@ def test_vif_15_trial_returns_preserves_full_series_length(registry):
         f"length; got {got}")
 
 
-def test_vif_16_returns_matrix_truncation_is_the_defect_r10_avoids(registry):
+def test_vif_16_returns_matrix_truncation_is_the_defect_r10_avoids(registry, grant):
     """GUARD, green today. Documents I-062: returns_matrix truncates every
     column to the shortest common length, so one short trial collapses the
     whole family's matrix -- which also silently degrades PBO/CSCV. R-10
     exists so the VIF never consumes this."""
-    registry.open_hypothesis("F", "s", "m", "f", "u", "h", "sc",
-                             trial_budget=100)
-    for n in (2000, 1500, 20):
-        registry.log_trial("F", {"n": n}, _ar1(n, 0.3, 0.0, n), 252)
+    with grant(registry, "REGISTER_HYPOTHESIS"):
+        registry.open_hypothesis("F", "s", "m", "f", "u", "h", "sc",
+                                 trial_budget=100)
+    with grant(registry, "LOG_TRIAL"):
+        for n in (2000, 1500, 20):
+            registry.log_trial("F", {"n": n}, _ar1(n, 0.3, 0.0, n), 252)
 
     M = registry.returns_matrix("F")
     assert M.shape == (20, 3), (
