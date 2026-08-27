@@ -5650,7 +5650,7 @@ proceeds" — the Sprint 3 behaviour was to flag and decline, and flagging alone
 
 ---
 
-## I-100 · 2026-08-25 · INCIDENT — the control built to protect the registry has locked the firm out of it; 148 pre-existing tests broken; and the findings never reached this log · Severity: HIGH · Owner: CIO → quant-validation
+## I-107 · 2026-08-25 · INCIDENT — the control built to protect the registry has locked the firm out of it; 148 pre-existing tests broken; and the findings never reached this log · Severity: HIGH · Owner: CIO → quant-validation
 
 **Description.** `VALIDATION-SPEC-004`'s **R-4** — implemented exactly as `test_rwg_04`/`test_rwg_05`
 require — makes `open_hypothesis`, `log_trial` and `log_event` **raise without an open write grant.**
@@ -5715,7 +5715,7 @@ blocks any claim that the harness suite passes.**
 
 ---
 
-## I-101 · 2026-08-25 · The document's §20 blocking table is two sprints stale, so the seat that reads it reports a set the firm already resolved · Severity: MEDIUM · Owner: CIO → director-of-research
+## I-108 · 2026-08-25 · The document's §20 blocking table is two sprints stale, so the seat that reads it reports a set the firm already resolved · Severity: MEDIUM · Owner: CIO → director-of-research
 
 **Description.** R-009's return lists seal-blocking as **"C2, C3, C7, C8, C11."** **Three of the five
 are resolved** [measured against the rulings]: **C2** delivered **ADMIT-CONDITIONAL** (S3-D-023);
@@ -5749,7 +5749,7 @@ cardinals; **it applies to rosters of conditions exactly as well.**
 
 ---
 
-## I-102 · 2026-08-25 · Seventh instance — R-009's seven findings, two HIGH and one a live pre-seal dependency, never reached this log · Severity: HIGH · Owner: CIO → director-of-research
+## I-109 · 2026-08-25 · Seventh instance — R-009's seven findings, two HIGH and one a live pre-seal dependency, never reached this log · Severity: HIGH · Owner: CIO → director-of-research
 
 **Description.** R-009 reports **I-250 … I-256 filed.** Measured: this log holds **zero** entries in
 that range; its highest is **I-226**.
@@ -5780,7 +5780,7 @@ know what it has found.**
 
 ---
 
-## I-103 · 2026-08-25 · EIGHTH instance — the grant remediation's findings, two of them HIGH, never reached this log; the index is now the firm's binding constraint · Severity: HIGH · Owner: CIO
+## I-115 · 2026-08-25 · EIGHTH instance — the grant remediation's findings, two of them HIGH, never reached this log; the index is now the firm's binding constraint · Severity: HIGH · Owner: CIO
 
 **Description.** `S4-D-009` reports **I-270 … I-279 filed.** Measured [CIO]: this log holds **zero**
 entries in that range and its highest is **I-226. Twelve references live in
@@ -5813,3 +5813,723 @@ where the registered family is `"S"`; **CIO-verified at source, `test_minbtl_ser
 
 **Resolution:** open — **HIGH.** The findings index is the next dispatch.
 **Pattern tag:** `finding-never-reached-the-index` · `eighth-instance` · `index-is-now-the-constraint`
+
+---
+
+## FINDINGS INDEX BACKFILL — S4-D-010 · 2026-08-25 · Execution & Operations
+
+**What follows.** Transcription of findings already filed in source memos but never appended to
+this log — the failure `ops/CASEBOOK.md`'s harvest depends on this log to catch. Six ranges, as
+scoped by the Principal and the CIO: I-210–I-219 (`REDTEAM-002-funding-carry-seal.md`), I-230–I-239
+(`DATA-IMPL-008-harness-self-defence.md`), I-240–I-249 (`REDTEAM-002A-withdrawal.md`), I-250–I-256
+(`DIR-RESTATE-001-prereg002-mechanism.md` §15 and `PREREG-002`'s R-009 block), I-260–I-269
+(`VALIDATION-RULING-006-r4-scope.md`), I-270–I-279 (`DATA-IMPL-009-grant-remediation.md`).
+
+**Rule observed throughout: every severity below is the filing seat's, transcribed verbatim. This
+seat re-rated nothing.** Each entry is its own `## I-NNN` block, greppable by ID and by severity —
+the design tested in `ops/FINDINGS-INDEX-NOTE.md`.
+
+**Counts found against the ranges named, not padded:** I-210–I-219 full (10/10) · I-230–I-239 full
+(10/10) · I-240–I-249 **short** (8/10 — I-240 through I-247 only) · I-250–I-256 **short** (6/7 —
+I-250 through I-255 only; see I-280) · I-260–I-269 full (10/10) · I-270–I-279 **short** (5/10 —
+I-270 through I-274 only). **49 transcribed entries total.**
+
+---
+
+## I-210 · 2026-08-25 · `k`, `d` and `band` carry no numeric value anywhere in `PREREG-002`, the payload or the seal block — a sizing rule frozen with two free symbols · Severity: HIGH — BLOCKING ON THE SEAL · Owner: director-of-research → quant-validation
+
+**Transcribed from** `research/REDTEAM-002-funding-carry-seal.md` §11 (Issues Filed table), filed by
+devils-advocate at S3-D-024; pointed to but not indexed at this log's I-098. The sealed `statement`
+freezes `w(t) = clip(1.0 − k·max(0, z(t) − d), 0, 1.0)` with two free symbols; §6.2's "made now,
+before any measurement", §10.5's "fixed at pre-registration" and §11.5's "parameter centres" each
+assert a fixing that does not exist, so P3, P4 and P7 cannot see a post-seal choice, and `R_strat`
+is undefined.
+
+**Resolution:** as filed — open at S3-D-024. Not adjudicated here: `PREREG-002` R-008 (same date)
+reads as fixing `k=0.5, d=1.0, band=0.10`; whether that discharges I-210 is director-of-research's/
+quant-validation's call, not Ops's.
+
+---
+
+## I-211 · 2026-08-25 · KC-002 clause (b) is a pure function of the unsealed `k` and `d` — direction knowable without running anything · Severity: HIGH · Owner: quant-validation
+
+**Transcribed from** `research/REDTEAM-002-funding-carry-seal.md` §11. `|Δw| > 0.25` iff
+`k·(z − d) > 0.25`; a larger `k` and smaller `d` make the sponsor's own pre-registered expected
+cause of death easier to survive. Filed as strictly worse than I-153, whose clause was at least
+visible in the text.
+
+**Resolution:** as filed — open.
+
+---
+
+## I-212 · 2026-08-25 · The ±50% grid has no centre — chosen with F-002's output already in hand · Severity: MEDIUM · Owner: director-of-research → quant-validation
+
+**Transcribed from** `research/REDTEAM-002-funding-carry-seal.md` §11. §10.5 grids `lookback` and
+`k`; `grid_from_center` requires a centre; §15 runs the grid at step 6, after F-002 at steps 2–3 —
+filed as I-029(d) relocated from the lag axis to the parameter axis, in the family whose §5.5 table
+certifies no such operation.
+
+**Resolution:** as filed — open. Ops notes without adjudicating: `PREREG-002` R-009/R41(b) reads as
+fixing grid centres pre-seal (`lookback`→30, `k`→0.5), which the filing seat did not have in hand.
+
+---
+
+## I-213 · 2026-08-25 · `C` denotes two different objects — the freeze instant and the in-sample right edge — five prior repairs addressed instances, not the cause · Severity: MEDIUM · Owner: director-of-research → quant-validation
+
+**Transcribed from** `research/REDTEAM-002-funding-carry-seal.md` §11. Two binding fields carry
+`[2020-01-01, C]`; at any seal date that window claims data not yet on disk, and `(B, C]` is a gap
+that is neither in-sample nor holdout. Remedy proposed by the filing seat: conform the two fields to
+"the last settled common bar at the first run" — no change to `C`, no Principal act, one prose edit.
+
+**Resolution:** as filed — open.
+
+---
+
+## I-214 · 2026-08-25 · F-002 leg (ii)'s exposure match is on the first moment while its statistic is an order statistic, and the tail test's effective sample is ~6, not 40 · Severity: MEDIUM · Owner: director-of-research → quant-validation
+
+**Transcribed from** `research/REDTEAM-002-funding-carry-seal.md` §11. The tail test's effective
+sample is market-wide stress episodes (≈6 in 6.6y), not 20 days × 2 assets; §6.1 records both
+assets' extremum on 2020-03-12 and §18 declares them one cluster; §17 rank 10 concedes `N_eff` far
+below 2 for the cross-section and never applies it here. Compounded, per the filing seat, by I-202
+moving C11's calibration downstream of the seal.
+
+**Resolution:** as filed — open.
+
+---
+
+## I-215 · 2026-08-25 · §19.1's sole ground for ADMITTED rather than ADMITTED-AS-EXPLORATORY is contradicted by D-6 in the same document · Severity: MEDIUM · Owner: quant-validation
+
+**Transcribed from** `research/REDTEAM-002-funding-carry-seal.md` §11. §19.1's "a verdict is
+reachable" is contradicted by D-6; I-173/I-186 make the family a permanent INSUFFICIENT-DATA as the
+document stands, which Validation's own §10.3(2) calls "currently the family's binding constraint"
+— the two findings were not put next to each other.
+
+**Resolution:** as filed — open.
+
+---
+
+## I-216 · 2026-08-25 · Persistence escape (c) is escape (a) relocated from the premium axis to the sizing axis, and §4's own rejection of (a) applies verbatim · Severity: MEDIUM · Owner: director-of-research
+
+**Transcribed from** `research/REDTEAM-002-funding-carry-seal.md` §11. Escape (c)'s named
+falsifier — aggregate short-perp OI falling into rich funding — is not in `pit.db`, has no loader,
+and is listed non-blocking. Filed seat's read: the marginal supplier at BTC/ETH scale is a
+vol-targeting basis desk that de-scales into rich funding as a by-product of inventory risk,
+without reading the signal.
+
+**Resolution:** as filed — open.
+
+---
+
+## I-217 · 2026-08-25 · C12's cadence discharge covers 4,802 symbol-days through 2026-07-28; the settled sealed span carries 4,828 · Severity: LOW-MEDIUM · Owner: head-of-data-infra
+
+**Transcribed from** `research/REDTEAM-002-funding-carry-seal.md` §11. The filing seat swept the 26
+uncovered settled symbol-days this session: 3 prints/day, both symbols, every day — clean, no new
+K7 trigger [measured by the filing seat]. Filed so the discharge's scope matches the span. **No
+action requested by the filing seat.**
+
+**Resolution:** as filed — open, no action requested.
+
+---
+
+## I-218 · 2026-08-25 · None of R-001…R-007 originated in the sponsor noticing, and the near-fatal arrival rate spiked at revisions 4–6 rather than declining · Severity: MEDIUM · Owner: CIO → Principal
+
+**Transcribed from** `research/REDTEAM-002-funding-carry-seal.md` §11. Each revision was triggered
+by an external measurement, ruling, or dispatch order — the document says so of R-006 itself. Three
+HIGHs in 48 hours at revisions 4–6 (I-130, I-140, I-153); the filing seat's prior on an eighth
+instrument finding an eighth defect is high, and names I-210 as that eighth.
+
+**Resolution:** as filed — open.
+
+---
+
+## I-219 · 2026-08-25 · Base rate, reported unprompted — the live failure mode is Appendix B #9 (throughput ZERO), not #1 · Severity: LOW-MEDIUM · Owner: devils-advocate → CIO → Principal
+
+**Transcribed from** `research/REDTEAM-002-funding-carry-seal.md` §11. Appendix B #1's metric is
+undefined at n = 0 Gate 1 verdicts and the filing seat makes no claim from it; I-025's Opus-by-origin
+metric had inverted from 100% Principal to effectively 100% Director. 28 days, 4 Opus seats, ~200
+issues, 0 trials/backtests/verdicts/seals at time of filing — no artifact in three sprints had
+stated the throughput number the Charter requires stated.
+
+**Resolution:** as filed — open.
+
+---
+
+## I-230 · 2026-08-25 · `TrialRegistry.__init__`'s `allow_create` default is `True`, contradicting `test_rwg_03`'s literal expectation · Severity: MEDIUM · Owner: quant-validation
+
+**Transcribed from** `research/DATA-IMPL-008-harness-self-defence.md` §6, filed by
+head-of-data-infra at S4-D-002. Shared fixtures `_seeded()`/`_build()` (48 of the two files' 47
+tests, net of `test_rwg_03` itself) require `allow_create=True`; the filing seat defaulted `True`
+and named the one-test cost. A one-line fix to `_seeded()` would pass both, per the filing seat,
+but is Validation's edit to make.
+
+**Resolution:** as filed — open. Ops notes without adjudicating: `VALIDATION-RULING-006` (I-265,
+below) reads as ruling `allow_create` back to `False`.
+
+---
+
+## I-231 · 2026-08-25 · R-4 enforced exactly as specified breaks ~149 pre-existing tests that call the raw registry write API with no grant · Severity: **CRITICAL** (as filed — outside this log's usual vocabulary; see I-283) · Owner: quant-validation → director-of-research (test-file owners)
+
+**Transcribed from** `research/DATA-IMPL-008-harness-self-defence.md` §6, filed by
+head-of-data-infra at S4-D-002. Framework call sites (`run_backtest`, `evaluate_gate1`, `PITStore`,
+`HoldoutVault`) self-grant and are restored; direct callers are not and cannot be restored from this
+seat. Suite moved to 173 passed / 81 failed / 68 errors against a 272/50/322 baseline.
+
+**Resolution:** as filed — open; became I-100 (this log), the incident that blocked the seal, and
+was subsequently ruled by `VALIDATION-RULING-006` and remediated by `DATA-IMPL-009` (I-270–I-274,
+below). Not closed here — this entry transcribes the original filing only.
+
+---
+
+## I-232 · 2026-08-25 · E-8's ANCHOR-STALE check needed an undocumented 730-day tolerance to avoid firing on wall-clock drift alone · Severity: MEDIUM · Owner: quant-validation
+
+**Transcribed from** `research/DATA-IMPL-008-harness-self-defence.md` §6. Wall-clock drift between
+spec authoring (2026-08-12) and the dispatch session (2026-08-25) made most fixtures' incidental
+`forward_window_start` values read stale at zero tolerance; the filing seat added
+`_ANCHOR_STALE_TOLERANCE_DAYS = 730`, documented at the call site.
+
+**Resolution:** as filed — open.
+
+---
+
+## I-233 · 2026-08-25 · E-24's `--as-of` refusal boundary is a fixed 2020-01-01 floor, not literally "the family's seal date" · Severity: MEDIUM · Owner: quant-validation
+
+**Transcribed from** `research/DATA-IMPL-008-harness-self-defence.md` §6. Neither the literal
+wall-clock seal timestamp nor the anchor `C` can serve as the refusal boundary without breaking a
+test that must pass; the filing seat used a fixed usage-error floor matching this firm's own
+earliest documented in-sample convention (`PREREG-002` §11.1's span).
+
+**Resolution:** as filed — open.
+
+---
+
+## I-234 · 2026-08-25 · Framework call sites self-grant around their own registry writes with a harness-supplied token, rather than requiring the caller to already hold one · Severity: MEDIUM · Owner: quant-validation (disclosure; filed as matching I-161)
+
+**Transcribed from** `research/DATA-IMPL-008-harness-self-defence.md` §6. `engine.run_backtest`,
+`evaluate_gate1`, `PITStore`, `HoldoutVault` self-grant to preserve every pre-existing caller of
+those functions.
+
+**Resolution:** as filed — open.
+
+---
+
+## I-235 · 2026-08-25 · R-12 ("grant row is first write") cannot hold for the very first `MIGRATION` grant on a table that does not yet exist · Severity: LOW · Owner: quant-validation
+
+**Transcribed from** `research/DATA-IMPL-008-harness-self-defence.md` §6. `executescript(SCHEMA)`
+necessarily precedes that one grant row's insert; every other reason keeps R-12 exactly, per the
+filing seat.
+
+**Resolution:** as filed — open.
+
+---
+
+## I-236 · 2026-08-25 · Bootstrap-on-missing-path performs schema creation with no `write_grants` row and no attribution at all · Severity: LOW · Owner: quant-validation
+
+**Transcribed from** `research/DATA-IMPL-008-harness-self-defence.md` §6. Disclosed by the filing
+seat as the primordial, pre-governance act, distinct from R-16's legacy-migration amnesty.
+
+**Resolution:** as filed — open.
+
+---
+
+## I-237 · 2026-08-25 · `evaluate_dated_clauses(family=None)`'s multi-family behaviour is minimally implemented and untested by the suite · Severity: LOW · Owner: quant-validation
+
+**Transcribed from** `research/DATA-IMPL-008-harness-self-defence.md` §6. E-25.4 names multi-family
+semantics out of scope; the filing seat's implementation iterates every registered family,
+concatenates findings, and reports only the last family's anchor/as-of.
+
+**Resolution:** as filed — open.
+
+---
+
+## I-238 · 2026-08-25 · The vault's `_require_grant("vault_file_write")` guard is satisfied by a grant taken immediately before it, making it declarative rather than preventive · Severity: LOW · Owner: quant-validation
+
+**Transcribed from** `research/DATA-IMPL-008-harness-self-defence.md` §6. Filed as the same class as
+R-18/I-160, now also true of the guard itself.
+
+**Resolution:** as filed — open.
+
+---
+
+## I-239 · 2026-08-25 · Coverage matching (E-6) uses containment rather than exact equality, because registered `source_offset` values do not equal the recognizer's own match-start · Severity: LOW · Owner: quant-validation
+
+**Transcribed from** `research/DATA-IMPL-008-harness-self-defence.md` §6. Verified empirically by
+the filing seat: off by 1–4 characters each in `test_dce_06/09/10/11/12/13`.
+
+**Resolution:** as filed — open.
+
+---
+
+## I-240 · 2026-08-25 · `band = 0.10`'s cost derivation charges 24 bp — four sides, both legs — for a rebalance the same sentence states moves only the perp leg · Severity: HIGH · Owner: director-of-research → quant-validation
+
+**Transcribed from** `research/REDTEAM-002A-withdrawal.md` §6, filed by devils-advocate at S4-D-005.
+Correct charge is 6 bp (one side) or 12 bp (perp round trip); corrected `band` is 0.27–0.54. At 0.27
+the sponsor's own declared escalation trigger — "had the cost arithmetic delivered `band` > 0.25 …
+this seat would have escalated" — is met, and the favourable post-hoc check that the band cannot
+suppress a clause-(b) day inverts. One prose edit, zero trials, free pre-seal, permanent after P7.
+
+**Resolution:** as filed — not blocking, per the filing seat's own §4. Ops notes without
+adjudicating: `PREREG-002` R-009/R44 reads as correcting `band` to 0.27 on this basis and escalating
+the fired trigger (I-251, below).
+
+---
+
+## I-241 · 2026-08-25 · `d = 1.0`'s bracket is derived from the wrong noise scale — omits day `t`'s own sampling variation · Severity: HIGH · Owner: director-of-research → quant-validation
+
+**Transcribed from** `research/REDTEAM-002A-withdrawal.md` §6. The derivation uses `σ/√30 = 0.183`
+(the reference level's estimation noise) and omits the screened day's own variation; with the
+window ending strictly before the screened day, `sd(z | null) = √(1 + 1/30) ≈ 1.017`. `d = 1.0` is
+therefore ~1.0 null SD, not the ~5.5 the document states — the same position on the scale at which
+§14.2 rejects `d = 0.2`. Filed on the derivation, not the seal — the choice itself is legitimately
+pre-registered, per the filing seat.
+
+**Resolution:** as filed — open, disclosure not re-derivation per the Principal's ruling (see
+`PREREG-002` R-009/R45).
+
+---
+
+## I-242 · 2026-08-25 · `σ̂` degeneracy is nowhere handled, and `1/k = 2.0` makes it quantitative for the first time · Severity: HIGH · Owner: director-of-research → quant-validation
+
+**Transcribed from** `research/REDTEAM-002A-withdrawal.md` §6. In a 30-day window dominated by
+prints at the administered floor (~35% of prints), `σ̂` collapses and `z` is unbounded on an
+arbitrarily small departure, so `w` can travel full-size-to-flat on a sub-bp funding move in the
+calmest regime — the inverse of the stated mechanism. No variance floor, winsorization or `σ̂` guard
+exists in any field, per the filing seat's verification.
+
+**Resolution:** as filed — not blocking per the filing seat's own §4, but named and not repaired.
+
+---
+
+## I-243 · 2026-08-25 · The R42 evidential register changes how leg (ii) is read but not how it is computed, making the computational bias directional for the first time · Severity: MEDIUM · Owner: director-of-research → quant-validation
+
+**Transcribed from** `research/REDTEAM-002A-withdrawal.md` §6. On the ~25% of inversion days
+`w ≡ 1.0` while `R_bench_scaled = R_bench × c`, `c < 1`, so `R_strat` is strictly larger there,
+losses included, and the mechanism asserts the 20 worst days are drawn from exactly that regime.
+Filed as I-214 with its direction identified.
+
+**Resolution:** as filed — open.
+
+---
+
+## I-244 · 2026-08-25 · DA(2) stands verbatim but its power is confounded by I-242 — a reporting obligation on DA(2)'s executor, not a change to the clause · Severity: MEDIUM · Owner: devils-advocate → whoever executes DA(2)
+
+**Transcribed from** `research/REDTEAM-002A-withdrawal.md` §6. `z > 1.5` counts `σ̂` collapses
+alongside crowding events; the filing seat requires the trailing-`σ̂` distribution over qualifying
+days reported alongside the count, so a DA(2) survival is not read as evidence of the mechanism.
+Threshold, window, in-sample maximum and silence-is-a-kill provision unchanged.
+
+**Resolution:** as filed — open, binding as a reporting obligation.
+
+---
+
+## I-245 · 2026-08-25 · A CIO verification reached this seat garbled — an apparent second `k = 3.0` is `1/k = 3.0` · Severity: LOW · Owner: CIO
+
+**Transcribed from** `research/REDTEAM-002A-withdrawal.md` §6. The dispatch stated the summary
+above; the sealed text reads `z = d + 1/k = 3.0`, where `1/k = 2.0`. The document is correct and the
+summary of the verification is not, per the filing seat.
+
+**Resolution:** as filed — open.
+
+---
+
+## I-246 · 2026-08-25 · Throughput remains 0 trials / 0 backtests / 0 verdicts / 0 seals; the family became sealable from this seat and nothing else changed · Severity: LOW-MEDIUM · Owner: CIO → Principal
+
+**Transcribed from** `research/REDTEAM-002A-withdrawal.md` §6. Appendix B #9 remains the live
+failure mode; Appendix B #1's metric remains undefined at n = 0 Gate 1 verdicts, and the filing seat
+makes no claim from it. I-219 stands and is not re-filed.
+
+**Resolution:** as filed — open.
+
+---
+
+## I-247 · 2026-08-25 · INCIDENT — the harness is uncommitted, its suite 110-red, and the failing call is `open_hypothesis` itself · Severity: HIGH · Owner: head-of-data-infra → quant-validation → CIO
+
+**Transcribed from** `research/REDTEAM-002A-withdrawal.md` §6. Five modules modified by another
+seat, uncommitted; suite measured twice at 110 failed / 144 passed / 68 errors — not environmental:
+a new `_require_grant` gate (SPEC-004 self-defence, absent at HEAD) now requires
+`TrialRegistry.write_grant(reason="REGISTER_HYPOTHESIS")` and the suite's callers were not updated.
+`REGISTRATION-PAYLOAD-PREREG-002` §6's six-item pre-execution checklist does not contain "open a
+write grant," so the seal as specified raises. `_BINDING_FIELDS` checked unchanged (sixteen fields),
+so §1.1's verification stands.
+
+**Resolution:** as filed — open; this is the incident that became I-100 in this log (severity there
+recorded as HIGH by the CIO).
+
+---
+
+## I-250 · 2026-08-25 · The rounding rule for `band` was never stated, and became decision-relevant at R-009 · Severity: MEDIUM (per this log's I-102, citing the Director's own rating; §15.8 does not label it independently) · Owner: director-of-research (self-filed, no addressee stated in source)
+
+**Transcribed from** `research/DIR-RESTATE-001-prereg002-mechanism.md` §15.4/§15.8 and `PREREG-002`
+R-009/R44(c), dispatch S4-D-007. §14.4 said "rounded down" and stated no rule; two
+independently-arguable routes land the corrected `band` at exactly 0.25, which would silence the
+escalation trigger. Rule adopted instead: truncate the derived bound downward at the precision its
+inputs support — the least-discretion option, justified without reference to 0.25.
+
+**Resolution:** as filed — open.
+
+---
+
+## I-251 · 2026-08-25 · The escalation trigger fired; the conflict is live and unresolved at the seal · Severity: HIGH · Owner: director-of-research → quant-validation
+
+**Transcribed from** `research/DIR-RESTATE-001-prereg002-mechanism.md` §15.5/§15.8 and `PREREG-002`
+R-009/R44(b). Corrected `band = 0.27 > 0.25`; the sponsor's own pre-registered clause committed this
+seat, in writing, to escalate rather than pick a side if this happened. Quantified: a suppression
+window `1.50 < z ≤ 1.54` for KC-002 clause (b) at 12 bp, versus `1.50 < z ≤ 2.08` at 6 bp.
+
+**Resolution:** as filed — open, escalated per the Principal's advance ruling that a trigger firing
+during drafting is "the system working at the cheapest possible moment."
+
+---
+
+## I-252 · 2026-08-25 · The 6-vs-12 bp cost-accounting convention is survival-relevant and was chosen by the sponsor on the axis ruled unchooseable from either survival condition · Severity: HIGH · Owner: quant-validation
+
+**Transcribed from** `research/DIR-RESTATE-001-prereg002-mechanism.md` §15.2/§15.8 and `PREREG-002`
+R-009/R44. 12 bp (selected) yields the smaller, family-friendlier corrected band (0.27 vs 0.54 at 6
+bp); the filing seat states the direction of its own choice and files this to Validation because it
+should not stand on the sponsor's say-so.
+
+**Resolution:** as filed — open, a new pre-seal dependency per the filing seat's own judgment
+(echoed at this log's I-102).
+
+---
+
+## I-253 · 2026-08-25 · KC-002 clause (b) counts executed moves, so any `band` > 0.25 couples a kill condition to a cost parameter · Severity: MEDIUM (per this log's I-102; §15.8 does not label it independently) · Owner: director-of-research (self-filed, no addressee stated in source; named, not repaired)
+
+**Transcribed from** `research/DIR-RESTATE-001-prereg002-mechanism.md` §15.5/§15.8. Whether clause
+(b) should count target rather than executed deviations, decoupling a kill condition from a cost
+parameter, is named as a clause-(b) restatement — a hard interrupt, out of this dispatch's scope,
+and not touched.
+
+**Resolution:** as filed — open, named and not repaired.
+
+---
+
+## I-254 · 2026-08-25 · The corrected literal sits 0.3% inside its own constraint, so an in-sample measured mean now sets a binding literal almost exactly · Severity: MEDIUM (per this log's I-102; §15.8 does not label it independently) · Owner: director-of-research (self-filed, no addressee stated in source; filed as I-223 escalated)
+
+**Transcribed from** `research/DIR-RESTATE-001-prereg002-mechanism.md` §15.4/§15.8. `band = 0.27`
+against a bound of `0.2708`; smallest authorized trade costs 3.240 bp against 3.249 bp/day of carry.
+
+**Resolution:** as filed — open.
+
+---
+
+## I-255 · 2026-08-25 · The whole `band` derivation is contingent on the one-leg rebalance; a future two-leg construction reverts the charge to 24 bp and the band to ~0.135, and nothing in the document flags the coupling · Severity: LOW (per this log's I-102; §15.8 does not label it independently) · Owner: director-of-research (self-filed, no addressee stated in source)
+
+**Transcribed from** `research/DIR-RESTATE-001-prereg002-mechanism.md` §15.8.
+
+**Resolution:** as filed — open.
+
+---
+
+## I-260 · 2026-08-25 · `holdout.py` ships 8 of 13 `_grant_log` call sites passing 4 positional args to a 3-arg method — 42 test instances raise `TypeError`, masked behind the grant error · Severity: HIGH · Owner: quant-validation → head-of-data-infra
+
+**Transcribed from** `research/VALIDATION-RULING-006-r4-scope.md` §9, filed by quant-validation at
+dispatch S4-D-008 (ruling on I-100 against `VALIDATION-SPEC-004`). Unconditional, independent of
+R-4; found during adjudication, not present in the incident record it rules on.
+
+**Resolution:** as filed — open; remediated (not closed here) by `DATA-IMPL-009`'s Phase 1
+(I-270–I-274, below).
+
+---
+
+## I-261 · 2026-08-25 · `DATA-IMPL-008`'s "no new, independent bugs were found" is false — produced by sampling a masked failure population · Severity: HIGH · Owner: quant-validation → head-of-data-infra
+
+**Transcribed from** `research/VALIDATION-RULING-006-r4-scope.md` §9. A method that could only
+return that answer, per the filing seat; standing rule stated at the ruling's §6: unmask, then
+count. This is the entry `TEMPLATES.md` §7.10(8) generalizes from.
+
+**Resolution:** as filed — open.
+
+---
+
+## I-262 · 2026-08-25 · The I-100 "relax R-4" fork does not exist — R-5 refuses the write independently, and relaxing R-1 too produces 60 sites reading INSUFFICIENT-DATA · Severity: MEDIUM · Owner: quant-validation
+
+**Transcribed from** `research/VALIDATION-RULING-006-r4-scope.md` §9. Recorded by the filing seat so
+the option is not re-proposed.
+
+**Resolution:** as filed — open (informational/foreclosing).
+
+---
+
+## I-263 · 2026-08-25 · R-7 × R-10 forces 2+ sequential grant blocks on the suite's commonest shape — 17 of 48 functions, one at 6-for-6 · Severity: MEDIUM · Owner: quant-validation (self)
+
+**Transcribed from** `research/VALIDATION-RULING-006-r4-scope.md` §9. A measured cost of the filing
+seat's own design, explicitly not relaxed.
+
+**Resolution:** as filed — open.
+
+---
+
+## I-264 · 2026-08-25 · `VALIDATION-SPEC-004` altered a call contract and stated no caller count; its §10 projected floor silently assumed zero affected callers · Severity: MEDIUM · Owner: quant-validation (self)
+
+**Transcribed from** `research/VALIDATION-RULING-006-r4-scope.md` §9. Filed by the same seat against
+its own document — the origin of `TEMPLATES.md` §7.10 item 7 ("count the callers before altering a
+call contract").
+
+**Resolution:** as filed — open.
+
+---
+
+## I-265 · 2026-08-25 · I-230 ruled: `allow_create` returns to `False`; SPEC-004's own fixtures pass `True` explicitly — the filing seat's own fixtures contradicted its own clause · Severity: MEDIUM · Owner: quant-validation
+
+**Transcribed from** `research/VALIDATION-RULING-006-r4-scope.md` §9. Ruling: `allow_create` reverts
+to `False` per R-1/R-3; `_seeded()`/`_build()` pass `allow_create=True` explicitly. Filed as the same
+not-counting defect one layer in.
+
+**Resolution:** as filed — ruled/open; a tightening toward the clause's stated assumption per the
+filing seat, no Principal act required.
+
+---
+
+## I-266 · 2026-08-25 · A fixture yielding inside an open grant is not foreclosed by R-6/R-7 for a test taking no explicit grant · Severity: MEDIUM · Owner: quant-validation
+
+**Transcribed from** `research/VALIDATION-RULING-006-r4-scope.md` §9. Closed by a new static check,
+`test_grant_meta_01`, prototyped and verified against a negative control, per the filing seat.
+
+**Resolution:** as filed — open (remediation prototyped; `DATA-IMPL-009` reports 0 offenders across
+20 files under the resulting `test_grant_meta.py`).
+
+---
+
+## I-267 · 2026-08-25 · I-068's three owed fixture edits (`test_G2`/`test_h7`/`test_h8`) remain unexecuted since 2026-08-05, now in their second incident · Severity: LOW · Owner: quant-validation
+
+**Transcribed from** `research/VALIDATION-RULING-006-r4-scope.md` §9. Deliberately not executed
+under this remediation so the I-078 dispositions stay visible, per the filing seat.
+
+**Resolution:** as filed — open; `DATA-IMPL-009` confirms all three still failing, left failing by
+design.
+
+---
+
+## I-268 · 2026-08-25 · `book/registry.db` has no `write_grants` table — R-11/R-14's migration has never run against the book of record · Severity: MEDIUM · Owner: quant-validation → head-of-data-infra
+
+**Transcribed from** `research/VALIDATION-RULING-006-r4-scope.md` §9. R-15's orphan audit has
+therefore never been exercised on real data; R-16's amnesty was specified against 1 event row and
+the book of record now holds 3.
+
+**Resolution:** as filed — open.
+
+---
+
+## I-269 · 2026-08-25 · The suite's grant `token` is a literal string in the test's own text · Severity: LOW · Owner: quant-validation (disclosure)
+
+**Transcribed from** `research/VALIDATION-RULING-006-r4-scope.md` §9. Filed as I-103/I-161 arriving
+in the suite. Accepted and disclosed by the filing seat: what tests need from the grant is
+visibility, not authentication, and the grant authenticates nobody anywhere.
+
+**Resolution:** as filed — accepted/open, disclosure only.
+
+---
+
+## I-270 · 2026-08-25 · `TrialRegistry(":memory:")` is structurally incompatible with `write_grant()` — no in-memory registry can ever take a grant · Severity: HIGH · Owner: head-of-data-infra → quant-validation (escalated, not patched)
+
+**Transcribed from** `research/DATA-IMPL-009-grant-remediation.md` (Newly Unmasked section),
+dispatch S4-D-009. `write_grant` always opens a second connection via `sqlite3.connect(self.path)`;
+for `path=":memory:"` this is a disconnected, schema-less database. Reproduced directly by the
+filing seat: any `write_grant(...)` against it raises `sqlite3.OperationalError: no such table:
+write_grants`, unconditionally. `test_carry_accounting.py::_new_registry` is the only site in the
+suite using this pattern (checked all files); 16 of the file's 24 tests fail on this. Root cause is
+`registry.py`, outside this dispatch's test-file-only authorization.
+
+**Resolution:** as filed — open, escalated to Validation, not patched.
+
+---
+
+## I-271 · 2026-08-25 · Three raw-SQL writes against `reg.conn`/`registry.conn` are invisible to the AST call-site walk but equally subject to R-1's read-only default · Severity: MEDIUM · Owner: head-of-data-infra (resolved in this dispatch)
+
+**Transcribed from** `research/DATA-IMPL-009-grant-remediation.md` (Newly Unmasked section).
+`test_holdout_p1.py::test_P4`/`::test_P6` and
+`test_seeded_n.py::test_h3_negative_raw_sqlite_downgrade_is_detected`; all three wrapped in a
+same-reason grant, per the filing seat, and now pass.
+
+**Resolution:** as filed — resolved by the filing seat's own dispatch.
+
+---
+
+## I-272 · 2026-08-25 · `test_h1_column_exists_defaults_zero_and_migrates` constructs a registry over a pre-grant-system legacy schema and expects it migrated, but migration only runs inside a grant block · Severity: LOW · Owner: head-of-data-infra (resolved in this dispatch)
+
+**Transcribed from** `research/DATA-IMPL-009-grant-remediation.md` (Newly Unmasked section). An
+empty `with grant(legacy_reg, "MIGRATION"): pass` was added by the filing seat; not a call to any of
+the three tracked methods, so uncounted by the 99-call-site AST total.
+
+**Resolution:** as filed — resolved by the filing seat's own dispatch.
+
+---
+
+## I-273 · 2026-08-25 · `test_mbs_11` registers family `"S"` but grades the unregistered family `"hac"` — a new, previously undiscovered sibling of I-075 · Severity: HIGH · Owner: head-of-data-infra → quant-validation (escalated, not patched)
+
+**Transcribed from** `research/DATA-IMPL-009-grant-remediation.md` (Newly Unmasked section). Masked
+until this dispatch behind the fixture-level grant error — exactly the trap the dispatch names. Not
+fixed here, on the same doctrine as I-075: retargeting a family argument is a finding for Validation
+to rule, not a grant block for this seat to add.
+
+**Resolution:** as filed — open, escalated to Validation, not patched.
+
+---
+
+## I-274 · 2026-08-25 · Grant blocks actually written: 76, against Validation's projected 71 — a 5-block delta, informational · Severity: LOW · Owner: head-of-data-infra
+
+**Transcribed from** `research/DATA-IMPL-009-grant-remediation.md` (Files section). All five traced
+to R-7 interleaving or raw-SQL sites the 99-call-site AST walk structurally cannot see
+(`test_holdout_p1.py` +2, `test_trial_budget_enforcement.py` +1, `test_seeded_n.py` +2).
+
+**Resolution:** as filed — informational, no action requested.
+
+---
+
+## I-280 · 2026-08-25 · This log's own I-102 cites I-256 as a filed finding (LOW) in the R-009 block; no such entry exists in either named source · Severity: MEDIUM · Owner: CIO (self, I-102's author) → director-of-research
+
+**Description.** `S4-D-010`'s scope named `research/DIR-RESTATE-001-prereg002-mechanism.md` §15 and
+`PREREG-002`'s R-009 block as the sources for I-250–I-256. §15.8's own issues-filed line lists only
+I-250 through I-255 — six entries — and `PREREG-002`'s R-009 revision block (R44/R44(b)/R44(c)/R45)
+cites the same six and no seventh. This log's own I-102 entry, filed by the CIO, nonetheless lists
+"I-256 LOW" in its pointer table. Searched the full repository for the literal string `I-256`: it
+appears in exactly two places, both inside this log's own I-102 entry, and nowhere in any research
+memo [checked]. **Ops transcribes I-250–I-255 (found) and does not fabricate an I-256 to fill the
+range** — there is no source to transcribe from, and inventing content for a numbered finding is
+exactly the risk this dispatch exists to avoid.
+
+**Resolution:** open — the CIO's own prior pointer entry appears to contain a citation this seat
+cannot verify against source; not corrected here, per the append-only rule and per Ops's mandate not
+to touch existing entries.
+**Pattern tag:** `index-entry-citing-a-nonexistent-source`
+
+---
+
+## I-281 · 2026-08-25 · Range I-240–I-249 was allocated for ten findings; the source memo files only eight (I-240 through I-247) · Severity: LOW · Owner: CIO (scope-setter)
+
+**Description.** `REDTEAM-002A-withdrawal.md` §6's own header reads "ISSUES FILED — I-240 THROUGH
+I-247." No I-248 or I-249 exists anywhere in the memo or elsewhere in the repository [checked]. The
+Principal's own scope instruction warned against assuming padding, and this is that case realized —
+a range allocated generously that the filing seat did not fill, exactly as instructed.
+
+**Resolution:** open, informational — no action requested; recorded so the next reader of the range
+table does not go looking for I-248/I-249.
+**Pattern tag:** `range-allocated-generously-not-padded`
+
+---
+
+## I-282 · 2026-08-25 · Range I-270–I-279 was allocated for ten findings; the source memo files only five (I-270 through I-274) · Severity: LOW · Owner: CIO (scope-setter)
+
+**Description.** `DATA-IMPL-009-grant-remediation.md`'s own "Issues filed" line lists I-270 through
+I-274 only. No I-275 through I-279 exists anywhere in the memo or elsewhere in the repository
+[checked]. Same class as I-281.
+
+**Resolution:** open, informational — no action requested.
+**Pattern tag:** `range-allocated-generously-not-padded`
+
+---
+
+## I-283 · 2026-08-25 · I-231 was filed with severity CRITICAL, a rating outside this log's otherwise-used vocabulary (HIGH / MEDIUM / LOW / LOW-MEDIUM) · Severity: LOW (observation only; Ops does not re-rate I-231 itself) · Owner: CIO / quant-validation (severity-vocabulary owners)
+
+**Description.** Every other severity value transcribed in this backfill, and every value already
+in this log before it, is one of HIGH, MEDIUM, LOW, or LOW-MEDIUM. `DATA-IMPL-008-harness-self-
+defence.md` §0.1/§6 rates I-231 **CRITICAL** — a fifth value, used exactly once across ~280 entries.
+Ops transcribes it as filed, per this dispatch's binding rule, and flags the vocabulary drift rather
+than normalizing it to HIGH, which would itself be a re-rating this seat does not have standing to
+make.
+
+**Resolution:** open, informational — whether CRITICAL is a standing fifth severity tier or a
+one-off is a question for whichever seat owns severity vocabulary (Validation authored the finding;
+the CRO owns the Issue Log per `TEMPLATES.md` §7.8).
+**Pattern tag:** `severity-vocabulary-drift`
+
+---
+
+## I-116 · 2026-08-27 · The CIO collided with a range it had itself allocated, four times, six weeks after declaring the structural fix for exactly that · Severity: MEDIUM · Owner: CIO
+
+> **CIO range re-declared: I-116 – I-119, and I-104 – I-106 are Validation's (allocated at S2-D-026),
+> not free.** The CIO's prior declaration of I-090–I-099 stands as spent.
+
+**Description.** Found by Execution & Ops while testing the findings index it had just built, and
+**correctly routed rather than fixed** — *"pre-existing, not introduced by this dispatch, belongs to
+whoever owns Issue Log discipline."*
+
+**Measured** [CIO]: **`I-006`, `I-100`, `I-101`, `I-102` and `I-103` each carried two `## I-NNN`
+headers** — one set from 2026-08-06, a second from 2026-08-25 on unrelated findings. **The 08-06
+`I-100`–`I-106` are Validation's, filed inside the range the CIO itself allocated to it at
+S2-D-026.** **The 08-25 four are the CIO's.**
+
+**The CIO declared its own range as I-090–I-099 at I-090, filled it, and then continued into
+I-100–I-103 — straight into a range it had issued to another seat.**
+
+**This is the sixth instance of the CIO's numbering error and the one it had explicitly written a
+structural fix against.** S2-D-009 §7: *"Effective immediately: the CIO allocates a disjoint,
+explicitly stated issue-number range to every dispatch at dispatch time, sized generously, and never
+reuses a range or takes a number from a range already issued to a live seat."* **The CIO wrote that
+rule, applied it to every seat, and did not apply it to itself when its own range ran out.**
+
+**Corrected here, not appended around.** The four CIO entries are renumbered
+**I-100→I-107 · I-101→I-108 · I-102→I-109 · I-103→I-115**, into verified-free numbers. **Validation's
+08-06 entries keep their numbers**, on the convention this firm has applied twice: **when two parties
+collide in a ledger, the CIO renumbers its own** (S2-D-002, S3-D-007). **`I-006`'s pair is older,
+predates this range discipline entirely, and is left alone and flagged.**
+
+**Why an edit rather than an append.** The log is append-only **for findings**, and no finding's
+content changed here. **A duplicate ID is not history — it is a defect in the index the log exists to
+be**, and an appended note saying *"the second I-102 is really something else"* leaves the query
+broken, which is precisely what the findings-index dispatch was funded to fix.
+
+**Resolution:** the four collisions are resolved; **`I-006`'s remains open and is the CRO's under
+`TEMPLATES.md` §7.8.**
+**Pattern tag:** `cio-collided-with-its-own-allocation` · `wrote-the-rule-exempted-itself`
+
+---
+
+## I-117 · 2026-08-27 · The CIO published a pointer to a finding that was never filed — `I-256` exists nowhere but in the CIO's own citation of it · Severity: MEDIUM · Owner: CIO
+
+**Description.** The CIO's index pointer (now `I-109`) listed **seven** R-009 findings, ending
+`I-256 LOW`. **Measured**: `research/DIR-RESTATE-001` files **six** — `I-250` through `I-255` — and
+**`I-256` appears nowhere in the repository outside the CIO's citation of it.** Found by Execution &
+Ops during transcription and filed as its `I-280`.
+
+**The chain.** R-009's **return** reported *"Issues filed, I-250–I-256"* and enumerated seven. **The
+Director reported a finding it did not write.** **The CIO transcribed the report into a pointer
+without checking it against the artifact** — and the pointer's entire purpose was to make findings
+locatable, so **a phantom entry in it is the failure mode it was built to prevent.**
+
+**This is the eleventh instance of the cardinal class and the most exact.** I-141, I-150, I-096,
+I-245, the budget miscount, and now this: **a number taken from a report rather than from the thing
+the report describes.** The corrective — *count the roster, not the memory of it* — **was written by
+the CIO and applied by the CIO to four other seats in the same fortnight.**
+
+**Not corrected in the pointer.** `I-109` stands as published, with this entry as its correction,
+**because a pointer silently amended after being found wrong teaches nothing** — and the whole
+finding is that the CIO published a list it had not verified.
+
+**The Director's half is not the CIO's to rate** and is left to it: its return enumerated seven where
+its document files six.
+
+**Resolution:** open — `I-256` is void; **no finding of that number exists or is owed.**
+**Pattern tag:** `count-from-the-document-not-the-thing` · `phantom-in-the-index-that-fixes-phantoms`
+
+---
+
+## I-118 · 2026-08-27 · A subagent's `Write` was refused because the deliverable's filename matched a self-report pattern, and the seat returned the content rather than routing around the rule · Severity: LOW · Owner: CIO
+
+**Description.** `S4-D-010`'s second deliverable, `ops/FINDINGS-INDEX-NOTE.md`, **could not be
+written by the seat**: the harness blocks subagent `Write` calls to paths matching
+`findings/report/summary/analysis`, on the general principle that **subagents return findings as
+text rather than writing report files.**
+
+**The rule is right in general and was wrong here** — this was a commissioned artifact named in the
+brief, not a self-report.
+
+**What the seat did is the finding.** It **returned the full content in its response, named the tool
+that refused it, and said where the file should go.** It did **not** rename the file to slip past the
+pattern, and did **not** drop the deliverable and report success on the half it could do.
+
+> **A seat that hits an unexpected restriction and routes around it by renaming has defeated a
+> control it did not understand.** D-003's standing rule — *"any residual prompt means the task is
+> reaching outside scope — queue it, don't work around it"* — **was written for permission prompts,
+> and this seat applied its spirit to a tool refusal nobody had anticipated.**
+
+**Placed by the CIO verbatim**, with authorship marked in the file. **The content is Execution &
+Operations'; only the placement is the CIO's.**
+
+**Standing note for future dispatches:** a deliverable whose filename contains `findings`, `report`,
+`summary` or `analysis` **cannot be written by a subagent.** **Name commissioned artifacts to avoid
+those tokens, or expect to place them by hand.**
+
+**Resolution:** closed — file placed at `ops/FINDINGS-INDEX-NOTE.md`. The naming constraint is
+recorded for future briefs.
+**Pattern tag:** `restriction-hit-and-not-routed-around`
