@@ -428,11 +428,22 @@ is the Principal's and is never written to this repository, to Oracle, or to any
 | 2 | `book/registry.db` holds no family named `funding-carry-conditioning-002` | `SELECT COUNT(*) FROM hypotheses WHERE family = ...` returns 0 |
 | 3 | `trial_budget` is **47**, not 79 and not 80 | the literal in §2.2 |
 | 4 | `n_inherited` is **7**, not 0 | the literal in §2.8 |
-| 5 | `forward_window_start` equals the UTC calendar day of the call, and equals the vault's `cutoff` | §2.5 |
-| 6 | The vault is sealed in the same session, same UTC day | §5 |
+| 5 | `forward_window_start` equals the UTC calendar day of the call, and equals the vault's `cutoff` | §2.5 — executed inside item 7's grant; see the note below |
+| 6 | The vault is sealed in the same session, same UTC day | §5 — executed **after** item 7's grant closes, never inside it; see the note below |
+| 7 | `open_hypothesis` executes inside an open `TrialRegistry.write_grant(reason="REGISTER_HYPOTHESIS", dispatch=..., token=...)` block, and no second `write_grant` is opened on the same registry object until that block has closed | `write_grants` gains exactly one new row, `reason='REGISTER_HYPOTHESIS'`, `outcome='CLEAN'`; `hypotheses` gains exactly one row for `family='funding-carry-conditioning-002'` |
 
 **Item 1 is not this seat's to clear and is not cleared. A seal is a Standing Order 002 §4 hard
 interrupt.**
+
+**Note, added 2026-09-10, dispatch S4-D-013 (`research/DATA-IMPL-011-checklist-grant-step.md`),
+discharging I-247.** The checklist as R-010 left it had no grant step, and `open_hypothesis` now
+requires one (`RegistryWriteNotGrantedError` otherwise) — item 7 is that step, transcribed from the
+call as executed and verified on a throwaway registry, not from `registry.py`'s docstrings (§7.12).
+**Items 5 and 6 are unchanged in what they check; each now depends on being sequenced correctly
+around item 7.** `HoldoutVault.seal()` opens its own `write_grant(reason="VAULT_SEAL", ...)`
+internally, and grants do not nest (R-7): calling it from inside item 7's open block raises
+`RegistryWriteGrantNestedError` **and rolls back item 7's otherwise-successful registration with
+it** — full account at `DATA-IMPL-011` §3–§4. No literal in §1's table of sixteen moves.
 
 ---
 

@@ -6722,3 +6722,39 @@ not a dispatch.
 **Resolution:** open — **HIGH.** The gap is disclosed, the detection works, **and the firm is one
 undetected sleep away from a backup regime that exists only in a health check's memory.**
 **Pattern tag:** `reclassification-changed-an-unnamed-slas` · `witness-may-sleep-backup-may-not`
+
+---
+
+## I-324 · 2026-09-11 · TENTH instance — the checklist dispatch's three findings, two HIGH, never reached this log, and both HIGH are traps in the seal act itself · Severity: HIGH · Owner: CIO → head-of-data-infra
+
+**Description.** `S4-D-013` reports **I-310 – I-312 filed.** Measured [CIO]: **zero entries in that
+range.** **Tenth instance.**
+
+**And this one is not a bookkeeping loss.** Both absent HIGHs describe **failure modes of the
+registration act the Principal is about to perform:**
+
+- **`I-311` — a grant opened inside an already-open one rolls back the entire outer block, including a
+  prior successful `open_hypothesis`.** **CIO-verified independently on a throwaway registry**, never
+  touching the book of record: the nested call raises `RegistryWriteGrantNestedError` and
+  **`hypotheses` reads 0 after the block. The registration is gone.**
+- **`I-312` — I-247 is discharged only by the grant step *and* the ordering rule together.** The grant
+  step alone still permits I-311.
+
+**Combined with a third finding rated LOW, these become a seal-act trap.** `I-310`: **neither
+`write_grant` nor `open_hypothesis` prints anything on success.** So a sealer who places the vault
+seal inside the grant block **sees no output, no error at the registration, and no hypothesis** — and
+the only thing standing between that and a silently lost seal is **checklist item 6's ordering note and
+item 7's read-back.**
+
+**The CIO rates the trio HIGH as a set even though the filing seat rated one LOW**, and states why
+rather than re-rating anyone's work: **I-310 alone is a missing print. I-310 plus I-311 is an operation
+that fails silently on the firm's most consequential act.** **Severity is a property of the
+combination, and no single filing seat was positioned to see it** — the seat filed three findings
+correctly and the CIO is naming what they compose into.
+
+**Pointer, ratings as the seat assigned them:** `research/DATA-IMPL-011-checklist-grant-step.md` —
+**I-311 HIGH** · **I-312 HIGH** · **I-310 LOW.**
+
+**Resolution:** open. **The mitigations are in the payload's §6 items 6 and 7 and are verified.** The
+index inflow remains unfixed, queued for sprint close per I-119.
+**Pattern tag:** `finding-never-reached-the-index` · `tenth-instance` · `severity-in-the-combination`
