@@ -5876,3 +5876,67 @@ Principal funds them.
 from the migrated API → C7/C8 at the act → registration-as-seal, the Principal's.**
 
 **Review date:** on the headroom reading.
+
+---
+
+## S4-D-011 · 2026-09-10 · Headroom fresh · R-010 and the migration dispatched
+
+**1 · Headroom supplied per I-099: `session 4% · weekly 2%` consumed.** **The corrective held and cost
+one round-trip.** Recorded because the alternative — proceeding on "Proceed" — is the behaviour that
+degraded at I-099, and **the only evidence a self-imposed control works is that it binds when it is
+inconvenient.**
+
+**2 · R-010 dispatched, with the Principal's tie-break carried verbatim and the better outcome named
+as available.** The brief tells the seat that **if the term-by-term derivation eliminates the free
+choice — if the perp leg's round trip is determinate from the sealed preset — the tie-break never
+engages, and that is the better outcome.** A pre-committed tie-break is insurance against
+indeterminacy, **not a preferred answer.**
+
+**Publication per the `d = 1.0` precedent: both candidate bands, the chosen one, and the reason go
+into the hashed field — not into a memo about the field.**
+
+**3 · §20's conformance rides R-010, and `TEMPLATES.md` §7.11 gets its first application** — a ruling
+names the artifacts it touches and the executing dispatch conforms them in the same act.
+
+**One instruction the CIO added against itself:** the brief supplies the corrected roster **and tells
+the seat to check §20's own columns rather than take the CIO's list as complete** — *"the CIO has now
+been wrong about a roster once and does not intend a second time."* **A CIO that hands a seat a
+roster it has not re-opened is repeating I-117 in a new place**, and §7.12 was written three commits
+ago.
+
+**4 · The migration dispatched with its grant named in the brief, as the Principal required:**
+**`reason="MIGRATION"`, on `book/registry.db`, for the sole purpose of creating `write_grants` and
+what `_migrate()` requires alongside it. Nothing else is granted** — and the brief says that if
+`_migrate()` attempts anything unexpected, **the seat stops rather than letting it.**
+
+**Sanctioned path only.** *"A hand-rolled schema on the book of record is the defect the path exists
+to prevent."*
+
+**5 · THE QUESTION THE CIO PUT INTO THE MIGRATION BRIEF THAT NOBODY HAD ASKED, and it is the
+interesting one.**
+
+`GATES.md` §4.7.4(i) holds that **the grant row is the first write performed under its own grant** —
+*"no ordering exists in which a write precedes the record of its authority."* **Validation named the
+one place that cannot literally hold: the very first `MIGRATION` grant on a file whose grant table
+does not yet exist to record it into** (its I-235).
+
+> **This dispatch is that case, on the firm's book of record.**
+
+The brief requires the seat to **state exactly how the bootstrap resolves** — whether the grant row
+lands, whether it is first, **and whether a window exists in which the table exists and its
+authorizing grant does not** — and **not to smooth it.** **The one file where the exception fires is
+the one file where it matters most**, and the firm should know precisely what its own audit chain does
+at its own origin.
+
+**6 · Both dispatches run concurrently on different seats and different trees** — Director in
+`research/`, Seat 9 in `book/` and `harness/`. **Each brief names the other's tree as off-limits.**
+This is the collision management that has held since Sprint 2, **not the entry-14 exposure**: one
+Opus and one Sonnet, four free units in tier, headroom at 4%.
+
+**7 · Budget.** **10 of 30 invocations · 6 of 12 Opus.** Free **3** · insurance 2 · DA reserve 1.
+§5 dead-man: **8 remain.**
+
+**8 · Sequence:** **R-010 + migration *(running)* → checklist from the migrated API → C7/C8 at the act
+→ registration-as-seal, the Principal's.**
+
+**Review date:** on both returns.
