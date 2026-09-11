@@ -6000,3 +6000,102 @@ from the implemented API as executed on the migrated book** · **C7 and C8 at th
 already counted. Free **3** · insurance 2 · DA reserve 1. §5 dead-man: **8 remain.**
 
 **Review date:** on R-010's return.
+
+---
+
+## S4-D-013 · 2026-09-11 · Sprint 4 extended to the seal and first evaluable trial · four ritual findings · checklist dispatched
+
+**1 · SPRINT 4 IS EXTENDED BY RULING through the seal and the first evaluable trial. Hard stop
+2026-09-24. SO-003 remains in force for the extension. Close report and §7 audit follow at whichever
+comes first.** **Recorded as an extension, not a re-plan** — the objectives are unchanged, the order is
+unchanged, and **only the calendar moved.** Usage at ruling: **21%.**
+
+**The CIO notes what the framing forecloses:** a re-plan would have invited re-scoping, and **§1's
+objective has survived three sprints of the firm finding reasons to do something else.** An extension
+with a hard stop keeps the objective and prices the delay.
+
+**2 · Merge verified and Principal-committed at `88d8a16`** — **1,198,296 new observations, 918
+cross-host agreements, RESTATED 0, exit 0.** VPS **97.38% over 864.6h**, 3,368 polls, **one 1.3h
+not-polled gap on 2026-09-03 with 0 failed attempts** — *the heartbeat distinguishing silence from
+absence, working.* **Cumulative cross-host agreements: 6,170 + 918 = 7,088, still zero disagreements.**
+`book/pit.db` now **1.58 GB, 3,232,636 Polymarket observations.**
+
+**Crypto legs verified unmoved at 2026-08-12** — **and I-097 is cured by construction, not by luck.**
+The DA's I-213 remedy conformed the two binding fields to *"the last settled common bar of the primary
+universe at the first run"* rather than to `C`, **so a 30-day-stale ingest no longer makes the sealed
+window claim data that does not exist.** The remedy the CIO could not find, the DA supplied, and it is
+holding.
+
+**3 · FOUR FINDINGS FILED. Three are the Principal's and one is the CIO's own.**
+
+**I-320, HIGH — the `rsync` pull delivered a corrupt database and exited 0.** `"database disk image is
+malformed"` at dry-run; source `integrity_check` clean. **CASE-4's class — "the success that captured
+nothing" — arriving in the firm's own weekly ritual.** Remedied at the same sitting: backup-API copy
+on the VPS, whole-file transfer, **local `integrity_check` gating the merge.**
+
+**Rated HIGH despite being fixed, and the reason is the CIO's:** **the verification the CIO specified at
+S2-D-025 §5 was the pulled file's row counts — and SQLite answers row counts from pages it can still
+parse.** **The check the CIO wrote would have passed a malformed file.** And a torn source that parsed
+far enough to merge would have written silently-wrong observations into a **gitignored, irreproducible
+1.58 GB store**, with **`RESTATED 0` reporting clean — because a restatement is a disagreement between
+two values, not the detection of a missing one.** **Casebook proposed, and the CIO concurs with the
+Principal's generalization: an exit code from a transfer tool describes the transfer; if the artifact
+has an internal integrity check, the pipeline runs it, or the pipeline has checked nothing.**
+
+**I-321, MEDIUM — successful polls 3,368 against heartbeat attempts 3,347.** Twenty-one more successes
+than attempts, *"logically impossible for the same event"* — **and they are not the same event.** Polls
+count distinct `knowledge_time` **retroactively over history predating the heartbeat**; attempts count
+heartbeat rows since **2026-08-04T16:53:16Z.** **I-093's class, fifth member.** Consequence stated
+because it is not zero: **the difference looks like 21 unexplained failures, and a future genuine gap
+could be absorbed into what reads as a known counting artifact.** Unfunded under §1.
+
+**I-322, MEDIUM — the merge costs ~2h at 100% CPU and scales with both sides.** The store grew **200 MB
+→ 1.58 GB in seventeen days.** `DATA-INFRA-003` sized **disk** and **nothing sized merge time.** The
+governance half: SO-003 §6 makes this a weekly `[PRINCIPAL]` ritual where *"a skipped week is a skipped
+verification and is logged as such"* — **so a four-hour Friday is a ritual that gets skipped, and the
+firm would then hold a correct record of a control it stopped running. Cost is a compliance risk when
+the compliance is a human sitting through it.** Queued as the first Sonnet item after the seal.
+
+**4 · I-323, HIGH, AND IT IS THE CIO'S OWN RECLASSIFICATION.**
+
+The laptop's snapshot job **did not fire for nine days**, 09-02 to 09-11, host asleep. **Caught only by
+the health check's staleness threshold**, then repaired manually.
+
+**The control worked. The regime did not.** And the reason is structural: at **S2-D-033** the CIO
+reclassified the laptop to **integrity witness** and wrote that **"host-sleep gaps on the witness are
+expected behaviour, not incidents."**
+
+> **That was correct for capture and wrong for snapshots, and the CIO did not notice it applied to
+> both.** The same host runs **the only backup of `book/pit.db`** — 1.58 GB, gitignored, irreproducible
+> — **and of `book/registry.db`, about to receive the firm's first hypothesis.**
+>
+> **A witness may sleep. A backup may not. One ruling covered both.**
+
+**This is §7.11's failure mode inverted, and §7.11 does not catch it.** That rule requires a ruling to
+name the artifacts it touches; **here the ruling named its artifact correctly and silently changed the
+SLA of a second one nobody listed.** **A ruling's blast radius exceeding its named scope** is a gap in
+the rule the CIO placed four commits ago.
+
+**Worse: S2-D-033 recorded the reclassification as a virtue** — *"a metric that outlives its purpose is
+one that will eventually be defended for its own sake."* **Right about the metric, blind to the control
+standing beside it.**
+
+**Asked of Seat 9 as a one-paragraph answer, explicitly not built.** The obvious candidate is the VPS —
+**it does not sleep and already runs a `Persistent=true` timer** — but moving the book of record's
+backup onto Rider A's host is an **architecture decision, not a dispatch.**
+
+**5 · The checklist grant step dispatched — Seat 9, Sonnet, the last item before C7/C8 and the seal.**
+Provenance per the Principal: **written from the implemented API as executed on the migrated book,
+never from the spec's anticipation of it.** **Seat 9 is the only seat that has executed it**, and
+`TEMPLATES.md` §7.12 binds — cite the artifact you opened.
+
+The brief also requires it to **re-read the other five checklist items against the migrated schema** —
+`grant_id` columns and three new tables landed under them — because **a checklist promising "no
+judgment" is only as good as its most stale item.**
+
+**6 · Budget.** **12 of 30 invocations · 7 of 12 Opus.** Free **2** · insurance 2 · DA reserve 1.
+§5 dead-man: **9 remain** since this checkpoint.
+
+**7 · The seal needs two things: the checklist step *(running)*, then C7 and C8 at the act.**
+
+**Review date:** on the checklist's return.
