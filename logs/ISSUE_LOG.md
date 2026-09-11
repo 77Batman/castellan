@@ -6897,3 +6897,105 @@ it.
 **Resolution:** open — **HIGH, seal-blocking via C8.** The registration half is executable and verified;
 **the vault half is not.**
 **Pattern tag:** `a-call-that-cannot-be-executed-is-a-description` · `scope-boundary-with-nobody-on-the-far-side`
+
+---
+
+## I-326 · 2026-09-11 · The vault's schema check returns TRUE unconditionally unless the fingerprint happens to carry two literal keys — and the seal was one dispatch from relying on it, four times · Severity: HIGH · Owner: CIO → quant-validation
+
+**Description.** `S4-D-015` was asked §4.7.2's test on the vault — *name the field the harness reads, and
+show what it does when the field is empty.* **The answer is worse than the question anticipated, and the
+CIO verified it at source.**
+
+**`holdout.py:176`:**
+
+```python
+def _schema_matches(df, fingerprint) -> tuple[bool, str]:
+    expected_cols = fingerprint.get("columns")
+    if expected_cols is not None and list(df.columns) != list(expected_cols):
+        return False, ...
+    expected_dtypes = fingerprint.get("dtypes") or {}
+    for col, dt in expected_dtypes.items():
+        ...
+    return True, ""
+```
+
+**A fingerprint lacking both literal keys `"columns"` and `"dtypes"` reaches `return True, ""` without
+executing a single comparison.** `get("columns")` → `None`, the branch is skipped; `get("dtypes") or {}`
+→ `{}`, the loop body never runs. **`schema_fingerprint={"instrument": "BTC/USDT", "fields": [...]}` —
+a plausible, honest, descriptive dict — passes unconditionally.**
+
+**And `seal()`'s own validation is truthiness-only** [measured, `holdout.py:~353`]: `if not fval: raise
+HoldoutSpecInvalidError`. **It rejects `{}` and `""`. It accepts any non-empty value, including a string
+where the signature declares `query_semantics: dict`.** No type check, no structural check.
+
+**So the vault's provenance guarantee decomposes as:** *dataset_id* — **prevents empty, nothing else**;
+*query_semantics* — **prevents empty, nothing else, and is never read again**; *schema_fingerprint* —
+**prevents empty, and its one Gate-1 content check (`_schema_matches`, called at `holdout.py:627`) is
+defeated by any dict without those two keys.**
+
+**This is I-095's exact shape, in the vault.** I-095: a deny covering the tool path nobody uses while
+the path everyone uses stayed open. **Here: a check covering the value nobody would supply — empty —
+while the value anyone would supply, a descriptive dict with sensible keys, passes unexamined.** **The
+control is deterministic, correctly configured, and pointed at nobody** — `GATES.md` §4.7.3's negative
+print, for the second time in this firm.
+
+**Why it matters now rather than as a backlog item.** **The vault exists to make the holdout
+tamper-evident.** `_schema_matches` is *"the one Gate-1 content check this field ever gets"* — and the
+firm was **one dispatch from sealing four vaults whose schema guarantee would have been satisfied by
+construction rather than by comparison.** Under P7 the fingerprint freezes. **A fingerprint that cannot
+fail is a fingerprint.**
+
+**The fix is trivial and is NOT the CIO's to make.** Requiring the two keys, or type-checking the three
+arguments, is a `holdout.py` change — **Validation owns the vault under Seat 3 and the specification that
+governs it.** The filing seat rated the pair HIGH and the CIO concurs without re-rating.
+
+**The good news, recorded because it is real:** the seat **supplied `schema_fingerprint` measured
+directly off `book/pit.db` via `read_sql().pivot_table()`, not off a schema document**, all fields
+`float64` — **so the value the firm is about to seal would pass a working check.** **The defect is that
+the check would not have told us.**
+
+**Resolution:** open — **HIGH, and seal-relevant rather than seal-blocking:** the values are correct; the
+guarantee is weaker than the document implies.
+**Pattern tag:** `check-covers-the-value-nobody-supplies` · `fingerprint-that-cannot-fail` · `4.7.3-negative-print`
+
+---
+
+## I-327 · 2026-09-11 · C8 requires FOUR vaults — the checklist says one and the document's own comment says two, and both are wrong · Severity: HIGH · Owner: CIO → director-of-research
+
+**Description.** **`HoldoutVault.seal()` and `PITStore.set_holdout_ceiling()` each bind one
+`(source, dataset_id)` pair**, and `_active_ceilings(source, dataset_id)` is an **exact-match lookup with
+no wildcard** [measured — `data.py:204, 271`].
+
+**`book/pit.db` holds four such pairs in the BTC/ETH universe** [CIO-verified]:
+
+```
+binance      BTC/USDT
+binance      ETH/USDT
+binanceusdm  BTC/USDT:USDT
+binanceusdm  ETH/USDT:USDT
+```
+
+**Therefore C8 requires four vaults.**
+
+**Both existing statements are wrong, in different directions:**
+
+- **Checklist item 6 — "The vault is sealed in the same session, same UTC day" — is singular**, in a
+  checklist that promises *"mechanical, six items, no judgment."*
+- **§21's vault block comment — `# a second vault for source="binanceusdm"` — says two.** It **splits
+  spot from perp and does not split BTC from ETH.** *"The block's own comment is also wrong"* — the
+  filing seat's words, and the CIO verified them.
+
+**The CIO's own report was wrong too, and in the same direction.** At `I-325` the CIO wrote *"the block
+requires two vaults while the checklist says one,"* **taking the count from the block's comment rather
+than from the lookup semantics.** **That is the cardinal class again — a count from a description rather
+than from the thing described — twelfth instance, and the CIO's.** §7.12 was placed four days ago.
+
+**Consequence if unfixed: three of four instrument-legs seal with no holdout ceiling at all.** A vault
+bound to `binance/BTC/USDT` leaves `ETH/USDT` and both perp legs **unceilinged**, and `_active_ceilings`
+returns nothing for them — **so P-1's air gap would exist for one quarter of the primary universe and
+the document would assert it for all of it.**
+
+**Resolution:** open — **HIGH, seal-blocking via C8.** The four values are supplied at
+`DATA-IMPL-012-vault-arguments.md` §1; **item 6 and §21's comment both need conforming, and that is a
+Director act on the document about to be sealed.**
+**Pattern tag:** `count-from-the-description-not-the-lookup` · `twelfth-cardinal` · `air-gap-for-one-quarter-of-the-universe`
