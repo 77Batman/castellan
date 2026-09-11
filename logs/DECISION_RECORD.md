@@ -5940,3 +5940,63 @@ Opus and one Sonnet, four free units in tier, headroom at 4%.
 → registration-as-seal, the Principal's.**
 
 **Review date:** on both returns.
+
+---
+
+## S4-D-012 · 2026-09-10 · The book of record is migrated · the bootstrap window answered plainly
+
+**1 · `write_grants` exists on `book/registry.db`. Verified by the CIO on the ledger itself** [measured]:
+tables now `dated_clauses`, `events`, `hypotheses`, `migration_watermark`, `sqlite_sequence`, `trials`,
+**`write_grants`**. **`hypotheses` 0 · `trials` 0** — unchanged. **`write_grants` 1 row: `grant_id=1`,
+`reason=MIGRATION`, `outcome=CLEAN`, `writes=0`.** `events` 3, all three carrying `grant_id IS NULL`
+under the R-16 watermark amnesty. **Suite identical at 301 / 22 / 323, and the seat reproduced the
+baseline independently before touching the file.**
+
+**No hand-written DDL.** The sanctioned `_migrate()` path, as the Principal required.
+
+**2 · THE I-235 BOOTSTRAP QUESTION IS ANSWERED, AND THE ANSWER IS "YES, THERE IS A WINDOW."**
+
+> **`executescript(SCHEMA)` runs first — that is what materializes the table on a legacy file — and
+> only afterward does the code `INSERT INTO write_grants` for the grant's own row. R-12 does not
+> literally hold here.**
+
+**The seat did not smooth it, and the bound it supplies is the part that matters:** **both statements
+sit inside one open connection and one transaction, committed or rolled back together, so no other
+process can ever observe the table populated without its grant.**
+
+**That is the right shape for an honest exception:** the violation is **real**, **named in the code
+that commits it**, **flagged in advance by Validation as I-235**, and **bounded by a mechanism rather
+than by a promise.** §4.7.4(i) says *no ordering exists in which a write precedes the record of its
+authority* — **at the origin of the chain, an ordering does exist, and it is unobservable.** **The
+firm now knows the shape of the soft spot at its own audit chain's origin, before writing its first
+hypothesis into it rather than after.**
+
+**Recorded as `I-300`, LOW, by the filing seat: the exception confirmed on the book of record, not
+merely in a test fixture.**
+
+**3 · Two further findings, both LOW and both honest about permanence.** **`I-301` — the three legacy
+`events` rows carry `grant_id IS NULL` permanently** under the R-16 amnesty: **I-163's instance
+realized for real on the ledger.** Those three rows can never be attributed, and the firm's audit
+chain begins with three unattributed entries **by construction, disclosed, not hidden.** **`I-302` —
+`write_grants.argv` recorded `["-c"]`** because the migration ran via `python3 -c`; cosmetic, and
+**the seat filed it rather than leaving a provenance field that says nothing.**
+
+**4 · The seat noticed a file changing underneath it and did the right thing.**
+`research/work/dated_sites.json` shifted — `6.571 years → SUPERSEDED … 6.612 years` — **which is the
+Director's concurrent R-010 work.** The seat **attributed it correctly, confirmed it had run nothing
+that touches it, and left it untouched in a tree it was told not to enter.** **The concurrency
+management held under live simultaneous writes**, which is the first time this sprint two seats have
+actually overlapped in anger rather than by schedule.
+
+**5 · Line budget: 63 against ~80 projected. Under, and reported as under.** **First dispatch in five
+to come in beneath its projection**, and the CIO notes it without drawing a conclusion from one
+observation.
+
+**6 · What the seal now needs — and it is down to three items.** **The checklist's grant step, written
+from the implemented API as executed on the migrated book** · **C7 and C8 at the act** ·
+**R-010's return.** The `write_grants` absence is closed.
+
+**7 · Budget.** **10 of 30 invocations · 6 of 12 Opus**, unchanged — the migration was Sonnet and
+already counted. Free **3** · insurance 2 · DA reserve 1. §5 dead-man: **8 remain.**
+
+**Review date:** on R-010's return.
