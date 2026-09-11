@@ -6758,3 +6758,142 @@ correctly and the CIO is naming what they compose into.
 **Resolution:** open. **The mitigations are in the payload's §6 items 6 and 7 and are verified.** The
 index inflow remains unfixed, queued for sprint close per I-119.
 **Pattern tag:** `finding-never-reached-the-index` · `tenth-instance` · `severity-in-the-combination`
+
+---
+
+## I-310 · 2026-09-11 · `write_grant` and `open_hypothesis` print nothing on success, unlike `evaluate_gate1` · Severity: LOW · Owner: head-of-data-infra
+
+> **Transcribed by the CIO's own hand from `research/DATA-IMPL-011-checklist-grant-step.md`, per the
+> Principal's pre-execution condition (3): findings describing the failure modes of the act about to be
+> performed are not bookkeeping and do not wait for the inflow fix. Severity as the filing seat rated
+> it — LOW — not re-rated. See `I-324` for the CIO's rating of the trio as a set.**
+
+**Neither `TrialRegistry.write_grant` nor `open_hypothesis` prints anything on success; both return
+`None` silently.** Measured by the filing seat on a throwaway registry: the block closed
+`outcome='CLEAN'` with `writes=3`, and `hypotheses` gained exactly one row — **none of which the caller
+saw.**
+
+**This is the inverse of `GATES.md` §4.7.4(ii)**, which `evaluate_gate1` satisfies by printing orphan
+count, chain integrity and chain head **on every invocation including when all three are zero**:
+*a control visible only when it fires is one nobody can confirm is running.*
+
+**Mitigated, not fixed.** The payload's checklist item 7 supplies the missing report by read-back:
+`SELECT COUNT(*) FROM hypotheses WHERE family=?` (expect 1) and
+`SELECT outcome, writes FROM write_grants ORDER BY grant_id DESC LIMIT 1` (expect `CLEAN`, `3`).
+
+**Resolution:** open — a library change, out of the filing dispatch's scope. **Post-seal item 1 per the
+Principal: a one-line Sonnet fix.**
+**Pattern tag:** `control-silent-on-success`
+
+---
+
+## I-311 · 2026-09-11 · A grant opened inside an already-open one rolls back the whole outer block, destroying a prior successful `open_hypothesis` · Severity: HIGH · Owner: head-of-data-infra
+
+> **Transcribed by the CIO's own hand per the Principal's pre-execution condition (3). Severity as
+> filed.**
+
+**Verified twice, independently: by the filing seat, and by the CIO on its own throwaway registry**
+(never touching `book/registry.db`):
+
+```
+inside block, after open_hypothesis: hypotheses = 0
+raised: RegistryWriteGrantNestedError
+AFTER the block: hypotheses = 0
+=> registration survives nesting? NO — rolled back
+```
+
+**`HoldoutVault.seal()` opens its own `write_grant` internally.** Grants do not nest (R-7). **So calling
+the vault seal from inside the `REGISTER_HYPOTHESIS` block raises `RegistryWriteGrantNestedError` and
+destroys the hypothesis registration with it.**
+
+**Mitigation, in the sealed procedure and verified:** payload §6 **item 6 executes after item 7's grant
+closes, never inside it**; item 5 executes **inside** item 7's grant. **The ordering is the control.**
+
+**Resolution:** open — the library behaviour stands; the procedure is conformed.
+**Pattern tag:** `nested-grant-destroys-the-outer-write` · `ordering-is-the-control`
+
+---
+
+## I-312 · 2026-09-11 · I-247 is discharged only by the grant step AND the ordering rule together · Severity: HIGH · Owner: head-of-data-infra
+
+> **Transcribed by the CIO's own hand per the Principal's pre-execution condition (3). Severity as
+> filed.**
+
+**I-247** was the Devil's Advocate's finding that **the payload's checklist had no grant step, so the
+seal act as specified would raise.** Adding the grant step (item 7) closes that.
+
+**It does not close I-311.** **A checklist carrying the grant step but not the ordering rule still
+permits the vault seal to be called inside the grant block** — which raises, rolls back, and loses the
+registration. **Both halves are required and neither suffices.**
+
+**Resolution:** open until the seal executes cleanly. **Both halves are now in the payload: item 7 (the
+grant) and item 6's ordering note (after, never inside).**
+**Pattern tag:** `two-halves-neither-sufficient`
+
+---
+
+## I-325 · 2026-09-11 · The vault seal is not executable: three of its arguments are placeholders with no values anywhere, and the block requires two vaults while the checklist says one · Severity: HIGH · Owner: CIO → head-of-data-infra → director-of-research
+
+**Description.** The Principal approved the registration and instructed the CIO to execute it. **The CIO
+cannot, and the passphrase is not the only reason.** Found while building the execution script.
+
+**`PREREG-002` §21's vault block — the call checklist item 6 runs, and which the payload's §5 says
+*"is at `PREREG-002` §21's vault block, unchanged by R-004 in every argument"* — carries three
+arguments that are placeholders:**
+
+```
+dataset_id=<the ingested dataset identifier>
+query_semantics=<the exact query, per Ruling 001 section 3.4>
+schema_fingerprint=<field names and dtypes>
+```
+
+**CIO-verified: none of the three has a value anywhere in `PREREG-002` or the payload** — grepped both,
+excluding the placeholder text itself, **zero hits.** They state what belongs there. They do not state
+what it is.
+
+**And the block's own comment requires a second vault:** `source="binance"` carries
+`# a second vault for source="binanceusdm"`. **Checklist item 6 reads "The vault is sealed" —
+singular.** **If C8 requires two vaults, item 6 is wrong as written**, in a checklist that promises
+*"mechanical, six items, no judgment."*
+
+**C8 is one of the two remaining seal-blocking conditions. It cannot be discharged with three
+arguments unspecified and an undetermined vault count.**
+
+**This is I-105's defect in its third location, and the pattern is now exact.** I-105: a two-stage
+budget **described in prose and never registered.** I-247: a checklist **promising no judgment and
+omitting the grant step.** **This: a vault call written as a call and executable as prose.** **Each was
+found one dispatch before the act that would have frozen it** — I-105 by the §4.7.2 audit, I-247 by the
+Devil's Advocate, **this by the CIO building the script rather than typing the command.**
+
+> **The generalization the firm should keep: a call that cannot be executed is a description of a call,
+> and `<angle brackets>` are the tell.** The payload discharged I-105 for the sixteen registration
+> fields **and the vault call was never given the same treatment**, because §5 declared it out of scope
+> — *"NOT PART OF THIS PAYLOAD"* — and **nothing else took it up.** **A scope boundary with nobody on
+> the far side of it is a gap.**
+
+**What the CIO did instead of executing.** Built `harness/scripts/execute_seal_prereg002.py`, which
+**extracts all sixteen binding fields mechanically** — 8 from the payload's own `python` blocks, 8 prose
+fields from §21's fenced block, **verified 8-of-8 by length and SHA-256** — so **no value is typed by
+anyone and the sealed value is the document's value by construction** (§7.12). `--inspect` writes
+nothing and was run; **the registry is untouched at 0 hypotheses / 0 trials, `write_grants` 1.** The
+script **refuses without the passphrase** rather than performing a partial seal, because **C8 requires
+the vault in the same session and same UTC day as the registration** — so a registration the CIO could
+perform and a vault it cannot **would leave a registered family with an unsealed holdout**, which is
+worse than not starting.
+
+**One thing the script also surfaced, and the CIO records it as a correction to its own earlier
+statement:** `forward_window_start` in the payload is **not a literal** — it is
+`datetime.now(timezone.utc).date().isoformat()`, **computed at the act, which is correct**, because `C`
+is the seal's own timestamp. **The CIO's first extractor treated it as a literal and failed. The payload
+was right and the CIO's reading was wrong.**
+
+**Dispatched to clear it:** `S4-D-015`, Seat 9, Sonnet — supply the three values **from `book/pit.db`
+rather than from a description of it**, establish the vault count, and **report what `seal()` does with
+an empty or placeholder value for each.** That last is §4.7.2's test applied to the vault: **if `seal()`
+accepts `query_semantics={}` without complaint, the vault's provenance guarantee is class (c) and not a
+control** — and the firm should know that before sealing its only family's holdout on the strength of
+it.
+
+**Resolution:** open — **HIGH, seal-blocking via C8.** The registration half is executable and verified;
+**the vault half is not.**
+**Pattern tag:** `a-call-that-cannot-be-executed-is-a-description` · `scope-boundary-with-nobody-on-the-far-side`
