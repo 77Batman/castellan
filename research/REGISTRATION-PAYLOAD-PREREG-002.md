@@ -316,6 +316,24 @@ Filed **I-142**.
 
 ---
 
+### 3.5 What R-010 changed inside the §21 block **[added 2026-09-10 · dispatch S4-D-011]**
+
+> **§3.4 closed with a standing instruction: *"a ruling that moves `band` moves two hashed strings and requires an R-010 before the seal, not after it."* The ruling came, `band` moved, and this is that R-010. The payload's own prediction is the reason this is a conformance rather than a discovery.**
+
+**`band` = 0.27 → `band` = 0.54.** **No literal in the table of sixteen moves.** `trial_budget` = **47**, `n_inherited` = **7**, `published_signal_haircut_applied` = **0.50**, `family`, `predecessor_family`, `holdout_classification`, `forward_window_min_length` — all byte-identical. **`band` is a numeric literal living inside two of the eight prose fields, not a field of its own**, which is why §3.3's trigger has now applied three revisions running.
+
+| Prose field | Changed? | What moved |
+|---|---|---|
+| `statement` | **Yes — two edits, both value-bearing** | (i) **`band` 0.27 → 0.54** in the numeric-literal roster; **`k` = 0.5, `d` = 1.0, `lookback` = 30, `w_max` = 1.0 byte-identical**; (ii) a new **cost-convention register** on the R45 precedent — **both candidate bands, the chosen one and the reason, published in the hashed field**: 6.0 bp one side → **0.54 SELECTED**, 12.0 bp round trip → 0.27 **DECLINED**, the `engine.py` citation that decides it, that the tie-break never engaged and would have given the same number, and the two surviving conventions (I-290, I-291) with their directions named |
+| `horizon` | **Yes — one edit, value-bearing** | **`band` 0.27 → 0.54**, with **both** errors named before the corrected arithmetic (R41's leg count; R44's side count and the withdrawal of R44's stated reason), the engine citation, the double-count argument, `band × 6.0 ≤ 3.249` ⇒ `≤ 0.54150` truncated to **0.54**, the identical 0.28% margin, and the escalation's new size on the face of the field: suppression window **1.50 < z ≤ 2.08**, and **R44's "the window is narrow" qualification WITHDRAWN** |
+| `mechanism`, `falsifier`, `universe`, `success_criteria`, `forward_kill_condition`, `data_sources` | **No** | Byte-identical to post-R-009. **`forward_kill_condition` is untouched in every clause, threshold and date; the struck `2027-01-31` literals remain (I-204).** |
+
+> **WHAT THIS PAYLOAD MUST CARRY TO WHOEVER EXECUTES THE SEAL, AND IT IS A DIFFERENT SENTENCE FROM §3.4's.** **`band` = 0.54 is DERIVED, not escalated.** I-252's question — 12 bp or 6 bp — **is answered on the merits and against the convention the sponsor itself selected one revision earlier**: the sanctioned engine charges one per-side price per unit of `|Δw|`, once, so a 12 bp round trip is a cost `run_backtest` will never apply (A2). **What remains open at the seal is not the charge but its consequence:** **I-251** (the escalation, fired at R-009, unresolved, now 14.5× larger) and **I-253** (whether KC-002 clause (b) should count *target* rather than *executed* deviations, which at 0.29 of suppression width is worth materially more than it was at 0.02). **Neither is repaired here. Neither moves a field. A ruling on I-253 moves KC-002, which is a hard interrupt and an R-011, not a footnote.**
+
+> **AND THE TWO CONVENTIONS THAT SURVIVE ARE ON THE PAYLOAD'S FACE BECAUSE A FUTURE RULING ON EITHER MOVES `band` AGAIN, PRE-SEAL:** **I-290**, the one-day carry budget on the inequality's right-hand side (a two-day budget gives `band ≤ 1.083`); **I-291**, the omitted `Y·σ·√(Q/ADV)` impact term. **Both run in this family's favour and both are retained unchanged, because the ruling scoped the charge and neither is the charge.**
+
+---
+
 ## 4. STAGE 2 — NOT A FIELD. A SEPARATE, POST-SEAL REGISTRY ACT.
 
 **Stage 2 is not part of this payload and must not be folded into `trial_budget`.** It is a

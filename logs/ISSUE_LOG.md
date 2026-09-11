@@ -6533,3 +6533,42 @@ those tokens, or expect to place them by hand.**
 **Resolution:** closed — file placed at `ops/FINDINGS-INDEX-NOTE.md`. The naming constraint is
 recorded for future briefs.
 **Pattern tag:** `restriction-hit-and-not-routed-around`
+
+---
+
+## I-119 · 2026-09-10 · NINTH instance — R-010's seven findings, one HIGH, never reached this log, six days after the index was built to stop exactly this · Severity: MEDIUM · Owner: CIO → director-of-research
+
+> **CIO range: I-116 – I-119 declared at I-116; this exhausts it. Next CIO range: I-320 – I-329.**
+
+**Description.** R-010 reports **I-290 … I-296 filed.** Measured [CIO]: this log holds **zero** entries
+in that range; its highest is **I-283.** **Among the absent: `I-293`, HIGH — C12's `Blocking?` cell
+frozen at `BLOCKING ON SEALING` for twenty days while the note beneath it read `DISCHARGED`.**
+
+**Ninth instance**, and the first **after** the findings index was built. I-092 · I-120 · I-094 ·
+I-034 · I-107 · I-109 · I-115 · I-119(prior) · **this.**
+
+**What the index did and did not fix, now measurable.** It **transcribed the backlog** — I-210 through
+I-283 are in the log and a HIGH query returns them. **It did not change what seats do at the end of a
+dispatch**, because it was a **transcription**, not a **mechanism.** **A catch-up pass leaves the
+inflow untouched**, and the inflow is the defect.
+
+**The CIO's own reading, stated because it bears on what to fund next:** the index was worth building
+and **it does not solve this.** Six source memos were emptied into the log; **the seventh arrived
+outside it six days later.** **The firm now needs the filing to happen in the dispatch that finds the
+thing, not in a later pass that catches up** — and every brief this sprint has told seats to file to
+`logs/ISSUE_LOG.md` while **every seat has filed to its own memo instead.** **Nine instances across
+six different seats is not a seat-discipline problem; it is a brief-design problem, and the briefs are
+the CIO's.**
+
+**Not remedied here.** A remedy is a change to how every dispatch closes, **which is dispatch practice
+and belongs in `TEMPLATES.md` §7.10 — and the CIO will not add a tenth practice rule mid-sprint while
+§1's objective is the first trial.** **Named, costed, and queued for sprint close.**
+
+**Pointer, ratings as the Director assigned them:** `research/DIR-RESTATE-001` §16 and `PREREG-002`'s
+R-010 block — **I-293 HIGH** (C12's frozen cell) · I-290 MED (the one-day RHS budget, undeclared
+convention, family-favourable, retained unruled) · **I-292 MED (the Director's own methodological
+finding against R-009 — see `S4-D-013` §3)** · I-294 MED · I-295 MED · I-291 LOW · I-296 LOW.
+
+**Resolution:** open — the transcription worked, **the inflow is unfixed**, and the fix is a
+dispatch-practice rule queued for sprint close.
+**Pattern tag:** `finding-never-reached-the-index` · `ninth-instance` · `catch-up-pass-does-not-fix-inflow`

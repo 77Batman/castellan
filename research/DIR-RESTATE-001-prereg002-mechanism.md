@@ -2351,3 +2351,222 @@ to 24 bp and the band to ~0.135, and nothing in the document flags the coupling)
 
 *Director of Research · Castellan Capital · **addendum §15 added 2026-08-25 for revision R-009***
 *Dispatch S4-D-007. Trial budget ZERO. Registry 0 / 0 / 3 at open and at close.*
+
+---
+
+*Dispatch **S4-D-011**. Trial budget **ZERO**. `book/registry.db` read **0 hypotheses / 0 trials /
+3 events** at open [measured, read-only `SELECT COUNT(*)`]. No query against `book/pit.db`. No
+backtest, no grid, no `open_hypothesis`, no registration, no seal, no commit. `harness/` opened
+**read-only** (Seat 9 holds the write tree).*
+
+## 16. `band` DERIVED FROM WHAT THE REBALANCE DOES — THE CHARGE IS ONE SIDE, AND THE FREE CHOICE DOES NOT SURVIVE
+
+### 16.1 What was ruled, and what was not
+
+The Principal ruled the **decision rule**, not the number. §15.2 selected 12 bp on a *convention*
+("the round-trip framing matches the one-day horizon") and disclosed that the convention yielded
+*"the smaller and family-friendlier of the two corrected bands"* — then asked for a ruling (I-252).
+The ruling received: **derive the charge from the mechanism's own sentence — the perp leg's actual
+friction for what the rebalance actually does, priced term by term from the sealed preset** — and, if
+a genuinely free convention choice survives that derivation, **the asymmetry doctrine resolves it
+against the family: 6 bp → `band` 0.54.**
+
+**The derivation below eliminates the choice.** It is settled by the harness, not by a convention,
+and it lands on the same number the tie-break would have produced. Both facts are stated because
+either alone would be a weaker record.
+
+### 16.2 The per-side price, term by term from the sealed preset
+
+`CRYPTO_PERP_TAKER` — the preset the perp leg trades on, Principal-authorized, not this seat's to
+adjust [measured — `harness/castellan/costs.py:120–129`]:
+
+| Charter §4.6 stack term | Preset field | Value | Enters the band charge? |
+|---|---|---:|---|
+| commission, per side | `commission_bps` | **5.0 bp** | **Yes** |
+| `0.5 × spread × capture` | `half_spread_bps` | **1.0 bp** | **Yes** |
+| `Y · σ_daily · √(Q/ADV)` | `impact_y = 1.0`, `impact_exponent = 0.5` | not a constant | **No — omitted; direction disclosed at §16.7** |
+| borrow / funding carry | `borrow_bps_annual` | **0.0** | Zero by value |
+| realized funding | *no such field, by construction* | — | **RHS of the inequality, never the LHS** [cited — Ruling 003 / I-034] |
+
+```
+per-side price = (commission_bps + half_spread_bps) x 1e-4 = (5.0 + 1.0) bp = 6.0 bp
+                                        [measured - costs.py:46, the `base` expression]
+```
+
+**6.0 bp per side is determinate.** The preset determines a **price per side** and says nothing about
+how many sides a rebalance incurs — the method is named `per_side_cost`, and the side count is a
+property of the trade sequence, not of the cost model. That is where §15.2's convention lived.
+
+### 16.3 The side count is determinate too, and the harness is what determines it
+
+**What the rebalance does.** `w(t)` scales **perp** notional; spot is fixed at 1.0 unit [measured —
+the sealed `statement`]. One leg moves. A band rebalance is one execution, `w_held → w_target`, at
+one bar. **One side.**
+
+**What the engine charges** [measured — `harness/castellan/engine.py:141–143`, `:197–198`]:
+
+```
+trades     = positions.diff().abs()          # comment in source: "per side traded"
+turnover   = trades.sum(axis=1)
+trade_cost = turnover * per_side_cost        # ONE per-side price per unit of |dw|, once, at the bar
+```
+
+**The engine charges exactly one side per unit of `|Δw|`, at the bar the weight changes, and never a
+second time.** A `band` derived against a 12 bp round-trip charge is derived against a cost
+`run_backtest` will never apply — and under A2 `run_backtest` is the only admissible producer of a
+number in this firm. **§4.7.2's test, applied to a cost convention: name the field the harness reads
+to enforce it. The field is `per_side_cost`, read once per side. There is no round-trip field.**
+
+**And the round-trip charge is not conservative-but-defensible; as a per-rebalance charge it is
+arithmetically wrong, because it counts every side twice.** The return leg of any increment **is
+itself a band rebalance**, which the same inequality charges again in its own right:
+
+| `w` path | Sides actually traded | Engine cost at 6.0 bp | One-side charge, summed | Round-trip charge, summed |
+|---|---:|---:|---:|---:|
+| 1.0 → 0.7 → 1.0 | 2 (sell 0.3, buy 0.3) | **3.6 bp** | **3.6 bp** ✓ | 7.2 bp ✗ (2×) |
+| 1.0 → 0.7 → 0.4 | 2 (sell 0.3, sell 0.3) | **3.6 bp** | **3.6 bp** ✓ | 7.2 bp ✗ (2×), and **no reversal ever occurs** |
+
+The second row is the one that kills the convention outright: a monotone sequence of same-direction
+rebalances contains **no round trip at all**, so the premise §15.2 imported — that the increment is
+put on and taken off — is not merely a horizon choice, it is **false on a realizable path.** The
+terminal unwind of the whole position is a property the benchmark shares and is not turnover the
+band authorizes.
+
+**§15.2's stated reason is therefore withdrawn, not overruled.** Its sentence — *"the inequality
+prices the increment against one day of carry, so a round trip of the increment is the term that
+matches the day"* — conflates the **increment's life-cycle** with **the rebalance**, and the subject
+of the inequality is the rebalance: *"the smallest rebalance the band authorizes must cost less than
+the daily carry it adjusts."* The sentence was always one-sided. R-009 read it two-sided.
+
+### 16.4 The arithmetic, in full
+
+```
+per-side price, CRYPTO_PERP_TAKER     = 5.0 commission + 1.0 half-spread = 6.0 bp  [measured, costs.py:120-129]
+sides per band rebalance              = 1 leg x 1 side                   = 1       [measured, engine.py:141-143, :197-198]
+=> charge on the smallest rebalance   = 1 x 6.0                          = 6.0 bp  [derived]
+BTC annualized mean funding           = 11.86%                                     [measured, DATA-INGEST-002 section 4]
+=> daily carry on perp notional       = 1186 / 365                       = 3.249 bp/day [derived]
+constraint (unchanged): the smallest authorized rebalance costs less than one day of the carry it adjusts
+=> band x 6.0 <= 3.249                =>  band <= 0.54150                          [derived]
+SELECTED band = 0.54   (truncation downward at the precision of the inputs, section 15.4's rule; NO snap)
+smallest authorized trade at 0.54     = 3.240 bp against 3.249 bp/day of carry -> margin 0.28%
+```
+
+**Three inputs are held byte-identical to R-009 and none is re-chosen here.** The carry input
+(11.86% BTC, the thinner of the two — ETH at 14.07% gives 1.157 and is the looser bound); the
+one-day budget on the right-hand side; and §15.4's truncation rule. **The only term that moves is
+the side count**, which is the term the ruling scoped.
+
+**`k` = 0.5, `d` = 1.0, `lookback` = 30, `w_max` = 1.0 are UNCHANGED and are not re-derived.**
+
+**Two cross-checks, both recorded because both were live hazards at 12 bp and neither recurs at 6:**
+
+1. **§15.4's route (ii)** — substituting the Charter's administered 10.95%/yr baseline — gives
+   `3.000 / 6.0` = **0.5000 exactly**, not 0.25. **The trigger-silencing coincidence that made route
+   (ii) dangerous at 12 bp is structurally absent at 6 bp.** The measured baseline is retained
+   regardless (no change of method authorized), and it yields the **larger** band, 0.54 against 0.50,
+   which is the direction against the family. I-223 / I-254's substance is unchanged.
+2. **The margin is identical.** 0.28% at 0.54/6.0 as at 0.27/12.0 — the truncation step is the same,
+   so **I-254 neither worsens nor improves.** It is not re-filed.
+
+### 16.5 The tie-break never engaged, and would have produced the same number
+
+Recorded explicitly so that no future reader has to reconstruct which of the two routes carried the
+number: **the free choice did not survive §16.3, so the asymmetry doctrine was not needed.** Had
+§16.3 failed to settle it, the pre-committed tie-break resolves to 6 bp → 0.54 — **the same value.**
+A derivation and a doctrine converging on one number is the strongest form this record can take, and
+it is the reason this seat reports the derivation as decisive rather than as the friendlier of two
+readings.
+
+### 16.6 WHAT R-010 COSTS THIS FAMILY — AND R-009's FIRST QUALIFICATION IS WITHDRAWN
+
+**R-009 offered three qualifications on the escalation and the first of them dies here.** It read:
+*"the window at 12 bp is narrow — 0.02 of deviation, 0.04 of `z`. The conflict is real and small."*
+
+At 0.54 the suppression window is **(0.25, 0.54]** of target deviation, i.e. **1.50 < z ≤ 2.08** —
+already computed and published in §15.5's own table as its 6 bp row, so **no new number is produced
+here.** The width goes from 0.02 to 0.29 of deviation: **14.5× wider** [arithmetic on two published
+figures]. **"Narrow" is no longer available as a qualification and this seat withdraws it rather than
+restating it in softer form.** The second and third qualifications stand unchanged: it remains a
+*delay* for a persistently-elevated `z`, and it still bites hardest from `w_held` = 1.0, where the
+inertness disclosure places this family for ~25% of days and for up to thirty days after a cascade.
+
+**The cost, stated as a cost.** KC-002 clause (b) is this family's own pre-registered expected cause
+of death. At `band` = 0.54 there is a materially wide band of `z` in which a day **target-qualifies
+for clause (b) while the strategy never trades at all** — the family can be killed by a clause in a
+state where it was inert. **That is the whole point of the repair and it is not softened.**
+
+**For the family: nothing.** No source of death is removed; no threshold moves in its favour.
+
+**I-251 is not re-escalated.** The trigger fired at R-009, the escalation is on the record, and
+re-firing it would be ceremony. What R-010 adds is the conflict's **size**, which is now §15.5's 6 bp
+row rather than its 12 bp row. **I-252 is answered on its merits and this seat records that the
+answer runs against the convention it itself selected one revision earlier.**
+
+### 16.7 THE ONE CONVENTION THAT SURVIVES, AND IT IS ON THE OTHER SIDE OF THE INEQUALITY
+
+Two terms in §16.4 are not derived, and this seat names them rather than presenting the inequality as
+fully determinate:
+
+**(a) The one-day budget on the right-hand side.** *Why* one day of carry is the right allowance for
+the smallest authorized rebalance is a declared conservatism, not a derivation. **Its direction runs
+in the family's favour and this seat says so:** a two-day budget gives `band ≤ 1.083`, a wider band
+and therefore a wider suppression window. **The one-day horizon is retained byte-identical** — the
+ruling scoped the charge, the horizon is a different axis, and moving a binding literal's derivation
+on an unruled axis inside a dispatch scoped elsewhere is the SO-003 §3.1 violation. **Named, not
+repaired: filed I-290.**
+
+**(b) The omitted impact term.** `Y · σ · √(Q/ADV)` is in the preset and is **not** in the 6.0 bp
+figure, because it is not a constant and pricing it requires a measured `σ` and a measured ADV —
+i.e. an in-sample figure inside a binding literal, which is exactly what I-223 objects to. **Its
+direction also runs in the family's favour:** including it raises the charge, lowers the bound and
+narrows the suppression window. **Omitting it is therefore the against-family choice and needs no
+relief; including it would need a measurement this dispatch forbids.** Filed **I-291**.
+
+**Both are disclosed as conventions running in the family's direction. Neither is used, and a future
+ruling on either moves `band` again — pre-seal, per the payload's own standing instruction.**
+
+### 16.8 WHAT §16 DID NOT DO
+
+- **No trial, no backtest, no grid, no `open_hypothesis`, no seal, no vault, no registry write, no
+  commit, no `book/pit.db` query.** Registry **0 / 0 / 3** at open and **0 / 0 / 3** at close.
+- **`harness/` read-only**, two files, no write. Seat 9 holds that tree for the `write_grants`
+  migration.
+- **No change to `k`, `d`, `lookback`, `w_max`, K1–K7, KC-002 in any clause or threshold,
+  `trial_budget` (47) or `n_inherited` (7).** No re-derivation of `d`.
+- **No removal of the struck `2027-01-31` literals** — I-204's prohibition holds.
+- **No repair of I-242, I-243, I-253, I-255**, and no retroactive conformance beyond §20.
+- **No new measurement.** Every figure is a prior `[measured]` carried with its source, a
+  `[measured]` read of harness source this session, or arithmetic on two published figures.
+
+### 16.9 Issues filed by §16
+
+**I-290** (the one-day budget on the RHS is an undeclared convention running in the family's
+direction — MEDIUM) · **I-291** (the impact term is in the preset and out of the band derivation;
+disclosed, against-family, unpriceable pre-seal — LOW) · **I-292** (**R-009 selected a
+survival-relevant cost convention that the sanctioned engine contradicts in source — the seat's own
+check reached for the *economic* reading of "cost" and never opened `engine.py`; the cheapest test of
+a cost convention is to read what the engine charges** — MEDIUM) · **I-293** (**§20's `Blocking?`
+column has carried C12 as `BLOCKING ON SEALING` since R5 while the note directly beneath it has read
+`DISCHARGED` since R12 — a table asserting a seal blocker the document itself closed twenty days
+earlier, found only because §20 was read column-by-column rather than against a supplied list** —
+HIGH) · **I-294** (**`§21 horizon` carries a negative bracket excursion under I-181's own checker criterion
+— *"depth 0, no negative excursion"* — caused by the half-open interval notation `(0.25, 0.54]`. It
+is legitimate mathematics and not a defect in meaning, but the field FAILS the check that cleared
+`success_criteria`, and `VALIDATION-GATE0-002` §5 applied that check to `success_criteria` only. The
+site entered at R-009 as `(0.25, 0.27]` and R-010 preserves the counts byte-for-byte in kind — 2
+opens, 3 closes, unchanged from HEAD [measured]. Named, NOT repaired: whether the notation or the
+checker moves is Validation's, and rewriting a hashed field's notation on an unruled axis is the move
+this dispatch forbids** — MEDIUM) · **I-295** (**`research/work/dated_sites.json` has been
+uncommitted since 2026-08-25 20:44 UTC [measured — mtime], i.e. R-009 left its dated-site inventory
+outside the book of record, and A3 makes the repo the book of record. R-010 has now invalidated its
+`statement` and `horizon` offsets and lengths as well. NOT regenerated — no script was run and
+`evaluate_dated_clauses.py` does not exist (I-173 / I-186) — and NOT committed, per dispatch** —
+MEDIUM) · **I-296** (**this addendum authored 381 lines against a ~220 projection, 73% over, and its
+own mid-task budget flag understated the overrun as ~32% because it was estimated rather than
+measured; corrected on the face of R-010** — LOW).
+
+---
+
+*Director of Research · Castellan Capital · **addendum §16 added 2026-09-10 for revision R-010***
+*Dispatch S4-D-011. Trial budget ZERO. Registry 0 / 0 / 3 at open and at close.*
