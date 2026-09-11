@@ -6572,3 +6572,153 @@ finding against R-009 — see `S4-D-013` §3)** · I-294 MED · I-295 MED · I-2
 **Resolution:** open — the transcription worked, **the inflow is unfixed**, and the fix is a
 dispatch-practice rule queued for sprint close.
 **Pattern tag:** `finding-never-reached-the-index` · `ninth-instance` · `catch-up-pass-does-not-fix-inflow`
+
+---
+
+## I-320 · 2026-09-11 · The rsync pull delivered a corrupt database and exited 0 — CASE-4's class, in the ritual the firm runs weekly · Severity: HIGH · Owner: Principal → head-of-data-infra
+
+> **CIO range: I-320 – I-329.**
+
+**Description.** Principal-reported at the 2026-09-11 Friday ritual. **The `rsync` pull of the live
+capture database delivered a malformed copy and exited with success.** `"database disk image is
+malformed"` surfaced at the merge dry-run; **source `integrity_check` was clean.** A torn read of a
+live SQLite file, copied while being written.
+
+**Remedied at the same sitting**, by the Principal: **SQLite backup-API copy on the VPS → whole-file
+transfer → local `integrity_check` gating the merge.** Committed at `88d8a16`.
+
+**This is CASE-4's class — "the success that captured nothing" — and it is the firm's own casebook
+arriving in its weekly ritual.** `rsync` reported success because **`rsync` succeeded**: it transferred
+the bytes it was asked for. **The bytes were not a database.** The exit code measured the transfer, not
+the artifact, **and nothing between the transfer and the merge asked whether the file was what it
+claimed to be.**
+
+**Why the CIO rates it HIGH despite being already fixed.** The runbook was **written, reviewed,
+executed four times, and its `[PRINCIPAL]`-step verification asked for the pulled file's row counts** —
+**and row counts on a malformed file can read fine**, because SQLite will answer from pages it can
+still parse. **The verification the CIO specified at S2-D-025 §5 would not have caught this**, and the
+CIO specified it.
+
+**What makes it dangerous rather than merely annoying: the merge is the one operation that writes the
+firm's irreproducible capture history into `book/pit.db`.** A torn source that parses far enough to
+merge would have written **partial, silently-wrong observations into a 1.58 GB store that is
+gitignored and cannot be reconstructed** — and `RESTATED 0` would have reported clean, because a
+restatement is a *disagreement between two values*, not a *detection of a missing one*.
+
+**Propose to the casebook** — the Principal's own proposal, and the CIO concurs: **CASE-4's rule
+applied to a transport, not a computation.** The generalization: **an exit code from a transfer tool
+describes the transfer. If the artifact has an internal integrity check, the pipeline runs it, or the
+pipeline has not checked anything.**
+
+**Resolution:** the defect is **closed** at `88d8a16` (backup-API + whole-file + gating
+`integrity_check`). **The runbook's `[PRINCIPAL]` verification step is stale and the CIO's S2-D-025 §5
+command with it** — both would pass a malformed file. **Open** until the verification is conformed to
+the new method.
+**Pattern tag:** `exit-code-measured-the-transfer-not-the-artifact` · `case-4-in-the-weekly-ritual`
+
+---
+
+## I-321 · 2026-09-11 · Successful polls exceed heartbeat attempts by 21 — two counters named as if they count the same event · Severity: MEDIUM · Owner: Principal → head-of-data-infra
+
+**Description.** Principal-reported: the health check shows **successful polls 3,368** against
+**heartbeat attempts 3,347** — **21 more successes than attempts.** *"Logically impossible for the same
+event."*
+
+**They are not the same event, and that is the defect.** The two figures are produced by different
+mechanisms: **successful polls counts distinct `knowledge_time` values in the store**, which works
+retroactively over capture history predating the heartbeat; **attempts counts heartbeat rows**, which
+began at **2026-08-04T16:53:16Z** (I-048). **A count that reaches back before the mechanism it is
+compared against will exceed it, and the report presents both as though one bounds the other.**
+
+**I-093's class, fifth member, new field pair.** I-022 (`over` computed then annotated) · I-050 (a `t`
+claiming independence it lacked) · I-093 (`rounds` meaning two units 20× apart) · I-105 (a stage
+described and never registered) · I-113 (a test named for a protection it does not uniquely test) ·
+**this.** **A label that does not mean what it says, in a control the firm reads weekly to decide
+whether its only irreproducible data stream is alive.**
+
+**Consequence, stated because it is not zero.** The heartbeat exists to separate **not-polled** from
+**no-quote** (I-048). **If the two counters are read as bounding each other, the difference looks like
+21 unexplained failures** — or, worse, **a future genuine gap could be absorbed into what looks like a
+known counting artifact.** **The one control the firm has for distinguishing silence from absence
+should not have a field pair that invites arithmetic nobody can do.**
+
+**Remedy, not actioned:** report the heartbeat window alongside the heartbeat counts, or count
+successful polls only from the heartbeat's start when the two are shown together. **Either is a
+labelling fix, not a mechanism change** — and per SO-003 §1 it is **not on the trial's critical path
+and is not funded.**
+
+**Resolution:** open — labelling, unfunded, queued.
+**Pattern tag:** `label-does-not-mean-what-it-says` · `two-counters-one-name`
+
+---
+
+## I-322 · 2026-09-11 · The merge costs ~2 hours at 100% CPU and scales with both sides — the weekly ritual has a cost curve nobody sized · Severity: MEDIUM · Owner: head-of-data-infra
+
+**Description.** Principal-reported: **~2 hours at 100% CPU** to merge **1.2M observations** into a
+**~1.4 GB store** (now **1.58 GB**). *"Cost scales with both sides."* Before *"the ritual becomes a
+four-hour Friday."*
+
+**The arithmetic nobody did when the ritual was adopted.** `DATA-INFRA-003`'s growth model sized
+**disk** — ~36 MB/day, revised from 32.64 — and **nothing sized merge time.** The store has grown
+**200 MB → 1.58 GB in seventeen days**, ~8×, and **a merge cost that scales with both the increment
+and the destination is superlinear in elapsed calendar time.** A weekly ritual whose cost rises with
+the square of the weeks is a ritual with a horizon.
+
+**Why the CIO records it as a governance item and not only a performance one.** SO-003 §6 makes the
+pull-and-merge a **weekly `[PRINCIPAL]` ritual**, and *"a skipped week is a skipped verification and is
+logged as such."* **A four-hour Friday is a ritual that gets skipped** — and the skip is logged, which
+means the firm will have a correct record of a control it stopped running. **Cost is a compliance risk
+when the compliance is a human sitting through it.**
+
+**And the cross-host integrity control rides on it:** the 918 agreements this week, 6,170 cumulative,
+**exist only because the merge runs.**
+
+**Not funded.** Indexing or a bulk-insert path is Data & Infra work, **not on the trial's critical path
+under SO-003 §1**, and §3.1 forbids the CIO absorbing it into a scoped dispatch. **Named, sized by the
+Principal's own measurement, and queued as the first Sonnet item after the seal.**
+
+**Resolution:** open — queued, unfunded, with a stated horizon.
+**Pattern tag:** `ritual-cost-unsized-at-adoption` · `compliance-risk-is-the-clock`
+
+---
+
+## I-323 · 2026-09-11 · The snapshot regime runs on a host the firm ruled may sleep — the CIO's own reclassification changed the SLA of a control it was not about · Severity: HIGH · Owner: CIO
+
+**Description.** The laptop's launchd snapshot job **did not fire from 2026-09-02 to 2026-09-11 — nine
+days** — because the host was asleep. **Caught only by the Friday health check's staleness threshold**,
+then repaired by a manual run.
+
+**The control worked. The regime did not.** The >30h staleness flag is the §4.7.4(ii) construction
+doing exactly its job — *a control that reports whether or not it fired.* **Without it the firm would
+have believed it had nine days of backups it did not have.**
+
+**But the reason the regime failed is the CIO's, and it is structural.** At **S2-D-033** the CIO
+recorded the laptop's reclassification from primary capture to **integrity witness**, and wrote:
+**"host-sleep gaps on the witness are expected behaviour, not incidents. The `pmset` regime continues
+best-effort."**
+
+> **That was correct for capture and wrong for snapshots, and the CIO did not notice it applied to
+> both.** The reclassification made host-sleep **expected** for a host that also runs **the only backup
+> of `book/pit.db`** — now **1.58 GB, gitignored, and irreproducible** — and of **`book/registry.db`,
+> about to receive the firm's first hypothesis.**
+
+**A witness may sleep. A backup may not.** **The same host does both, and one ruling covered it.**
+
+**This is §7.11's failure mode inverted.** That rule says a ruling names the artifacts it touches. **Here
+the ruling named an artifact correctly and silently changed the SLA of a second one nobody listed** —
+**a ruling's blast radius exceeding its named scope**, which §7.11 does not currently catch.
+
+**Recorded at S2-D-033 as a virtue, which makes it worse.** The CIO wrote that the reclassification
+*"retires a metric"* and that **"a metric that outlives its purpose is one that will eventually be
+defended for its own sake."** It was right about the metric **and blind to the control standing beside
+it.**
+
+**Remedy: asked of Seat 9 as a one-paragraph answer at S4-D-013, explicitly not built** — whether the
+snapshot SLA is compatible with a sleep-permitted host, and the cheapest fix if not. **The obvious
+candidate is the VPS, which does not sleep and already runs a systemd timer with `Persistent=true`** —
+but that is Rider A's host and moving the book of record's backup onto it is an architecture decision,
+not a dispatch.
+
+**Resolution:** open — **HIGH.** The gap is disclosed, the detection works, **and the firm is one
+undetected sleep away from a backup regime that exists only in a health check's memory.**
+**Pattern tag:** `reclassification-changed-an-unnamed-slas` · `witness-may-sleep-backup-may-not`
