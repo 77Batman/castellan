@@ -129,3 +129,33 @@ and the distinction is recorded rather than smoothed. The convention binds prosp
 **Not concealment.** Validation's own finding on it: *"the method could only return that answer."* **A sample drawn from a population where one cause masks all others returns that cause with probability 1**, and no amount of care in the sampling repairs it.
 
 **Test for the situation:** if a known failure sits **upstream of everything you are inspecting**, your sample measures the blocker, not the population. **Remove the blocker, then count what remains — every instance, not a sample of them.**
+
+---
+
+### 7.11 Rulings name the artifacts they touch
+
+*Principal-ruled 2026-08-27, from I-101. Placed here rather than in an order, which expires.*
+
+> **Every Principal ruling names the artifacts it touches, and the executing dispatch conforms them in the same act. A ruling with no named artifacts is presumed record-only.**
+
+**What it replaces.** The alternative on the table was a second index carrying ruling-status alongside findings. **Refused:** *"the fix for rulings-never-reaching-artifacts is not a second database — it's a closure rule."* A register of which rulings have reached which documents is itself a thing that goes stale, and the firm would then need a register of that.
+
+**Origin.** `PREREG-002` §20's blocking table carried **C2 and C3 as `BLOCKING`** two sprints after C2 delivered ADMIT-CONDITIONAL and C3 withdrew, and **C11** after it was removed as circular. The CIO reported the corrected set **five times in the decision record and never once asked whether the document agreed.** The seat that needed the answer **read the document** — correctly — and reported what it said.
+
+**Why it is not a filing convention.** §20 sits **inside the document about to be sealed.** Under P7 it freezes. **The firm would have sealed a table asserting that its own Gate 0 verdict was still outstanding**, and no later reader could distinguish that from a genuine open condition without cross-reading three sprints of decision record.
+
+**Test:** for every ruling, name the file and section it changes. **If the answer is "none," say so** — that is a valid answer and it makes the ruling record-only by declaration rather than by omission.
+
+---
+
+### 7.12 Cite artifacts you opened, never reports of them
+
+*Principal-ruled 2026-08-27, from I-117. The citation form of the cardinal-class corrective.*
+
+> **A pointer, count or quotation is taken from the artifact itself — never from a report of the artifact.**
+
+**Origin.** The CIO published an index pointer listing **seven** findings for a dispatch whose document files **six**. **`I-256` exists nowhere in the repository except in the CIO's citation of it.** The seat's *return* had enumerated seven; **the CIO transcribed the return instead of opening the document** — inside the index whose entire purpose was making findings locatable.
+
+**Eleventh instance of one class.** I-141 (nine fields when the roster said eight) · I-150 (six sites when the truth was fourteen) · I-096 (an acceptance number from a cached artifact, unreachable by construction) · I-245 (a grep restated from memory of the grep) · a budget miscount · this. **Every one is a number taken from a description rather than from the thing described.**
+
+**The companion rule is already at §7.10(3)** — *acceptance is computed, not narrated.* **This is its citation form: computed for numbers you assert, opened for artifacts you cite.**

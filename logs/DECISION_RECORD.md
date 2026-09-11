@@ -5791,3 +5791,88 @@ pre-seal dependency · **C7 and C8.**
 §5 dead-man: **7 remain.**
 
 **Review date:** on the findings index's return.
+
+---
+
+## S4-D-010 · 2026-09-10 · I-252 ruled · two rules placed · **dispatches HELD on the CIO's own corrective**
+
+**1 · I-252 RULED, and the Principal ruled the DECISION RULE rather than the number.** The convention
+is **derived from the mechanism's own sentence** — the rebalance moves only the perp leg, so **the
+charge is that leg's actual round-trip friction, priced from the sealed cost preset, shown term by
+term.**
+
+**And the tie-break is pre-committed against the family:**
+
+> **If, after that derivation, a genuinely free convention choice remains, the asymmetry doctrine
+> resolves it against the family: 6 bp → band 0.54.**
+
+**The reasoning generalizes past this parameter:** *"a 'convention' is exactly where a
+stale-term-that-favours-us hides, and the DA ruled this axis unchooseable from survival conditions —
+so the family may not inherit the friendlier number from an arbitrary choice."* **Both candidate
+bands, the chosen one, and the reason publish in the hashed field, per the `d = 1.0` precedent.**
+
+**R-010 also conforms §20's blocking table in the same revision** — *"I-101's finding is inside the
+document about to be sealed, and P7 freezing a table that asserts our own Gate 0 verdict is still
+outstanding is I-140's class with no excuse left."*
+
+**2 · The ruling-status scope call: the index stays findings-only**, and the alternative was refused
+on a reason worth keeping — *"the fix for rulings-never-reaching-artifacts is not a second database —
+it's a closure rule."* **A register of which rulings reached which documents is itself a thing that
+goes stale**, and the firm would then need a register of that.
+
+**Placed at `reference/TEMPLATES.md` §7.11** rather than in an order that expires: **every Principal
+ruling names the artifacts it touches; the executing dispatch conforms them in the same act; a ruling
+with no named artifacts is presumed record-only.** **Retroactive conformance beyond §20 is out of
+scope under §1 unless something blocks the trial.**
+
+**3 · I-117's corrective placed at §7.12 as its own rule** — *"pointers only to artifacts opened, not
+reports of them."* **The Principal ruled I-117 stands unamended by ruling, not merely by the CIO's
+choice:** *"a pointer published unverified, left visible with its finding attached, teaches what a
+silent correction never would."*
+
+**4 · I-116 countersigned with the observation the CIO would not have made about itself:** *"the
+rule's author finally inside its blast radius is the sixth instance closing itself."*
+
+**5 · I-118's handling endorsed and promoted from improvisation to sanctioned route:** a seat whose
+deliverable is refused by a filename pattern **returns the content and names the refusing tool**, and
+**the CIO then places it by hand with authorship marked.** That is now the procedure rather than a
+thing that happened to work.
+
+**6 · THE TWO DISPATCHES ARE PREPARED AND ARE NOT SENT. The CIO is applying its own I-099
+corrective.**
+
+R-010 (Director, free tier) and the `write_grants` migration (Seat 9, Sonnet) are both authorized,
+scoped and ready. **Neither has been dispatched.**
+
+**I-099's corrective, written by the CIO against the CIO on 2026-08-25:**
+
+> **The CIO does not dispatch without a headroom reading younger than the staleness bound, and where
+> none exists it requests one and waits. *Not* "flags it and proceeds" — the Sprint 3 behaviour was to
+> flag and decline, and flagging alone is what degraded.**
+
+**The last reading was `27% / 13%` on 2026-08-13. Four weeks stale. Headroom is UNKNOWN.**
+
+**The Principal's message ends "Proceed," and the CIO does not read that as a headroom reading** — it
+is an authorization of the work, which was never in doubt. **The corrective was written precisely
+because "flag and proceed" is what the CIO degraded to the first time**, and **a corrective the CIO
+suspends the moment it is inconvenient is the exact pattern this firm has catalogued eleven times, in
+its author.**
+
+**What it costs:** one message round-trip. **What it cost last time:** a dead Sonnet dispatch, an
+invocation under D-012, and wall-clock in a sprint whose objective is the forward clock.
+
+**Everything executable without a dispatch has been executed** — both rules placed, the rulings
+recorded — **so the wait costs only the two dispatches themselves.**
+
+**7 · The 22 remaining reds are Validation-owned and block the gate floor, not the seal act.** I-270's
+sixteen, I-273's sibling, and the documented four. **Sequenced at the CIO's discretion against §1 —
+and under §1 they are not on the trial's critical path**, so they wait behind the seal unless the
+Principal funds them.
+
+**8 · Budget.** **8 of 30 invocations · 5 of 12 Opus.** Free **4** · insurance 2 · DA reserve 1.
+§5 dead-man: **9 remain** since this checkpoint.
+
+**9 · Sequence, whole:** **[headroom] → R-010 (band + §20) → `write_grants` migration → checklist
+from the migrated API → C7/C8 at the act → registration-as-seal, the Principal's.**
+
+**Review date:** on the headroom reading.
