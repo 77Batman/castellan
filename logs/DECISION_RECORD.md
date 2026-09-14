@@ -6246,3 +6246,105 @@ Principal's instruction and the CIO's to honour.
 Principal's word on whose hand corrects it.**
 
 **Review date:** on the Principal's ruling on item 1.
+
+---
+
+## S4-D-019 · 2026-09-14 · Session closed on context exhaustion · seal packet pending · rulings received, none executed
+
+**Closed by:** Principal instruction, context at 100%, under `TEMPLATES.md` §7.10(6).
+**Numbering note:** `S4-D-016`, `S4-D-017`, `S4-D-018` were issued as **dispatch identifiers** and
+carry no record entry of their own. This entry is `S4-D-019` so that it collides with none of them.
+*(016 = the seal-conformance brief; 017 = the Ops Oracle dispatch that correctly stopped at the
+retrieval gate, I-329; 018 = the re-dispatch that produced M366.)*
+
+### 1 · What did NOT happen, stated first
+
+**The Principal's rulings of 2026-09-14 arrived at the end of the session and were not executed.**
+Nothing in the seal packet was edited. **`research/REGISTRATION-PAYLOAD-PREREG-002.md` is untouched
+by the CIO's hand** — `git status` shows it clean, and checklist item 1 still reads, at line 447:
+
+> `| 1 | The five blocking conditions are cleared or explicitly accepted by Validation at C2 intake | **C2, C3, C7, C8, C11** — all five OPEN as of 2026-08-10 |`
+
+**I-328 is open. The seal has not executed.** Work performed this session before the close order:
+one `--inspect` run (read-only, wrote nothing) and one `grep`, both to fingerprint the pre-edit state.
+
+### 2 · The rulings, transcribed for the fresh session
+
+**I-328 — the CIO's hand conforms item 1, now.** Transcription of a ruled state from a verified
+source (§20 as conformed at R-010/R-011: **seal-blocking is C7 and C8**), not a judgment — **no Opus
+unit, does not wait.** Four conditions: *(a)* the edit **cites §20 as its source in the row itself**;
+*(b)* the extractor and `--inspect` **re-run clean afterward**; *(c)* **all eight prose-field hashes
+re-verified byte-identical**; *(d)* **if the assumption that item 1's home is prose and the seal
+hashes fields, not checklists, is wrong — stop and say so.**
+
+> **Pre-edit fingerprint, captured this session and recorded here so (b) and (c) are checkable
+> against a written baseline rather than a memory of one:**
+> `statement 9207/5fb2dcdd8edd · mechanism 11828/65c7903646c5 · falsifier 11563/7fc8617cab39 ·
+> universe 24575/5401d95c45ff · horizon 9742/f31b02cddb30 · success_criteria 42058/5f48a0e8029a ·
+> forward_kill_condition 23285/2c632b35f51a · model_prior_provenance 8191/62fce6ba4f8b`
+> `family 'funding-carry-conditioning-002' · trial_budget 47 · predecessor_family None ·
+> holdout_classification 'FORWARD' · forward_window_start <computed at the act> ·
+> forward_window_min_length 12.0 · published_signal_haircut_applied 0.5 · n_inherited 7`
+> Registry before: **0 hypotheses · 0 trials · 3 events · write_grants 1.**
+
+**Brief-completeness corrective adopted**, in the CIO's own sentence: *a seat that exceeds a brief is
+not a substitute for a brief that is complete* — and the corrective is **the roster rule applied to
+briefs: a brief that conforms a state names every row that references that state, found by grep, not
+by memory.**
+
+**Then print the final checklist verbatim** — seven items, I-311 ordering (**four VAULT_SEAL grants
+strictly after the REGISTER_HYPOTHESIS grant closes**), the four `(source, dataset_id)` pairs, and
+the expected read-backs: **`hypotheses = 1` · `write_grants` last = `('REGISTER_HYPOTHESIS','CLEAN',3)`
+· `prereg_sha256` printed · four ceilings · the DATA-IMPL-010 bootstrap-window citation.**
+**The seal executes in the Principal's terminal on that print.**
+
+**M366 — the seat's answers govern where they differ from M364.** Two diffs the Principal owns:
+SO-003 has no §6.1, the session-close rule lives at **`TEMPLATES.md` §7.10(6)** since the §7.3
+promotion — **his fourth citation error, corrected**; and the drift-metric label is corrected to
+**I-219's actual content (base-rate/throughput)**. **New rule adopted:** *§7.3's promotion pass must
+leave a forwarding line at the old location and update citations it can find by grep — a promotion
+that saves a rule and strands its references is half a promotion.* **"Enumerate before reporting
+absent" countersigned** as standing practice for every retrieval, Oracle included. The Oracle-binding
+dispatch error is **I-100's class one layer over, counted per D-012**; corrective: **capability is
+checked before dispatch, like caller counts.**
+
+**Go-live preconditions — all three ruled, so Phase 2 stops waiting on the seal.**
+1. **I-099 amended:** for unattended sessions a **dispatcher-attested conservative posture — Sonnet
+   only, ≤1 invocation, block-bounded — satisfies the headroom gate**; any **Opus** dispatch still
+   requires a human `/usage` reading.
+2. **Block-end policy:** **15-minute grace window**; a dispatch still running at grace-end is
+   **I-049 termination class** — tree verified, partials kept by name, incident filed, unit counted.
+3. **Lock convention** as specified in **M364 Q9** (`.castellan/session.lock`, refuse-if-live,
+   clear-if-stale with an incident line) **enters `CLAUDE.md`.**
+
+**(2) and (3) are one Sonnet doc unit, Principal-funded outside §1, sequenced AFTER the seal.** The
+**per-dispatch duration field** the seat found missing is **added to the decision-record entry format
+in the same unit.**
+
+### 3 · Dispositions — every dirty path
+
+| Path | Disposition | Why |
+|---|---|---|
+| `research/work/dated_sites.json` | **Committed** | Tracked derived scan, 88+/46−, regenerated during R-010/R-011 work. Committed because A3 makes the repo the record of what the working tree held. **Carries I-331** — it disagrees with the seal extractor on `universe` by two characters; **not to be used as a cross-check until regenerated.** |
+| `AGENTS.md` | **Left untracked, uncommitted, undeleted** | A second orchestrator brief, byte-identical to `CLAUDE.md` but for its own self-naming line. **Filed I-330, HIGH, Principal.** Which document governs the firm is a §2 reserved question and not the CIO's to settle by a `git add`. |
+| `.codex/` | **Left untracked, uncommitted, undeleted** | Nine seat definitions in `.toml`, mirroring `agents/`'s nine. Same finding, same file. |
+| `ops/.DS_Store` | **Left untracked; gitignore recommended, not applied** | macOS filesystem artifact, 2026-08-28. Trivially ignorable — **but `.gitignore` is a tracked governance file and this session is closing, so the recommendation is recorded rather than taken.** |
+
+### 4 · State at close
+
+Suite **301 passed / 22 failed / 323**. Registry **0 hypotheses · 0 trials · 3 events · write_grants 1**.
+Budget **18 of 30 invocations · 8 of 12 Opus · free 1 (holding) · insurance 2 · DA reserve 1**.
+§5 dead-man: **7 remain.** Hard stop **2026-09-24** — **ten days.**
+
+### 5 · Next actions, in order
+
+1. **CIO conforms checklist item 1** under the four conditions above — first act of the fresh
+   session, no unit, no wait. **Grep the payload and PREREG-002 for every row referencing the
+   blocking set before editing; item 1 is the third incomplete roster this CIO has handed a seat.**
+2. **Re-run the extractor and `--inspect`**; verify all sixteen fields against §2's baseline.
+3. **Print the final seven-item checklist verbatim.** The Principal seals on that print.
+4. **After the seal:** the Sonnet doc unit — block-end policy, lock convention, duration field.
+5. **Also queued:** `_schema_matches` red-first repair before Gate 1 · I-310 success prints ·
+   I-323 snapshot SLA · I-119 index inflow · 22 suite reds · I-330 · I-331.
+
+**Review date:** immediately, at the open of the next session.

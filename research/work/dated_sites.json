@@ -64,67 +64,81 @@
    ]
   },
   "universe": {
-   "length": 23854,
+   "length": 24573,
    "sites": [
     {
      "field": "universe",
      "off": 258,
      "text": "2020-01-01",
      "rec": "ISO",
-     "sent": "UNIVERSE: BTC/USDT and ETH/USDT spot paired against                                      BTC/USDT:USDT and ETH/USDT:USDT perpetuals, common span 2020-01-01 to                                      C = 6.571 years, zero gaps [measured]."
+     "sent": "UNIVERSE: BTC/USDT and ETH/USDT spot paired against                                      BTC/USDT:USDT and ETH/USDT:USDT perpetuals, common span 2020-01-01 to                                      C = 6.571 years [SUPERSEDED - S3-D-019, 2026-08-12: ingest ran; common                                      span re-measured at 6.612 years (2415 days, through the currently-                              "
     },
     {
      "field": "universe",
      "off": 309,
      "text": "C",
      "rec": "FORMULA",
-     "sent": "UNIVERSE: BTC/USDT and ETH/USDT spot paired against                                      BTC/USDT:USDT and ETH/USDT:USDT perpetuals, common span 2020-01-01 to                                      C = 6.571 years, zero gaps [measured]."
+     "sent": "UNIVERSE: BTC/USDT and ETH/USDT spot paired against                                      BTC/USDT:USDT and ETH/USDT:USDT perpetuals, common span 2020-01-01 to                                      C = 6.571 years [SUPERSEDED - S3-D-019, 2026-08-12: ingest ran; common                                      span re-measured at 6.612 years (2415 days, through the currently-                              "
     },
     {
      "field": "universe",
-     "off": 781,
+     "off": 349,
+     "text": "2026-08-12",
+     "rec": "ISO",
+     "sent": "UNIVERSE: BTC/USDT and ETH/USDT spot paired against                                      BTC/USDT:USDT and ETH/USDT:USDT perpetuals, common span 2020-01-01 to                                      C = 6.571 years [SUPERSEDED - S3-D-019, 2026-08-12: ingest ran; common                                      span re-measured at 6.612 years (2415 days, through the currently-                              "
+    },
+    {
+     "field": "universe",
+     "off": 1182,
      "text": "2022-11-09",
      "rec": "ISO",
      "sent": "REASON, per I-045: Binance changed SOLUSDT's funding settlement                                      frequency and raised its Capped Funding Rate Multiplier from 0.75 to                                      1 - taking the cap to +/-2.00%, roughly 40x the default +/-0.05% band                                      - announced 2022-11-09 20:00 UTC [cited - official, DATA-VERIFY-001                   "
     },
     {
      "field": "universe",
-     "off": 3625,
+     "off": 4026,
      "text": "2022-11-10",
      "rec": "ISO",
      "sent": "WHAT THE DROP DOES NOT COST:                                      F-002 is computed on the common PRIMARY-universe index (BTC, ETH), so                                      NO LEG OF F-002 EVER READ SOL and SOL's 2022-11-10 tail realization                                      (-0.17166 accrual on -1.0 perp notional [measured -                                      VALIDATION-RULING-003 T-9]) was n"
     },
     {
      "field": "universe",
-     "off": 4300,
+     "off": 4701,
      "text": "2020-03-12",
      "rec": "ISO",
      "sent": "WHAT IT DOES COST, recorded pre-seal: the universe's                                      largest in-sample basis excursions are -73.65bp (BTC) and -102.95bp                                      (ETH), both 2020-03-12 [measured - DATA-INGEST-002 section 4] -                                      roughly an ORDER OF MAGNITUDE milder than SOL's - so F-002 LEG (ii)                                     "
     },
     {
      "field": "universe",
-     "off": 14729,
+     "off": 15130,
      "text": "2025-09-18",
      "rec": "ISO",
      "sent": "THE ONE KNOWN IN-SAMPLE TRIGGER, NAMED BY DATE SO NO DISCRETION                                        EXISTS AT RUN TIME: 2025-09-18, on which Binance changed the                                        funding formula FIRM-WIDE, introducing the /(8/N) divisor [cited -                                        official, DATA-VERIFY-001 section 3.1]."
     },
     {
      "field": "universe",
-     "off": 15426,
+     "off": 15827,
      "text": "2025-09-18",
      "rec": "ISO",
      "sent": "UNDER A MECHANICAL TRIGGER IT FIRES                                        REGARDLESS, AND THIS SEAT DECLARES THAT IT DOES: BTC and ETH carry                                        z(t) = INSUFFICIENT-DATA and w = 1.0 for the 30 days from                                        2025-09-18."
     },
     {
      "field": "universe",
-     "off": 22529,
+     "off": 21550,
+     "text": "2026-08-12",
+     "rec": "ISO",
+     "sent": "MinBTL is MONOTONE INCREASING in                                      N, so the measured MinBTL(27,000, SR 1.0) = 16.79 years against 6.571                                      [SUPERSEDED - S3-D-019, 2026-08-12: 6.612 (or 6.609 settled-only); see                                      section 11.1."
+    },
+    {
+     "field": "universe",
+     "off": 23248,
      "text": "2026-08-04",
      "rec": "ISO",
      "sent": "EXPLICITLY NOT CONDITIONED ON, checked deliberately: no excluded                                      period, date range or event window; no post-event window; no                                      volatility-state filter (volatility is a REPORTING cut only, never a                                      filter on what is traded); no funding-sign filter (excluding the                              "
     },
     {
      "field": "universe",
-     "off": 23168,
+     "off": 23887,
      "text": "2022-11-09",
      "rec": "ISO",
      "sent": "THREE FACTS MAKE IT ADMISSIBLE HERE AND ALL THREE ARE                                      CHECKABLE: (i) the reason is a DOCUMENTED VENDOR ACT DATED 2022-11-09                                      [cited - official], not a property of SOL's returns; (ii) NO RETURN                                      STATISTIC ON SOL HAS EVER BEEN COMPUTED BY THIS FAMILY - the registry                            "
@@ -136,7 +150,7 @@
    "sites": []
   },
   "success_criteria": {
-   "length": 41793,
+   "length": 42056,
    "sites": [
     {
      "field": "success_criteria",
@@ -154,77 +168,84 @@
     },
     {
      "field": "success_criteria",
-     "off": 3852,
+     "off": 3156,
+     "text": "2026-08-12",
+     "rec": "ISO",
+     "sent": "ML-13 accordingly leaves this document's N accounting INTACT and the                                      reason is the discount's own stated condition, satisfied choice by                                      choice above rather than asserted: N_conditioning = 7, trial budget                                      79, ceiling N = 86, MinBTL(86, SR 1.0) = 6.14 years against 6.571                    "
+    },
+    {
+     "field": "success_criteria",
+     "off": 4114,
      "text": "2026-08-06",
      "rec": "ISO",
      "sent": "[R13/R14/R15/R16/R17, 2026-08-06, PRE-SEAL - THE CEILING IS A                                      FUNCTION AND THE BUDGET IS STAGED AGAINST A DECLARED RHO."
     },
     {
      "field": "success_criteria",
-     "off": 4719,
+     "off": 4982,
      "text": "2026-08-10",
      "rec": "ISO",
-     "sent": "[R20, 2026-08-10, PRE-SEAL - I-105's DISCHARGE."
+     "sent": "Neither                                      N_conditioning (7) nor the MinBTL figures move; what moves is what                                      may be SPENT.]                                      [R20, 2026-08-10, PRE-SEAL - I-105's DISCHARGE."
     },
     {
      "field": "success_criteria",
-     "off": 12908,
+     "off": 13171,
      "text": "C + 187 days",
      "rec": "FORMULA",
      "sent": "(2) KC-002 survival at                                      C + 187 days: no clause fires - and per KC-002's own text, SURVIVING                                      IT CONFIRMS NOTHING."
     },
     {
      "field": "success_criteria",
-     "off": 14794,
+     "off": 15057,
      "text": "2026-08-04",
      "rec": "ISO",
      "sent": "Required in every artifact regardless of verdict: per-                                      regime-cell decomposition (all four cells); raw AND effective                                      observation counts side by side; gross and net with the breakeven                                      cost; hit rate PAIRED with slugging ratio (Charter 5.4 - neither                                      mean"
     },
     {
      "field": "success_criteria",
-     "off": 14976,
+     "off": 15239,
      "text": "2026-08-10",
      "rec": "ISO",
      "sent": "Required in every artifact regardless of verdict: per-                                      regime-cell decomposition (all four cells); raw AND effective                                      observation counts side by side; gross and net with the breakeven                                      cost; hit rate PAIRED with slugging ratio (Charter 5.4 - neither                                      mean"
     },
     {
      "field": "success_criteria",
-     "off": 16268,
+     "off": 16531,
      "text": "2026-08-05",
      "rec": "ISO",
      "sent": "REPLACED BY:] the disclosure line 'registry N =                                      n_inherited 7 (the K1-K7 conditioning floor, SEALED, with four                                      harness consumers) + logged <count>; declared ceiling 54 at Stage 1,                                      86 at full Stage 2; authorized budget stage <1 or 2>'; and the                                      disclosur"
     },
     {
      "field": "success_criteria",
-     "off": 30644,
+     "off": 30907,
      "text": "2026-08-04",
      "rec": "ISO",
      "sent": "RECORDED AT PRE-REGISTRATION, all [measured] from castellan.stats:                                      ~~n_inherited = 0 (no prior search exists)~~ ;                                       N_conditioning = 7 (was 6; K7 adds one); trial                                      budget 79 (was 80; the 'SOL on its own span' diagnostic is struck                                      with the asset); CEILING"
     },
     {
      "field": "success_criteria",
-     "off": 36996,
+     "off": 37259,
      "text": "2026-08-11",
      "rec": "ISO",
      "sent": "C1 IS DISCHARGED; I-034 IS CLOSED (Principal,                                      2026-08-11; satisfied 2026-07-29, commit 875874f)."
     },
     {
      "field": "success_criteria",
-     "off": 37018,
+     "off": 37281,
      "text": "2026-07-29",
      "rec": "ISO",
      "sent": "C1 IS DISCHARGED; I-034 IS CLOSED (Principal,                                      2026-08-11; satisfied 2026-07-29, commit 875874f)."
     },
     {
      "field": "success_criteria",
-     "off": 38417,
+     "off": 38680,
      "text": "2026-07-29",
      "rec": "ISO",
      "sent": "All nineteen Validation-authored T-cases pass                                      (DATA-IMPL-004 sections 5-6, landed 2026-07-29) [cited]."
     },
     {
      "field": "success_criteria",
-     "off": 38805,
+     "off": 39068,
      "text": "C",
      "rec": "FORMULA",
      "sent": "THE ONE HEAD NOT                                      REPAIRED IS DEFECT (d) - CostModel has no field that can charge                                      liquidation or venue-insolvency risk, the largest risk in this                                      mandate - which is CLASS (c), C-25 in the section 10.11.4                                      register, disclosed on the face of every artifact,"
@@ -554,67 +575,81 @@
    ]
   },
   "universe": {
-   "length": 15085,
+   "length": 15545,
    "sites": [
     {
      "field": "universe",
      "off": 184,
      "text": "2020-01-01",
      "rec": "ISO",
-     "sent": "UNIVERSE: BTC/USDT and ETH/USDT spot paired against BTC/USDT:USDT and ETH/USDT:USDT perpetuals, common span 2020-01-01 to C = 6.571 years, zero gaps [measured]."
+     "sent": "UNIVERSE: BTC/USDT and ETH/USDT spot paired against BTC/USDT:USDT and ETH/USDT:USDT perpetuals, common span 2020-01-01 to C = 6.571 years [SUPERSEDED - S3-D-019, 2026-08-12: ingest ran; common span re-measured at 6.612 years (2415 days, through the currently- forming terminal bar) / 6.609 years (2414 days, last SETTLED bar only); see PREREG-002 section 11.1 In-sample row for full detail], zero gap"
     },
     {
      "field": "universe",
      "off": 198,
      "text": "C",
      "rec": "FORMULA",
-     "sent": "UNIVERSE: BTC/USDT and ETH/USDT spot paired against BTC/USDT:USDT and ETH/USDT:USDT perpetuals, common span 2020-01-01 to C = 6.571 years, zero gaps [measured]."
+     "sent": "UNIVERSE: BTC/USDT and ETH/USDT spot paired against BTC/USDT:USDT and ETH/USDT:USDT perpetuals, common span 2020-01-01 to C = 6.571 years [SUPERSEDED - S3-D-019, 2026-08-12: ingest ran; common span re-measured at 6.612 years (2415 days, through the currently- forming terminal bar) / 6.609 years (2414 days, last SETTLED bar only); see PREREG-002 section 11.1 In-sample row for full detail], zero gap"
     },
     {
      "field": "universe",
-     "off": 485,
+     "off": 238,
+     "text": "2026-08-12",
+     "rec": "ISO",
+     "sent": "UNIVERSE: BTC/USDT and ETH/USDT spot paired against BTC/USDT:USDT and ETH/USDT:USDT perpetuals, common span 2020-01-01 to C = 6.571 years [SUPERSEDED - S3-D-019, 2026-08-12: ingest ran; common span re-measured at 6.612 years (2415 days, through the currently- forming terminal bar) / 6.609 years (2414 days, last SETTLED bar only); see PREREG-002 section 11.1 In-sample row for full detail], zero gap"
+    },
+    {
+     "field": "universe",
+     "off": 738,
      "text": "2022-11-09",
      "rec": "ISO",
      "sent": "REASON, per I-045: Binance changed SOLUSDT's funding settlement frequency and raised its Capped Funding Rate Multiplier from 0.75 to 1 - taking the cap to +/-2.00%, roughly 40x the default +/-0.05% band - announced 2022-11-09 20:00 UTC [cited - official, DATA-VERIFY-001 section 3.2]."
     },
     {
      "field": "universe",
-     "off": 2330,
+     "off": 2583,
      "text": "2022-11-10",
      "rec": "ISO",
      "sent": "WHAT THE DROP DOES NOT COST: F-002 is computed on the common PRIMARY-universe index (BTC, ETH), so NO LEG OF F-002 EVER READ SOL and SOL's 2022-11-10 tail realization (-0.17166 accrual on -1.0 perp notional [measured - VALIDATION-RULING-003 T-9]) was never inside the test; that realization is in any case NOT usable as forward evidence, its magnitude having required the +/-2.00% cap then in force ["
     },
     {
      "field": "universe",
-     "off": 2746,
+     "off": 2999,
      "text": "2020-03-12",
      "rec": "ISO",
      "sent": "WHAT IT DOES COST, recorded pre-seal: the universe's largest in-sample basis excursions are -73.65bp (BTC) and -102.95bp (ETH), both 2020-03-12 [measured - DATA-INGEST-002 section 4] - roughly an ORDER OF MAGNITUDE milder than SOL's - so F-002 LEG (ii) IS A TAIL TEST ON A MILD TAIL AND ITS SURVIVAL IS WEAKER EVIDENCE OF TAIL REDUCTION THAN THE LEG'S CONSTRUCTION IMPLIES; and the firm loses a corro"
     },
     {
      "field": "universe",
-     "off": 9290,
+     "off": 9543,
      "text": "2025-09-18",
      "rec": "ISO",
      "sent": "THE ONE KNOWN IN-SAMPLE TRIGGER, NAMED BY DATE SO NO DISCRETION   EXISTS AT RUN TIME: 2025-09-18, on which Binance changed the   funding formula FIRM-WIDE, introducing the /(8/N) divisor [cited -   official, DATA-VERIFY-001 section 3.1]."
     },
     {
      "field": "universe",
-     "off": 9728,
+     "off": 9981,
      "text": "2025-09-18",
      "rec": "ISO",
      "sent": "UNDER A MECHANICAL TRIGGER IT FIRES   REGARDLESS, AND THIS SEAT DECLARES THAT IT DOES: BTC and ETH carry   z(t) = INSUFFICIENT-DATA and w = 1.0 for the 30 days from   2025-09-18."
     },
     {
      "field": "universe",
-     "off": 14241,
+     "off": 13595,
+     "text": "2026-08-12",
+     "rec": "ISO",
+     "sent": "MinBTL is MONOTONE INCREASING in N, so the measured MinBTL(27,000, SR 1.0) = 16.79 years against 6.571 [SUPERSEDED - S3-D-019, 2026-08-12: 6.612 (or 6.609 settled-only); see section 11.1."
+    },
+    {
+     "field": "universe",
+     "off": 14701,
      "text": "2026-08-04",
      "rec": "ISO",
      "sent": "EXPLICITLY NOT CONDITIONED ON, checked deliberately: no excluded period, date range or event window; no post-event window; no volatility-state filter (volatility is a REPORTING cut only, never a filter on what is traded); no funding-sign filter (excluding the negative-funding regime is the most tempting and most dishonest exclusion available to this family and K3 forbids it); no basis-level filter"
     },
     {
      "field": "universe",
-     "off": 14658,
+     "off": 15118,
      "text": "2022-11-09",
      "rec": "ISO",
      "sent": "THREE FACTS MAKE IT ADMISSIBLE HERE AND ALL THREE ARE CHECKABLE: (i) the reason is a DOCUMENTED VENDOR ACT DATED 2022-11-09 [cited - official], not a property of SOL's returns; (ii) NO RETURN STATISTIC ON SOL HAS EVER BEEN COMPUTED BY THIS FAMILY - the registry holds 0 trials [measured] - so there is no result the drop could have been selected on; (iii) the destination WAS ALREADY ON K4'S DECLARED"
@@ -626,7 +661,7 @@
    "sites": []
   },
   "success_criteria": {
-   "length": 26327,
+   "length": 26479,
    "sites": [
     {
      "field": "success_criteria",
@@ -644,77 +679,84 @@
     },
     {
      "field": "success_criteria",
-     "off": 2446,
+     "off": 2009,
+     "text": "2026-08-12",
+     "rec": "ISO",
+     "sent": "ML-13 accordingly leaves this document's N accounting INTACT and the reason is the discount's own stated condition, satisfied choice by choice above rather than asserted: N_conditioning = 7, trial budget 79, ceiling N = 86, MinBTL(86, SR 1.0) = 6.14 years against 6.571 [SUPERSEDED - S3-D-019, 2026-08-12: 6.612 (6.609 settled-only); margin widens from 0.43 to ~0.47 yr; MinBTL(86) itself unrecompute"
+    },
+    {
+     "field": "success_criteria",
+     "off": 2597,
      "text": "2026-08-06",
      "rec": "ISO",
      "sent": "[R13/R14/R15/R16/R17, 2026-08-06, PRE-SEAL - THE CEILING IS A FUNCTION AND THE BUDGET IS STAGED AGAINST A DECLARED RHO."
     },
     {
      "field": "success_criteria",
-     "off": 2980,
+     "off": 3132,
      "text": "2026-08-10",
      "rec": "ISO",
-     "sent": "[R20, 2026-08-10, PRE-SEAL - I-105's DISCHARGE."
+     "sent": "Neither N_conditioning (7) nor the MinBTL figures move; what moves is what may be SPENT.] [R20, 2026-08-10, PRE-SEAL - I-105's DISCHARGE."
     },
     {
      "field": "success_criteria",
-     "off": 8172,
+     "off": 8324,
      "text": "C + 187 days",
      "rec": "FORMULA",
      "sent": "(2) KC-002 survival at C + 187 days: no clause fires - and per KC-002's own text, SURVIVING IT CONFIRMS NOTHING."
     },
     {
      "field": "success_criteria",
-     "off": 9392,
+     "off": 9544,
      "text": "2026-08-04",
      "rec": "ISO",
      "sent": "Required in every artifact regardless of verdict: per- regime-cell decomposition (all four cells); raw AND effective observation counts side by side; gross and net with the breakeven cost; hit rate PAIRED with slugging ratio (Charter 5.4 - neither means anything alone); the plateau centroid AND the argmax reported together, with only the centroid advancing, the distance between them being itself t"
     },
     {
      "field": "success_criteria",
-     "off": 9500,
+     "off": 9652,
      "text": "2026-08-10",
      "rec": "ISO",
      "sent": "Required in every artifact regardless of verdict: per- regime-cell decomposition (all four cells); raw AND effective observation counts side by side; gross and net with the breakeven cost; hit rate PAIRED with slugging ratio (Charter 5.4 - neither means anything alone); the plateau centroid AND the argmax reported together, with only the centroid advancing, the distance between them being itself t"
     },
     {
      "field": "success_criteria",
-     "off": 10311,
+     "off": 10463,
      "text": "2026-08-05",
      "rec": "ISO",
      "sent": "REPLACED BY:] the disclosure line 'registry N = n_inherited 7 (the K1-K7 conditioning floor, SEALED, with four harness consumers) + logged <count>; declared ceiling 54 at Stage 1, 86 at full Stage 2; authorized budget stage <1 or 2>'; and the disclosure line 'F-002 false-survival rate under the no-information null: 1.3e-4 [derived, with the leg-(ii) term ASSUMED / MEASURED per C11]' - because I-02"
     },
     {
      "field": "success_criteria",
-     "off": 19285,
+     "off": 19437,
      "text": "2026-08-04",
      "rec": "ISO",
      "sent": "RECORDED AT PRE-REGISTRATION, all [measured] from castellan.stats: ~~n_inherited = 0 (no prior search exists)~~ ;  N_conditioning = 7 (was 6; K7 adds one); trial budget 79 (was 80; the 'SOL on its own span' diagnostic is struck with the asset); CEILING N = 86 IN BOTH ACCOUNTINGS - THE MULTIPLE-TESTING COUNT AT THE CEILING DOES NOT MOVE - so MinBTL(86, SR 1.0) = 6.14 years against 6.571 available, "
     },
     {
      "field": "success_criteria",
-     "off": 23306,
+     "off": 23458,
      "text": "2026-08-11",
      "rec": "ISO",
      "sent": "C1 IS DISCHARGED; I-034 IS CLOSED (Principal, 2026-08-11; satisfied 2026-07-29, commit 875874f)."
     },
     {
      "field": "success_criteria",
-     "off": 23328,
+     "off": 23480,
      "text": "2026-07-29",
      "rec": "ISO",
      "sent": "C1 IS DISCHARGED; I-034 IS CLOSED (Principal, 2026-08-11; satisfied 2026-07-29, commit 875874f)."
     },
     {
      "field": "success_criteria",
-     "off": 24209,
+     "off": 24361,
      "text": "2026-07-29",
      "rec": "ISO",
      "sent": "All nineteen Validation-authored T-cases pass (DATA-IMPL-004 sections 5-6, landed 2026-07-29) [cited]."
     },
     {
      "field": "success_criteria",
-     "off": 24449,
+     "off": 24601,
      "text": "C",
      "rec": "FORMULA",
      "sent": "THE ONE HEAD NOT REPAIRED IS DEFECT (d) - CostModel has no field that can charge liquidation or venue-insolvency risk, the largest risk in this mandate - which is CLASS (c), C-25 in the section 10.11.4 register, disclosed on the face of every artifact, and NOT a condition precedent because there is nothing to wait for."

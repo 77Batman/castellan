@@ -7095,3 +7095,55 @@ workable fixes (**grant the binding, or supply the text**), and **did not attemp
 **Resolution:** open — the tool-grant question stands for the Principal; the recall corrective is in
 force.
 **Pattern tag:** `dispatched-work-the-seat-cannot-perform` · `absence-inferred-from-a-failed-search`
+
+## I-330 · 2026-09-14 · A second orchestrator brief and a second seat roster exist in the repo, untracked · Severity: HIGH · Owner: Principal
+
+**Found by:** CIO, during the session-close dirty-path sweep (`git status`), not by a dispatch.
+
+**The measured fact.** Two untracked paths, both written **2026-09-10 21:19**, the same minute:
+
+- **`AGENTS.md`** — 118 lines. `diff CLAUDE.md AGENTS.md` returns **one line**: line 78, the
+  repository-layout row naming the file itself (`CLAUDE.md  this file` → `AGENTS.md  this file`).
+  It is otherwise **byte-identical to the orchestrator brief**, including the harness section and
+  Amendments A1–A4.
+- **`.codex/agents/`** — **nine `.toml` files**, one per seat, names matching `agents/`'s nine `.md`
+  files exactly. *(Counted both directories; nine and nine.)*
+
+**Why it is filed rather than committed.** `CLAUDE.md` is amended as the firm rules — A5 and A6 both
+landed in the Charter during this sprint, and `CLAUDE.md`'s harness section has been edited since.
+**A copy taken on 2026-09-10 is current as of 2026-09-10 and nothing in this firm updates it.**
+Under **A3 the repo is the book of record**; a second, unversioned orchestrator brief beside the
+first means the book of record has two governing summaries and no rule for which wins.
+
+**This is the §7.3 finding one layer up.** The Principal ruled today that a promotion which saves a
+rule and strands its references is half a promotion. **A duplication that copies a brief and leaves
+nothing to keep the copy honest is the same defect without even a promotion to justify it.**
+
+**Not adjudicated here.** Whether Codex CLI is authorized to operate on this repository, and whether
+its brief should be a generated artifact, a symlink, or a forwarding stub, is a **§2 reserved
+question** — it concerns which document governs the firm. **The CIO did not commit these paths, did
+not delete them, and did not gitignore them.** They are left exactly as found.
+
+**Resolution:** open — for the Principal.
+**Pattern tag:** `second-source-of-truth` · `copy-with-no-forwarding-line`
+
+## I-331 · 2026-09-14 · The dated-clauses scan and the seal extractor disagree on `universe` by two characters · Severity: LOW · Owner: Head of Data & Infrastructure
+
+**The measured fact.** `research/work/dated_sites.json` records `universe.length = 24573`.
+`harness/scripts/execute_seal_prereg002.py --inspect`, run today, reports **`universe  24575 chars
+sha256 5401d95c45ff`**. **Two characters.**
+
+**Cause not stated.** The scan file was last written **2026-08-25** and PREREG-002 has revised since
+(R-010, R-011), so staleness is available as an explanation — **and so is `extract_prose`'s
+`.rstrip()`, which trims the extracted string and would produce a difference of exactly this size
+without any document change.** **Both are plausible and neither was measured.** Naming one would be
+the cardinal error this log records twelve times; it is named as a discrepancy and left there.
+
+**Why it still matters at LOW.** The scan file is **not** an input to the seal — `prereg_sha256`
+hashes what the extractor extracts, and the extractor reads `PREREG-002` §21 directly. So this
+cannot corrupt the act. **What it can do is corrupt a cross-check**: anyone reconciling the seal's
+field lengths against `dated_sites.json` gets a mismatch on a field that is in fact correct.
+
+**Resolution:** open — reconcile before `dated_sites.json` is used to check anything about the seal.
+The scan is regenerable; regenerating it answers the question in one run.
+**Pattern tag:** `derived-artifact-drift` · `cross-check-that-would-mislead`
