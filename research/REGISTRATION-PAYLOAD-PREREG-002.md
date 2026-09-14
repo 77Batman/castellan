@@ -25,8 +25,10 @@ recommendation, and no analysis. Every one of those lives in `PREREG-002` or in 
 
 **THIS FILE IS NOT AN AUTHORIZATION TO SEAL.** `TrialRegistry.open_hypothesis` **is** the seal —
 `registry.py`'s P1: *"on first registration, computes `prereg_sha256`"* [measured]. Registration and
-sealing are one operation, not two. The seal remains blocked on **C2, C3, C7, C8, C11** (§20 of
-`PREREG-002`, unchanged by R-004), and a seal is a Standing Order 002 §4 hard interrupt. **This file
+sealing are one operation, not two. The seal remains blocked on **C7 and C8 — those two and nothing
+else** [source: `PREREG-002` §20's conformed table, R-010/R-011 — *"Seal-blocking · C7, C8. Nothing
+else."*; C2 discharged ADMIT-CONDITIONAL, C3 withdrawn, C11 removed as circular], and a seal is a
+Standing Order 002 §4 hard interrupt. **This file
 exists so that when the seal is authorized, the act is mechanical and has nothing left to decide.**
 
 **`book/registry.db` reads 0 hypotheses / 0 trials / 1 event as of this writing** [measured —
@@ -444,7 +446,7 @@ any file.**
 
 | # | Check | Passes when |
 |---:|---|---|
-| 1 | The five blocking conditions are cleared or explicitly accepted by Validation at C2 intake | **C2, C3, C7, C8, C11** — all five OPEN as of 2026-08-10 |
+| 1 | The seal-blocking conditions are cleared or explicitly accepted by Validation at C2 intake | **C7 and C8 — those two and nothing else, both OPEN and both discharged by the act itself** (C7 = Pod B's written acceptance of KC-002 plus the Principal's signature; C8 = four vault seals with the registration, one session, one UTC day, all four after item 7's grant closes). **[Source: `PREREG-002` §20, conformed table at R-010/R-011 — *"Seal-blocking · C7, C8. Nothing else."*]** The other three are not open: **C2 DISCHARGED** — ADMIT-CONDITIONAL, criteria 1–5 PASS (`VALIDATION-GATE0-002` §10.1; S3-D-023) · **C3 WITHDRAWN** (`REDTEAM-002A` §7; S4-D-006) · **C11 REMOVED from seal-blocking as circular** (S3-D-023 §6), re-imposed as a Gate 1 class-(b) condition. *Row conformed 2026-09-14 by the CIO's hand under the Principal's I-328 ruling; the row it replaces asserted all five open as of 2026-08-10.* |
 | 2 | `book/registry.db` holds no family named `funding-carry-conditioning-002` | `SELECT COUNT(*) FROM hypotheses WHERE family = ...` returns 0 |
 | 3 | `trial_budget` is **47**, not 79 and not 80 | the literal in §2.2 |
 | 4 | `n_inherited` is **7**, not 0 | the literal in §2.8 |

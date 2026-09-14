@@ -7144,6 +7144,204 @@ hashes what the extractor extracts, and the extractor reads `PREREG-002` §21 di
 cannot corrupt the act. **What it can do is corrupt a cross-check**: anyone reconciling the seal's
 field lengths against `dated_sites.json` gets a mismatch on a field that is in fact correct.
 
-**Resolution:** open — reconcile before `dated_sites.json` is used to check anything about the seal.
-The scan is regenerable; regenerating it answers the question in one run.
-**Pattern tag:** `derived-artifact-drift` · `cross-check-that-would-mislead`
+**Resolution:** ~~open~~ **CLOSED 2026-09-14 — CAUSE MEASURED, AND IT IS NEITHER OF THE TWO CANDIDATES
+THIS ENTRY NAMED.** Principal-directed measurement (I-331 instruction, run before the seal so the
+cross-check is trustworthy after it). **The cause is the literal's enclosing double quotes.**
+
+| Extraction | `universe` length | Instrument |
+|---|---:|---|
+| raw regex capture, no trimming | **24577** | — |
+| `.rstrip()` — **as the seal extractor ships** | **24575** | `execute_seal_prereg002.py:134` |
+| `.rstrip()` then **enclosing `"` stripped** — as the scan ships | **24573** | `extract_dated_sites.py:70–75` |
+
+**Both named candidates are refuted, and refuted in different ways.**
+**`.rstrip()` is refuted on SIGN.** It trims exactly two characters — `'\n\n'` [measured] — so it is the
+right magnitude, **but it moves 24577 → 24575, away from 24573, not toward it.** A scan that skipped
+`.rstrip()` would read **higher** than the extractor, not lower.
+**Staleness is refuted on HISTORY.** The `universe` field has measured **24575 rstripped / 24577 raw at
+every revision since `a779bed`, 2026-08-12** — through R-008, R-009, R-010 and R-011 [measured, `git show`
+at six revisions]. The scan ran **2026-08-25**, thirteen days after the field last moved. **There was no
+drift for staleness to explain.**
+
+**What it actually is.** `extract_dated_sites.py:71–75` strips the surrounding double quotes of the
+literal (`s[1:]`, `s[:-1]`); `execute_seal_prereg002.py:134` does not. **Two characters, and the
+difference is universal — all eight prose fields are quote-wrapped and every one differs by exactly 2**
+[measured]. **`24575 − 2 = 24573`.** The scan is not stale and not wrong; **the two instruments answer
+two different questions and neither says which it is answering.**
+
+**`dated_sites.json` is rehabilitated as a cross-check** on the stated convention: **its lengths are the
+extractor's minus 2 per field.** It does not need regenerating for this purpose.
+
+**This measurement surfaced `I-333`, which is larger than the entry that produced it** — the firm's two
+instruments disagree because **the governing document and the harness disagree about whether the quotes
+are part of the value**, and that question is answered permanently at the seal.
+**Pattern tag:** `derived-artifact-drift` · `cross-check-that-would-mislead` · `two-named-causes-both-wrong` · `refuted-on-sign-not-magnitude`
+
+---
+
+## I-332 · 2026-09-14 · The session-opening harness check cannot execute as written, and reports success when it fails · Severity: MEDIUM · Owner: CIO → Principal (`CLAUDE.md` is a tracked governance file)
+
+**Found by:** the CIO, on the first command of a fresh session, because the result was used to fill a
+state table and did not survive being looked at.
+
+**The measured fact, in two parts.**
+
+**(1) The command does not exist on this machine.** `CLAUDE.md`'s harness section prescribes, as **the
+first action in any working session**: `pip install -e harness && python -m pytest harness/tests -q`.
+**`python` is not on PATH** — `command -v python` returns nothing; only `python3` is present, at
+`/Library/Frameworks/Python.framework/Versions/3.13/bin/python3` [measured]. The prescribed check
+returns `/bin/bash: python: command not found`.
+
+**(2) And the failure is silent.** The run was issued as `python -m pytest harness/tests -q 2>&1 | tail -5`.
+**A pipeline's exit status is its LAST stage's** — `tail` succeeded, so the job **exited 0** and was
+reported as a completed run. **The status of the thing being checked was discarded by the pipe.**
+
+**Why this is filed rather than fixed in passing.** **The check could not have failed.** A session-opening
+gate whose purpose is to refuse work on a broken suite will, in this form, **pass on a machine with no
+Python at all.** The firm has a doctrine for exactly this shape — red-first, and T-18's *defect-in-the-test*
+condition, where a seat recognised that a test which passes by construction is not a test. **This is that
+condition in the governance brief rather than in a test file.**
+
+**It produced its failure mode in this session, in one step.** The exit-0 result was offered as
+verification of the suite floor, and **the state table would have carried `301/22/323 ✅` sourced from a
+run that never imported pytest.** It was caught by reading the output rather than the exit code — which
+is §7.10(3)'s rule (*acceptance is computed, not narrated*) applied to a shell status.
+
+**Correction supplied, not applied.** `CLAUDE.md` is tracked governance. The line should read `python3`,
+and the invocation should not pipe the command under test — or should carry `set -o pipefail`, or read
+`${PIPESTATUS[0]}` explicitly. **The CIO does not edit the orchestrator brief on its own authority.**
+
+**Consequence for this session, stated plainly: the suite floor 301/22/323 is UNVERIFIED.** It is not
+seal-blocking — the 22 reds are Validation-owned and bear on the gate floor, not on the seal act
+(`M357`) — but it is not measured either, and is not reported as measured.
+
+**Resolution:** open — one-line `CLAUDE.md` amendment for the Principal; suite floor to be measured with
+`python3` at the next opportunity.
+**Pattern tag:** `a-check-that-cannot-fail` · `exit-status-of-the-wrong-stage` · `governance-file-prescribes-a-dead-command`
+
+---
+
+## I-333 · 2026-09-14 · The seal hashes the enclosing quotes; the payload defines the value as the text between them · Severity: HIGH · Owner: Principal ← quant-validation · **Standing Order 002 §4 hard interrupt — Charter/harness divergence**
+
+**Found by:** the CIO, while measuring I-331 under the Principal's instruction. **It was not looked for,
+and I-331 was filed LOW precisely because it "cannot corrupt the act." The measurement found the part
+that can.**
+
+**The divergence, both sides quoted from the artifacts themselves (§7.12).**
+
+**The governing document.** `REGISTRATION-PAYLOAD-PREREG-002.md` §3 defines the extraction:
+
+> *"The extraction is mechanical — **the text between `<field_name>                    = "` and its
+> closing `"`** in that block — and requires no judgment at any point."*
+
+**Between the quotes. The quotes are delimiters, not content.**
+
+**The harness.** `execute_seal_prereg002.py` handles its two field classes differently, and only one of
+them unquotes [measured, in source]:
+
+| Class | Line | Handling | Quotes |
+|---|---|---|---|
+| literals (`family`, `trial_budget`, `n_inherited`, …) | `:115` | `ast.literal_eval(raw)` | **removed** |
+| the 8 prose fields | `:134` | `m.group(1).rstrip()` | **retained** |
+
+**There is no unquoting anywhere in `extract_prose`** [measured — grepped for `[1:-1]`, `strip('"')`,
+`literal_eval`, `unquote`; the only `literal_eval` is the literals path at `:115`].
+
+**What would be sealed.** The value the extractor hands `open_hypothesis` for `universe` begins
+`'"Venue: binance (spot) and binanceusdm (perpetual)…'` and ends `…EDIT."'` — **the delimiter characters
+embedded in the string** [measured, first 90 and last 60 bytes printed]. **All eight prose fields are
+affected; every one is quote-wrapped; the error is exactly two characters each.**
+
+**Why HIGH, and why it is an interrupt rather than a note.** **`prereg_sha256` hashes all sixteen fields.**
+Repairing the extractor **changes all eight prose hashes.** Under **P7 nothing may be added or altered
+after sealing**, and the only remedy for a bad seal is *"a successor family whose window starts later
+anyway"* (`VALIDATION-GATE0-001` §4.3, adopted at §20.1). **So this is decidable now and undecidable in
+one hour's time.** That is the whole of its severity: not that two characters matter much, but that
+**the window in which they can be ruled on closes at the seal.**
+
+**The CIO does not rule it, and names why.** Two readings are available and they are not equivalent:
+*(a)* **the payload's §3 governs** — the quotes are delimiters, the extractor is defective in the same
+sentence its own §3 wrote, and the fix is two characters before the seal; *(b)* **the extractor is the
+instrument and what it extracts is the field** — the hash is self-consistent and re-verifiable forever,
+the quotes are harmless, and touching it hours before the act is the larger risk. **This seat's reading
+is (a) and this seat is the sponsor of the seal's schedule**, which is precisely the conflict that makes
+it Validation's call and the Principal's signature. **Stated so the interest is legible, per I-026.**
+
+**Note on the eight baseline hashes.** `S4-D-019 §2`'s fingerprint, and the re-verification performed
+today against it, are hashes **of the quote-wrapped strings**. The re-verification is valid — the
+question is what the strings should have been, not whether they moved. **They did not move.**
+
+**Resolution:** open — **interrupt filed, seal held pending the Principal's ruling.** Correction supplied
+either way: strip the enclosing quotes in `extract_prose` and re-inspect (eight hashes move, once,
+before the seal), or rule the current form correct and record that §3's definition and the harness
+differ by two characters per field **on the record, before P7 freezes it.**
+**Pattern tag:** `document-and-harness-disagree-on-the-value` · `inconsistent-handling-of-two-field-classes` · `decidable-only-before-the-act` · `found-by-a-LOW-entry`
+
+---
+
+## I-334 · 2026-09-14 · §20.1 of PREREG-002 still carries the pre-R-010 seal-blocking set, two subsections below §20's conformed table · Severity: MEDIUM · Owner: director-of-research → Principal
+
+**Found by:** the CIO's grep, run under the Principal's instruction to enumerate every row referencing
+the blocking set before editing item 1. **It is outside the payload and was not what the grep was for.**
+
+**The measured fact.** `PREREG-002` §20's conformed table reads [measured, `:2121`]:
+
+> `| **Seal-blocking** | **C7, C8. Nothing else.** |`
+
+**Sixty lines below it, §20.1's own table reads** [measured, `:2156`]:
+
+> `| **SEAL-BLOCKING** | **C2 · C7 · C8 · C11** | open_hypothesis may not be called until all four clear |`
+
+and the prose above it at `:2150` reads **`C2, C7, C8 AND C11 ARE OPEN`**, tagged **R35/R36, 2026-08-11** —
+**one month before R-010 conformed §20.**
+
+**This is I-293 repeating inside the document I-293 was filed against.** R-010's pass conformed §20's
+table and did not reach §20.1. **The transferable finding R-010 itself wrote — *"when a ruling supplies
+the list of artifacts it touches, the executing seat still reads the table's own columns, because the
+list is evidence about the rulings and not about the table"* — applies one heading further down than it
+was applied.** The list said §20. The seat read §20. **§20.1 is a different table with the same subject.**
+
+**Why MEDIUM and not HIGH.** **Nothing executes off §20.1.** It is a sequencing *recommendation*, already
+self-superseded — the subsection's operative sentence is `DO NOT SEAL TODAY`, dated **2026-08-11**, and
+the document itself classifies its neighbours as *"fifteen dated clauses whose premises are false."*
+The sealer reads the payload's checklist, which is now conformed. **The checklist does not consult §20.1.**
+
+**Why it is filed before the seal anyway.** §20.1 **is inside the document that P7 freezes.** §7.11's own
+origin note says it exactly: *"§20 sits inside the document about to be sealed. Under P7 it freezes. The
+firm would have sealed a table asserting that its own Gate 0 verdict was still outstanding."* **That
+sentence describes §20.1 as it stands today.** Whether to spend a conformance before the seal, or seal
+with the staleness disclosed on the record, is the Principal's call and not the CIO's.
+
+**The CIO did not edit it.** The ruling authorised the CIO's hand on **the payload's item 1**. `PREREG-002`
+is the Director's artifact under revision-block discipline; **a CIO edit with no R-block would breach the
+document's own convention hours before it freezes.**
+
+**Resolution:** open — for the Principal: conform §20.1 by Director dispatch before the seal, or seal with
+this entry as the disclosure. **Correction supplied: §20.1's table and its `:2150` sentence take §20's
+conformed set, C7 and C8.**
+**Pattern tag:** `ruling-never-reached-the-artifact` · `same-subject-different-table` · `I-293-inside-I-293s-own-document`
+
+---
+
+## I-335 · 2026-09-14 · `I-342` is cited as filed in two documents and exists in no issue log · Severity: LOW · Owner: CIO
+
+**The measured fact.** `REGISTRATION-PAYLOAD-PREREG-002.md:443` and
+`DIR-RESTATE-001-prereg002-mechanism.md:2703` both read **"Filed I-342, LOW"**, describing the payload's
+§6 heading that said six items when the table has held seven since S4-D-013. **`logs/ISSUE_LOG.md`
+contains no `I-342`** — the highest heading in the log is `I-331`, and `I-342` appears nowhere in the
+repository except in those two citations of it [measured — `grep -o '^## I-[0-9]*'`, `grep -rn 'I-342'`].
+
+**This is §7.12's origin class, twelfth-plus instance, and its exact shape:** *"`I-256` exists nowhere in
+the repository except in the CIO's citation of it."* **Here the number was reserved in prose and the
+entry was never written.** The finding it names is real and is described in full at both sites; **only
+the log entry is missing.**
+
+**Numbering note.** `I-342` is **out of sequence** — the log ran to `I-331` when it was written — so the
+number appears to have been invented rather than allocated. **New entries continue from `I-332`, and
+`I-342` is left unused rather than back-filled**, so that the two citations remain findable as the
+defect they are.
+
+**Resolution:** open — file the heading-vs-count finding under a correctly allocated number, or conform
+the two citations to say *recorded in the revision block, not separately filed.* **Either closes it; a
+number that points at nothing does not.**
+**Pattern tag:** `cited-artifact-that-was-never-created` · `number-invented-not-allocated`

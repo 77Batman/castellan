@@ -6348,3 +6348,130 @@ Budget **18 of 30 invocations · 8 of 12 Opus · free 1 (holding) · insurance 2
    I-323 snapshot SLA · I-119 index inflow · 22 suite reds · I-330 · I-331.
 
 **Review date:** immediately, at the open of the next session.
+
+---
+
+## S4-D-020 · 2026-09-14 · Item 1 conformed by the CIO's hand · re-verified against the written baseline · seal held on a §4 interrupt found while measuring I-331
+
+**Opened by:** Principal instruction at the open of a fresh session, executing `S4-D-019 §2` as transcribed.
+**Units:** none. The conformance is transcription of a ruled state and carries no Opus unit, per the ruling.
+
+### 1 · Cold start — what was recovered, and the one row that was not
+
+`M367` recalled and matched against disk. Git `main`, in sync with `origin/main`, working tree clean,
+`HEAD 5df1f97`. Registry **0 hypotheses · 0 trials · 3 events · write_grants 1** — identical to
+`S4-D-019 §2`'s baseline. `I-328` open; the payload untouched; `AGENTS.md` and `.codex/` absent from
+the tree and from `git status`, so **I-330's revocation held.**
+
+**The suite floor 301/22/323 is NOT verified, and the reason is filed as `I-332`.** The session-opening
+check prescribed by `CLAUDE.md` — `python -m pytest harness/tests -q` — **cannot execute on this
+machine** (`python` is not on PATH; only `python3` is) **and reported exit 0 anyway**, because the
+command was piped and a pipeline's status is its last stage's. **The check could not have failed.** It
+was offered as verification of the floor and the state table would have carried it. **Not seal-blocking**
+— the 22 reds are Validation-owned and bear on the gate floor, not the seal act — **but not measured,
+and not reported as measured.** One-line `CLAUDE.md` amendment supplied to the Principal, not applied:
+`CLAUDE.md` is tracked governance.
+
+### 2 · The conformance — and the second row the grep found
+
+**Condition (d) was checked first and the assumption HOLDS.** `extract_prose` anchors on
+`re.match(r"^## 21[.\s]", L)` against `PREREG-002-crypto-funding-basis.md` [measured, `:125`]. The eight
+hashed prose fields come from **§21 of PREREG-002**; **checklists are not hashed.** No stop.
+
+**The grep required by `S4-D-019 §5(1)` earned its place. Item 1 was not the only row.**
+
+| Site | Text before | Disposition |
+|---|---|---|
+| `payload:447` — checklist item 1 | `**C2, C3, C7, C8, C11** — all five OPEN as of 2026-08-10` | **Conformed.** Named by the ruling. |
+| `payload:28` — prose | `The seal remains blocked on **C2, C3, C7, C8, C11**` | **Conformed.** *Not named by the ruling.* Same false roster, same document, same ruled state. |
+| `payload:95` | C11's ≤2 trials budgeted inside the post-seal 47 | **Left.** This is the side §20's R-047 note ruled **correct**; conforming it would reintroduce the disagreement. |
+| `payload:152`, `:416` | C8's same-session / same-UTC-day content | **Left.** Condition content, not a blocking roster; C8 is blocking. |
+| `PREREG-002:2150`, `:2156` — §20.1 | `SEAL-BLOCKING · C2 · C7 · C8 · C11` | **Not edited — filed `I-334`.** Different document, Director's artifact, revision-block discipline. |
+
+Both conformed rows **cite §20 in the row itself**, per condition (a).
+
+**The corrective adopted at `S4-D-019` was load-bearing within one hour of being adopted.** *A brief that
+conforms a state names every row that references that state, found by grep, not by memory.* **The ruling
+named one row; the state lived in two.** This time the incomplete roster would have been the CIO's alone,
+on the CIO's own hand, in the artifact the sealer reads.
+
+### 3 · Re-verification — conditions (b) and (c), against the written baseline
+
+`python3 harness/scripts/execute_seal_prereg002.py --inspect` — read-only, exit 0, `--inspect: nothing
+was written`. **All sixteen fields identical to `S4-D-019 §2`'s fingerprint.** All eight prose hashes
+byte-identical: `statement 9207/5fb2dcdd8edd · mechanism 11828/65c7903646c5 · falsifier 11563/7fc8617cab39
+· universe 24575/5401d95c45ff · horizon 9742/f31b02cddb30 · success_criteria 42058/5f48a0e8029a ·
+forward_kill_condition 23285/2c632b35f51a · model_prior_provenance 8191/62fce6ba4f8b`. Literals unmoved:
+`family 'funding-carry-conditioning-002' · trial_budget 47 · predecessor_family None · holdout_classification
+'FORWARD' · forward_window_min_length 12.0 · published_signal_haircut_applied 0.5 · n_inherited 7`.
+Registry before: **0 · 0 · 3 · 1.**
+
+**A correction the re-run itself supplied.** The CIO stated, in reporting condition (d), that the payload
+is *"not hashed at all."* **That is wrong, and the extractor's own provenance line says so:** `source,
+literals: research/REGISTRATION-PAYLOAD-PREREG-002.md`. **The payload is the source of eight of the
+sixteen hashed literals.** The ruling's assumption as written — *the seal hashes fields, not checklists* —
+holds exactly; the CIO's gloss was looser than the assumption it was restating. **Condition (b) was
+therefore not ceremonial: an edit to that file can move a hashed value. This one did not.**
+
+### 4 · I-331 measured — both named causes refuted, and the measurement found something larger
+
+**Neither `.rstrip()` nor staleness.** `.rstrip()` trims exactly two characters (`'\n\n'`) — right
+magnitude, **wrong sign**: it moves 24577 → 24575, *away* from the scan's 24573. Staleness is refuted on
+history: `universe` has measured **24575 rstripped at every revision since `a779bed`, 2026-08-12**, and
+the scan ran **2026-08-25**, thirteen days after the field last moved.
+
+**The cause is the enclosing double quotes.** `extract_dated_sites.py:71–75` strips them; the seal
+extractor does not. `24575 − 2 = 24573`, **and the difference is exactly 2 on all eight prose fields.**
+`dated_sites.json` is rehabilitated as a cross-check on the stated convention and needs no regeneration.
+**`I-331` CLOSED.**
+
+**And `I-333` opened, which is larger than the entry that produced it.** The payload's §3 defines the
+value as *"the text between `<field_name> = "` and its closing `"`"* — **quotes as delimiters.** The
+harness retains them: literals go through `ast.literal_eval` (`:115`, unquoted), the eight prose fields
+through `m.group(1).rstrip()` (`:134`, **quoted**). **The string that would be sealed for `universe`
+begins `"Venue: binance…` and ends `…EDIT."` with the delimiters inside it.** Repairing that moves all
+eight hashes, and **P7 makes the question undecidable one hour after the seal.**
+
+**Filed HIGH as a Standing Order 002 §4 hard interrupt — Charter/harness divergence. The seal is held
+on it.** The CIO does not rule it and names the conflict: this seat's reading is that §3 governs, **and
+this seat is the sponsor of the seal's schedule.** Validation's call, the Principal's signature.
+
+### 5 · M366 adoptions landed
+
+| Adoption | Home |
+|---|---|
+| Capability is checked before dispatch, as caller counts are | `TEMPLATES.md` **§7.10(9)** — new |
+| A promotion leaves a forwarding line and greps its citations | `TEMPLATES.md` **§7.13** — new |
+| Enumerate before reporting an artifact absent | `TEMPLATES.md` **§7.14** — new, countersigned standing practice |
+| `SO-003` has no §6.1; session-close lives at `TEMPLATES.md` §7.10(6) | recorded; **§7.13 is the rule that prevents its recurrence** |
+| Drift metric is I-219's base-rate/throughput | recorded |
+| M366 governs over M364 where they differ | in force |
+
+**§7.13 met its own origin case immediately: `I-335`** — `I-342` is cited as filed in two documents and
+exists in no issue log, at a number out of sequence with the log it claims to be in.
+
+### 6 · Findings this session
+
+`I-331` **closed** (cause measured) · `I-332` MEDIUM (the check that cannot fail) · **`I-333` HIGH, §4
+interrupt, seal held** · `I-334` MEDIUM (§20.1 stale, I-293 inside its own document) · `I-335` LOW.
+**Four of the five were found by measuring a LOW entry the Principal ordered measured before the seal
+rather than after it.** That ordering is the reason `I-333` is answerable at all.
+
+### 7 · State at close of this entry
+
+Suite **UNVERIFIED** (`I-332`) — last measured 301/22/323. Registry **0 · 0 · 3 · 1**, unchanged; nothing
+was written. Budget unchanged: **18 of 30 invocations · 8 of 12 Opus · free 1 · insurance 2 · DA reserve 1**
+— no seat was dispatched. Hard stop **2026-09-24**.
+
+### 8 · Next actions
+
+1. **Principal rules `I-333`.** Seal held until then. Both corrections are supplied and either closes it.
+2. **Principal rules `I-334`** — conform §20.1 by Director dispatch before the seal, or seal with the
+   disclosure standing.
+3. **The seven-item checklist is printed in full below §8 of this entry's companion report** and is
+   ready; **items 2–7 are unaffected by both interrupts.**
+4. Then: the Sonnet doc unit (block-end grace, `.castellan/session.lock`, per-dispatch duration field).
+5. Queued unchanged: `_schema_matches` red-first repair before Gate 1 · I-310 success prints · I-323
+   snapshot SLA · I-119 index inflow · 22 suite reds · I-330 · I-332 · I-335.
+
+**Review date:** on the Principal's ruling of `I-333`.

@@ -130,6 +130,14 @@ and the distinction is recorded rather than smoothed. The convention binds prosp
 
 **Test for the situation:** if a known failure sits **upstream of everything you are inspecting**, your sample measures the blocker, not the population. **Remove the blocker, then count what remains — every instance, not a sample of them.**
 
+**9 · Check the seat's capability before dispatching, exactly as you check caller counts.** *(Principal-ruled 2026-09-14, adopted from M366; origin I-329.)*
+
+> **Before a dispatch goes out, the dispatching seat confirms the receiving seat holds the tools the work requires.**
+
+**Origin.** `S4-D-017` required `mcp__oracle__recall`, `list_recent` and a save-to-Oracle deliverable. **Execution & Operations holds Read, Write, Edit and Bash — no Oracle binding.** The seat stopped at the retrieval gate and said so, which was correct conduct; **one Sonnet invocation was spent under D-012 for nothing.**
+
+**The class is I-100's, one layer over.** §7.10(7) requires a spec altering a call contract to state its measured caller count. **The symmetric question — can the seat perform the call at all — went unasked.** The CIO held Oracle tools and did not consider that the seat might not. **Reading one line of `agents/` costs less than the invocation it saves.**
+
 ---
 
 ### 7.11 Rulings name the artifacts they touch
@@ -159,3 +167,31 @@ and the distinction is recorded rather than smoothed. The convention binds prosp
 **Eleventh instance of one class.** I-141 (nine fields when the roster said eight) · I-150 (six sites when the truth was fourteen) · I-096 (an acceptance number from a cached artifact, unreachable by construction) · I-245 (a grep restated from memory of the grep) · a budget miscount · this. **Every one is a number taken from a description rather than from the thing described.**
 
 **The companion rule is already at §7.10(3)** — *acceptance is computed, not narrated.* **This is its citation form: computed for numbers you assert, opened for artifacts you cite.**
+
+---
+
+### 7.13 A promotion leaves a forwarding line
+
+*Principal-ruled 2026-09-14, adopted from M366. The §7.3 promotion pass is its origin.*
+
+> **A rule moved from one location to another leaves a forwarding line at the old location and updates the citations it can find by grep. A promotion that saves a rule and strands its references is half a promotion.**
+
+**Origin.** The session-close rule was promoted out of `SO-003` into `TEMPLATES.md` §7.10(6). **`SO-003` has no §6.1 and nothing at the old location says where the rule went**, so a citation to `SO-003 §6.1` — the Principal's own, and his fourth citation error — survived the move with nothing to catch it. The seat that was asked found the rule; **a seat that was not would have found an absence and had no way to distinguish it from a deletion.**
+
+**The two halves are separable and both are required.** The forwarding line handles readers who arrive at the old address. The grep pass handles documents that never look. **Neither substitutes for the other.**
+
+**Companion.** §7.11 puts the naming duty on rulings; this puts it on promotions. **I-330 is the same defect with no promotion to justify it** — a copy of the orchestrator brief taken on one date, with nothing in the firm to keep the copy honest.
+
+---
+
+### 7.14 Enumerate before reporting an artifact absent
+
+*Principal-countersigned 2026-09-14 as standing practice for every retrieval, Oracle included. Origin I-329.*
+
+> **Never conclude absence from a search that returns nothing. Enumerate first — `list_recent`, a directory listing, `git log --all`, `grep -r` — and report absent only against an enumeration.**
+
+**Origin.** The CIO ran **two semantic recalls, one targeted at `M364` by name and content, and neither returned it.** The CIO was one sentence from reporting *"M364 does not exist in Oracle."* **`list_recent` found it immediately — 17,103 chars — and found `M365` beside it**, a memory the instruction had not named and which constrained the answer.
+
+**Why a failed search is not a measurement.** A query that fails to match is **indistinguishable, from the caller's side, from a store that holds nothing.** Two failed recalls are two failed queries. **This is I-046's pattern inverted:** there, an artifact was asserted present on weak evidence; here, absent on none.
+
+**The firm already applied this to counts** — *count the roster, not the memory of it.* **It now applies to existence.**
