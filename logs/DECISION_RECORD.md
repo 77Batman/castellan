@@ -6099,3 +6099,78 @@ judgment" is only as good as its most stale item.**
 **7 · The seal needs two things: the checklist step *(running)*, then C7 and C8 at the act.**
 
 **Review date:** on the checklist's return.
+
+---
+
+## S4-D-014 · 2026-09-14 · Four-vault conformance dispatched · I-326 ruled post-seal · governance channel opened
+
+**1 · I-327 ruled: the Director conforms to FOUR vaults, now, one Opus from free.** The Principal's
+reason: *"three of four legs sealing with no holdout ceiling while the document asserts one for all is
+P-1 false for 75% of the universe; pre-seal it costs a revision, post-seal it costs the family."*
+
+**The brief tells the Director to take the count from `DATA-IMPL-012` §1's measurement and from none of
+the three prior statements — including the CIO's**, which said two. **A seat handed three
+contradictory counts and no instruction takes the most recent one, and the most recent one was wrong.**
+
+**2 · I-326 ruled REPAIRED AFTER THE SEAL, bound by event — and the distinction is the sharp part:**
+
+> **The fingerprint is data and freezes under P7. `_schema_matches` is code and does not.**
+
+So the sealed **values** must be right at the act; the **check** may be repaired after, **before this
+family's first Gate 1 evaluation, where it runs.** **Validation repairs it red-first — reject absent
+keys, type-check the dict.**
+
+**And the seal-time condition is made mechanical rather than left as care:** **each of the four
+fingerprints must carry the literal keys `"columns"` and `"dtypes"`.** **CIO-verified that
+`DATA-IMPL-012` §1's supplied values already do** — `"columns": ["close","high","low","open","volume"]`
+and the `"dtypes"` map, both present in both schema shapes. **With the keys present the existing
+comparison executes for this family**, so the seal does not rest on the defect.
+
+**I-326 goes to the casebook beside I-095 as §4.7.3's second negative print**, and the Principal
+extracts the standing question: **"what does this control do with an empty value?" is now a standard
+question for every control that accepts a structure.** **The CIO notes it generalizes past empty —
+I-326's defect was not the empty case, which `seal()` rejects, but the *plausible* case, which it
+accepts.** The fuller form: **what does this control do with a value that looks right and is shaped
+wrong?**
+
+**3 · GOVERNANCE — §9 placed in `ops/STANDING-ORDER-003.md`.** A dispatcher will carry advisor messages
+without the Principal's copy-paste. **`ADVISOR-DRAFT` is non-binding design input, treated exactly as
+the Principal's own unsigned input. Only approval token + name + timestamp is a ruling.** §4 items,
+reserved acts, the seal, the Friday ritual and spend **remain in the same hands.**
+
+**The CIO recorded the risk as its own rather than the channel's:** §4's erosion guard forbids the CIO
+narrowing the interrupt set by interpretation, and **an unsigned message acted on as a ruling is that
+narrowing performed on the signature instead of the clause.** **The test is mechanical — is the token
+present — and is applied without weighing content**, because **a draft that is obviously right is still
+a draft**, and **four sprints have established that the quality of a claim is not its provenance.**
+
+**Operative rule written in: the CIO may act on an `ADVISOR-DRAFT` exactly as far as it may act on its
+own judgment under §3, and no further.**
+
+**4 · The Oracle M363 dispatch is HELD, per the Principal's own sequencing** — *"one Sonnet unit,
+sequenced after the Director's conformance dispatch."* The seats and files do not collide and it could
+run concurrently; **the instruction says sequenced and the cost of honouring it is under an hour against
+a 09-24 hard stop.** It fires on the conformance's return.
+
+**5 · The flag the Principal asked for in advance, and the CIO agrees it needs a ruling.**
+**I-099's corrective — written by the CIO against the CIO — is: *the CIO does not dispatch without a
+headroom reading younger than the staleness bound, and where none exists it requests one and waits.***
+
+> **Unattended, there is nobody to request a reading from. The rule as written does not merely
+> complicate unattended dispatch — it forbids it, by construction.**
+
+**That is not an edge case to be worded around; it is the rule's central clause meeting the new mode
+head-on.** The CIO will state it in the first line of the M363 answer as instructed, **and notes that
+the honest options are narrow: a machine-readable headroom source, an unattended-mode exemption with
+its own failure accounting, or unattended operation confined to work that spends no dispatch.**
+**The CIO does not pre-judge which**, and records that **it wrote the rule that now blocks the
+capability, which is the correct order for that to happen in.**
+
+**6 · Budget.** **15 of 30 invocations · 8 of 12 Opus.** Free **1 — and it holds**, per the Principal.
+Insurance 2 · DA reserve 1. §5 dead-man: **9 remain.** Hard stop **2026-09-24.**
+
+**7 · Sequence:** Director conformance *(running)* → **fingerprint-key verification by output** →
+**the final checklist printed in full** → **the seal, the Principal's terminal, four vault locks plus
+registration, one session, one UTC day** → Validation's check repair before Gate 1.
+
+**Review date:** on the conformance's return.

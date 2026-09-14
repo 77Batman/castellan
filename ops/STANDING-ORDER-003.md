@@ -89,6 +89,23 @@ At sprint close the Principal audits every `[would-have-asked]` entry.
 
 ---
 
+## §9 · Provenance of inbound messages **[NEW — Principal notice, 2026-09-14]**
+
+A dispatcher now carries messages between the Principal's advisor and this firm without his copy-paste. **The provenance rule is binding and admits no judgment:**
+
+| Label | Standing |
+|---|---|
+| **`ADVISOR-DRAFT`** | **Non-binding. Carries no authority.** The firm treats it as **design input, exactly as it treats the Principal's own unsigned input today.** |
+| **Carrying the Principal's approval token, name and timestamp** | **A Principal ruling.** |
+
+> **Nothing changes in who signs.** §4 items, reserved acts, **the seal**, the Friday ritual and **spend** remain the Principal's, in the same hands.
+
+**CIO note, recorded because the channel's risk is not the advisor's competence but the firm's own reading.** This order already contains the failure mode: **§4's erosion guard forbids the CIO narrowing the interrupt set by interpretation**, and **an unsigned message acted on as a ruling is that narrowing performed on the signature rather than on the clause.** **The test is mechanical and the CIO applies it without weighing content:** *is the approval token present?* **A draft that is obviously right is still a draft**, and **the firm has spent four sprints establishing that the quality of a claim is not its provenance.**
+
+**Operationally: the CIO may act on an `ADVISOR-DRAFT` exactly as far as it may act on its own judgment under §3 — no further.** Where a draft proposes something §3 does not delegate, **it queues like any other §4 item, and the queue entry names it as a draft.**
+
+---
+
 ## §8 · Erosion guard
 
 The interrupt set may be **widened by any seat** and **narrowed only by the Principal in writing.** No adjective may be introduced into §4 by interpretation. **The CIO may not batch, summarize, or soften interrupt items — they arrive as filed.** The independence of **Seats 2, 6 and 7** is untouched and outside this protocol.
