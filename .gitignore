@@ -18,3 +18,4 @@ logs/capture/pit-snapshot.out
 logs/capture/pit-snapshot.err
 AGENTS.md
 .codex/
+.DS_Store
