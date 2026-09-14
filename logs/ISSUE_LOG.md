@@ -7172,14 +7172,14 @@ two different questions and neither says which it is answering.**
 **`dated_sites.json` is rehabilitated as a cross-check** on the stated convention: **its lengths are the
 extractor's minus 2 per field.** It does not need regenerating for this purpose.
 
-**This measurement surfaced `I-333`, which is larger than the entry that produced it** — the firm's two
+**This measurement surfaced `I-363`, which is larger than the entry that produced it** — the firm's two
 instruments disagree because **the governing document and the harness disagree about whether the quotes
 are part of the value**, and that question is answered permanently at the seal.
 **Pattern tag:** `derived-artifact-drift` · `cross-check-that-would-mislead` · `two-named-causes-both-wrong` · `refuted-on-sign-not-magnitude`
 
 ---
 
-## I-332 · 2026-09-14 · The session-opening harness check cannot execute as written, and reports success when it fails · Severity: MEDIUM · Owner: CIO → Principal (`CLAUDE.md` is a tracked governance file)
+## I-362 · 2026-09-14 · The session-opening harness check cannot execute as written, and reports success when it fails · Severity: MEDIUM · Owner: CIO → Principal (`CLAUDE.md` is a tracked governance file)
 
 **Found by:** the CIO, on the first command of a fresh session, because the result was used to fill a
 state table and did not survive being looked at.
@@ -7217,7 +7217,7 @@ seal-blocking — the 22 reds are Validation-owned and bear on the gate floor, n
 
 **Resolution:** ~~open~~ **CLOSED 2026-09-14, same session, by Principal ruling.** The amendment is
 applied: `CLAUDE.md`'s harness line now reads **`python3 -m pytest harness/tests -q`**, with the no-pipe
-rule and the `pipefail`/`${PIPESTATUS[0]}` alternative stated inline and I-332 cited.
+rule and the `pipefail`/`${PIPESTATUS[0]}` alternative stated inline and I-362 cited.
 
 **The floor was then measured, unpiped, and it is the expected one: `301 passed / 22 failed / 323`,
 `PYTEST_EXIT=1`** [measured, `python3 -m pytest harness/tests -q`, 35.15s]. **The number the broken check
@@ -7225,13 +7225,13 @@ would have asserted was correct. That is the point and not a mitigation** — an
 happens to sit beside a true value is indistinguishable from one that does not, which is exactly why it
 had to be measured rather than inherited.
 
-**Re-measured after the I-333 repair: `327 passed / 22 failed / 349`** — **+26 is the new
+**Re-measured after the I-363 repair: `327 passed / 22 failed / 349`** — **+26 is the new
 `test_seal_prose_extraction.py` exactly, and the 22 reds are unchanged**, so the repair broke nothing.
 **Pattern tag:** `a-check-that-cannot-fail` · `exit-status-of-the-wrong-stage` · `governance-file-prescribes-a-dead-command`
 
 ---
 
-## I-333 · 2026-09-14 · The seal hashes the enclosing quotes; the payload defines the value as the text between them · Severity: HIGH · Owner: Principal ← quant-validation · **Standing Order 002 §4 hard interrupt — Charter/harness divergence**
+## I-363 · 2026-09-14 · The seal hashes the enclosing quotes; the payload defines the value as the text between them · Severity: HIGH · Owner: Principal ← quant-validation · **Standing Order 002 §4 hard interrupt — Charter/harness divergence**
 
 **Found by:** the CIO, while measuring I-331 under the Principal's instruction. **It was not looked for,
 and I-331 was filed LOW precisely because it "cannot corrupt the act." The measurement found the part
@@ -7295,10 +7295,10 @@ rather than guesses** if a literal is not delimiter-wrapped. **Sliced, not `.str
 eat a legitimate run of quotes) and **no second `.rstrip()`** (whitespace inside the delimiters is
 content). Test then **26/26 green**. Full suite **327/22/349**, reds unchanged at 22.
 
-**POST-I-333 BASELINE — THIS SUPERSEDES `S4-D-019 §2`'s FINGERPRINT.** Stated as a supersession, not
+**POST-I-363 BASELINE — THIS SUPERSEDES `S4-D-019 §2`'s FINGERPRINT.** Stated as a supersession, not
 silently substituted, per the ruling:
 
-| field | S4-D-019 §2 (superseded) | **post-I-333 baseline** |
+| field | S4-D-019 §2 (superseded) | **post-I-363 baseline** |
 |---|---|---|
 | statement | 9207 / `5fb2dcdd8edd` | **9205 / `8c0425153490`** |
 | mechanism | 11828 / `65c7903646c5` | **11826 / `27c422c0d486`** |
@@ -7326,7 +7326,7 @@ regeneration needed; noted here per the ruling's "regenerate or note."
 
 ---
 
-## I-334 · 2026-09-14 · §20.1 of PREREG-002 still carries the pre-R-010 seal-blocking set, two subsections below §20's conformed table · Severity: MEDIUM · Owner: director-of-research → Principal
+## I-364 · 2026-09-14 · §20.1 of PREREG-002 still carries the pre-R-010 seal-blocking set, two subsections below §20's conformed table · Severity: MEDIUM · Owner: director-of-research → Principal
 
 **Found by:** the CIO's grep, run under the Principal's instruction to enumerate every row referencing
 the blocking set before editing item 1. **It is outside the payload and was not what the grep was for.**
@@ -7370,20 +7370,20 @@ EXPLICIT PRINCIPAL EXCEPTION.**
 discipline:** granted **for one class only — transcription of a ruled state from a verified source** — on
 the ground that **P7 freezes the whole document and a frozen self-contradiction is I-140's class with no
 excuse.** It does not extend to any edit requiring judgment, and none was made. The revision block records
-the hand: *"conformance by CIO hand under Principal ruling I-334."*
+the hand: *"conformance by CIO hand under Principal ruling I-364."*
 
 **Four sites conformed, all in §20.1, each citing §20's R-010/R-011 table in the row itself:** the
 `C2, C7, C8 AND C11 ARE OPEN` sentence · the `SEAL WHEN C2, C7, C8 AND C11 HAVE CLEARED` sentence · the
 `SEAL-BLOCKING` table row · the directed-set sentence. **Nothing added, no threshold moved, no new rule.**
 
 **Verified as the ruling required.** Extractor re-run after the edit: **all sixteen fields identical to
-the post-I-333 baseline** [measured]. §20 and §20.1 sit outside §21's fenced block, which is the only
+the post-I-363 baseline** [measured]. §20 and §20.1 sit outside §21's fenced block, which is the only
 region `extract_prose` reads. **Had any hash moved, the instruction was to stop. None moved.**
 **Pattern tag:** `ruling-never-reached-the-artifact` · `same-subject-different-table` · `I-293-inside-I-293s-own-document`
 
 ---
 
-## I-335 · 2026-09-14 · `I-342` is cited as filed in two documents and exists in no issue log · Severity: LOW · Owner: CIO
+## I-365 · 2026-09-14 · `I-342` is cited as filed in two documents and exists in no issue log · Severity: LOW · Owner: CIO
 
 **The measured fact.** `REGISTRATION-PAYLOAD-PREREG-002.md:443` and
 `DIR-RESTATE-001-prereg002-mechanism.md:2703` both read **"Filed I-342, LOW"**, describing the payload's
@@ -7397,13 +7397,13 @@ entry was never written.** The finding it names is real and is described in full
 the log entry is missing.**
 
 **Numbering note.** `I-342` is **out of sequence** — the log ran to `I-331` when it was written — so the
-number appears to have been invented rather than allocated. **New entries continue from `I-332`, and
+number appears to have been invented rather than allocated. **New entries continue from `I-362`, and
 `I-342` is left unused rather than back-filled**, so that the two citations remain findable as the
 defect they are.
 
 ### **[2026-09-14 · THE RULING SAID "STRIKE THE CITATION WHERE IT APPEARS." THE CITATION IS ELEVEN CITATIONS, AND NOTHING WAS STRUCK.**
 
-**The Principal ruled I-335 on this entry's stated premise — one phantom number, `I-342`, at two sites.
+**The Principal ruled I-365 on this entry's stated premise — one phantom number, `I-342`, at two sites.
 Enumerating before acting (§7.14, adopted three hours earlier) shows the premise is wrong by an order of
 magnitude.** Every `I-33x`/`I-34x`/`I-36x` token in the repository was extracted and checked against the
 log's own headings [measured]:
@@ -7422,7 +7422,7 @@ log's own headings [measured]:
 **every one of these is above it**, so the block was allocated against a log that had not reached it.
 
 **Three of them — `I-340`, `I-341`, `I-345` — are cited inside `PREREG-002`, which P7 freezes at the
-seal.** That is the same structural concern that made `I-334` worth conforming.
+seal.** That is the same structural concern that made `I-364` worth conforming.
 
 **NOTHING WAS STRUCK, AND THE REASON IS THAT STRIKING IS THE WRONG REPAIR.** Each citation sits beside a
 **full description of a real finding** — the vault-argument narrowing, the heading-vs-count, the ordering
@@ -7444,3 +7444,129 @@ measurement contradicts.**
 
 **Resolution:** open — **re-ruling invited on the measured extent.** The strike is not executed.
 **Pattern tag:** `cited-artifact-that-was-never-created` · `number-invented-not-allocated` · `a-block-of-numbers-allocated-against-a-log-that-never-reached-them` · `ruling-given-on-a-premise-the-measurement-contradicts`
+
+---
+
+## I-366 · 2026-09-14 · The CIO allocated four issue numbers already claimed by another document, putting two meanings of `I-363`/`I-364` inside the document about to freeze · Severity: HIGH · Owner: CIO
+
+**Self-reported. The defect is this seat's and was introduced today.**
+
+**What happened.** Filing the session's findings, the CIO allocated `I-332`, `I-333`, `I-334`, `I-335`
+by reading the **highest heading in `logs/ISSUE_LOG.md`** (`I-331`) and counting up. **All four were
+already claimed** — `research/DATA-IMPL-012-vault-arguments.md` §7 filed `I-332` (HIGH,
+`_schema_matches` accepts a non-empty wrong-shaped `schema_fingerprint`), `I-333` (MEDIUM,
+`query_semantics` recorded but never read by any harness path) and `I-334` (MEDIUM, `_schema_matches`
+does exact-order list equality on `columns`) [measured]. **The claims were never written into this log**,
+so the log's own headings could not show them.
+
+**The consequence, and it is why this is HIGH rather than clerical.** `PREREG-002` — **the document P7
+freezes at the seal** — ended up carrying **both senses at once**: the R-012 block written today cited
+`I-334` for the §20.1 conformance and `I-333` for the extractor baseline, while `:87`, written at R-011,
+cites *"I-330's sibling findings I-331/I-333/I-334"* in `DATA-IMPL-012`'s sense. **Two different findings
+under one number, frozen permanently, with no way for a later reader to tell which is meant.**
+
+**This is the rule this seat adopted three hours earlier, applied to everyone except itself.**
+`TEMPLATES.md` §7.14 — *enumerate before reporting an artifact absent; never conclude from a search that
+returns nothing* — was adopted at S4-D-020, **and then used correctly on I-365's citations** (finding
+eleven phantoms) **and not at all on the CIO's own allocation.** The log's heading list is exactly the
+"search that returns nothing" §7.14 warns about: **an unfiled claim is invisible to it.**
+
+**It was also self-concealing.** The CIO's own phantom-enumeration for `I-365` reported `I-332`–`I-335`
+as **`FILED`** — because by then the CIO had filed them. **The instrument built to find phantom numbers
+confirmed the collision as healthy**, since it compared citations against headings and the headings were
+the new entries. A check run after the act it should have preceded.
+
+**Repair, executed.** The CIO's four entries are renumbered to the first range free of every number
+claimed anywhere in the repository (`grep -rho "I-[0-9]\{3\}"`, true maximum `I-361`; `I-999` is a test
+fixture string, not an allocation):
+
+| was | is | subject |
+|---|---|---|
+| I-332 | **I-362** | the session-opening check that cannot fail |
+| I-333 | **I-363** | the seal hashes the enclosing quotes |
+| I-334 | **I-364** | §20.1 carries the pre-R-010 blocking set |
+| I-335 | **I-365** | eleven phantom citations |
+
+Rewritten in `logs/ISSUE_LOG.md`, `logs/DECISION_RECORD.md` (S4-D-020/021 only), `CLAUDE.md`,
+`harness/tests/test_seal_prose_extraction.py`, `harness/scripts/execute_seal_prereg002.py`, and
+`PREREG-002`'s R-012 block **bounded to lines 18–59 so `:87`'s pre-existing citation was not touched**
+[measured — verified after: `I-332`/`I-334`/`I-335` now appear only in `DATA-IMPL-012`, and `I-333` only
+in `DATA-IMPL-012`, `DIR-RESTATE-001` and `PREREG-002:87`]. Suite re-run **28/28** on the seal tests and
+**the eight prose hashes are unmoved** — the renumber touched comments and prose, never a hashed field.
+
+**Standing corrective, and it is the allocation form of §7.14:** **an issue number is allocated against
+every number CLAIMED anywhere in the repository, never against the log's highest heading.** A number
+claimed in a document and not yet filed is allocated; the log is the record of entries, **not the record
+of allocations**, and the firm has now been bitten from both sides of that gap in one session —
+**I-365 is claims-without-entries, and this is entries-over-claims.**
+
+**Resolution:** open — the renumber is executed and verified; **the standing corrective is for the
+Principal to countersign**, and `I-365`'s back-fill should allocate from the claimed set when it runs.
+**Pattern tag:** `allocated-against-the-wrong-index` · `two-meanings-under-one-number` · `the-rule-adopted-and-not-self-applied` · `a-check-that-ran-after-the-act-it-should-have-preceded`
+
+---
+
+## I-367 · 2026-09-14 · Checklist item 6's expected read-back is wrong: one `seal()` writes TWO `VAULT_SEAL` grants, so four vaults produce EIGHT rows, not four · Severity: HIGH · Owner: Principal ← CIO
+
+**Found by:** building item 6's execution script on the Principal's ruling, and testing it end-to-end
+against a throwaway registry per the I-311 method. **It was not looked for. The test asserted the
+documented expectation and the documented expectation failed.**
+
+**The measured fact** [measured — throwaway registry, one `seal()` call, `write_grants` counted before
+and after]:
+
+```
+grants before ONE seal(): 0
+grants after  ONE seal(): 2
+    ('VAULT_SEAL', 'HoldoutVault.seal',                 'CLEAN')
+    ('VAULT_SEAL', 'HoldoutVault.holdout_spec_sealed',  'CLEAN')
+```
+
+**Two grants per seal, for two distinct writes:** the vault file write (`holdout.py:253`) and the
+`holdout_spec_sealed` event, logged through `_grant_log` (`holdout.py:370`), **which opens its own grant
+under the same `reason`.** Both are deliberate, disclosed self-granting — `VaultWriteNotGrantedError`'s
+docstring carries the honest account. **Neither is a defect. The count stated beside them is.**
+
+**What every prior statement of this read-back says.** The payload's checklist item 6: *"`write_grants`
+gains **four** `reason='VAULT_SEAL'` rows, all with `outcome='CLEAN'`."* The CIO's printed seal packet,
+twice. `S4-D-019 §2`'s transcription of the expected read-backs. **All four vaults × 2 = 8.**
+
+**Why HIGH.** **This is I-328's shape at the other end of the same checklist.** Item 1 asserted five
+conditions open when two were; item 6 asserts a count of four when the count is eight. **The Principal
+executes this checklist at the vault door with the registration already committed and P7 already
+running.** A read-back that does not match its stated expectation at that moment leaves exactly two
+outcomes, both bad: **halt a completed seal on a false alarm, or exercise the judgment a no-judgment
+checklist exists to make unnecessary.** The ceiling count (4) and the `spec.json` count (4) are correct;
+**it is only the grant-row count that is wrong**, which makes it the harder kind to catch — three numbers
+in a row, two right.
+
+**Why it was invisible until today.** **No test in `harness/tests/` executed `HoldoutVault.seal()` four
+times and counted the resulting grants.** The count was stated in prose, in four documents, propagated by
+transcription from the first, and **never computed** — §7.10(3)'s rule, *acceptance is computed, not
+narrated*, applied to a number nobody ran. **The Principal's own instruction to write and test the script
+is what produced the measurement**; a hand-typed session at the vault would have hit this live.
+
+**Corrected read-back, now implemented in the script** (`execute_vault_seals_prereg002.py`, which prints
+it and returns non-zero unless every count matches):
+
+| read-back | expected |
+|---|---:|
+| `VAULT_SEAL` / `CLEAN` rows, total | **8** |
+| ... of which `dispatch='HoldoutVault.seal'` | **4** |
+| ... of which `dispatch='HoldoutVault.holdout_spec_sealed'` | **4** |
+| `ingest_ceiling` rows in `pit.db` | **4** |
+| `spec.json` under `book/vaults/` | **4** |
+| `hypotheses` | **1** |
+
+**Second measured fact, recorded with it because it will also be read at the door:** `seal()` **normalises
+the cutoff to a full UTC datetime.** `--cutoff 2026-09-14` produces `ingest_ceiling.cutoff =
+'2026-09-14T00:00:00+00:00'` [measured]. **The widened form is correct and is not a mismatch**; it is
+named here so it is not read as one.
+
+**Not corrected by this seat.** Item 6 lives in the payload — the Director's artifact — and **this is a new
+measurement, not the transcription of a ruled state**, so the I-364 exception does not reach it. **The
+correction is supplied; the hand is the Principal's to name.**
+
+**Resolution:** open — for the Principal: conform item 6's read-back to 8/4/4, or seal against the
+script's print, which computes all six counts and refuses on any mismatch.
+**Pattern tag:** `false-expectation-in-a-no-judgment-checklist` · `a-count-stated-in-prose-and-never-computed` · `transcribed-through-four-documents` · `found-by-building-the-thing-that-would-have-hit-it-live`

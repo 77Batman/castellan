@@ -19,8 +19,8 @@ House rule 6 applies throughout: **[measured]** = read or executed in this repos
 
 > **UNSEALED. `book/registry.db` reads 0 hypotheses / 0 trials / 3 events, `write_grants` 1 row [measured — read-only `SELECT COUNT(*)`]. No literal in §1's table of sixteen moves. §20.1 is not a hashed field; verified by re-running the extractor after the edit — see below.**
 
-**Authority:** the Principal's ruling on **I-334**, 2026-09-14.
-**Hand:** **conformance by CIO hand under Principal ruling I-334.** The Principal granted an explicit,
+**Authority:** the Principal's ruling on **I-364**, 2026-09-14.
+**Hand:** **conformance by CIO hand under Principal ruling I-364.** The Principal granted an explicit,
 narrow exception to the Director's-artifact discipline **for this one class — transcription of a ruled
 state from a verified source** — on the stated ground that **P7 freezes the whole document, and a frozen
 self-contradiction is I-140's class with no excuse.** The exception does not extend to any edit requiring
@@ -39,7 +39,7 @@ judgment, and no such edit was made.
 else."* **C2** discharged ADMIT-CONDITIONAL (`VALIDATION-GATE0-002` §10.1; S3-D-023) · **C11** removed
 from seal-blocking as circular (S3-D-023 §6). Nothing is added, no threshold moves, no new rule enters.
 
-**Occasion:** **I-334, MEDIUM**, filed by the CIO. Found by a `grep` run under the Principal's standing
+**Occasion:** **I-364, MEDIUM**, filed by the CIO. Found by a `grep` run under the Principal's standing
 instruction to enumerate every row referencing a state before conforming it — **and the grep was aimed at
 a different document.** §20.1's table is tagged **R35/R36, 2026-08-11**, and sat **sixty lines below**
 the §20 table that R-010 conformed on 2026-09-10.
@@ -52,7 +52,7 @@ same subject, and nothing in the procedure said to look one heading further down
 standing — `TEMPLATES.md` §7.11 plus the S4-D-019 roster rule — is to grep the *state*, not the *section*.
 
 **Verification, per the ruling's own condition.** The extractor was re-run after this edit. **All sixteen
-fields unchanged from the post-I-333 baseline** — §20 and §20.1 sit outside §21's fenced block, which is
+fields unchanged from the post-I-363 baseline** — §20 and §20.1 sit outside §21's fenced block, which is
 the only region `extract_prose` reads. Had any hash moved, the instruction was to stop.
 
 ---

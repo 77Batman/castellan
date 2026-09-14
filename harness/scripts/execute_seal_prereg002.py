@@ -139,7 +139,7 @@ def extract_prose() -> dict:
         m = re.search(rf"^{f}\s*=\s*(.*?)(?=^[a-z_]+\s*=|\Z)", body, re.S | re.M)
         if m:
             raw = m.group(1).rstrip()
-            # I-333, Principal-ruled 2026-09-14. The payload's §3 defines the
+            # I-363, Principal-ruled 2026-09-14. The payload's §3 defines the
             # value as "the text between `<field_name> = \"` and its closing
             # `\"`" -- the quotes are DELIMITERS, not content. `extract_literals`
             # already honours that via ast.literal_eval; this path did not, and

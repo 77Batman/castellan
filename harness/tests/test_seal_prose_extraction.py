@@ -1,4 +1,4 @@
-"""I-333 — the seal extractor must return the field VALUE, not the delimited literal.
+"""I-363 — the seal extractor must return the field VALUE, not the delimited literal.
 
 `REGISTRATION-PAYLOAD-PREREG-002.md` §3 defines the extraction:
 
@@ -11,7 +11,7 @@ BETWEEN the quotes. The quotes are delimiters, not content.
 so every one of the eight prose strings that `prereg_sha256` hashes carried a
 leading and trailing `"` that §3 says is not part of the value.
 
-Written RED, before the repair, per the Principal's I-333 ruling. At the time of
+Written RED, before the repair, per the Principal's I-363 ruling. At the time of
 writing all eight fields failed `test_no_prose_field_is_quote_wrapped`.
 
 Why it matters more than two characters: `prereg_sha256` hashes all sixteen
@@ -113,7 +113,7 @@ def test_passphrase_prompt_refusing_empty_is_a_refusal_not_a_pass(monkeypatch):
 def test_literal_fields_are_unquoted_and_stay_that_way():
     """`extract_literals` already conforms to §3 via ast.literal_eval.
 
-    Asserted so the I-333 repair cannot be 'fixed' by making prose match
+    Asserted so the I-363 repair cannot be 'fixed' by making prose match
     literals in the wrong direction.
     """
     lits = _seal_module().extract_literals()

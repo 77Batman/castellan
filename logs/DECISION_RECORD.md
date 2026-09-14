@@ -6363,7 +6363,7 @@ Budget **18 of 30 invocations · 8 of 12 Opus · free 1 (holding) · insurance 2
 `S4-D-019 §2`'s baseline. `I-328` open; the payload untouched; `AGENTS.md` and `.codex/` absent from
 the tree and from `git status`, so **I-330's revocation held.**
 
-**The suite floor 301/22/323 is NOT verified, and the reason is filed as `I-332`.** The session-opening
+**The suite floor 301/22/323 is NOT verified, and the reason is filed as `I-362`.** The session-opening
 check prescribed by `CLAUDE.md` — `python -m pytest harness/tests -q` — **cannot execute on this
 machine** (`python` is not on PATH; only `python3` is) **and reported exit 0 anyway**, because the
 command was piped and a pipeline's status is its last stage's. **The check could not have failed.** It
@@ -6386,7 +6386,7 @@ hashed prose fields come from **§21 of PREREG-002**; **checklists are not hashe
 | `payload:28` — prose | `The seal remains blocked on **C2, C3, C7, C8, C11**` | **Conformed.** *Not named by the ruling.* Same false roster, same document, same ruled state. |
 | `payload:95` | C11's ≤2 trials budgeted inside the post-seal 47 | **Left.** This is the side §20's R-047 note ruled **correct**; conforming it would reintroduce the disagreement. |
 | `payload:152`, `:416` | C8's same-session / same-UTC-day content | **Left.** Condition content, not a blocking roster; C8 is blocking. |
-| `PREREG-002:2150`, `:2156` — §20.1 | `SEAL-BLOCKING · C2 · C7 · C8 · C11` | **Not edited — filed `I-334`.** Different document, Director's artifact, revision-block discipline. |
+| `PREREG-002:2150`, `:2156` — §20.1 | `SEAL-BLOCKING · C2 · C7 · C8 · C11` | **Not edited — filed `I-364`.** Different document, Director's artifact, revision-block discipline. |
 
 Both conformed rows **cite §20 in the row itself**, per condition (a).
 
@@ -6425,7 +6425,7 @@ extractor does not. `24575 − 2 = 24573`, **and the difference is exactly 2 on 
 `dated_sites.json` is rehabilitated as a cross-check on the stated convention and needs no regeneration.
 **`I-331` CLOSED.**
 
-**And `I-333` opened, which is larger than the entry that produced it.** The payload's §3 defines the
+**And `I-363` opened, which is larger than the entry that produced it.** The payload's §3 defines the
 value as *"the text between `<field_name> = "` and its closing `"`"* — **quotes as delimiters.** The
 harness retains them: literals go through `ast.literal_eval` (`:115`, unquoted), the eight prose fields
 through `m.group(1).rstrip()` (`:134`, **quoted**). **The string that would be sealed for `universe`
@@ -6447,51 +6447,51 @@ this seat is the sponsor of the seal's schedule.** Validation's call, the Princi
 | Drift metric is I-219's base-rate/throughput | recorded |
 | M366 governs over M364 where they differ | in force |
 
-**§7.13 met its own origin case immediately: `I-335`** — `I-342` is cited as filed in two documents and
+**§7.13 met its own origin case immediately: `I-365`** — `I-342` is cited as filed in two documents and
 exists in no issue log, at a number out of sequence with the log it claims to be in.
 
 ### 6 · Findings this session
 
-`I-331` **closed** (cause measured) · `I-332` MEDIUM (the check that cannot fail) · **`I-333` HIGH, §4
-interrupt, seal held** · `I-334` MEDIUM (§20.1 stale, I-293 inside its own document) · `I-335` LOW.
+`I-331` **closed** (cause measured) · `I-362` MEDIUM (the check that cannot fail) · **`I-363` HIGH, §4
+interrupt, seal held** · `I-364` MEDIUM (§20.1 stale, I-293 inside its own document) · `I-365` LOW.
 **Four of the five were found by measuring a LOW entry the Principal ordered measured before the seal
-rather than after it.** That ordering is the reason `I-333` is answerable at all.
+rather than after it.** That ordering is the reason `I-363` is answerable at all.
 
 ### 7 · State at close of this entry
 
-Suite **UNVERIFIED** (`I-332`) — last measured 301/22/323. Registry **0 · 0 · 3 · 1**, unchanged; nothing
+Suite **UNVERIFIED** (`I-362`) — last measured 301/22/323. Registry **0 · 0 · 3 · 1**, unchanged; nothing
 was written. Budget unchanged: **18 of 30 invocations · 8 of 12 Opus · free 1 · insurance 2 · DA reserve 1**
 — no seat was dispatched. Hard stop **2026-09-24**.
 
 ### 8 · Next actions
 
-1. **Principal rules `I-333`.** Seal held until then. Both corrections are supplied and either closes it.
-2. **Principal rules `I-334`** — conform §20.1 by Director dispatch before the seal, or seal with the
+1. **Principal rules `I-363`.** Seal held until then. Both corrections are supplied and either closes it.
+2. **Principal rules `I-364`** — conform §20.1 by Director dispatch before the seal, or seal with the
    disclosure standing.
 3. **The seven-item checklist is printed in full below §8 of this entry's companion report** and is
    ready; **items 2–7 are unaffected by both interrupts.**
 4. Then: the Sonnet doc unit (block-end grace, `.castellan/session.lock`, per-dispatch duration field).
 5. Queued unchanged: `_schema_matches` red-first repair before Gate 1 · I-310 success prints · I-323
-   snapshot SLA · I-119 index inflow · 22 suite reds · I-330 · I-332 · I-335.
+   snapshot SLA · I-119 index inflow · 22 suite reds · I-330 · I-362 · I-365.
 
-**Review date:** on the Principal's ruling of `I-333`.
+**Review date:** on the Principal's ruling of `I-363`.
 
 ---
 
 ## S4-D-021 · 2026-09-14 · Four rulings executed · the extractor conformed to §3, red-first · the seal packet is ready and the invocation is printed
 
-**Opened by:** the Principal's rulings on I-333, I-334, I-332 and I-335, received in one block.
+**Opened by:** the Principal's rulings on I-363, I-364, I-362 and I-365, received in one block.
 **Units:** none. Conformance and repair, no seat dispatched.
 
-### 1 · I-332 — applied, then the floor measured for the first time this session
+### 1 · I-362 — applied, then the floor measured for the first time this session
 
 `CLAUDE.md`'s harness line now reads **`python3 -m pytest harness/tests -q`**, with the no-pipe rule and
-the `pipefail` / `${PIPESTATUS[0]}` alternative stated inline and I-332 cited. **Floor measured unpiped:
+the `pipefail` / `${PIPESTATUS[0]}` alternative stated inline and I-362 cited. **Floor measured unpiped:
 `301 passed / 22 failed / 323`, `PYTEST_EXIT=1`** [measured, 35.15s]. **The number the unfailable check
 would have asserted was correct — which is the point rather than a mitigation.** A check that cannot fail
 is worthless whether or not the value beside it happens to be true.
 
-### 2 · I-333 — ruled for §3, repaired red-first, and the ruling's ground is the durable part
+### 2 · I-363 — ruled for §3, repaired red-first, and the ruling's ground is the durable part
 
 **The Principal's ground:** amending §3 to match the code would be **adjusting a declaration to fit its
 enforcement — the I-046 inversion the firm has refused twice.** **The document defines; the harness
@@ -6509,7 +6509,7 @@ the eight fields happened to end in whitespace it would have forced the wrong re
 ruled definition as arithmetic (`new == raw.rstrip()[1:-1]`), with the regex **restated in the test rather
 than imported**, because a check that calls the thing it checks is not one.
 
-**POST-I-333 BASELINE — SUPERSEDES `S4-D-019 §2`, stated as a supersession per the ruling.** All eight
+**POST-I-363 BASELINE — SUPERSEDES `S4-D-019 §2`, stated as a supersession per the ruling.** All eight
 lengths fall by exactly 2; **the eight literals are unchanged**, as required:
 
 `statement 9205/8c0425153490 · mechanism 11826/27c422c0d486 · falsifier 11561/26eefca19d52 ·
@@ -6524,15 +6524,15 @@ against. No regeneration needed; noted per the ruling.
 **No test in `harness/tests/` touched `execute_seal_prereg002.py` before today** — I-039's pattern, the
 worst error in the only untested function, in the script that performs the firm's most irreversible act.
 
-### 3 · I-334 — §20.1 conformed as R-012, by the CIO's hand under explicit exception
+### 3 · I-364 — §20.1 conformed as R-012, by the CIO's hand under explicit exception
 
 Four sites in §20.1, each citing §20's R-010/R-011 table in the row. Revision block records the hand:
-*"conformance by CIO hand under Principal ruling I-334."* **Exception bounded to transcription of a ruled
+*"conformance by CIO hand under Principal ruling I-364."* **Exception bounded to transcription of a ruled
 state from a verified source**, on the Principal's ground that **P7 freezes the whole document and a
 frozen self-contradiction is I-140's class with no excuse.** **Verified: all sixteen fields identical to
-the post-I-333 baseline** — §20.1 sits outside §21's fence. Had any moved, the instruction was to stop.
+the post-I-363 baseline** — §20.1 sits outside §21's fence. Had any moved, the instruction was to stop.
 
-### 4 · I-335 — THE RULING'S PREMISE WAS WRONG BY AN ORDER OF MAGNITUDE, AND NOTHING WAS STRUCK
+### 4 · I-365 — THE RULING'S PREMISE WAS WRONG BY AN ORDER OF MAGNITUDE, AND NOTHING WAS STRUCK
 
 The ruling — *"the citation is struck where it appears"* — was given on this entry's stated premise of
 **one phantom number at two sites.** **§7.14, adopted three hours earlier, says enumerate before acting.**
@@ -6573,7 +6573,7 @@ the passphrase.
 
 ### 6 · State
 
-Suite **327 passed / 22 failed / 349** after the I-333 repair — **+26 is the new test file exactly, reds
+Suite **327 passed / 22 failed / 349** after the I-363 repair — **+26 is the new test file exactly, reds
 unchanged at 22.** Re-confirmed after the passphrase change. Registry **0 · 0 · 3 · 1** — **nothing
 written; the seal has not executed.** Budget unchanged: **18 of 30 · 8 of 12 Opus · free 1 · insurance 2 ·
 DA reserve 1.** Hard stop **2026-09-24**.
@@ -6581,7 +6581,7 @@ DA reserve 1.** Hard stop **2026-09-24**.
 ### 7 · Next
 
 **The seal.** Items 1–7 are conformed, the sixteen fields are verified against a baseline recorded in this
-entry, and the invocation is printed for the Principal's hands. **I-335's re-ruling is invited but is not
+entry, and the invocation is printed for the Principal's hands. **I-365's re-ruling is invited but is not
 seal-blocking on this seat's reading.**
 
 **Review date:** at the seal.
