@@ -16,3 +16,5 @@ book/snapshots/
 logs/capture/snapshot-failures.log
 logs/capture/pit-snapshot.out
 logs/capture/pit-snapshot.err
+AGENTS.md
+.codex/
