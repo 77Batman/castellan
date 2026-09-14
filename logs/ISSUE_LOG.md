@@ -6999,3 +6999,52 @@ the document would assert it for all of it.**
 `DATA-IMPL-012-vault-arguments.md` §1; **item 6 and §21's comment both need conforming, and that is a
 Director act on the document about to be sealed.**
 **Pattern tag:** `count-from-the-description-not-the-lookup` · `twelfth-cardinal` · `air-gap-for-one-quarter-of-the-universe`
+
+---
+
+## I-328 · 2026-09-14 · Item 1 of the seal's own checklist is false — it asserts five open blocking conditions, three of which the firm discharged weeks ago · Severity: HIGH · Owner: CIO → director-of-research
+
+**Description.** Found by the CIO while reading the checklist in order to print it, per the Principal's
+instruction. **The first item of the checklist that executes the seal reads** [measured, verbatim]:
+
+> `| 1 | The five blocking conditions are cleared or explicitly accepted by Validation at C2 intake |`
+> `**C2, C3, C7, C8, C11** — all five OPEN as of 2026-08-10 |`
+
+**Three of the five are not open** [measured against the rulings]: **C2** delivered **ADMIT-CONDITIONAL**
+(`VALIDATION-GATE0-002`, S3-D-023) · **C3 WITHDRAWN** (`REDTEAM-002A`, S4-D-006) · **C11 removed from
+seal-blocking as circular** (S3-D-023 §6). **Seal-blocking is C7 and C8**, and the document's own §20
+now says so — **R-010 conformed it and R-011 conformed §20's C8 row and §11.1 alongside.**
+
+**So `PREREG-002` §20 and its own execution checklist now disagree about what blocks the seal**, and the
+checklist is the artifact the sealer reads.
+
+**This is I-101 in the payload.** I-101 found rulings that never reached §20; **§20 was then conformed
+and the payload was not.** The same defect, one artifact over, **after the rule written to prevent it
+was placed.** `TEMPLATES.md` §7.11: *a ruling names the artifacts it touches, and the executing dispatch
+conforms them in the same act.*
+
+**The failure is the CIO's brief, for the third time.** §7.11 puts the naming duty on the ruling and the
+conformance duty on the dispatch — **and the CIO wrote the dispatch. S4-D-016's brief named §21's vault
+block and checklist item 6. It did not name item 1.** The Director conformed what it was pointed at,
+**and then went beyond scope on its own initiative to §20's C8 row and §11.1 — finding a stale cardinal
+in each — while item 1 sat unnamed one section from the one it was editing.**
+
+**A seat that exceeds a brief is not a substitute for a brief that is complete.** The CIO has now handed
+incomplete rosters three times: the §20 list that omitted C12 (I-293), the vault count taken from a
+comment (I-327), and this.
+
+**Why HIGH rather than documentary.** **The checklist promises "mechanical, seven items, no judgment."**
+A sealer executing it literally **halts at item 1**, because five conditions are asserted open and only
+two are. **A sealer who does not halt has exercised judgment the checklist forbids** — and the only
+route past a false first item is to decide it is out of date, which is precisely the reasoning a
+no-judgment checklist exists to make unnecessary. **Either outcome is a defect, and one of them ends
+with the seal proceeding on a sealer's private view of which items still apply.**
+
+**The correction is mechanical and fully evidenced** — every ruling is in the decision record and in
+§20's conformed table. **The CIO has not made it**: the payload is the Director's artifact, it is the
+seal's own content, and **the CIO declines to edit the seal's checklist on its own authority hours
+before the act.** **Put to the Principal with the correction supplied.**
+
+**Resolution:** open — **HIGH, seal-blocking in practice.** One row. The correction is stated; the hand
+that makes it is the Principal's to name.
+**Pattern tag:** `ruling-never-reached-the-artifact` · `incomplete-roster-in-the-brief` · `false-first-item-in-a-no-judgment-checklist`

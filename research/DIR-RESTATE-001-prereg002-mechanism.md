@@ -2570,3 +2570,154 @@ measured; corrected on the face of R-010** — LOW).
 
 *Director of Research · Castellan Capital · **addendum §16 added 2026-09-10 for revision R-010***
 *Dispatch S4-D-011. Trial budget ZERO. Registry 0 / 0 / 3 at open and at close.*
+
+---
+
+## 17. THE VAULT COUNT — WHY IT IS FOUR, WHY IT WAS NEVER A JUDGMENT CALL, AND WHY THREE STATEMENTS DISAGREED
+
+*Reasoning for revision **R-011** of `PREREG-002` (R48, R48(b), R48(c), R49) and for the payload's
+item 6. **No derivation is performed here.** The four argument-sets were measured by Seat 9 at
+`DATA-IMPL-012` §1 and are transcribed verbatim; this section supplies the reasoning for the count,
+the ordering and the two conformances the dispatch did not scope.*
+
+### 17.1 The count is a property of the lookup, not of the universe's prose
+
+**One `seal()` call protects exactly one `(source, dataset_id)` pair.** `HoldoutVault.seal()` takes a
+single `dataset_id: str` and passes it straight to `PITStore.set_holdout_ceiling(source,
+dataset_id, …)`; `_active_ceilings` resolves by `WHERE source=? AND dataset_id=?` — **exact match, no
+wildcard, no prefix, no pattern** [measured — `data.py:204`, `:271`; convention cited at
+`DATA-IMPL-001` §4(1), *"the vault's `dataset_id` argument is passed straight through as `symbol`"*].
+
+**The universe holds four such pairs** [measured, read-only `GROUP BY` against
+`file:book/pit.db?mode=ro`, this session]: `binance`/`BTC/USDT` (12,080 rows) · `binance`/`ETH/USDT`
+(12,080) · `binanceusdm`/`BTC/USDT:USDT` (19,329) · `binanceusdm`/`ETH/USDT:USDT` (19,329). The two
+SOL pairs on disk are **out of the universe at R3** and correctly receive neither vault nor ceiling.
+
+**The count therefore follows from the lookup's arity and the universe's cardinality, both of which
+were readable at any point in eight revisions by one query and one function signature.** There was no
+judgment in it. That is what makes the three-way disagreement worth recording rather than merely
+correcting.
+
+### 17.2 What sealing one vault would actually have done — the reason this is pre-seal
+
+A `dataset_id` that does not exactly match the string a future `ingest()` passes **seals
+successfully and then never binds** [`DATA-IMPL-012` §2]. So the one-vault form does not fail loudly;
+it produces a vault, a `spec.json`, a `holdout_spec_sealed` event and a clean-looking record, while
+**three of the four legs carry no ceiling at all.** Nothing reports the absence. The D2 control
+would have existed, reported clean, and protected 25% of the universe.
+
+**This is §4.7.3's failure mode stated in its own vocabulary, and I-095's shape exactly: a control
+that is deterministic, correctly configured, and pointed at the wrong path is indistinguishable from
+the record from one that works.** It is also why the Principal ruled it pre-seal: post-seal the
+remedy is a successor family whose forward window starts later anyway, so a bad seal buys nothing
+and forfeits the correction (§20.1, Validation's I-030 reasoning, applied a third time).
+
+### 17.3 The ordering is a control, and it is the half most likely to be lost
+
+**All four seals occur after the `REGISTER_HYPOTHESIS` grant has closed. Never inside it.**
+`HoldoutVault.seal()` opens its own `write_grant(reason="VAULT_SEAL", …)` internally [measured —
+`holdout.py`, inside `seal()`], grants do not nest, and a nested grant raises **and rolls the
+otherwise-successful registration back with it** [cited — I-311, verified twice and independently by
+Seat 9 and by the CIO on throwaway registries]. **Four locks plus one registration, one session, one
+UTC day (C8).**
+
+The failure this guards is asymmetric and nasty: **the natural way to write the loop is to seal each
+vault as part of registering the family**, which is the one arrangement that destroys both. It is
+therefore written on the face of item 6 and on the face of §20's C8 row — **§4.7.4(ii) applied to a
+sequencing constraint: a control a reader has to infer from a footnote is one the executing seat
+will not see at 2 a.m. on the day of the act.**
+
+### 17.4 The two conformances the dispatch did not scope, and why they were made anyway
+
+**§20's C8 row and §11.1's `Sequencing, binding` row.** Neither was named. Both were read, and both
+carry the same count claim in the same document that P7 will freeze.
+
+**The reason is one revision old and is this seat's own finding: I-293.** R-010 conformed the three
+§20 cells a supplied ruling list named and found a fourth, contradicting the document since R5,
+**only because §20 was read column-by-column rather than against the list.** The transferable rule
+recorded then — *the list is evidence about the rulings, not about the table* — applies unchanged to
+a dispatch's task list. **A dispatch that names two statements is evidence about two statements.**
+
+Both cells were **underspecified rather than false** (each is true of any one of the four seals), and
+that distinction is stated rather than smoothed: they were not lying, they were counting to one in a
+place that now has to count to four, and a reader executing §20's checklist would have sealed once.
+
+**The uncomfortable half. §11.1's `Vault` row has read *"One `HoldoutVault` per (dataset, family)"*
+since R1.** The document has held the correct rule from its first draft, and §21's block comment
+contradicted its own §11 for eight revisions without anyone reading the two together. **This was a
+conformance failure, not an analysis failure** — the firm did not fail to know the rule, it failed to
+propagate it — and that is the more expensive of the two findings, because no amount of additional
+analysis would have caught it.
+
+### 17.5 `instrument_identity` — the one value this seat authored, labelled as such
+
+`DATA-IMPL-012` §1 supplies three values. `instrument_identity` is not one of them, and the prior
+single string named **all four symbols on a vault that binds one pair** — the same cardinality defect
+in the adjacent field, four times over, inside a hashed spec. Ruling 001 §3.4 makes the field
+**binding**: a change to it **retires the vault**, so it is fixed pre-seal or not at all.
+
+The narrowing is a **decomposition of the document's own existing string**, and each vault's field
+list matches that vault's **measured** `columns` from `DATA-IMPL-012` §1. **It is nonetheless
+authored rather than transcribed, and is labelled [inferred] rather than [measured]** so no future
+reader mistakes it for Seat 9's measurement. Filed **I-341, MEDIUM.**
+
+### 17.6 The seal-time condition on I-326, verified rather than assumed
+
+`_schema_matches` returns `True` **unconditionally** when a fingerprint lacks the literal keys
+`"columns"` and `"dtypes"` — `get("columns")` → `None` skips the branch, `get("dtypes") or {}` →
+empty skips the loop, so a plausible descriptive dict passes unexamined [measured —
+`DATA-IMPL-012` §4]. **All four fingerprints in R48's block carry both literal keys, checked key by
+key against the transcription, not assumed from the source document.** With them present the existing
+comparison executes for this family.
+
+**The Principal's division holds and this seat does not cross it:** the fingerprint is **data** and
+freezes under P7; `_schema_matches` is **code** and does not. The repair is Validation's, post-seal,
+bound before Gate 1. **The seal-time obligation was mechanical and is met. Had any of the four lacked
+either key, the instruction was to stop, and this seat would have stopped** — a fingerprint that
+cannot fail is worse than no fingerprint, because it reports clean.
+
+### 17.7 WHAT §17 DID NOT DO
+
+- **No trial, no backtest, no grid, no `open_hypothesis`, no seal, no vault, no registry write, no
+  commit.** Registry **0 / 0 / 3** and `write_grants` **1 row** at open and at close.
+- **One read-only `GROUP BY` against `book/pit.db`** (`?mode=ro`) — the row-count class §20's C12
+  note and I-045 already treat as not a trial. **No price, return or statistic computed.**
+- **`harness/` read-only.** **No repair of `_schema_matches` (I-326 — Validation's, ruled
+  post-seal).** **No touch of the 22 suite reds.**
+- **No binding field of `open_hypothesis` touched**, no re-derivation of `band`, `k`, `d`,
+  `lookback`, `w_max`; `trial_budget` 47 and `n_inherited` 7 unchanged.
+- **No removal of the struck `2027-01-31` literals** — I-204's prohibition holds. **No `[Rn, <date>]`
+  stamp inside any hashed field** — I-226.
+- **No repair of I-331, I-333, I-334** (Seat 9's sibling findings: seal-time type/shape validation,
+  `query_semantics` having no harness reader, exact-order `columns`). All three remain open and all
+  three are named on the face of R-011.
+
+### 17.8 Issues filed by §17
+
+**I-340** (**the vault count: three prior statements of one cardinal quantity — §21's comment said
+two, the payload's item 6 said one, the CIO's report said two by reading the comment rather than the
+lookup semantics — and no two agreed; the correct rule was in §11.1 the whole time, making this a
+conformance failure rather than an analysis failure** — HIGH) · **I-341** (**`instrument_identity`
+named four symbols on a one-pair vault; narrowed per vault by this seat rather than transcribed from
+a measurement, and Ruling 001 §3.4 makes the field binding so the error was not cosmetic** —
+MEDIUM) · **I-342** (**the payload's §6 heading has read "six items" since S4-D-013 added a seventh;
+found while conforming item 6, not looked for — same class and same arithmetic as the vault count** —
+LOW) · **I-343** (**the ordering constraint — four seals strictly after the registration grant
+closes — existed only in a note beneath the checklist and in `DATA-IMPL-011`; it is now on the face
+of item 6 and of §20's C8. The natural implementation, sealing inside the registration loop,
+destroys both records, and a control a seat must infer is one it will not see on the day of the
+act** — MEDIUM) · **I-344** (**this seat re-measured the vault count rather than taking it from
+`DATA-IMPL-012` alone, on the grounds that the count is the thing three statements got wrong;
+recorded as a method note, not a defect — the cheapest check of a cardinal is to count it, and it
+cost one read-only query** — LOW) · **I-345** (**R-011's line-budget flag was first drafted with
+estimated figures in the slot §7.12 reserves for a measurement, and the estimate for this section was
+42% of its measured length — R-010's I-296 defect repeated one revision after it was filed. Corrected
+against `git diff --numstat` on the face of R-011** — LOW).
+
+**I-346 through I-349 unused.**
+
+---
+
+*Director of Research · Castellan Capital · **addendum §17 added 2026-09-14 for revision R-011***
+*Dispatch S4-D-016. Trial budget ZERO. Registry 0 / 0 / 3 and `write_grants` 1 row at open and at
+close. No hypothesis opened, no vault sealed, `book/vaults/` untouched, no commit.*

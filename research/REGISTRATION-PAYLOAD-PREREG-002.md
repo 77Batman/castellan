@@ -413,14 +413,34 @@ lookup with no defined value at `ρ̂ = 0.07`.
 
 ## 5. THE VAULT — NOT PART OF THIS PAYLOAD, AND BINDING ON THE SAME DAY
 
-**C8: the vault seal occurs in the same session and on the same UTC calendar day as
+**C8: the vault seals occur in the same session and on the same UTC calendar day as
 `open_hypothesis`.** P7 fails Gate 1 if `hypothesis_sealed` postdates `C` at UTC day granularity.
-The call is at `PREREG-002` §21's vault block, unchanged by R-004 in every argument. **The passphrase
-is the Principal's and is never written to this repository, to Oracle, or to any file.**
+~~The call is~~ **[R-011] THE CALLS ARE FOUR, NOT ONE, AND THEY ARE** at `PREREG-002` §21's vault
+block. **The passphrase is the Principal's and is never written to this repository, to Oracle, or to
+any file.**
+
+> **[R-011 · 2026-09-14 · dispatch S4-D-016] THIS SECTION SAID "THE VAULT" AND ITEM 6 SAID "THE
+> VAULT." BOTH WERE SINGULAR AND BOTH WERE WRONG.** `HoldoutVault.seal()` and
+> `PITStore.set_holdout_ceiling()` each bind exactly **one** `(source, dataset_id)` pair, and
+> `_active_ceilings` is an exact-match lookup with **no wildcard** [measured — `data.py:204`, `:271`].
+> The primary universe holds **four** such pairs [measured — `DATA-IMPL-012` §1, re-measured
+> read-only against `book/pit.db` at S4-D-016]. **Sealing one vault leaves three of four legs with no
+> holdout ceiling while this document asserts one for all — P-1 false for 75% of the universe.**
+> §21's own block comment said **two**, splitting spot from perp without splitting BTC from ETH; it
+> is **struck**, not corrected in place. **THE PAYLOAD GOVERNS, and the payload now says four.**
+> **No literal in §1's table of sixteen moves; no vault argument is a binding field of
+> `open_hypothesis`** — `prereg_sha256` covers `_BINDING_FIELDS` only, and the vault's arguments hash
+> separately into `spec_sha256` [measured — `registry.py`, `holdout.py`]. Filed **I-340, HIGH.**
 
 ---
 
-## 6. PRE-EXECUTION CHECKLIST — mechanical, six items, no judgment
+## 6. PRE-EXECUTION CHECKLIST — mechanical, ~~six~~ **[R-011] SEVEN** items, no judgment
+
+> **[R-011] THE HEADING SAID SIX AND THE TABLE HAS HELD SEVEN SINCE S4-D-013 ADDED THE GRANT STEP.**
+> Found while conforming item 6, not looked for. **Same class as the vault count and the same
+> arithmetic: a cardinal stated in prose beside a list that can be counted.** Filed **I-342, LOW** —
+> low because nothing executes off the heading, and filed anyway because the class is now at its
+> thirteenth instance and the pattern is the finding.
 
 | # | Check | Passes when |
 |---:|---|---|
@@ -429,7 +449,7 @@ is the Principal's and is never written to this repository, to Oracle, or to any
 | 3 | `trial_budget` is **47**, not 79 and not 80 | the literal in §2.2 |
 | 4 | `n_inherited` is **7**, not 0 | the literal in §2.8 |
 | 5 | `forward_window_start` equals the UTC calendar day of the call, and equals the vault's `cutoff` | §2.5 — executed inside item 7's grant; see the note below |
-| 6 | The vault is sealed in the same session, same UTC day | §5 — executed **after** item 7's grant closes, never inside it; see the note below |
+| 6 | ~~The vault is sealed in the same session, same UTC day~~ **[R-011] ALL FOUR VAULTS ARE SEALED — one `HoldoutVault.seal()` call per `(source, dataset_id)` pair — in the same session and the same UTC day as item 7, and EVERY ONE OF THE FOUR AFTER ITEM 7'S GRANT HAS CLOSED. Never inside it. FOUR LOCKS PLUS ONE REGISTRATION, ONE SESSION, ONE UTC DAY.** | **All four of `binance`/`BTC/USDT`, `binance`/`ETH/USDT`, `binanceusdm`/`BTC/USDT:USDT`, `binanceusdm`/`ETH/USDT:USDT` have a `spec.json` under `book/vaults/` and an `ingest_ceiling` row in `book/pit.db`; `write_grants` gains **four** `reason='VAULT_SEAL'` rows, all with `outcome='CLEAN'`, **all four timestamped after item 7's row closed**. Fewer than four ceilings = the check has failed. §5 — see the note below |
 | 7 | `open_hypothesis` executes inside an open `TrialRegistry.write_grant(reason="REGISTER_HYPOTHESIS", dispatch=..., token=...)` block, and no second `write_grant` is opened on the same registry object until that block has closed | `write_grants` gains exactly one new row, `reason='REGISTER_HYPOTHESIS'`, `outcome='CLEAN'`; `hypotheses` gains exactly one row for `family='funding-carry-conditioning-002'` |
 
 **Item 1 is not this seat's to clear and is not cleared. A seal is a Standing Order 002 §4 hard

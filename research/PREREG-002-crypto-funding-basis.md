@@ -15,6 +15,37 @@ House rule 6 applies throughout: **[measured]** = read or executed in this repos
 
 ---
 
+## REVISION BLOCK — R-011 · 2026-09-14 · PRE-SEAL · **THE VAULT COUNT — ONE LOCK WAS SPECIFIED, FOUR ARE REQUIRED**
+
+> **UNSEALED. `book/registry.db` reads 0 hypotheses / 0 trials / 3 events, `write_grants` 1 row (`grant_id=1`, `MIGRATION`, `CLEAN`) [measured — read-only `SELECT COUNT(*)`, at open and at close]. Trial budget ZERO. No backtest, no grid, no `open_hypothesis`, no registry write, no vault, no test run, no commit; `harness/`, `book/vaults/`, `VALIDATION-*` and `REDTEAM-*` untouched. `harness/` opened READ-ONLY. One read-only `GROUP BY` against `book/pit.db` (`?mode=ro`) — a row-count diagnostic of the class §20's C12 note and I-045 already treat as NOT a trial.**
+
+**Authority:** dispatch **S4-D-016** · the Principal's ruling on the pre-seal question — *"three of four legs sealing with no holdout ceiling while the document asserts one for all is P-1 false for 75% of the universe; pre-seal it costs a revision, post-seal it costs the family"* · his ruling on I-326 — the `_schema_matches` repair is **Validation's, post-seal, bound before Gate 1**, because **the fingerprint is data and freezes under P7 while the function is code and does not.**
+**Occasion:** **I-330, HIGH**, filed by Seat 9 at S4-D-015 against three prior statements of the same cardinal quantity, no two of which agreed.
+**Reasoning memo:** `research/DIR-RESTATE-001-prereg002-mechanism.md` **§17**.
+**Measured source of the four values:** `research/DATA-IMPL-012-vault-arguments.md` **§1** — measured off `book/pit.db`, not off a schema document, and transcribed here **verbatim**.
+**Payload:** `research/REGISTRATION-PAYLOAD-PREREG-002.md` **§5, §6 item 6** — **NO LITERAL IN THE TABLE OF SIXTEEN MOVES, AND NO HASHED FIELD'S VALUE MOVES.** `trial_budget` = 47, `n_inherited` = 7, `published_signal_haircut_applied` = 0.50, `band` = 0.54. **No vault argument is one of the sixteen**: `prereg_sha256` covers `_BINDING_FIELDS` only, and the vault's arguments hash separately into `spec_sha256` inside `HoldoutVault.seal()` [measured — `registry.py`; `holdout.py`'s `spec` dict and `hashlib.sha256(blob…)`]. **`forward_kill_condition` is not touched in any clause, threshold or date.**
+
+| # | Clause changed | What changed | Why |
+|---|---|---|---|
+| **R48** | §21's vault block — the whole of it | **ONE `seal()` CALL BECOMES FOUR, ONE PER `(source, dataset_id)` PAIR**, each carrying its own `dataset_id`, `query_semantics` and `schema_fingerprint` verbatim from `DATA-IMPL-012` §1. `seal()` and `set_holdout_ceiling()` each bind exactly one pair and `_active_ceilings` is an exact-match lookup with **no wildcard** [measured — `data.py:204`, `:271`]; the universe holds **four** pairs [measured, re-measured this session against `book/pit.db`]. **B and D are written out IN FULL, not as *"C with a different `dataset_id`"* — abbreviating the second of a pair is how the count was lost.** | **Three of four legs would have sealed with no ceiling at all.** A `dataset_id` that does not exactly match the string a future `ingest()` passes seals successfully and then **never binds** [`DATA-IMPL-012` §2] — the D2 control would have existed, reported clean, and protected nothing on 75% of the universe. **This is §4.7.3's failure mode exactly: a control deterministic about the wrong path is indistinguishable from the record from one that works.** |
+| **R48(b)** | §21's vault block — the comment | **`# a second vault for source="binanceusdm"` IS STRUCK, NOT CORRECTED IN PLACE.** It split spot from perp and did not split BTC from ETH within either source: wrong in the permissive direction by two vaults. | **A wrong instruction to the executing seat is worse than a wrong assertion about the firm**, because Pod B executes this block. **Correcting "two" to "four" in place would leave the sentence that taught the reader the wrong partition.** |
+| **R48(c)** | §21's vault block — `instrument_identity` | **NARROWED PER VAULT.** The prior single string named all four symbols; on a one-pair vault that is an identity four times wider than the `dataset_id` beside it. **This seat authored the narrowing** — `DATA-IMPL-012` supplies three values and this is not one of them — as a decomposition of the document's own string, each field list matching that vault's **measured** `columns`. | **The same cardinality defect, in the adjacent field, four times over, inside a hashed spec.** Ruling 001 §3.4 makes `instrument_identity` binding and a change to it **retires the vault** — so it is fixed pre-seal or it is not fixed. Filed **I-341, MEDIUM.** |
+| **R49** | §20's **C8** row; §11.1's **Sequencing, binding** row | **THE COUNT AND THE ORDERING ARE MADE UNAMBIGUOUS IN BOTH.** C8 now names all four pairs and states that all four seals follow the closure of the `REGISTER_HYPOTHESIS` grant. §11.1's sequencing row is conformed with it. | **NEITHER ROW WAS NAMED BY THE DISPATCH, AND THAT IS PRECISELY WHY THEY WERE READ.** **I-293's lesson, one revision old: a list-driven pass conforms the cells the list names and freezes the one it does not.** §20 is the operative seal checklist inside this document and P7 freezes it with everything else. **§11.1's `Vault` row has read *"One `HoldoutVault` per (dataset, family)"* since R1 — the document held the correct rule the whole time and §21 contradicted it for eight revisions. This was a conformance failure, not an analysis failure**, which is the more uncomfortable of the two findings and the one worth carrying forward. |
+
+**THE SEAL-TIME CONDITION ON I-326, MET AND VERIFIED RATHER THAN ASSERTED.** `_schema_matches` returns `True` **unconditionally** when a fingerprint lacks the literal keys `"columns"` and `"dtypes"` — `get("columns")` → `None` skips the branch, `get("dtypes") or {}` → empty skips the loop [measured, `DATA-IMPL-012` §4]. **All four `schema_fingerprint` dicts in the block below carry both literal keys.** With them present the existing comparison executes for this family, and the function's repair can be Validation's post-seal work without leaving a fingerprint that cannot fail. **Had any of the four lacked either key, this dispatch's instruction was to stop, and this seat would have.**
+
+**WHAT R-011 COSTS THIS FAMILY.** **Against the family: nothing measurable, and that is the honest report** — no threshold moves, no source of death is added or removed, no window changes. **Against the document: the third independent statement of one cardinal quantity, and no two of the three agreed** — §21's comment said two, the payload's item 6 said one, the CIO's report said two by reading the comment rather than the lookup semantics. **The count was measurable by one `GROUP BY` at any point in eight revisions.** Recorded as the twelfth instance of the cardinal class at I-327. **For the family: the D2 ceiling now actually binds on all four legs, which is a control gained rather than a bar lowered.**
+
+**R-011 ADDS ZERO NEW DATED SITES.** No replacement text inside a binding field carries an ISO date or a `C`-form expression — **no binding field was touched at all.** **No `[Rn, <date>]` stamp appears inside any hashed field; R-numbers only, per I-226.** The struck `2027-01-31` literals are **not** removed; **I-204's prohibition holds.** The retained `# [R3 · 2026-08-04]` provenance comment is carried forward verbatim, once, at the block head.
+
+> **LINE-BUDGET FLAG — AND THE FIRST DRAFT OF THIS FLAG WAS AN ESTIMATE IN A SLOT THAT CALLS FOR A MEASUREMENT, WHICH IS R-010'S OWN MISTAKE REPEATED ONE REVISION LATER.** §2.2 projected **~200** authored lines for a placement-and-conformance dispatch the dispatch itself correctly described as having **no derivation**. This flag was first written mid-task at *"148 · 62 · 20 = 230, over by 15%"* — **all three figures estimated.** **Measured at close [`git diff --numstat`, additions, R-009's convention]: `PREREG-002` 153 · `DIR-RESTATE` §17 151 · payload 25 · total 329. Over the projection by 65%.** (324 before this corrected flag and its issue entry, which add 5 lines to the thing they measure; **the self-reference is disclosed rather than resolved in the friendlier direction.**) The two header figures were close; **the §17 estimate was 42% of the truth.**
+>
+> **Where the overrun is, named rather than defended.** It is almost entirely §17. **The dispatch was right that this work contained no derivation, and §17 is eight subsections of reasoning where about four were required** — §17.2, the back half of §17.4 and §17.6 argue points that R-011's own table already carries, and they are this seat's habit rather than the dispatch's requirement. **~50 lines of that are not defensible as structural.** R48(c) and R49 — the two conformances the dispatch did not scope — cost ~14 lines in `PREREG-002` and are defensible; they are not the overrun. **The last three dispatches ran 1.58×, 1.39× and 1.80×, two flagged and one did not. This one is 1.62×, flagged, and the flag is corrected against a measurement on its own face rather than left standing as the friendlier estimate.** Filed **I-345, LOW.**
+
+**What was NOT done:** no seal, no registration, no trial, no `open_hypothesis`, no write to `book/`; **no repair of `_schema_matches` (I-326 — Validation's, ruled post-seal)**; no touch of the 22 suite reds; **no repair of I-242, I-243, I-253, I-255, I-330's sibling findings I-331/I-333/I-334**; no change to `k`, `d`, `band`, `lookback`, `w_max`, any K-menu, `trial_budget`, `n_inherited`, or KC-002 in any clause, threshold or date. **Nothing else was found that blocks the seal.** What remains seal-blocking is **C7 and C8**, unchanged; what remains verdict-blocking is unchanged.
+
+---
+
 ## REVISION BLOCK — R-010 · 2026-09-10 · PRE-SEAL · **THE SIDE COUNT, AND A CONVENTION THE ENGINE SETTLES**
 
 > **UNSEALED. `book/registry.db` reads 0 hypotheses / 0 trials / 3 events [measured — read-only `SELECT COUNT(*)`, at open and at close]. Trial budget ZERO. No query against `book/pit.db`. No backtest, no grid, no `open_hypothesis`, no registry write, no vault, no test run, no commit; `book/`, `VALIDATION-*` and `REDTEAM-*` untouched. `harness/` opened READ-ONLY, two files — Seat 9 holds that tree for the `write_grants` migration.**
@@ -1523,7 +1554,7 @@ fall. It is not a budget.
 | **`C`** | **The seal date.** Not fixed by this document. Fixed by Pod B's `open_hypothesis` call, on the same UTC day as the vault seal. |
 | **In-sample** | `[2020-01-01, C]` for BTC/ETH — ~~**6.571 years**~~ **6.612 years, gap-free, measured, not estimated [S3-D-019, 2026-08-12 — see below].** ~~**[R34 · 2026-08-11] 6.571 years is measured to 2026-07-28. `C` is later than that and the true span at the seal is LONGER — so 6.571 is an UNDERSTATEMENT, and every margin quoted from it (§10.4's 0.43-year MinBTL margin above all) is understated with it.** **This is the one stale date in this document that runs FOR the family, which is precisely why four revisions passed over it. The figure is NOT re-derived here — re-deriving it is a computation a zero-trial budget does not authorize — and it is labelled rather than corrected.**~~ **[R37 · 2026-08-12 — MEASURED, AND R34's LABEL IS STRUCK AS UNEARNED.] The span is 6.571 years and it has not moved. Measured this session, `[2020-01-01, 2026-07-28] = 2400 days = 6.5710 years` (6.570977 at E-9's 365.2425; 6.570842 at 365.25), from a read-only `SELECT` over `book/pit.db`: BTC/USDT and ETH/USDT spot close, BTC and ETH perp close, and both funding series, common coverage `[2020-01-01, 2026-07-28]`, `ingest_ceiling` **zero rows** [all measured — 2026-08-12; last `knowledge_time` on every leg is 2026-07-29]. **R34 asserted the span grows with `C`. It does not: it grows with INGEST, and no bar has been ingested since 2026-07-29.** At `C = 2026-08-12` the declared in-sample window runs 15 days past the last bar on disk. **The figure is therefore EXACT today, not understated, and §10.4's 0.43-year MinBTL margin is exact with it.** Any larger span is contingent on §15 step 1's post-seal ingest actually running to `C` — **an assumption, not a measurement**, and R34 recorded it as though the margin were already banked. **This is a correction that runs AGAINST the family: it removes a claimed hidden margin. Filed I-176, MEDIUM.** [S3-D-019 · Head of Data & Infrastructure · 2026-08-12 — INGEST RAN; THE SPAN MOVED, RE-MEASURED.] Per dispatch S3-D-019, primary universe (BTC/ETH only — SOL excluded per R3, not ingested) taken to current via `castellan.loaders.fetch_ccxt_ohlcv` / `fetch_ccxt_funding` against `binance` (spot) and `binanceusdm` (perp + funding), through `PITStore`, raw, two-timestamp discipline. `book/registry.db` read 0 hypotheses / 0 trials before this ingest and reads 0 / 0 after it. `ingest_ceiling` held **zero rows** throughout and blocked nothing — the family remains unregistered, so there is no cutoff to enforce; this is not a bypass, there was nothing to bypass. Re-measured, same read-only `SELECT` methodology as R37: common coverage across all six legs is now `[2020-01-01, 2026-08-12] = 2415 days = 6.6120 years` at E-9's 365.2425 (6.611910 at 365.25) — **up from 2400 days / 6.5710 years, a growth of exactly 15 days: the same 15 days R37 measured the declared window as running past the last bar.** Last `knowledge_time` on every leg is now 2026-08-12. **Caveat, disclosed rather than smoothed over:** the terminal bar (`2026-08-12`) is every leg's currently-forming, unsettled UTC day — spot BTC volume 398.04 against a several-thousand-per-day trailing norm confirms it is partial — and should be expected to restate before day-close, on the identical pattern this same ingest run just produced and logged for the prior terminal bar (`2026-07-29`; see the restatement note below). Excluding the partial terminal day, the last fully-settled common bar is `2026-08-11`: `2414 days = 6.6093 years`. **Both figures are longer than R37's 6.5710, not shorter — reported whichever way the number moved, uncharacterized.** §10.4's `MinBTL(86, SR 1.0) = 6.14 yr` is an input unaffected by the available span and is not recomputed here; mechanically, the margin against it widens from 0.43 yr to **0.472 yr** (inclusive figure) or **0.469 yr** (settled-only figure) — this seat reports the arithmetic moves, and leaves whether/how to re-seal §10.4 on it to Validation. **Restatement, auto-logged under A4, reported verbatim:** ingesting `binanceusdm` perp OHLCV re-fetched the (already-partial) `2026-07-29` bar for both `BTC/USDT:USDT` and `ETH/USDT:USDT` and found it had settled differently — 3 fields each (`low`, `close`, `volume`), logged as two `data_restatement` events (`book/registry.db` event_id 2, 3). **Blast radius: none** — 0 hypotheses / 0 trials exist against this family or any other, so no trial's number is invalidated by this restatement; it is reported because A4 requires it reported regardless of blast radius, not because this one has teeth yet. Escalated to Validation the same session. Filed **I-190, MEDIUM** (restatement) and **I-191, MEDIUM** (span re-measurement / partial-terminal-bar caveat). Full detail: dispatch S3-D-019 return. |
 | **Vault** | One `HoldoutVault` per (dataset, family) under `book/vaults/`, sealed with `family="funding-carry-conditioning-002"`, `cutoff=C`, `holdout_end_rule="open-ended, forward from C"`. **The passphrase is the Principal's and is never written to this repo, to Oracle, or to any file.** Acceptance 001 C-2 writes only a salted one-way verifier, which is what lets `acquire_once()` refuse a wrong-but-non-empty passphrase before any fetch (I-015). |
-| **Sequencing, binding** | The vault is sealed **on or before the calendar day of `C`, in the same session as the `open_hypothesis` call.** P7 fails Gate 1 if the seal postdates `C` at UTC day granularity. |
+| **Sequencing, binding** | ~~The vault is~~ **[R-011] All FOUR vaults are** sealed **on or before the calendar day of `C`, in the same session as the `open_hypothesis` call, and all four AFTER that call's `REGISTER_HYPOTHESIS` grant has closed.** P7 fails Gate 1 if the seal postdates `C` at UTC day granularity. **The `Vault` row directly above already stated the correct rule — one vault per dataset — and §21's block comment contradicted it for eight revisions.** |
 | **Ingest ceiling** | `seal()` writes the ceiling into `PITStore`. ~~**The `binanceusdm` perp OHLCV ingest (§15 step 1) occurs after the seal and is bounded by it.** The spot and funding panels already on disk are bounded at `2026-07-28T23:59:59Z` [measured — DATA-INGEST-001 §1.2, §2], conservative against any `C ≥ 2026-07-28`.~~ **[S3-D-019, 2026-08-12 — SUPERSEDED, DISCLOSED RATHER THAN QUIETLY OVERTAKEN.] All six primary legs — spot close, perp close, AND both funding series — were ingested to current under direct dispatch, pre-seal, not per §15 step 1's planned post-seal sequencing.** There was still no ceiling to bound anything by (no cutoff exists until a seal writes one), so nothing was blocked and nothing needed lifting; this is not the D2 control firing, it is the control having nothing yet to fire on. All six legs are now bounded at `2026-08-12T00:00:00Z` on disk (the currently-forming, unsettled UTC day — see the In-sample row's caveat). **§15 step 1, as currently written, describes an ingest that has already happened, ahead of its planned position in the sequence — a sequencing-table finding, not corrected here because this dispatch does not authorize touching §15.** `book/pit.db :: ingest_ceiling` currently has **zero rows** [reconfirmed 2026-08-12], so there is still no collision to manage [measured]. |
 | **Opened** | Once, at Gate 1, by Validation, with the Principal notified. A second look permanently retires it. |
 
@@ -2071,7 +2102,7 @@ PREREG-001 §17 recommended **ADMITTED-AS-EXPLORATORY** and *"fund the falsifier
 | **C5** **[R31 · 2026-08-11 · PROMOTED TO A LOCK BY THE PRINCIPAL]** | **Validation's ruling on §5.4** — the point of application of the §4.6 50% haircut (returns, Sharpe, or alpha), which is unspecified in the Charter and uncomputed in the harness (I-019). **[R31] AND THE RULING IS IN THREE PARTS, ONLY THE FIRST OF WHICH IS VALIDATION'S.** **(1) THE POINT OF APPLICATION — Validation's, final short of the Principal — and the three readings are NOT equivalent, because one of them is a NO-OP:** haircutting the **return series** (`r → 0.5·r`) changes **nothing** at Gate 1, since Sharpe, `t`, DSR, PBO, WFE, subperiod positivity and P&L concentration are **all invariant to a positive scalar** [inferred — from the definitions; no measurement involved], leaving only capacity and cost-robustness to move; haircutting the **expected return** (`μ → 0.5·μ`, `σ` as measured) **halves `t`** and sets the effective hurdle at **6.0**, which is §5.4's reading; haircutting the **computed Sharpe** matches the second for the Sharpe criterion and is **undefined** for `t` and for DSR's benchmark. **C5 is therefore not a choice among three shades of one control — it is a choice between a 2× hurdle and nothing.** **(2) THE RATIFICATION — THE PRINCIPAL'S, and Validation cannot supply it.** Either reading moves the bar a family must clear between 3.0 and 6.0 **while `T_STAT_HURDLE = 3.0` never moves.** Charter §4 reserves *"any change to the Gate thresholds in Part IV"* to the Principal in writing; **a ruling that changes the effective bar by 2× without touching the literal constant is a §4 reserved act wearing an interpretation's clothes** — the Principal's own 2026-08-11 doctrine applied one clause over. **Escalated under house rule 7, not resolved here.** **(3) THE EXECUTOR — without which (1) changes nothing.** `published_signal_haircut_applied = 0.50` has **zero non-`registry.py` consumers** and **no haircut computation exists anywhere in the harness** [measured — I-134]. **A ruling naming a point of application and no executor is class (c) and leaves I-143's permissive branch exactly where it is.** C5 discharges only when the ruling carries **executor, cadence and artifact**: *Validation, at every `evaluate_gate1` call on this family, with the point of application and the applied value named on the Validation Report's face.* | Quant Validation **(1)** · **the Principal (2)** · Quant Validation **(3)** | ~~Blocking on **Gate 1**, not on sealing~~ **[R31 · 2026-08-11 · A LOCK, NOT A FOOTNOTE] BLOCKING ON GATE 1 EVALUATION AND ON ANY REPORTED VERDICT — ABSOLUTELY.** The family may be sealed, may be run, and may spend Stage 1 with C5 open. **IT MAY NOT BE EVALUATED AT GATE 1, AND NO PROCEED MAY BE REPORTED, UNTIL C5 IS RULED.** The Principal's reason is recorded with it because it sets the standard for findings of this class: *"a path to half the Charter's bar existing quietly is exactly what the relabeling mandate existed to surface, and its first substantive yield gets a lock, not a footnote."* Filed **I-152, MEDIUM.** |
 | **C6** | **Validation confirms §8.2** — that reading `field='funding_rate'` via `PITStore.asof` / `rows_in_window` is an admissible A4 path, there being no `pit_*` panel accessor for a non-close field. | Quant Validation | Blocking on **measurement**, not on sealing |
 | **C7** | Pod B's written acceptance of **KC-002** as sponsor, and the Principal's signature, before any capital paper or real. | PM Pod B / the Principal | **BLOCKING** (KC-002 preamble) |
-| **C8** | The seal and `HoldoutVault.seal()` occur in the **same session, same UTC day**; passphrase supplied by the Principal and written nowhere. | PM Pod B + the Principal | **BLOCKING** (P7) |
+| **C8** **[R-011 · THE COUNT IS MADE UNAMBIGUOUS]** | The seal and ~~`HoldoutVault.seal()`~~ **ALL FOUR `HoldoutVault.seal()` calls — one per `(source, dataset_id)` pair: `binance`/`BTC/USDT`, `binance`/`ETH/USDT`, `binanceusdm`/`BTC/USDT:USDT`, `binanceusdm`/`ETH/USDT:USDT`** — occur in the **same session, same UTC day**, and **all four after the `REGISTER_HYPOTHESIS` grant has closed, never inside it** (grants do not nest; a nested grant rolls the registration back with it — I-311); passphrase supplied by the Principal and written nowhere. **Four locks plus one registration.** | PM Pod B + the Principal | **BLOCKING** (P7) |
 | **C9** | `binanceusdm` perpetual OHLCV ingested for BTC/ETH/SOL, bounded by the sealed ceiling at `C`. | head-of-data-infra | Blocking on **measurement**, not on sealing |
 | **C10** **[R15 · WEIGHT INCREASED · 2026-08-06]** | **I-022** — the trial-count criterion stops returning a literal `True`. Until then the ~~80-trial~~ **[R15] 47-trial authorized** budget is enforced by this seat and by nothing else. **[R15 · 2026-08-06] C10's weight goes UP, not down.** It now bears on §10.5.2's **Stage 2 gate** as well as on the headline budget: a two-stage budget is a budget with a door in it, and the only code-level control that would refuse an over-budget spend is the one I-022 disables. **The door's key — `VIF_gate`, computed inside `evaluate_gate1` from the registry and printed on the report face — is held by the harness and not by this seat (V-1, V-2, M-10); the door's LATCH is I-022 and it is broken.** | head-of-data-infra | Blocking on **Gate 1**, not on sealing | **[R27 · 2026-08-10 · WEIGHT FALLS. I-022 IS REPAIRED IN CODE AND OPEN IN THE LOG.]** `gates.py:527–640` `_trial_budget_criterion` FAILs three ways — B-7 (`:598`), **B-9's ordering walk per trial naming k** (`:606–620`), B-23's malformed-extension branch [measured]. **The literal `True` I-022 quotes does not exist in `gates.py`.** `DATA-IMPL-007` §5: ***"Can close. All 19 test functions green"***, landed **2026-08-05** [cited]. **`VALIDATION-SPEC-003` §12 makes C10's discharge conditional on I-022 closing AND on this document registering Stage 1 as its sealed `trial_budget` — R-004 did the second at 47.** **Both of C10's conditions are met in substance; only the formal closure of I-022 is outstanding, and it is not this seat's.** Filed **I-142, MEDIUM.**
 | **C12** **[R5 · 2026-08-04]** · **[R12 · 2026-08-05 · DISCHARGED, NARROWLY — see the note under this table]** · **[R47 · 2026-09-10 · THE `Blocking?` CELL IS CONFORMED TWENTY DAYS LATE]** | **The in-sample cadence sweep on the PRIMARY universe, to establish that K7 has no unnamed in-sample trigger.** Seat 9 measures, for **BTC and ETH** across the full span, the count of `funding_rate` prints per UTC day, and enumerates **every** date on which the count departs from 3 — **in both directions**. I-045's BTC control tests only `>3 prints` and **ETH was never the control** [measured — I-045], so the primary universe's cadence homogeneity is currently **asserted, not measured**. Any date found is a K7 trigger and **must be named in the sealed text by date**, alongside 2025-09-18 (§7.1.1). **This is a row-count query on `book/pit.db` and is NOT a trial** — the same class as §0's `COUNT(*)`/`MIN`/`MAX` diagnostics and as I-045's own measurement. Cost: a fraction of a Sonnet unit. | head-of-data-infra → quant-validation | ~~**BLOCKING ON SEALING.** Sealing K7 while asserting an unverified homogeneity claim about the primary universe would be the I-045 defect committed a second time inside its own remedy.~~ **[R47] DISCHARGED, NARROWLY — 0 deviating days of 4,802 symbol-days** [cited — `DATA-VERIFY-002` §3–§4, carried at the R12 note below]. **AND THIS CELL IS THE FINDING OF R-010's §20 PASS: it has read `BLOCKING ON SEALING` since R5 while the note directly beneath this table has read `DISCHARGED` since R12 — a table asserting a seal blocker the document itself closed twenty days earlier, through a 590-line Gate 0 verdict, a Red-Team memo, a withdrawal and four revisions. It was found only because §20 was read column-by-column rather than against the supplied ruling list, which did not name C12. Filed I-293, HIGH.** **The narrowness is not withdrawn: `DATA-VERIFY-002` verified the CADENCE dimension only and is not evidence about the parameter dimension, which K7 governs by declaration.** |
@@ -3794,26 +3825,136 @@ published_signal_haircut_applied  = 0.50     # [R21, 2026-08-10] NOTHING IN THE 
 
 ---
 
-**Vault seal, same session, same UTC day:**
+**Vault seals — FOUR, one per `(source, dataset_id)` pair. Same session, same UTC day as `open_hypothesis`. All four AFTER the registration grant has closed.**
+
+> ### **[R-011 · PRE-SEAL] FOUR VAULTS, NOT ONE AND NOT TWO, AND THE COMMENT THAT SAID TWO IS STRUCK RATHER THAN CORRECTED IN PLACE.**
+>
+> `HoldoutVault.seal()` and `PITStore.set_holdout_ceiling()` each bind **exactly one** `(source, dataset_id)` pair, and `_active_ceilings` is an exact-match lookup with **no wildcard** [measured — `data.py:204`, `:271`]. The primary universe holds **four** such pairs [measured — read-only `SELECT source, symbol, COUNT(*) … GROUP BY`, `file:book/pit.db?mode=ro`, this session: `binance`/`BTC/USDT` 12,080 rows · `binance`/`ETH/USDT` 12,080 · `binanceusdm`/`BTC/USDT:USDT` 19,329 · `binanceusdm`/`ETH/USDT:USDT` 19,329. The two SOL pairs also on disk are **out of the universe at R3**, receive no vault and therefore no ceiling; that is correct and is stated so it is not read as an omission]. **Three of four legs sealing with no holdout ceiling, under a block asserting one for all, is P-1 false for 75% of the universe — pre-seal it costs a revision, post-seal it costs the family.**
+>
+> **The struck comment read `# a second vault for source="binanceusdm"`.** It split spot from perp and did **not** split BTC from ETH within either source, so it was wrong in the permissive direction by two vaults. **The count is taken from `DATA-IMPL-012` §1's measurement and re-measured here, not from any of the three prior statements** — this block's comment (two), the payload's item 6 (one), or the CIO's report (two). **§11.1's `Vault` row has read *"One `HoldoutVault` per (dataset, family)"* since R1 and was right the whole time: this was a conformance failure inside the document, not an analysis failure.** Filed **I-340, HIGH.**
+>
+> **ORDERING, WHICH IS A CONTROL AND NOT A STYLE.** All four seals occur **after** the `write_grant(reason="REGISTER_HYPOTHESIS", …)` block around `open_hypothesis` **has closed** — **never inside it.** `HoldoutVault.seal()` opens its own `write_grant(reason="VAULT_SEAL", …)` internally [measured — `holdout.py`, the `with self.registry.write_grant(reason="VAULT_SEAL", …)` block inside `seal()`], grants do not nest, and a nested grant raises **and rolls the registration back with it** [cited — I-311, verified twice and independently by Seat 9 and by the CIO on throwaway registries]. **Four locks plus one registration, one session, one UTC day (C8).** `cutoff=C` is the same computed value in all four and equals `forward_window_start`.
+>
+> **The three binding values in each call are transcribed verbatim from `DATA-IMPL-012` §1**, where Seat 9 measured them off `book/pit.db` rather than off a schema document. **They are not re-derived here and not paraphrased.** Vaults B and D are written out **in full** rather than as *"C with a different `dataset_id`"*: **abbreviating the second of a pair is how the count was lost in the first place.** Each `schema_fingerprint` carries the literal keys `"columns"` and `"dtypes"` — the seal-time condition without which `_schema_matches` returns `True` unexamined (I-326). **The repair of that function is Validation's and is ruled post-seal; the fingerprint is data and freezes under P7, the function is code and does not.**
 
 ```
-HoldoutVault(vault_dir="book/vaults/funding-carry-conditioning-002-binance",
-             registry=registry, name="funding-carry-conditioning-002-binance",
+# [R3 · 2026-08-04] SOL removed from the universe; it is removed from the vault identity with it.
+# C is one computed value, shared by all four calls and equal to forward_window_start.
+
+# ---- VAULT A --- binance / BTC/USDT (spot) ----------------------------------
+HoldoutVault(vault_dir="book/vaults/funding-carry-conditioning-002-binance-BTCUSDT",
+             registry=registry, name="funding-carry-conditioning-002-binance-BTCUSDT",
              family="funding-carry-conditioning-002", store=pit_store).seal(
-    source="binance",                       # a second vault for source="binanceusdm"
-    dataset_id=<the ingested dataset identifier>,
-    # [R3 · 2026-08-04] SOL removed from the universe; it is removed from the vault identity with it.
-    instrument_identity="BTC/USDT, ETH/USDT (spot); "
-                        "BTC/USDT:USDT, ETH/USDT:USDT (perp), "
-                        "fields close/open/high/low/volume and funding_rate",
-    query_semantics=<the exact query, per Ruling 001 section 3.4>,
+    source="binance",
+    dataset_id="BTC/USDT",
+    instrument_identity="BTC/USDT (spot) on binance; "
+                        "fields close/open/high/low/volume",
+    query_semantics={
+        "loader": "castellan.loaders.fetch_ccxt_ohlcv",
+        "timeframe": "1d",
+        "fields_requested": ["open", "high", "low", "close", "volume"],
+        "date_bounds": {"since": "2020-01-01T00:00:00Z", "until": "cutoff C, open-ended forward"},
+        "filter_predicates": "none beyond (exchange_id, symbol, timeframe); every bar ccxt returns "
+                             "for that tuple since `since` is ingested unfiltered",
+    },
     cutoff=<C = this UTC calendar day>,
-    schema_fingerprint=<field names and dtypes>,
+    schema_fingerprint={
+        "columns": ["close", "high", "low", "open", "volume"],
+        "dtypes": {"close": "float64", "high": "float64", "low": "float64",
+                   "open": "float64", "volume": "float64"},
+    },
+    passphrase=<the Principal's, never written to repo, Oracle, or any file>,
+    holdout_end_rule="open-ended, forward from C",
+    resolution_source="exchange settlement; funding prints final at settlement, never revised",
+    sealed_by="pm-digital-markets")
+
+# ---- VAULT B --- binance / ETH/USDT (spot) ----------------------------------
+HoldoutVault(vault_dir="book/vaults/funding-carry-conditioning-002-binance-ETHUSDT",
+             registry=registry, name="funding-carry-conditioning-002-binance-ETHUSDT",
+             family="funding-carry-conditioning-002", store=pit_store).seal(
+    source="binance",
+    dataset_id="ETH/USDT",
+    instrument_identity="ETH/USDT (spot) on binance; "
+                        "fields close/open/high/low/volume",
+    query_semantics={
+        "loader": "castellan.loaders.fetch_ccxt_ohlcv",
+        "timeframe": "1d",
+        "fields_requested": ["open", "high", "low", "close", "volume"],
+        "date_bounds": {"since": "2020-01-01T00:00:00Z", "until": "cutoff C, open-ended forward"},
+        "filter_predicates": "none beyond (exchange_id, symbol, timeframe); every bar ccxt returns "
+                             "for that tuple since `since` is ingested unfiltered",
+    },
+    cutoff=<C = this UTC calendar day>,
+    schema_fingerprint={
+        "columns": ["close", "high", "low", "open", "volume"],
+        "dtypes": {"close": "float64", "high": "float64", "low": "float64",
+                   "open": "float64", "volume": "float64"},
+    },
+    passphrase=<the Principal's, never written to repo, Oracle, or any file>,
+    holdout_end_rule="open-ended, forward from C",
+    resolution_source="exchange settlement; funding prints final at settlement, never revised",
+    sealed_by="pm-digital-markets")
+
+# ---- VAULT C --- binanceusdm / BTC/USDT:USDT (perp + funding) ---------------
+HoldoutVault(vault_dir="book/vaults/funding-carry-conditioning-002-binanceusdm-BTCUSDT-PERP",
+             registry=registry, name="funding-carry-conditioning-002-binanceusdm-BTCUSDT-PERP",
+             family="funding-carry-conditioning-002", store=pit_store).seal(
+    source="binanceusdm",
+    dataset_id="BTC/USDT:USDT",
+    instrument_identity="BTC/USDT:USDT (perpetual) on binanceusdm; "
+                        "fields close/open/high/low/volume and funding_rate",
+    query_semantics={
+        "loaders": ["castellan.loaders.fetch_ccxt_ohlcv", "castellan.loaders.fetch_ccxt_funding"],
+        "timeframe_ohlcv": "1d",
+        "funding_native_cadence": "8h exchange settlement interval, via ccxt "
+                                  "fetch_funding_rate_history, not resampled",
+        "fields_requested": ["open", "high", "low", "close", "volume", "funding_rate"],
+        "date_bounds": {"since": "2020-01-01T00:00:00Z", "until": "cutoff C, open-ended forward"},
+        "filter_predicates": "none beyond (exchange_id, symbol); every OHLCV bar and every funding "
+                             "print ccxt returns for that tuple since `since` is ingested unfiltered",
+    },
+    cutoff=<C = this UTC calendar day>,
+    schema_fingerprint={
+        "columns": ["close", "funding_rate", "high", "low", "open", "volume"],
+        "dtypes": {"close": "float64", "funding_rate": "float64", "high": "float64",
+                   "low": "float64", "open": "float64", "volume": "float64"},
+    },
+    passphrase=<the Principal's, never written to repo, Oracle, or any file>,
+    holdout_end_rule="open-ended, forward from C",
+    resolution_source="exchange settlement; funding prints final at settlement, never revised",
+    sealed_by="pm-digital-markets")
+
+# ---- VAULT D --- binanceusdm / ETH/USDT:USDT (perp + funding) ---------------
+HoldoutVault(vault_dir="book/vaults/funding-carry-conditioning-002-binanceusdm-ETHUSDT-PERP",
+             registry=registry, name="funding-carry-conditioning-002-binanceusdm-ETHUSDT-PERP",
+             family="funding-carry-conditioning-002", store=pit_store).seal(
+    source="binanceusdm",
+    dataset_id="ETH/USDT:USDT",
+    instrument_identity="ETH/USDT:USDT (perpetual) on binanceusdm; "
+                        "fields close/open/high/low/volume and funding_rate",
+    query_semantics={
+        "loaders": ["castellan.loaders.fetch_ccxt_ohlcv", "castellan.loaders.fetch_ccxt_funding"],
+        "timeframe_ohlcv": "1d",
+        "funding_native_cadence": "8h exchange settlement interval, via ccxt "
+                                  "fetch_funding_rate_history, not resampled",
+        "fields_requested": ["open", "high", "low", "close", "volume", "funding_rate"],
+        "date_bounds": {"since": "2020-01-01T00:00:00Z", "until": "cutoff C, open-ended forward"},
+        "filter_predicates": "none beyond (exchange_id, symbol); every OHLCV bar and every funding "
+                             "print ccxt returns for that tuple since `since` is ingested unfiltered",
+    },
+    cutoff=<C = this UTC calendar day>,
+    schema_fingerprint={
+        "columns": ["close", "funding_rate", "high", "low", "open", "volume"],
+        "dtypes": {"close": "float64", "funding_rate": "float64", "high": "float64",
+                   "low": "float64", "open": "float64", "volume": "float64"},
+    },
     passphrase=<the Principal's, never written to repo, Oracle, or any file>,
     holdout_end_rule="open-ended, forward from C",
     resolution_source="exchange settlement; funding prints final at settlement, never revised",
     sealed_by="pm-digital-markets")
 ```
+
+> **[R-011] `instrument_identity` IS NARROWED PER VAULT, AND THIS SEAT AUTHORED THAT NARROWING RATHER THAN TRANSCRIBING IT.** `DATA-IMPL-012` §1 supplies three values; `instrument_identity` is not one of them. The prior single string named **all four symbols**, which on a one-pair vault asserts an identity four times wider than the `dataset_id` it sits beside — **the same cardinality defect, in the adjacent field, four times over, inside a hashed spec.** The narrowing is a **decomposition of the document's own existing string**, and each field list matches that vault's **measured** `columns` [`DATA-IMPL-012` §1], so it is backed by measurement rather than invented. **It is nonetheless this seat's authorship and is labelled as such.** Filed **I-341, MEDIUM.**
 
 ---
 
