@@ -6174,3 +6174,75 @@ Insurance 2 · DA reserve 1. §5 dead-man: **9 remain.** Hard stop **2026-09-24.
 registration, one session, one UTC day** → Validation's check repair before Gate 1.
 
 **Review date:** on the conformance's return.
+
+---
+
+## S4-D-015 · 2026-09-14 · M363 answered and saved as M366 · three go-live preconditions, none of which exists
+
+**1 · Answered and saved. Oracle `M366`, tagged `castellan-session-brief-answers`**, written by the CIO
+because **the seat has no Oracle binding** (I-329). Eleven answers, a ten-item diff list, both `[verify]`
+citations dispositioned.
+
+**2 · The diff a dispatcher would have hardcoded, and it points at an expired order.** **`M364` cites
+`SO-003 §6.1` three times for the session-close disposition. `SO-003` has no §6.1** — its §6 is
+Checkpoint cadence with no subsection [CIO-verified]. **The rule was born at `SO-002` §6.1 and promoted
+to `reference/TEMPLATES.md` §7.10(6) on 2026-08-25, when SO-002 expired under its own §7.3.**
+
+**The promotion pass that saved the rule is what broke the citation** — and that is the cost of §7.3
+working, not an argument against it. **A rule that moves to survive leaves every pointer to its old
+address wrong.** **I-361, MEDIUM.** The CIO notes the general form: **§7.3 promotes rules and does not
+update citations to them**, and **nothing in the firm currently does.**
+
+**3 · The other substantive correction is about content, not a pointer.** `M364` describes the drift
+metric as *"instrument issues vs market findings ratio."* **I-219 is the base-rate/throughput finding**
+— Appendix B #1 undefined at n = 0 Gate 1 verdicts, and the live failure mode is **Appendix B #9:
+throughput zero.** **The seat opened `REDTEAM-002` line 679 and read it rather than accepting the
+label.** §7.12 doing exactly its work.
+
+**4 · The repo added two facts `M364` omits, and one of them the CIO must qualify.**
+`.claude/settings.json` denies `Write`/`Edit` on `./book/vaults/**` and `./book/registry.db` **at the
+tool layer.** **The CIO's answer flags its own I-095 against that: those denies cover the `Write`/`Edit`
+path nobody uses, while the `python3`/`sqlite3` path everyone uses is ungoverned by the permission
+layer.** **The real control is the code-layer write grant.** **A dispatcher hardcoding the settings
+denies as its NEVER tier would inherit a control the firm has already found misaimed.**
+
+**5 · THREE GO-LIVE PRECONDITIONS, AND NONE EXISTS.** From `M365` — a `decision`-kind memory the
+Principal's instruction did not name and the CIO found while retrieving the other two:
+
+| | Status [CIO-verified] |
+|---|---|
+| **The I-099 / headroom amendment** | **Does not exist.** The rule forbids unattended dispatch by construction |
+| **A block-end grace-vs-terminate policy** | **Does not exist** anywhere in the repo |
+| **A lock convention in `CLAUDE.md`** | **Does not exist.** The seat grepped `CLAUDE.md`, `ops/*.md`, `reference/*.md` — **nothing.** `M364`'s JSON schema is a proposal, correctly presented as one |
+
+**So the dispatcher's own design memo lists three preconditions and the firm has built none of them.**
+**All three are Principal's calls or Principal-authorized work, and none is on §1's critical path** —
+**the CIO names them and does not fund them.**
+
+**6 · What `M364` does well, recorded because the channel is new and the firm will read this again.** It
+**discloses its own provenance and uncertainty in its header**, **flags exactly two citations rather
+than hedging everything or hardcoding everything**, and **where the repo is genuinely silent — token/$
+economics, per-dispatch durations — it says so rather than inventing a number.** **That is §7.10(3)
+applied correctly by a non-binding draft**, and **its Q1/Q4/Q8 corrections to the questionnaire's own
+framing proved right on verification.**
+
+**The §9 test held in the direction that matters: the draft was treated as design input, checked
+against files, and found right about more than it was wrong about — and none of that changed its
+standing.**
+
+**7 · One measurement the answer could not make, and it bears on the dispatcher.** **No structured
+per-dispatch duration field exists anywhere in `logs/DECISION_RECORD.md`.** `M364`'s 7–53 min Sonnet and
+12–26 min Opus figures **could be neither confirmed nor refuted in budget.** **A dispatcher sizing
+calendar blocks needs that number and the firm does not record it** — flagged, unfunded.
+
+**8 · `M363`'s own deadline — "before Sat 2026-09-13" — passed before the answer was written** (I-360,
+LOW). **The CIO notes it was the held sequencing that cost the day**, and that the sequencing was the
+Principal's instruction and the CIO's to honour.
+
+**9 · Budget.** **18 of 30 invocations · 8 of 12 Opus.** Free **1, holding.** Insurance 2 · DA reserve 1.
+§5 dead-man: **7 remain.** Hard stop **2026-09-24.**
+
+**10 · The seal packet stands where S4-D-014 left it: checklist item 1 is false and awaits the
+Principal's word on whose hand corrects it.**
+
+**Review date:** on the Principal's ruling on item 1.
