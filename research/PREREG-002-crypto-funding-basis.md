@@ -15,6 +15,48 @@ House rule 6 applies throughout: **[measured]** = read or executed in this repos
 
 ---
 
+## REVISION BLOCK — R-012 · 2026-09-14 · PRE-SEAL · **CONFORMANCE ONLY** · **§20.1 IS TOLD WHAT §20 WAS TOLD A MONTH AGO**
+
+> **UNSEALED. `book/registry.db` reads 0 hypotheses / 0 trials / 3 events, `write_grants` 1 row [measured — read-only `SELECT COUNT(*)`]. No literal in §1's table of sixteen moves. §20.1 is not a hashed field; verified by re-running the extractor after the edit — see below.**
+
+**Authority:** the Principal's ruling on **I-334**, 2026-09-14.
+**Hand:** **conformance by CIO hand under Principal ruling I-334.** The Principal granted an explicit,
+narrow exception to the Director's-artifact discipline **for this one class — transcription of a ruled
+state from a verified source** — on the stated ground that **P7 freezes the whole document, and a frozen
+self-contradiction is I-140's class with no excuse.** The exception does not extend to any edit requiring
+judgment, and no such edit was made.
+
+**What changed — three sites in §20.1, no others.** Each cites §20's conformed table in the row itself.
+
+| Site | Was | Now |
+|---|---|---|
+| §20.1 prose | `C2, C7, C8 AND C11 ARE OPEN` | **C7 and C8** |
+| §20.1 prose | `SEAL WHEN C2, C7, C8 AND C11 HAVE CLEARED` | **SEAL WHEN C7 AND C8 HAVE CLEARED** |
+| §20.1 table, SEAL-BLOCKING row | `C2 · C7 · C8 · C11` | **C7 · C8. Nothing else** |
+| §20.1 directed-set sentence | `C2, C3, C5, C7, C8, C11` | union restated across both axes; seal-blocking still C7, C8 |
+
+**Source for all four:** §20's conformed table, **R-010/R-011** — *"Seal-blocking · C7, C8. Nothing
+else."* **C2** discharged ADMIT-CONDITIONAL (`VALIDATION-GATE0-002` §10.1; S3-D-023) · **C11** removed
+from seal-blocking as circular (S3-D-023 §6). Nothing is added, no threshold moves, no new rule enters.
+
+**Occasion:** **I-334, MEDIUM**, filed by the CIO. Found by a `grep` run under the Principal's standing
+instruction to enumerate every row referencing a state before conforming it — **and the grep was aimed at
+a different document.** §20.1's table is tagged **R35/R36, 2026-08-11**, and sat **sixty lines below**
+the §20 table that R-010 conformed on 2026-09-10.
+
+**This is I-293 repeating inside the document I-293 was filed against**, and the rule R-010 itself wrote
+is the one that would have caught it: *"when a ruling supplies the list of artifacts it touches, the
+executing seat still reads the table's own columns, because the list is evidence about the rulings and
+not about the table."* **R-010's list said §20. The seat read §20. §20.1 is a different table with the
+same subject, and nothing in the procedure said to look one heading further down.** The corrective now
+standing — `TEMPLATES.md` §7.11 plus the S4-D-019 roster rule — is to grep the *state*, not the *section*.
+
+**Verification, per the ruling's own condition.** The extractor was re-run after this edit. **All sixteen
+fields unchanged from the post-I-333 baseline** — §20 and §20.1 sit outside §21's fenced block, which is
+the only region `extract_prose` reads. Had any hash moved, the instruction was to stop.
+
+---
+
 ## REVISION BLOCK — R-011 · 2026-09-14 · PRE-SEAL · **THE VAULT COUNT — ONE LOCK WAS SPECIFIED, FOUR ARE REQUIRED**
 
 > **UNSEALED. `book/registry.db` reads 0 hypotheses / 0 trials / 3 events, `write_grants` 1 row (`grant_id=1`, `MIGRATION`, `CLEAN`) [measured — read-only `SELECT COUNT(*)`, at open and at close]. Trial budget ZERO. No backtest, no grid, no `open_hypothesis`, no registry write, no vault, no test run, no commit; `harness/`, `book/vaults/`, `VALIDATION-*` and `REDTEAM-*` untouched. `harness/` opened READ-ONLY. One read-only `GROUP BY` against `book/pit.db` (`?mode=ro`) — a row-count diagnostic of the class §20's C12 note and I-045 already treat as NOT a trial.**
@@ -2147,16 +2189,16 @@ PREREG-001 §17 recommended **ADMITTED-AS-EXPLORATORY** and *"fund the falsifier
 >
 > ### **[R35/R36 · 2026-08-11 · THE DATED COMMITMENT IS STRUCK AND REPLACED BY A CONDITION, AND THE BLOCKING SET IS WRITTEN AS THE TWO SETS IT ALWAYS WAS.]**
 >
-> **`2026-08-11` IS TODAY, AND C2, C7, C8 AND C11 ARE OPEN.** *"Realistic seal date: on or before sprint close, 2026-08-11"* is **D-14 of the dated-clause sweep — a dated commitment nothing evaluates, false on the day it was written for, in the sweep's own author's document.** Retaining it would freeze that schedule under P7. **Struck.**
+> ~~**`2026-08-11` IS TODAY, AND C2, C7, C8 AND C11 ARE OPEN.**~~ **[R-012 · 2026-09-14 · CONFORMANCE ONLY] C2 AND C11 ARE NOT OPEN AND HAVE NOT BEEN SINCE S3-D-023. SEAL-BLOCKING IS C7 AND C8** [source: §20's conformed table, R-010/R-011 — *"Seal-blocking · C7, C8. Nothing else."*]. *"Realistic seal date: on or before sprint close, 2026-08-11"* is **D-14 of the dated-clause sweep — a dated commitment nothing evaluates, false on the day it was written for, in the sweep's own author's document.** Retaining it would freeze that schedule under P7. **Struck.**
 >
-> **Replaced by: SEAL WHEN C2, C7, C8 AND C11 HAVE CLEARED, AND NOT BEFORE.** **C1 is DISCHARGED and is no longer a condition of any kind. C3 is not a seal condition** — §20's own column reads *"Blocking on Gate 1, not on sealing"* — **and R-005's block, which listed it among *"the same five open and blocking"* seal conditions, merged two kinds of block into one list.** That is the shape of error that produced I-140.
+> ~~**Replaced by: SEAL WHEN C2, C7, C8 AND C11 HAVE CLEARED, AND NOT BEFORE.**~~ **[R-012] REPLACED BY: SEAL WHEN C7 AND C8 HAVE CLEARED, AND NOT BEFORE** [source: §20's conformed table, R-010/R-011]. **C1 is DISCHARGED and is no longer a condition of any kind. C3 is not a seal condition** — §20's own column reads *"Blocking on Gate 1, not on sealing"* — **and R-005's block, which listed it among *"the same five open and blocking"* seal conditions, merged two kinds of block into one list.** That is the shape of error that produced I-140. **[R-012] C2 discharged ADMIT-CONDITIONAL (`VALIDATION-GATE0-002` §10.1; S3-D-023) and C11 removed from seal-blocking as circular (S3-D-023 §6) — both a month after this paragraph was written, and this paragraph is the last place in the document that had not been told.**
 >
 > | Set | Members | Meaning |
 > |---|---|---|
-> | **SEAL-BLOCKING** | **C2 · C7 · C8 · C11** | `open_hypothesis` may not be called until all four clear |
+> | **SEAL-BLOCKING** | ~~**C2 · C7 · C8 · C11**~~ **[R-012 · 2026-09-14] C7 · C8. Nothing else** — conformed to §20's table (R-010/R-011: *"Seal-blocking · C7, C8. Nothing else."*) | `open_hypothesis` may not be called until ~~all four~~ **both** clear |
 > | **VERDICT-BLOCKING** | **C3 · C5**, and by §20's own column also **C4** (Gate 1 scheduling) and **C10** (Gate 1; met in substance, formal closure of I-022 outstanding) | the family may be sealed and run; **no Gate 1 verdict and no PROCEED may exist** until these clear |
 >
-> **The directed set `C2, C3, C5, C7, C8, C11` is the union minus C4 and C10, and this seat names the two it drops rather than inheriting a list.**
+> ~~**The directed set `C2, C3, C5, C7, C8, C11` is the union minus C4 and C10, and this seat names the two it drops rather than inheriting a list.**~~ **[R-012 · 2026-09-14] The union is now `C3, C4, C5, C7, C8, C10, C11` across both axes, of which only `C7` and `C8` are SEAL-blocking; the naming discipline in the struck sentence stands and is the reason this row was findable.**
 >
 > `C` moves with the seal, **KC-002's observation date moves with it to `C + 187 days` — which R32 has now made true of the sealed field's clause 5 as well as of its opening** — and the firm loses the intervening days of a forward window it will hold for at least twelve months.
 >

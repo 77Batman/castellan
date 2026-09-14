@@ -7215,8 +7215,18 @@ and the invocation should not pipe the command under test — or should carry `s
 seal-blocking — the 22 reds are Validation-owned and bear on the gate floor, not on the seal act
 (`M357`) — but it is not measured either, and is not reported as measured.
 
-**Resolution:** open — one-line `CLAUDE.md` amendment for the Principal; suite floor to be measured with
-`python3` at the next opportunity.
+**Resolution:** ~~open~~ **CLOSED 2026-09-14, same session, by Principal ruling.** The amendment is
+applied: `CLAUDE.md`'s harness line now reads **`python3 -m pytest harness/tests -q`**, with the no-pipe
+rule and the `pipefail`/`${PIPESTATUS[0]}` alternative stated inline and I-332 cited.
+
+**The floor was then measured, unpiped, and it is the expected one: `301 passed / 22 failed / 323`,
+`PYTEST_EXIT=1`** [measured, `python3 -m pytest harness/tests -q`, 35.15s]. **The number the broken check
+would have asserted was correct. That is the point and not a mitigation** — an unfailable check that
+happens to sit beside a true value is indistinguishable from one that does not, which is exactly why it
+had to be measured rather than inherited.
+
+**Re-measured after the I-333 repair: `327 passed / 22 failed / 349`** — **+26 is the new
+`test_seal_prose_extraction.py` exactly, and the 22 reds are unchanged**, so the repair broke nothing.
 **Pattern tag:** `a-check-that-cannot-fail` · `exit-status-of-the-wrong-stage` · `governance-file-prescribes-a-dead-command`
 
 ---
@@ -7271,11 +7281,48 @@ it Validation's call and the Principal's signature. **Stated so the interest is 
 today against it, are hashes **of the quote-wrapped strings**. The re-verification is valid — the
 question is what the strings should have been, not whether they moved. **They did not move.**
 
-**Resolution:** open — **interrupt filed, seal held pending the Principal's ruling.** Correction supplied
-either way: strip the enclosing quotes in `extract_prose` and re-inspect (eight hashes move, once,
-before the seal), or rule the current form correct and record that §3's definition and the harness
-differ by two characters per field **on the record, before P7 freezes it.**
-**Pattern tag:** `document-and-harness-disagree-on-the-value` · `inconsistent-handling-of-two-field-classes` · `decidable-only-before-the-act` · `found-by-a-LOW-entry`
+**Resolution:** ~~open~~ **CLOSED 2026-09-14 — RULED FOR §3 AND REPAIRED, RED-FIRST, PRE-SEAL.**
+
+**The Principal's ground, recorded because it decides the class and not just the instance:** amending §3
+to match the code would be **adjusting a declaration to fit its enforcement — the I-046 inversion the
+firm has already refused twice.** The document defines; the harness enforces. **When they diverge, the
+harness moves.**
+
+**Executed.** Red-first per the ruling. `harness/tests/test_seal_prose_extraction.py` written **before**
+the repair: at that point **8 of 19 failed**, one per prose field, each naming the delimiter it found
+[measured]. Repair applied at `execute_seal_prereg002.py:134` — `raw[1:-1]` behind a guard that **raises
+rather than guesses** if a literal is not delimiter-wrapped. **Sliced, not `.strip('"')`** (which would
+eat a legitimate run of quotes) and **no second `.rstrip()`** (whitespace inside the delimiters is
+content). Test then **26/26 green**. Full suite **327/22/349**, reds unchanged at 22.
+
+**POST-I-333 BASELINE — THIS SUPERSEDES `S4-D-019 §2`'s FINGERPRINT.** Stated as a supersession, not
+silently substituted, per the ruling:
+
+| field | S4-D-019 §2 (superseded) | **post-I-333 baseline** |
+|---|---|---|
+| statement | 9207 / `5fb2dcdd8edd` | **9205 / `8c0425153490`** |
+| mechanism | 11828 / `65c7903646c5` | **11826 / `27c422c0d486`** |
+| falsifier | 11563 / `7fc8617cab39` | **11561 / `26eefca19d52`** |
+| universe | 24575 / `5401d95c45ff` | **24573 / `7b0975de13e7`** |
+| horizon | 9742 / `f31b02cddb30` | **9740 / `c3b6e442dfa6`** |
+| success_criteria | 42058 / `5f48a0e8029a` | **42056 / `58398d150a58`** |
+| forward_kill_condition | 23285 / `2c632b35f51a` | **23283 / `0f17c5b60d6a`** |
+| model_prior_provenance | 8191 / `62fce6ba4f8b` | **8189 / `810704911f51`** |
+
+**Every length falls by exactly 2. THE EIGHT LITERAL FIELDS ARE UNCHANGED** — `family`, `trial_budget`
+47, `predecessor_family` None, `holdout_classification` FORWARD, `forward_window_start`,
+`forward_window_min_length` 12.0, `published_signal_haircut_applied` 0.5, `n_inherited` 7 — **as the
+ruling required** [measured].
+
+**`I-331`'s cross-check convention is now obsolete and the reason is worth stating.** `universe` reads
+**24573 — identical to `dated_sites.json`**. The "extractor minus 2 per field" convention is void; the two
+instruments now agree exactly. **The scan was correct the whole time and the seal instrument was the one
+diverging** — which inverts I-331's own framing, where the scan was the artifact under suspicion. **A LOW
+entry filed against the cross-check found the defect in the thing it was checking against.** No
+regeneration needed; noted here per the ruling's "regenerate or note."
+
+**Validation reviews at its next invocation as definition-conformance, not judgment. No Opus spent.**
+**Pattern tag:** `document-and-harness-disagree-on-the-value` · `inconsistent-handling-of-two-field-classes` · `decidable-only-before-the-act` · `found-by-a-LOW-entry` · `the-cross-check-was-right`
 
 ---
 
@@ -7316,9 +7363,22 @@ with the staleness disclosed on the record, is the Principal's call and not the 
 is the Director's artifact under revision-block discipline; **a CIO edit with no R-block would breach the
 document's own convention hours before it freezes.**
 
-**Resolution:** open — for the Principal: conform §20.1 by Director dispatch before the seal, or seal with
-this entry as the disclosure. **Correction supplied: §20.1's table and its `:2150` sentence take §20's
-conformed set, C7 and C8.**
+**Resolution:** ~~open~~ **CLOSED 2026-09-14 — CONFORMED PRE-SEAL AS `R-012`, BY THE CIO'S HAND UNDER
+EXPLICIT PRINCIPAL EXCEPTION.**
+
+**The exception and its bounds, recorded because it is a departure from the Director's-artifact
+discipline:** granted **for one class only — transcription of a ruled state from a verified source** — on
+the ground that **P7 freezes the whole document and a frozen self-contradiction is I-140's class with no
+excuse.** It does not extend to any edit requiring judgment, and none was made. The revision block records
+the hand: *"conformance by CIO hand under Principal ruling I-334."*
+
+**Four sites conformed, all in §20.1, each citing §20's R-010/R-011 table in the row itself:** the
+`C2, C7, C8 AND C11 ARE OPEN` sentence · the `SEAL WHEN C2, C7, C8 AND C11 HAVE CLEARED` sentence · the
+`SEAL-BLOCKING` table row · the directed-set sentence. **Nothing added, no threshold moved, no new rule.**
+
+**Verified as the ruling required.** Extractor re-run after the edit: **all sixteen fields identical to
+the post-I-333 baseline** [measured]. §20 and §20.1 sit outside §21's fenced block, which is the only
+region `extract_prose` reads. **Had any hash moved, the instruction was to stop. None moved.**
 **Pattern tag:** `ruling-never-reached-the-artifact` · `same-subject-different-table` · `I-293-inside-I-293s-own-document`
 
 ---
@@ -7341,7 +7401,46 @@ number appears to have been invented rather than allocated. **New entries contin
 `I-342` is left unused rather than back-filled**, so that the two citations remain findable as the
 defect they are.
 
-**Resolution:** open — file the heading-vs-count finding under a correctly allocated number, or conform
-the two citations to say *recorded in the revision block, not separately filed.* **Either closes it; a
-number that points at nothing does not.**
-**Pattern tag:** `cited-artifact-that-was-never-created` · `number-invented-not-allocated`
+### **[2026-09-14 · THE RULING SAID "STRIKE THE CITATION WHERE IT APPEARS." THE CITATION IS ELEVEN CITATIONS, AND NOTHING WAS STRUCK.**
+
+**The Principal ruled I-335 on this entry's stated premise — one phantom number, `I-342`, at two sites.
+Enumerating before acting (§7.14, adopted three hours earlier) shows the premise is wrong by an order of
+magnitude.** Every `I-33x`/`I-34x`/`I-36x` token in the repository was extracted and checked against the
+log's own headings [measured]:
+
+| Phantom | Cited in |
+|---|---|
+| **I-339** | `DATA-IMPL-012-vault-arguments.md` |
+| **I-340** | `DIR-RESTATE-001` · **`REGISTRATION-PAYLOAD-PREREG-002.md`** · **`PREREG-002`** |
+| **I-341** | `DIR-RESTATE-001` · **`PREREG-002`** |
+| **I-342** | `DIR-RESTATE-001` · **payload** · `DECISION_RECORD.md` · this log |
+| **I-343 · I-344 · I-346 · I-349** | `DIR-RESTATE-001` |
+| **I-345** | `DIR-RESTATE-001` · **`PREREG-002`** |
+| **I-360 · I-361** | `DECISION_RECORD.md` |
+
+**Eleven numbers, six documents, none filed.** The log's highest heading before this session was `I-331`;
+**every one of these is above it**, so the block was allocated against a log that had not reached it.
+
+**Three of them — `I-340`, `I-341`, `I-345` — are cited inside `PREREG-002`, which P7 freezes at the
+seal.** That is the same structural concern that made `I-334` worth conforming.
+
+**NOTHING WAS STRUCK, AND THE REASON IS THAT STRIKING IS THE WRONG REPAIR.** Each citation sits beside a
+**full description of a real finding** — the vault-argument narrowing, the heading-vs-count, the ordering
+constraint. **The findings exist; only the log entries do not.** Deleting the numbers would delete the
+pointers to real work and leave the descriptions orphaned. And back-filling eleven entries now would mean
+**authoring them from the descriptions rather than from the artifacts — §7.12's exact prohibition** — by
+the wrong seat, hours before the seal.
+
+**The disposition that costs nothing, and why the P7 concern dissolves:** **`logs/ISSUE_LOG.md` is not
+part of the sealed document and does not freeze.** Entries can be filed at `I-339`–`I-361` **after** the
+seal, by the seats that made the findings, and `PREREG-002`'s three citations then resolve to real
+entries **without the frozen document being touched again.** A dangling pointer that becomes live later
+is not the same defect as a frozen contradiction, which cannot be repaired at all.
+
+**Recommendation to the Principal: do not strike; seal with this disclosure standing; back-fill the
+eleven post-seal as a Sonnet doc unit.** Not seal-blocking on this seat's reading, and the reading is
+stated rather than acted on because **the ruling that authorised the strike was given on a premise this
+measurement contradicts.**
+
+**Resolution:** open — **re-ruling invited on the measured extent.** The strike is not executed.
+**Pattern tag:** `cited-artifact-that-was-never-created` · `number-invented-not-allocated` · `a-block-of-numbers-allocated-against-a-log-that-never-reached-them` · `ruling-given-on-a-premise-the-measurement-contradicts`

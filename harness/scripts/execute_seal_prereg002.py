@@ -3,8 +3,10 @@
 
 PRINCIPAL-ONLY. This script performs the act the Principal approved at S4-D-014.
 It cannot run without the holdout passphrase, which is the Principal's, is never
-stored in this repository, and is read here from the environment so that it never
-enters a transcript, a log, or an argv.
+stored in this repository, and is READ INTERACTIVELY AT A PROMPT -- never from an
+argument and never from the environment (Principal-ruled 2026-09-14). `getpass`
+echoes nothing, so the secret enters neither the transcript, nor a log, nor argv,
+nor the process environment, nor shell history.
 
 WHY THIS SCRIPT EXISTS RATHER THAN A HAND-TYPED CALL
 ----------------------------------------------------
@@ -35,14 +37,19 @@ This script therefore closes the grant block before touching the vault. The orde
 is enforced by structure here so that it cannot be got wrong by hand.
 
 Usage:
-    CASTELLAN_HOLDOUT_PASSPHRASE=... CASTELLAN_REGISTRY_WRITE=... \
-        python3 harness/scripts/execute_seal_prereg002.py --inspect
-    ... same env ... python3 harness/scripts/execute_seal_prereg002.py --execute
+    python3 harness/scripts/execute_seal_prereg002.py --inspect
+        Extracts and prints all sixteen fields. Writes nothing. Needs no secret.
+
+    CASTELLAN_REGISTRY_WRITE=... python3 harness/scripts/execute_seal_prereg002.py --execute
+        Prompts for the holdout passphrase (not echoed), then performs items
+        5 and 7. CASTELLAN_REGISTRY_WRITE is a registry write CAPABILITY TOKEN,
+        not a secret of the Principal's, and remains an environment variable.
 """
 from __future__ import annotations
 
 import argparse
 import ast
+import getpass
 import hashlib
 import os
 import re
@@ -131,8 +138,47 @@ def extract_prose() -> dict:
     for f in PROSE_FIELDS:
         m = re.search(rf"^{f}\s*=\s*(.*?)(?=^[a-z_]+\s*=|\Z)", body, re.S | re.M)
         if m:
-            found[f] = m.group(1).rstrip()
+            raw = m.group(1).rstrip()
+            # I-333, Principal-ruled 2026-09-14. The payload's §3 defines the
+            # value as "the text between `<field_name> = \"` and its closing
+            # `\"`" -- the quotes are DELIMITERS, not content. `extract_literals`
+            # already honours that via ast.literal_eval; this path did not, and
+            # hashed eight strings two characters longer than §3 defines.
+            # Sliced, not `.strip('"')`: a value legitimately ending in a quote
+            # must lose exactly one. No second .rstrip() -- whitespace inside
+            # the delimiters is content.
+            if not (raw.startswith('"') and raw.endswith('"') and len(raw) >= 2):
+                raise SystemExit(
+                    f"{f}: §21's literal is not delimiter-wrapped -- refusing to "
+                    f"guess at its bounds. Got {raw[:40]!r}...{raw[-40:]!r}"
+                )
+            found[f] = raw[1:-1]
     return found
+
+
+def _acquire_passphrase() -> str | None:
+    """Read the holdout passphrase INTERACTIVELY. Principal-ruled 2026-09-14.
+
+    Never an argument, never an environment variable. `getpass` echoes nothing,
+    so the secret reaches neither the terminal, nor argv, nor the process
+    environment, nor shell history.
+
+    The value is used as a PRESENCE GATE only -- this script does not perform
+    item 6, and `HoldoutVault.seal()` is the Principal's separate act. The gate
+    exists so that a registration cannot be created in a session where the
+    Principal is not also able to seal the four vaults, which C8 requires on the
+    same UTC day. Returns None when nothing is typed, and the caller refuses.
+
+    Any environment variable of the same name is IGNORED, deliberately and
+    silently -- honouring it as a fallback would reintroduce the exposure the
+    ruling removed.
+    """
+    try:
+        return getpass.getpass(
+            "\n  Holdout passphrase (not echoed; Principal's hands only): "
+        ) or None
+    except (EOFError, KeyboardInterrupt):
+        return None
 
 
 def gather() -> dict:
@@ -178,15 +224,16 @@ def main() -> int:
         print("\n--inspect: nothing was written. Re-run with --execute to seal.\n")
         return 0
 
-    passphrase = os.environ.get("CASTELLAN_HOLDOUT_PASSPHRASE")
+    passphrase = _acquire_passphrase()
     if not passphrase:
         print(
-            "\nREFUSING: CASTELLAN_HOLDOUT_PASSPHRASE is not set.\n"
+            "\nREFUSING: no holdout passphrase supplied at the prompt.\n"
             "The holdout passphrase is the Principal's. It is never stored in this\n"
-            "repository and is not passed on the command line. Item 6 cannot run\n"
-            "without it, and C8 requires the vault sealed in the same session and the\n"
-            "same UTC day as the registration -- so a partial run is refused rather\n"
-            "than leaving a registered family with an unsealed holdout.\n",
+            "repository, never passed on the command line, and never read from the\n"
+            "environment. Item 6 cannot run without it, and C8 requires the vault\n"
+            "sealed in the same session and the same UTC day as the registration --\n"
+            "so a partial run is refused rather than leaving a registered family\n"
+            "with an unsealed holdout.\n",
             file=sys.stderr,
         )
         return 2

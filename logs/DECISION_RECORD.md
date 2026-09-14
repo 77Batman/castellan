@@ -6475,3 +6475,113 @@ was written. Budget unchanged: **18 of 30 invocations · 8 of 12 Opus · free 1 
    snapshot SLA · I-119 index inflow · 22 suite reds · I-330 · I-332 · I-335.
 
 **Review date:** on the Principal's ruling of `I-333`.
+
+---
+
+## S4-D-021 · 2026-09-14 · Four rulings executed · the extractor conformed to §3, red-first · the seal packet is ready and the invocation is printed
+
+**Opened by:** the Principal's rulings on I-333, I-334, I-332 and I-335, received in one block.
+**Units:** none. Conformance and repair, no seat dispatched.
+
+### 1 · I-332 — applied, then the floor measured for the first time this session
+
+`CLAUDE.md`'s harness line now reads **`python3 -m pytest harness/tests -q`**, with the no-pipe rule and
+the `pipefail` / `${PIPESTATUS[0]}` alternative stated inline and I-332 cited. **Floor measured unpiped:
+`301 passed / 22 failed / 323`, `PYTEST_EXIT=1`** [measured, 35.15s]. **The number the unfailable check
+would have asserted was correct — which is the point rather than a mitigation.** A check that cannot fail
+is worthless whether or not the value beside it happens to be true.
+
+### 2 · I-333 — ruled for §3, repaired red-first, and the ruling's ground is the durable part
+
+**The Principal's ground:** amending §3 to match the code would be **adjusting a declaration to fit its
+enforcement — the I-046 inversion the firm has refused twice.** **The document defines; the harness
+enforces; when they diverge the harness moves.** Recorded because it settles the class, not the instance.
+
+**Red-first, as ruled.** `harness/tests/test_seal_prose_extraction.py` written **before** the repair:
+**8 of 19 failed**, one per prose field, each naming the delimiter it found. Repair at
+`execute_seal_prereg002.py` — `raw[1:-1]` behind a guard that **raises rather than guesses** if a literal
+is not delimiter-wrapped. **Sliced, not `.strip('"')`**; **no second `.rstrip()`**, because whitespace
+inside the delimiters is content. Then **green**.
+
+**One of this seat's own assertions was withdrawn before the repair, and it is worth recording.** The
+first draft pinned `.rstrip()` invariance on the repaired value — **a property §3 does not state.** Had
+the eight fields happened to end in whitespace it would have forced the wrong repair. Replaced with the
+ruled definition as arithmetic (`new == raw.rstrip()[1:-1]`), with the regex **restated in the test rather
+than imported**, because a check that calls the thing it checks is not one.
+
+**POST-I-333 BASELINE — SUPERSEDES `S4-D-019 §2`, stated as a supersession per the ruling.** All eight
+lengths fall by exactly 2; **the eight literals are unchanged**, as required:
+
+`statement 9205/8c0425153490 · mechanism 11826/27c422c0d486 · falsifier 11561/26eefca19d52 ·
+universe 24573/7b0975de13e7 · horizon 9740/c3b6e442dfa6 · success_criteria 42056/58398d150a58 ·
+forward_kill_condition 23283/0f17c5b60d6a · model_prior_provenance 8189/810704911f51`
+
+**`I-331`'s convention is void, and the inversion is the finding.** `universe` now reads **24573 —
+identical to `dated_sites.json`**. **The scan was right the whole time; the seal instrument was the one
+diverging.** A LOW entry filed against a cross-check located the defect in the thing it was checking
+against. No regeneration needed; noted per the ruling.
+
+**No test in `harness/tests/` touched `execute_seal_prereg002.py` before today** — I-039's pattern, the
+worst error in the only untested function, in the script that performs the firm's most irreversible act.
+
+### 3 · I-334 — §20.1 conformed as R-012, by the CIO's hand under explicit exception
+
+Four sites in §20.1, each citing §20's R-010/R-011 table in the row. Revision block records the hand:
+*"conformance by CIO hand under Principal ruling I-334."* **Exception bounded to transcription of a ruled
+state from a verified source**, on the Principal's ground that **P7 freezes the whole document and a
+frozen self-contradiction is I-140's class with no excuse.** **Verified: all sixteen fields identical to
+the post-I-333 baseline** — §20.1 sits outside §21's fence. Had any moved, the instruction was to stop.
+
+### 4 · I-335 — THE RULING'S PREMISE WAS WRONG BY AN ORDER OF MAGNITUDE, AND NOTHING WAS STRUCK
+
+The ruling — *"the citation is struck where it appears"* — was given on this entry's stated premise of
+**one phantom number at two sites.** **§7.14, adopted three hours earlier, says enumerate before acting.**
+Enumerating every `I-33x`/`I-34x`/`I-36x` token against the log's own headings returns **eleven phantom
+numbers across six documents**: `I-339, I-340, I-341, I-342, I-343, I-344, I-345, I-346, I-349, I-360,
+I-361` — **none filed**, all above the log's then-highest heading of `I-331`. **Three of them — I-340,
+I-341, I-345 — are cited inside `PREREG-002`, which P7 freezes.**
+
+**The strike was not executed, and striking is the wrong repair.** Each citation sits beside a **full
+description of a real finding**; the findings exist and only the entries do not. Deleting the numbers
+orphans real work. Back-filling eleven entries now would mean **authoring them from descriptions rather
+than artifacts — §7.12's exact prohibition — by the wrong seat, hours before the seal.**
+
+**The P7 concern dissolves on a fact worth stating plainly: `logs/ISSUE_LOG.md` is not part of the sealed
+document and does not freeze.** The eleven can be filed post-seal by the seats that made the findings, and
+`PREREG-002`'s three citations then resolve **without the frozen document being reopened.** A dangling
+pointer that goes live later is not a frozen contradiction.
+**Recommendation: do not strike; seal with the disclosure; back-fill post-seal. Re-ruling invited.**
+
+### 5 · The passphrase — the ruling and the shipped script disagreed, and the script was conformed
+
+The ruling requires the passphrase **interactive only, never an argument or environment variable.** The
+shipped script read **`CASTELLAN_HOLDOUT_PASSPHRASE` from `os.environ`**, and its own docstring argued
+that was the safe choice. **It is not, and the script's own design shows why: the value is never used.**
+It is a **presence gate** — this script does not perform item 6 — so the shipped form **took a secret it
+had no use for**, where an environment variable is readable from the process table on some platforms and
+lands in shell history when set inline.
+
+**Conformed rather than reported, because handing the Principal a print that contradicts his own ruling is
+worse than a bounded change.** `_acquire_passphrase()` added, `getpass` (no echo), **environment variable
+ignored deliberately and silently** — honouring it as a fallback would reintroduce the exposure the ruling
+removed. Empty input **refuses**, exactly as the missing variable used to, preserving the C8 partial-run
+guard. Red-first: both tests failed on `AttributeError` before the change, pass after.
+
+**`CASTELLAN_REGISTRY_WRITE` is left as an environment variable and is named here so the choice is not
+silent:** it is a registry write **capability token**, not the Principal's secret, and the ruling named
+the passphrase.
+
+### 6 · State
+
+Suite **327 passed / 22 failed / 349** after the I-333 repair — **+26 is the new test file exactly, reds
+unchanged at 22.** Re-confirmed after the passphrase change. Registry **0 · 0 · 3 · 1** — **nothing
+written; the seal has not executed.** Budget unchanged: **18 of 30 · 8 of 12 Opus · free 1 · insurance 2 ·
+DA reserve 1.** Hard stop **2026-09-24**.
+
+### 7 · Next
+
+**The seal.** Items 1–7 are conformed, the sixteen fields are verified against a baseline recorded in this
+entry, and the invocation is printed for the Principal's hands. **I-335's re-ruling is invited but is not
+seal-blocking on this seat's reading.**
+
+**Review date:** at the seal.
