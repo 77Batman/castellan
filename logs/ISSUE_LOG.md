@@ -7048,3 +7048,50 @@ before the act.** **Put to the Principal with the correction supplied.**
 **Resolution:** open — **HIGH, seal-blocking in practice.** One row. The correction is stated; the hand
 that makes it is the Principal's to name.
 **Pattern tag:** `ruling-never-reached-the-artifact` · `incomplete-roster-in-the-brief` · `false-first-item-in-a-no-judgment-checklist`
+
+---
+
+## I-329 · 2026-09-14 · The CIO dispatched a task requiring Oracle access to a seat with no Oracle binding, and separately nearly reported a memory absent because semantic recall missed it twice · Severity: MEDIUM · Owner: CIO
+
+**Two failures in one dispatch, the second a near-miss the CIO caught only by checking.**
+
+**(1) The seat could not do what it was asked.** `S4-D-017` required `mcp__oracle__recall`, `list_recent`
+and a save-to-Oracle deliverable. **Execution & Operations holds Read, Write, Edit and Bash — no Oracle
+binding.** The seat **stopped at the retrieval gate and said so**, per its own brief's instruction not
+to reconstruct a questionnaire from its title. **That is correct conduct and is recorded as correct.**
+One Sonnet invocation spent under D-012 for nothing.
+
+**The class is `I-100`'s, one layer over.** There the finding was *nobody counted the callers* before
+specifying a control. **Here: nobody checked the seat's tool grant before dispatching work that needs
+it.** **`TEMPLATES.md` §7.10(7) requires a spec altering a call contract to state its measured caller
+count — the symmetric question, unasked, is whether the seat can perform the call at all.** **The CIO
+holds Oracle tools and did not consider that the seat might not.**
+
+**(2) THE NEAR-MISS, AND IT IS THE MORE INSTRUCTIVE HALF.** Retrieving the memories itself, the CIO ran
+**two semantic recalls — one of them targeted at `M364` by name and content — and neither returned
+it.** The CIO was one sentence from reporting **"M364 does not exist in Oracle"**, which would have been
+**the I-046 pattern inverted: asserting an artifact's absence on the strength of a failed search.**
+
+**`list_recent` found it immediately.** `M364` exists, 17,103 chars — **and so does `M365`, a
+`decision`-kind memory recording the dispatcher's governance design, which the Principal's instruction
+did not name and which constrains the answer.**
+
+> **Semantic recall returning nothing is not evidence of absence.** A query that fails to match is
+> indistinguishable, from the caller's side, from a store that holds nothing. **Two failed recalls are
+> two failed queries, not a measurement.**
+
+**Corrective, and it is §7.12's search analogue:** **before reporting an artifact absent, enumerate —
+`list_recent`, a directory listing, a `git log --all` — never conclude absence from a search that
+returns nothing.** **The firm already applies this to counts (*count the roster, not the memory of
+it*); it now applies to existence.**
+
+**Re-dispatched as `S4-D-018`** with all three memories staged as files, so the seat reads them without
+Oracle. **The CIO writes the Oracle entry on return**, since the seat cannot.
+
+**Recorded in the seat's favour:** its return named the missing tool precisely, recommended the two
+workable fixes (**grant the binding, or supply the text**), and **did not attempt a substitute lookup** —
+*"I attempted no substitute lookup beyond confirming this."*
+
+**Resolution:** open — the tool-grant question stands for the Principal; the recall corrective is in
+force.
+**Pattern tag:** `dispatched-work-the-seat-cannot-perform` · `absence-inferred-from-a-failed-search`
