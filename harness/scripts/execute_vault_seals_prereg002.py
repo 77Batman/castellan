@@ -71,6 +71,7 @@ from __future__ import annotations
 import argparse
 import ast
 import getpass
+import json
 import os
 import re
 import sqlite3
@@ -180,6 +181,27 @@ def extract_vault_specs() -> list[dict]:
                 f"would not catch it. Refusing."
             )
     return specs
+
+
+def read_prereg_sha256(conn) -> str | None:
+    """The sealed hash, from the EVENT payload. I-368.
+
+    `hypotheses` has no `prereg_sha256` column -- eighteen columns and none of
+    them is the hash [measured]. `registry.py` P1 writes it into the
+    `hypothesis_sealed` event's `detail_json`. Parsed in Python so the read-back
+    does not depend on the JSON1 extension.
+    """
+    row = conn.execute(
+        "select detail_json from events where kind='hypothesis_sealed' "
+        "and family=? order by event_id desc limit 1",
+        (FAMILY,),
+    ).fetchone()
+    if not row or not row[0]:
+        return None
+    try:
+        return json.loads(row[0]).get("prereg_sha256")
+    except (ValueError, TypeError):
+        return None
 
 
 def verify_item_7_completed(cutoff: str) -> None:
@@ -334,6 +356,7 @@ def main() -> int:
         "select dispatch, count(*) from write_grants where reason='VAULT_SEAL' "
         "and outcome='CLEAN' group by dispatch"
     ).fetchall())
+    print(f"\n  prereg_sha256         : {read_prereg_sha256(c)}")
     print(f"\n  VAULT_SEAL CLEAN rows : {n_vault}   (expected 8 -- TWO per seal(), "
           f"measured; item 6's 'four' is I-367)")
     for d, n in sorted(by_dispatch.items()):

@@ -7591,3 +7591,78 @@ field. Had any moved, the instruction was to stop.
 tracing to I-328 and I-367, and distinguished from CASE-9 — there the control does nothing; here the
 control works perfectly and only the expectation beside it is wrong, which is the quieter failure.
 **Pattern tag:** `false-expectation-in-a-no-judgment-checklist` · `a-count-stated-in-prose-and-never-computed` · `transcribed-through-four-documents` · `found-by-building-the-thing-that-would-have-hit-it-live`
+
+---
+
+## I-368 · 2026-09-15 · The only evidence path of the firm's most irreversible act was the one query no test exercised · Severity: HIGH · Owner: CIO · **Found LIVE, mid-seal**
+
+**Found by:** the Principal, executing the seal. **Not by a test, not by a review, not by a dry run —
+by the act itself, at the moment the act had already become permanent.**
+
+**What happened.** Item 7 completed **CLEAN**. The `REGISTER_HYPOTHESIS` grant opened, wrote three rows,
+and **closed and committed**. Then the read-back crashed:
+
+```
+  grant block closed. Vault seal follows OUTSIDE it, per I-311/I-312.
+Traceback (most recent call last):
+  File ".../execute_seal_prereg002.py", line 281, in main
+    sha = c.execute("select prereg_sha256 from hypotheses where family=?", (FAMILY,)).fetchone()
+sqlite3.OperationalError: no such column: prereg_sha256
+```
+
+**`hypotheses` has eighteen columns and none of them is the hash** [measured, `pragma table_info`].
+`registry.py`'s P1 computes `prereg_sha256` on first registration and writes it into the
+**`hypothesis_sealed` event's `detail_json`**, beside a shadow copy of all sixteen binding fields — which
+is where the Principal found it, and where it always was.
+
+**The registration was never at risk, and that is the whole shape of the finding.** The failing query runs
+**after** the grant block closed. The seal is intact: `hypotheses = 1`, `forward_window_start = 2026-09-15`,
+`trial_budget 47`, `n_inherited 7`, `grant_id 2`, newest grant `REGISTER_HYPOTHESIS/CLEAN/3`,
+`prereg_sha256 = e5ebd3a6db02b97955518bc70db3906918e702f9879d3ad9928223ad6d2a105f` [all measured by the
+Principal from the live registry]. **What broke was not the act. It was the only means of knowing the act
+had happened.**
+
+**Why that is HIGH and not cosmetic.** `write_grant` and `open_hypothesis` **print nothing on success**
+(I-310). The read-back is therefore **not a convenience — it is the entire evidence path**, and this
+firm's own doctrine is that the read-back *is* the evidence. A crash there is indistinguishable, from the
+executing party's side, from a failed seal, at the exact moment P7 has made the outcome permanent and the
+correct next action is unknown. **The Principal had to reconstruct the hash from the event table by hand
+to learn whether his own seal had succeeded.**
+
+**I-039's class, and the third instance of it in three days.** I-363: the worst error sat in
+`extract_prose`, which no test touched. I-367: the grant count was stated in four documents and computed
+in none. **This: the read-back query was never executed by any test, because every test either stopped
+before `--execute` or ran the vault script instead.** Three findings, one script, one cause — **the code
+path that runs once, at the end, in anger, is the path nothing rehearses.**
+
+**And it is the sharper version of I-367.** I-367 was a *wrong expectation* beside a working mechanism,
+caught by a throwaway test the day before. **This was a wrong query in the same read-back block, and the
+throwaway test suite did not catch it because the test drove the vault script's read-backs and never the
+registration script's.** A test suite that covers the second half of an evidence path and not the first
+reads as coverage.
+
+**Repaired, under the Principal's act-now instruction.** `read_prereg_sha256(conn)` added to **both**
+scripts: reads `detail_json` from the newest `hypothesis_sealed` event for the family, parses it **in
+Python rather than with `json_extract`**, so the evidence path does not depend on the JSON1 extension
+being compiled into whatever `sqlite3` the executing machine carries; returns `None` rather than raising
+when the event is absent. The registration script's read-back connection is also switched to `mode=ro` —
+a read-back has no business holding a writable handle.
+
+**Verified against the LIVE registry, read-only** [measured]: both scripts return
+`e5ebd3a6db02b97955518bc70db3906918e702f9879d3ad9928223ad6d2a105f`, **identical to each other and to the
+value the Principal recorded by hand.**
+
+**Five regression tests added**, including the general form the specific bug argues for: **`no query may
+name a column that does not exist`** — every column both scripts touch across `hypotheses`,
+`write_grants`, `events` and `ingest_ceiling` is asserted present. Suite **343 passed / 22 failed / 365**,
+reds unchanged.
+
+**Gap (2) closed by measurement, not inspection.** Every column `execute_vault_seals_prereg002.py`
+references was checked against the live schemas: `write_grants.closed_utc`, `.dispatch`, `.grant_id`,
+`.reason`, `.outcome` · `hypotheses.family`, `.forward_window_start` · `ingest_ceiling.source`,
+`.dataset_id`, `.cutoff` — **all present. The vault script carries no reference to a nonexistent column.**
+
+**Resolution:** ~~open~~ **CLOSED 2026-09-15 — repaired, tested, and verified against the live sealed
+registry.** The standing corrective is the test, not the entry: **the evidence path of an irreversible
+act is exercised end-to-end before the act, or it is not an evidence path.**
+**Pattern tag:** `the-evidence-path-nobody-rehearsed` · `crash-after-the-point-of-no-return` · `coverage-of-the-second-half-reads-as-coverage` · `found-live`

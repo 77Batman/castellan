@@ -69,6 +69,7 @@ import argparse
 import ast
 import getpass
 import hashlib
+import json
 import os
 import re
 import sqlite3
@@ -174,6 +175,39 @@ def extract_prose() -> dict:
     return found
 
 
+def read_prereg_sha256(conn) -> str | None:
+    """The sealed hash, read from the EVENT payload where it actually lives.
+
+    I-368, found live at the vault door 2026-09-15. The read-back originally
+    queried `hypotheses.prereg_sha256`. THAT COLUMN DOES NOT EXIST -- the
+    hypotheses table has eighteen columns and none of them is the hash
+    [measured, `pragma table_info(hypotheses)`]. `registry.py`'s P1 computes
+    `prereg_sha256` on first registration and writes it into the
+    `hypothesis_sealed` event's `detail_json`, alongside a shadow copy of all
+    sixteen binding fields.
+
+    The registration itself was never at risk: this query runs AFTER the grant
+    block has closed and committed. It crashed the read-back, which is the
+    ONLY evidence path the act has, because `write_grant` and `open_hypothesis`
+    print nothing on success (I-310).
+
+    Parsed in Python rather than with `json_extract` so the read-back does not
+    depend on the JSON1 extension being compiled into whatever sqlite3 the
+    Principal's machine happens to carry.
+    """
+    row = conn.execute(
+        "select detail_json from events where kind='hypothesis_sealed' "
+        "and family=? order by event_id desc limit 1",
+        (FAMILY,),
+    ).fetchone()
+    if not row or not row[0]:
+        return None
+    try:
+        return json.loads(row[0]).get("prereg_sha256")
+    except (ValueError, TypeError):
+        return None
+
+
 def _acquire_passphrase() -> str | None:
     """Read the holdout passphrase INTERACTIVELY. Principal-ruled 2026-09-14.
 
@@ -276,9 +310,9 @@ def main() -> int:
 
     print("\n  grant block closed. Vault seal follows OUTSIDE it, per I-311/I-312.")
 
-    c = sqlite3.connect(REGISTRY)
+    c = sqlite3.connect(f"file:{REGISTRY}?mode=ro", uri=True)
     n_fam = c.execute("select count(*) from hypotheses where family=?", (FAMILY,)).fetchone()[0]
-    sha = c.execute("select prereg_sha256 from hypotheses where family=?", (FAMILY,)).fetchone()
+    sha = read_prereg_sha256(c)  # I-368: from the sealed EVENT, not a hypotheses column
     grant = c.execute(
         "select reason, outcome, writes from write_grants order by grant_id desc limit 1"
     ).fetchone()
@@ -286,7 +320,7 @@ def main() -> int:
     print(f"\n{'=' * 78}\nREAD-BACK -- the seal's evidence (I-310: nothing prints on success)\n{'=' * 78}")
     print(f"  hypotheses (family) : {n_fam}                 expect 1")
     print(f"  write_grants last   : {grant}   expect ('REGISTER_HYPOTHESIS','CLEAN',n)")
-    print(f"  prereg_sha256       : {sha[0] if sha else None}")
+    print(f"  prereg_sha256       : {sha}")
     print(f"  registry after      : {registry_state()}")
     print(f"  C (forward_window_start) : {fields['forward_window_start']}")
     print(
