@@ -7712,7 +7712,7 @@ acquiring the holdout early, stops a typo bricking the family, and makes the acq
 is **not** built against an adversary holding a copy of the repository. Nothing in the firm says so, and
 the phrase "the passphrase is never stored" is true in a way that invites the broader reading.
 
-**Why MEDIUM and not HIGH.** Nothing is compromised. The repository is private, and the consequence of a
+**Why MEDIUM and not HIGH.** Nothing is compromised. **The repository is private** — `77Batman/castellan-capital`, `"isPrivate": true`, `"visibility": "PRIVATE"` [measured, `gh repo view`, 2026-09-15; it was **[assumed]** when this entry was first filed and is now measured, because the entry's severity rests on it and an unverified premise under a severity label is the cardinal error this log records]. The consequence of a
 guessed passphrase is early holdout acquisition — which is **still attributable**, because
 `acquire_once()` logs the acquisition and the ceiling lift as registry events. The integrity control is
 the event trail, not the passphrase. **The passphrase's job is to make acquisition deliberate, and it
