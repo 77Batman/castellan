@@ -6758,3 +6758,80 @@ None. All work stayed inside the four files named in the brief: `CLAUDE.md`, `.g
 
 Files touched: exactly the four named in the brief. Commit message: `S4-D-024: lock convention,
 block-end grace, per-dispatch duration into CLAUDE.md`.
+
+---
+
+## S4-D-025 · 2026-09-15 · Session closed for a host OS update — the seal stands, the queue is handed forward
+
+**Closed by:** Principal instruction, for a host OS update. **Not** a context exhaustion close, **not** a
+block-end termination — an orderly close under `TEMPLATES.md` §7.10(6).
+
+**Format note.** S4-D-024's `started_utc`/`ended_utc`/`duration` field binds **decision-record entries for
+a DISPATCH**. This is a session close, not a dispatch, so the field does not bind it; **S4-D-024's own
+entry carries the fields and is the demonstration.** Stated rather than silently omitted, because a new
+rule skipped on its first adjacent opportunity looks the same as a rule forgotten. Close time
+**2026-09-15T02:15:26Z** [measured].
+
+### 1 · Dirty-path disposition — §7.10(6)
+
+`git status --porcelain` and `--untracked-files=all` both **return empty** [measured]. **Every path
+written this session was committed as it was produced**, across eight commits. **There is nothing
+deliberately unstaged and nothing left to name** — which is the first time this firm has closed a session
+with an empty disposition table, and it is worth recording as the thing §7.10(6) was written to produce
+rather than as an absence of work.
+
+| Path class | Disposition |
+|---|---|
+| `book/registry.db`, `book/vaults/**` | **Committed at `dff9a13`** — the seal. Frozen under P7. |
+| `research/`, `logs/`, `reference/`, `CLAUDE.md`, `.gitignore`, `harness/` | **Committed** across `5c81b85 … 826f1cd`. |
+| untracked | **None.** |
+| ignored | Unchanged; `.castellan/` does not yet exist on this host. |
+
+### 2 · The one residue, disposed rather than repaired
+
+**Two commit SUBJECTS carry the pre-I-366 numbering permanently** — `5c81b85` and `cf538a8` name
+`I-332`/`I-333`/`I-334` in the CIO's superseded sense. The renumber moved the working tree; it cannot move
+a commit message without rewriting history, and **that history now contains `dff9a13`, the seal.**
+**Rewriting the commit that records a P7-frozen act in order to fix a citation in its subject line is the
+worse trade**, so the trap is documented at I-366 instead, where a reader hits it.
+
+### 3 · What this session did
+
+**The firm's first family is sealed.** `funding-carry-conditioning-002`, `C = 2026-09-15`,
+`prereg_sha256 e5ebd3a6…6d2a105f`, four holdouts locked, C7 and C8 discharged, forward window open,
+KC-002 fixed at 2027-03-21. Registry moved from `0 · 0 · 3 · 1` to **`1 · 0 · 9 · 10`** — the first
+movement since activation on 2026-07-28.
+
+**Ten findings filed, eight closed.** I-362 (a session check that could not fail) · **I-363** (the seal
+hashed the delimiters; the document defines, the harness enforces) · I-364 (§20.1 stale) · I-365 (eleven
+phantom citations, strike withdrawn) · **I-366** (the CIO's own numbering collision, self-reported) ·
+**I-367** (eight grant rows, not four) · **I-368** (the evidence path nobody rehearsed, found live) ·
+I-369 (the verifier's unstated threat model). I-331 closed with its cause measured. Open: I-330, I-365,
+I-366, I-369.
+
+**Three doctrines added**, all Principal-ruled: *the document defines, the harness enforces, and when they
+diverge the harness moves* · *a count measured by a tested script against a throwaway registry is a ruled
+state for conformance* · *an issue number is allocated against every number claimed anywhere, never
+against the log's highest heading.* Plus `TEMPLATES` §7.10(9), §7.13, §7.14, and casebook **CASE-16**.
+
+**Budget: 18 of 30 invocations · 8 of 12 Opus — unchanged.** One Sonnet unit spent at S4-D-024,
+Principal-funded outside §1. **No seat was dispatched in the entire seal sequence**; every act was the
+CIO's own hand under a Principal ruling.
+
+Suite **343 passed / 22 failed / 365**, reds unchanged at 22 throughout.
+
+### 4 · The queue, in order, handed forward
+
+1. **I-365 back-fill** — eleven phantom entries (`I-339, I-340, I-341, I-342, I-343, I-344, I-345,
+   I-346, I-349, I-360, I-361`), **by the filing seats, from their artifacts** (§7.12), **allocating from
+   the CLAIMED set** (I-366). Three of them are cited inside the P7-frozen `PREREG-002`.
+2. **I-326 — `_schema_matches` red-first repair.** Validation's, **bound by event: before this family's
+   first Gate 1 evaluation.** The fingerprint is data and froze at the seal; the function is code and did
+   not.
+3. **THE FIRST TRIALS.** Budget 47, Stage 1 ceiling 54, `n_inherited` 7. F-002's three runs are first,
+   **leg (iii) leading among the substantive legs** — it is the cheapest, needs only the benchmark run,
+   and kills the family root and branch if there is no premium to condition on.
+4. Then: the Sonnet doc unit's siblings — I-310 success prints · I-323 snapshot SLA · I-119 index inflow ·
+   22 suite reds · I-330 · I-369.
+
+**Review date:** at the open of the next session.

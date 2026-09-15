@@ -7500,6 +7500,19 @@ claimed in a document and not yet filed is allocated; the log is the record of e
 of allocations**, and the firm has now been bitten from both sides of that gap in one session —
 **I-365 is claims-without-entries, and this is entries-over-claims.**
 
+**RESIDUE, disposed at the 2026-09-15 session close rather than left to be found.** The renumber moved
+every occurrence in the working tree. **It did not move COMMIT SUBJECTS, and two carry the old numbering
+permanently:** `5c81b85` (*"seal HELD on I-333"*) and `cf538a8` (*"I-333, red-first … I-334 … I-332"*),
+both in the `DATA-IMPL-012` sense of those numbers rather than the CIO's. **A `git log --grep I-333`
+therefore returns the wrong finding.**
+
+**Deliberately NOT repaired, and the reason is proportionality, not oversight.** Rewriting two subject
+lines means rebasing eight commits — **including `dff9a13`, the seal itself.** Rewriting the commit that
+records an act P7 has frozen, to correct a citation in its own subject line, trades a permanent
+navigational annoyance for a permanent integrity question about the firm's most important commit. **The
+log is a record of what was done at the time, and at the time those numbers were what the CIO had
+allocated.** Named here so the trap is documented where a reader hits it.
+
 **Resolution:** open — the renumber is executed and verified; **the standing corrective is for the
 Principal to countersign**, and `I-365`'s back-fill should allocate from the claimed set when it runs.
 **Pattern tag:** `allocated-against-the-wrong-index` · `two-meanings-under-one-number` · `the-rule-adopted-and-not-self-applied` · `a-check-that-ran-after-the-act-it-should-have-preceded`
