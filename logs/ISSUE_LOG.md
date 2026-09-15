@@ -8157,3 +8157,41 @@ written in full or the count is not stated.** No `+ others`, no `… and the res
 that cannot be counted. **If the list is too long to write, the count stands alone without a list beside
 it.**
 **Pattern tag:** `a-cardinal-beside-a-list-made-uncountable-by-a-phrase` · `i-342-committed-by-the-entry-that-enumerated-i-342` · `two-errors-that-reconcile-to-the-right-total`
+
+---
+
+## I-374 · 2026-09-15 · The CIO's dispatch brief specified a write-grant construction that raises on contact, and the seat found it only because it tested against a scratch registry first · Severity: MEDIUM · Owner: CIO
+
+**This seat's own defect, self-reported, in the brief for the firm's first trial.**
+
+**What the brief said.** `S4-D-028` instructed, as a literal code block: `with registry.write_grant(reason="LOG_TRIAL", dispatch="S4-D-028"): run_backtest(...)`. **The Principal's ruling of 2026-09-15 directed that the `LOG_TRIAL` grant be "named in the brief," and the CIO wrote a named grant that cannot execute.**
+
+**Why it fails, two ways** [measured — `harness/castellan/engine.py`, the comment at the self-grant site reads *"VALIDATION-SPEC-004: self-granted so pre-existing callers of `run_backtest` (which hold no grant of their own) keep working"*]: **(1)** no token was supplied and `CASTELLAN_REGISTRY_WRITE` is unset; **(2)** decisively, **`run_backtest` opens its own `LOG_TRIAL` grant internally via `HARNESS_INTERNAL_TOKEN`, and grants are non-reentrant (R-9)** — so an outer grant raises `RegistryWriteGrantNestedError` **even with a valid token.** **The correct call is `run_backtest` with no outer grant**, which is what the seat ran.
+
+**THE GRANT IS NOT NAMEABLE BY A CALLER, AND THAT IS THE POINT WORTH KEEPING.** The Principal's instruction was sound governance — name the authority under which the write happens — but **`run_backtest`'s authority is not the caller's to name.** It is self-granted precisely so the 148 pre-existing callers SPEC-004's R-4 would have broken keep working (I-100's caller count). **A brief can name which registry writes a dispatch is authorized to cause; it cannot name the grant, because the grant does not belong to the dispatch.** The `grant_id` lands on the trial row afterwards — **`grant_id = 11` on trial 1** [measured] — which is where the audit trail actually lives.
+
+**HOW IT WAS CAUGHT, and this is the part that should be practice.** The seat **built a scratch copy of the registry and ran the construction against it before touching the live databases** [reported by the seat; corroborated — `book/registry.db` shows exactly one new trial and one new grant row, and `book/pit.db` shows no diff at all]. **Had it followed the brief literally against the live registry, the first trial of the firm's first family would have been an exception**, and the failure would have been indistinguishable from a harness defect.
+
+**Corrective.** **A brief that embeds a literal code block has had that block executed by the seat that wrote it, or it is marked as untested prose.** The CIO wrote `with registry.write_grant(...)` from reading the *tests*, where the construction is correct because test bodies call `log_trial` directly rather than through `run_backtest` [measured — `test_trial_budget_enforcement.py`, `test_seeded_n.py`]. **The pattern was real and the context was wrong**, which is §7.12's shape one layer down: **the citation was to an artifact that used the call, not to the call site the dispatch would actually execute.**
+
+**Resolution:** open — **corrective for the Principal to countersign.** No harm reached the book: the seat's precaution absorbed it.
+**Pattern tag:** `a-literal-code-block-in-a-brief-that-was-never-run` · `a-pattern-copied-from-a-context-that-does-not-hold` · `the-grant-that-is-not-the-callers-to-name` · `caught-by-a-scratch-copy`
+
+---
+
+## I-375 · 2026-09-15 · `PITStore` has no read-only open path and executes schema DDL plus a commit on every open, so the A4 store cannot be opened without write access · Severity: MEDIUM · Owner: head-of-data-infra
+
+**Found by Head of Data & Infrastructure at S4-D-028, running the firm's first trial, when the dispatch brief instructed it to open the store read-only.**
+
+**Measured** [`harness/castellan/data.py:98-105`]: `PITStore.__init__` calls **`sqlite3.connect(path)` with no `uri=True`**, then **`executescript(SCHEMA)`** and **`commit()`**, then `_migrate()`. Consequently `PITStore("file:book/pit.db?mode=ro")` raises **`OperationalError: unable to open database file`** — the URI is taken as a literal filename — and **there is no argument by which a caller can request a read-only handle.**
+
+**Why this is more than ergonomics.** **Amendment A4 makes the PIT store the only admissible source of prices**, and its whole purpose is that what it returns is what was knowable at a past instant. **Every read of that store therefore opens it read-write, runs DDL against it, and commits.** The DDL is idempotent (`CREATE TABLE IF NOT EXISTS`) and `_migrate` is conditional, so **in practice nothing changed — `book/pit.db` shows no diff after this session's reads** [measured, `git status`]. **The defect is that this is a property of the schema happening to be current, not a guarantee the interface provides.** A reader cannot prove it did not write; it can only observe afterwards that it did not.
+
+**The contrast is inside the firm's own code.** `TrialRegistry` **does** have the read-only discipline — a read-only handle by default, reverting to it after every grant block (R-6), with write access granted in a named, block-scoped, recorded way. **The registry's integrity model was built and the PIT store's was not**, and A4 leans on the PIT store at least as hard.
+
+**Not repaired here.** Out of S4-D-028's scope, and the seat correctly filed rather than fixed. **The workaround used was to open the ordinary path and call only `asof`, `pit_price_panel` and `pit_funding_panel`** — no `ingest`, no `set_holdout_ceiling`.
+
+**Recommendation, Validation's and Data & Infra's jointly, not the CIO's to specify:** a `read_only=True` constructor path that opens `file:…?mode=ro` with `uri=True` and **skips `executescript`/`_migrate` entirely**, with the existing behaviour retained for ingest callers. **Count the callers before altering the contract (§7.10(7))** — `PITStore(` is constructed in both harness code and tests, and the count was not taken here.
+
+**Resolution:** open — **for Validation and Head of Data & Infrastructure.** Not blocking: no trial or verdict depends on it, and the store is measurably unmodified.
+**Pattern tag:** `the-read-path-that-must-open-for-writing` · `integrity-by-idempotence-rather-than-by-interface` · `one-store-hardened-and-its-sibling-not`

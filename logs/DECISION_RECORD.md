@@ -6835,3 +6835,81 @@ Suite **343 passed / 22 failed / 365**, reds unchanged at 22 throughout.
    22 suite reds · I-330 · I-369.
 
 **Review date:** at the open of the next session.
+
+---
+
+## S4-D-026 · 2026-09-15 · Director of Research · eight back-filled entries · §7.12
+
+**started_utc** 2026-09-15T16:33Z · **ended_utc** 2026-09-15T16:36Z · **duration** ~2.9 min [measured]
+**Seat:** Director of Research · **Model:** Sonnet — **a tier deviation from the seat's declared `model: opus`, disclosed at I-372** · **Trial budget: ZERO** · **Registry writes: none**
+
+Back-filled `I-290`, `I-291`, `I-292`, `I-293`, `I-296`, `I-340`, `I-341`, `I-345` from
+`DIR-RESTATE-001-prereg002-mechanism.md` and `REGISTRATION-PAYLOAD-PREREG-002.md`. Output staged to
+`research/work/backfill-director-S4-D-026.md`; **the CIO concatenated and did not author.**
+
+**Rule 6 returned nothing** — all eight are real findings carrying explicit *"Filed I-nnn, SEVERITY"*
+language at the artifact. **The seat confirmed `I-346`–`I-349` as unused range endpoints from its own
+artifact and did not touch them**, independently corroborating I-370's classification.
+
+**One divergence found and FLAGGED RATHER THAN RECONCILED** — filed by the CIO as **I-373**.
+
+---
+
+## S4-D-027 · 2026-09-15 · Head of Data & Infrastructure · two back-filled entries · §7.12
+
+**started_utc** 2026-09-15T16:33Z · **ended_utc** 2026-09-15T16:36Z · **duration** ~2.9 min [measured]
+**Seat:** Head of Data & Infrastructure · **Model:** Sonnet — **the seat's declared tier, no deviation** · **Trial budget: ZERO** · **Registry writes: none**
+
+Back-filled `I-333`, `I-334` from `DATA-IMPL-012-vault-arguments.md`. Staged to
+`research/work/backfill-datainfra-S4-D-027.md`.
+
+**The seat disclosed that its date is [inferred]** — `DATA-IMPL-012` carries no seat date — and
+established 2026-09-11 from `I-325`/`I-326`/`I-327`. **The entries state the date without the marker**,
+so the CIO recorded a **provenance note beside them rather than editing a seat's text**, which §7.12
+forbids. **No divergence found** against the frozen document.
+
+---
+
+## S4-D-028 · 2026-09-15 · **THE FIRM'S FIRST TRIAL.** F-002 §15 step 2 — leg (0) and leg (iii)
+
+**started_utc** 2026-09-15T16:44Z · **ended_utc** 2026-09-15T16:53Z · **duration** ~8.8 min [measured]
+**Seat:** Head of Data & Infrastructure · **Model:** Sonnet, declared tier · **Registry trials: 1 of 47**
+
+**Trial 1** · family `funding-carry-conditioning-002` · `n_bars` **2415** · `periods_per_year` **365** ·
+`config_hash` `44532cc88ed7b1a9` · `sr_period` 0.4509 · `grant_id` **11** [all measured, read back from
+`book/registry.db` by the CIO]. **Registry `1 · 0 · 9 · 10` → `1 · 1 · 9 · 11`.** **The first trial the
+firm has logged since activation on 2026-07-28** — I-219 Appendix B #9's throughput-zero failure is ended.
+
+| Leg | Threshold | Measured | Verdict |
+|---|---|---|---|
+| **(0)** qualifying floor | < 1,800 daily bars → INSUFFICIENT-DATA | **2,415** settled / 2,416 inclusive | **DOES NOT FIRE**, by >600 bars |
+| **(iii)** no premium | `R_bench` annualized **net** ≤ 0 | **+12.68%/yr** arithmetic (+13.51% compounded); gross −0.21%, carry accrual **+12.92%**, cost drag −0.03% | **DOES NOT FIRE** |
+
+> **LEG (iii)'s NON-FIRING IS WORTH NOTHING AS EVIDENCE AND IS NOT WRITTEN UP AS A RESULT.** `PREREG-002`
+> §5.3 R7 pre-committed this: leg (iii) tests whether ~1,186 bps/yr of largely administered carry exceeds
+> ~24 bps of friction, *"will almost certainly not fire,"* and **"no artifact may present leg (iii)'s
+> survival as a result."** The measured cost drag of **−0.03%/yr against +12.92%/yr of carry** is that
+> prediction landing exactly. **The family's entire falsification burden sits on legs (i) and (ii), which
+> were NOT run.** Nothing about this dispatch is evidence the family works.
+
+**STEP 3 WAS HELD BY THE CIO, and the hold is the substantive decision of this dispatch.** §15 step 1b —
+C11, the leg-(ii) null calibration — *"runs before F-002, never after; a null measured after seeing the
+statistic is not a null."* Validation **removed C11 from seal-blocking as circular and re-imposed it
+class (b) at Gate 1** (`VALIDATION-GATE0-002` §10.1, I-202, S3-D-023 §6). **Step 3 is E2 — evaluated
+ONCE, no re-run.** Running leg (ii) before C11's status is resolved would **destroy leg (ii)'s evidential
+value permanently, with no repair available.** Step 2 does not touch leg (ii), so it was clean either way.
+**Escalated to the Principal; not resolved by the CIO.**
+
+**Two harness findings, both filed, neither repaired in-dispatch:** **I-375** (`PITStore` has no
+read-only open path and runs DDL plus a commit on every open — A4's store cannot be opened without write
+access) and **I-374**, **the CIO's own** (the brief's literal `with registry.write_grant(...)` block
+raises `RegistryWriteGrantNestedError`, because `run_backtest` self-grants; **the Principal's instruction
+to name the grant was sound and the grant is not the caller's to name**). **The seat tested against a
+scratch registry before touching the live databases**, which is why the first trial was a trial and not
+an exception.
+
+**Minor, disclosed, not investigated:** a one-bar counting-convention offset — this session measures
+2,416/2,415 for `[2020-01-01, 2026-08-12]` where the sealed document's S3-D-019 note reports 2,415/2,414.
+**Moves no verdict.**
+
+**`book/pit.db` shows no diff** [measured]. **`PREREG-002` untouched** [measured].
