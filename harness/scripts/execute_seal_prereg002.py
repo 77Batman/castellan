@@ -40,10 +40,28 @@ Usage:
     python3 harness/scripts/execute_seal_prereg002.py --inspect
         Extracts and prints all sixteen fields. Writes nothing. Needs no secret.
 
-    CASTELLAN_REGISTRY_WRITE=... python3 harness/scripts/execute_seal_prereg002.py --execute
-        Prompts for the holdout passphrase (not echoed), then performs items
-        5 and 7. CASTELLAN_REGISTRY_WRITE is a registry write CAPABILITY TOKEN,
-        not a secret of the Principal's, and remains an environment variable.
+    CASTELLAN_REGISTRY_WRITE=S4-D-014-seal \
+        python3 harness/scripts/execute_seal_prereg002.py --execute
+        Prompts for the holdout passphrase (not echoed), then performs items 5 and 7.
+
+WHAT `CASTELLAN_REGISTRY_WRITE` IS, IN THREE REGISTERS (Principal-ruled 2026-09-14)
+-----------------------------------------------------------------------------------
+Measured, not described (`registry.py:415-474`): any non-empty string is accepted;
+there is no issuer, no format check, no registry of valid values and no single-use
+rule. The value is stored VERBATIM in `write_grants.token` and folded into
+`_compute_grant_hash(prev_hash, tok, reason, dispatch, argv, opened_utc)`.
+
+  PREVENTS  accidental and ungranted writes -- no grant, no write, and the
+            variable must be set deliberately.
+  DETECTS   and ATTRIBUTES deliberate ones, through the tamper-evident hash chain
+            the token participates in.
+  DOES NOT  authenticate anyone.
+
+**It must never be a secret.** `book/registry.db` is a tracked file, so the token
+lands in plaintext in the book of record and is committed. Use a dispatch label:
+the value for this act is `S4-D-014-seal`, matching the existing convention in the
+one prior grant row (`S4-D-012-migration-grant`). VALIDATION-SPEC-004's own
+sentence already said this; this docstring now matches it.
 """
 from __future__ import annotations
 

@@ -444,6 +444,41 @@ any file.**
 > low because nothing executes off the heading, and filed anyway because the class is now at its
 > thirteenth instance and the pattern is the finding.
 
+> ### **[R-012 · 2026-09-14 · I-367] ITEM 6'S GRANT-ROW COUNT WAS FOUR AND THE MEASURED COUNT IS EIGHT.**
+>
+> **Conformance by CIO hand under Principal ruling I-367.** The Principal extended the I-364
+> transcription exception to this class by ruling: **a count measured by a tested script, verified
+> against a throwaway registry, is a ruled state for conformance purposes — the measurement is the
+> authority.**
+>
+> **Source, cited as the ruling requires** — `harness/tests/test_vault_seal_script.py`, nine tests
+> green, and the direct measurement it rests on [measured, throwaway registry, one `seal()` call]:
+>
+> ```
+> grants before ONE seal(): 0
+> grants after  ONE seal(): 2
+>     ('VAULT_SEAL', 'HoldoutVault.seal',                'CLEAN')
+>     ('VAULT_SEAL', 'HoldoutVault.holdout_spec_sealed', 'CLEAN')
+> ```
+>
+> **Four calls × two grants = eight rows.** Both writes are deliberate, disclosed self-granting —
+> `VaultWriteNotGrantedError`'s docstring carries the account. **Neither is a defect; the count stated
+> beside them was.**
+>
+> **This is I-328's shape at the other end of this same checklist.** Item 1 asserted five blocking
+> conditions when two were open; item 6 asserted four grant rows when eight are written. **The
+> Principal executes this checklist at the vault door with the registration already committed and P7
+> already running**, where a read-back that does not match its stated expectation leaves only two
+> outcomes: halt a completed seal on a false alarm, or exercise the judgment a no-judgment checklist
+> exists to remove. **Three counts sit in this row and two of them were right**, which is the harder
+> kind to catch.
+>
+> **It survived because it was never computed.** The number was stated in prose in four documents and
+> propagated by transcription from the first; **no test had ever called `seal()` four times and counted
+> the grants.** §7.10(3) — *acceptance is computed, not narrated* — applied to a number nobody ran.
+> **The Principal's instruction to write and test item 6's script is what produced the measurement.**
+> Filed **I-367, HIGH.** Casebook entry recorded beside I-328.
+
 | # | Check | Passes when |
 |---:|---|---|
 | 1 | The seal-blocking conditions are cleared or explicitly accepted by Validation at C2 intake | **C7 and C8 — those two and nothing else, both OPEN and both discharged by the act itself** (C7 = Pod B's written acceptance of KC-002 plus the Principal's signature; C8 = four vault seals with the registration, one session, one UTC day, all four after item 7's grant closes). **[Source: `PREREG-002` §20, conformed table at R-010/R-011 — *"Seal-blocking · C7, C8. Nothing else."*]** The other three are not open: **C2 DISCHARGED** — ADMIT-CONDITIONAL, criteria 1–5 PASS (`VALIDATION-GATE0-002` §10.1; S3-D-023) · **C3 WITHDRAWN** (`REDTEAM-002A` §7; S4-D-006) · **C11 REMOVED from seal-blocking as circular** (S3-D-023 §6), re-imposed as a Gate 1 class-(b) condition. *Row conformed 2026-09-14 by the CIO's hand under the Principal's I-328 ruling; the row it replaces asserted all five open as of 2026-08-10.* |
@@ -451,7 +486,7 @@ any file.**
 | 3 | `trial_budget` is **47**, not 79 and not 80 | the literal in §2.2 |
 | 4 | `n_inherited` is **7**, not 0 | the literal in §2.8 |
 | 5 | `forward_window_start` equals the UTC calendar day of the call, and equals the vault's `cutoff` | §2.5 — executed inside item 7's grant; see the note below |
-| 6 | ~~The vault is sealed in the same session, same UTC day~~ **[R-011] ALL FOUR VAULTS ARE SEALED — one `HoldoutVault.seal()` call per `(source, dataset_id)` pair — in the same session and the same UTC day as item 7, and EVERY ONE OF THE FOUR AFTER ITEM 7'S GRANT HAS CLOSED. Never inside it. FOUR LOCKS PLUS ONE REGISTRATION, ONE SESSION, ONE UTC DAY.** | **All four of `binance`/`BTC/USDT`, `binance`/`ETH/USDT`, `binanceusdm`/`BTC/USDT:USDT`, `binanceusdm`/`ETH/USDT:USDT` have a `spec.json` under `book/vaults/` and an `ingest_ceiling` row in `book/pit.db`; `write_grants` gains **four** `reason='VAULT_SEAL'` rows, all with `outcome='CLEAN'`, **all four timestamped after item 7's row closed**. Fewer than four ceilings = the check has failed. §5 — see the note below |
+| 6 | ~~The vault is sealed in the same session, same UTC day~~ **[R-011] ALL FOUR VAULTS ARE SEALED — one `HoldoutVault.seal()` call per `(source, dataset_id)` pair — in the same session and the same UTC day as item 7, and EVERY ONE OF THE FOUR AFTER ITEM 7'S GRANT HAS CLOSED. Never inside it. FOUR LOCKS PLUS ONE REGISTRATION, ONE SESSION, ONE UTC DAY.** | **All four of `binance`/`BTC/USDT`, `binance`/`ETH/USDT`, `binanceusdm`/`BTC/USDT:USDT`, `binanceusdm`/`ETH/USDT:USDT` have a `spec.json` under `book/vaults/` and an `ingest_ceiling` row in `book/pit.db`; ~~`write_grants` gains **four** `reason='VAULT_SEAL'` rows, all with `outcome='CLEAN'`~~ **[R-012 · 2026-09-14 · I-367] `write_grants` gains EIGHT `reason='VAULT_SEAL'` rows, all `outcome='CLEAN'` — TWO PER `seal()` CALL: four with `dispatch='HoldoutVault.seal'` (the vault file write) and four with `dispatch='HoldoutVault.holdout_spec_sealed'` (the event, logged through `_grant_log`, which opens its own grant under the same reason). Four is the count of CALLS, not of ROWS**, **all eight timestamped after item 7's row closed**. **Fewer than four ceilings = the check has failed; fewer than eight grant rows = the check has failed.** **The cutoff is normalised by `seal()` to a full UTC datetime — `ingest_ceiling.cutoff` reads `<C>T00:00:00+00:00`, not the bare date. That is correct and is not a mismatch.** §5 — see the note below |
 | 7 | `open_hypothesis` executes inside an open `TrialRegistry.write_grant(reason="REGISTER_HYPOTHESIS", dispatch=..., token=...)` block, and no second `write_grant` is opened on the same registry object until that block has closed | `write_grants` gains exactly one new row, `reason='REGISTER_HYPOTHESIS'`, `outcome='CLEAN'`; `hypotheses` gains exactly one row for `family='funding-carry-conditioning-002'` |
 
 **Item 1 is not this seat's to clear and is not cleared. A seal is a Standing Order 002 §4 hard

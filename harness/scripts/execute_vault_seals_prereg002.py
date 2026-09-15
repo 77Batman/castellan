@@ -46,10 +46,25 @@ C8 requires all four seals in the SAME SESSION and the SAME UTC DAY as the
 registration. The cutoff equality check is what enforces the second half.
 
 Usage:
-    CASTELLAN_REGISTRY_WRITE=<dispatch label> \
+    CASTELLAN_REGISTRY_WRITE=S4-D-014-seal \
         python3 harness/scripts/execute_vault_seals_prereg002.py \
             --cutoff YYYY-MM-DD            # verbatim from --execute's "C = ..." line
         [--dry-run]                        # verify + print, seal nothing
+
+`CASTELLAN_REGISTRY_WRITE` PREVENTS accidental and ungranted writes; DETECTS and
+ATTRIBUTES deliberate ones through the tamper-evident grant-hash chain; DOES NOT
+authenticate anyone. It must never be a secret -- it is stored verbatim in
+`write_grants.token` and `book/registry.db` is a tracked, committed file. Use a
+dispatch label. (Principal-ruled 2026-09-14; full account in
+`execute_seal_prereg002.py`'s docstring.)
+
+EXPECTED READ-BACK IS EIGHT GRANT ROWS, NOT FOUR (I-367)
+---------------------------------------------------------
+One `seal()` writes TWO `VAULT_SEAL` rows -- `dispatch='HoldoutVault.seal'` (the
+vault file write) and `dispatch='HoldoutVault.holdout_spec_sealed'` (the event,
+via `_grant_log`, which opens its own grant under the same reason). Four calls
+therefore produce eight rows. Four is the count of CALLS. This script computes
+all six read-backs and exits non-zero on any mismatch.
 """
 from __future__ import annotations
 

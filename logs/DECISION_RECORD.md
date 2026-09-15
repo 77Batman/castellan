@@ -6585,3 +6585,43 @@ entry, and the invocation is printed for the Principal's hands. **I-365's re-rul
 seal-blocking on this seat's reading.**
 
 **Review date:** at the seal.
+
+---
+
+## S4-D-022 · 2026-09-14 · Item 6 conformed to the measurement · token description corrected · the seal is authorized and the packet is final
+
+**Opened by:** the Principal's rulings on I-366, I-367 and the token's provenance. **Units:** none.
+
+**I-366 countersigned as standing.** *An issue number is allocated against every number claimed anywhere
+in the repository, never against the log's highest heading — the log records entries, not allocations.*
+The Principal named the sharper half: **the rule's author caught the rule failing on himself and said
+so.** The enumeration that found eleven phantoms reported the CIO's own four collisions as healthy,
+because by then the CIO had filed them — **a check run after the act it should have preceded.**
+
+**I-367 — item 6 conformed by the CIO's hand**, under a ruling that extends the I-364 exception to a new
+class: **a count measured by a tested script, verified against a throwaway registry, is a ruled state for
+conformance purposes — the measurement is the authority.** Item 6 now reads **eight** `VAULT_SEAL` rows
+(4 + 4 by dispatch), states *"four is the count of CALLS, not of ROWS"*, records the cutoff
+normalisation, and fails on **fewer than four ceilings OR fewer than eight grant rows**. R-012 note
+records the hand and cites `test_vault_seal_script.py`. **Extractor re-run: all sixteen fields
+unchanged.**
+
+**Token description corrected to the three-register form** in both scripts: **PREVENTS** accidental and
+ungranted writes · **DETECTS and ATTRIBUTES** deliberate ones through the tamper-evident chain · **DOES
+NOT authenticate anyone**, and must never be a secret, since it is stored verbatim in
+`write_grants.token` and `book/registry.db` is tracked and committed. Value: **`S4-D-014-seal`**.
+`VALIDATION-SPEC-004`'s own sentence already said this; the scripts now match it.
+
+**Casebook CASE-16** — *The count stated in four documents and computed in none* — traces to I-328 and
+I-367, distinguished from CASE-9: there the control does nothing; here the control works perfectly and
+only the expectation stated beside it is wrong.
+
+**State.** Suite **338 passed / 22 failed / 360**, reds unchanged at 22. Registry **0 · 0 · 3 · 1** —
+nothing written. Budget unchanged: **18 of 30 · 8 of 12 Opus**. No seat dispatched across S4-D-020,
+S4-D-021 or this entry.
+
+**THE SEAL IS AUTHORIZED TO EXECUTE ON THE PRINTED RUN ORDER.** Snapshot → `--inspect` against the
+post-I-363 table → `--execute` → item 6's script → read-backs. Nothing further is required of this seat
+before the act.
+
+**Review date:** on the Principal's read-backs.

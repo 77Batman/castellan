@@ -7567,6 +7567,27 @@ named here so it is not read as one.
 measurement, not the transcription of a ruled state**, so the I-364 exception does not reach it. **The
 correction is supplied; the hand is the Principal's to name.**
 
-**Resolution:** open — for the Principal: conform item 6's read-back to 8/4/4, or seal against the
-script's print, which computes all six counts and refuses on any mismatch.
+**Resolution:** ~~open~~ **CLOSED 2026-09-14 — ITEM 6 CONFORMED BY THE CIO'S HAND UNDER PRINCIPAL
+RULING I-367.**
+
+**The ruling extended the I-364 transcription exception to a new class, and the extension is the
+durable part:** *a count measured by a tested script, verified against a throwaway registry, is a ruled
+state for conformance purposes — the measurement is the authority.* Recorded because it settles what
+a CIO hand may conform: **not only rulings already on the record, but measurements that admit no
+judgment.**
+
+**Conformed:** the payload's item 6 row now reads **EIGHT** `VAULT_SEAL` rows — four
+`dispatch='HoldoutVault.seal'`, four `dispatch='HoldoutVault.holdout_spec_sealed'` — with *"four is the
+count of CALLS, not of ROWS"* stated on its face, the cutoff-normalisation fact recorded beside it, and
+the failure condition restated as **fewer than four ceilings OR fewer than eight grant rows**. An R-012
+note beneath the checklist records the hand, the ruling, and the measurement verbatim, citing
+`harness/tests/test_vault_seal_script.py` as source.
+
+**Verified as the ruling required:** extractor re-run after the edit, **all sixteen fields identical**
+to the post-I-363 baseline [measured]. Item 6 lives in the payload's checklist, which is not a hashed
+field. Had any moved, the instruction was to stop.
+
+**Casebook:** `ops/CASEBOOK.md` **CASE-16 · The count stated in four documents and computed in none**,
+tracing to I-328 and I-367, and distinguished from CASE-9 — there the control does nothing; here the
+control works perfectly and only the expectation beside it is wrong, which is the quieter failure.
 **Pattern tag:** `false-expectation-in-a-no-judgment-checklist` · `a-count-stated-in-prose-and-never-computed` · `transcribed-through-four-documents` · `found-by-building-the-thing-that-would-have-hit-it-live`
