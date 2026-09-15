@@ -7666,3 +7666,60 @@ references was checked against the live schemas: `write_grants.closed_utc`, `.di
 registry.** The standing corrective is the test, not the entry: **the evidence path of an irreversible
 act is exercised end-to-end before the act, or it is not an evidence path.**
 **Pattern tag:** `the-evidence-path-nobody-rehearsed` · `crash-after-the-point-of-no-return` · `coverage-of-the-second-half-reads-as-coverage` · `found-live`
+
+---
+
+## I-369 · 2026-09-15 · The committed holdout verifier is a single salted SHA-256, not a password-hardening KDF · Severity: MEDIUM · Owner: Principal ← quant-validation · **Disclosure, not a repair request**
+
+**Found by:** the CIO, reading `verifier.json` before committing it — the standing rule that what is about
+to be published permanently is read first, not trusted from a docstring.
+
+**The measured fact.** Each of the four vaults holds [measured, all four inspected]:
+
+```json
+{"salt_b64": "<16 random bytes, distinct per vault>",
+ "verifier_sha256": "<64 hex>"}
+```
+
+**What is right about it, stated first.** No plaintext. Nothing that round-trips to the passphrase. **A
+distinct random salt per vault**, so the four digests do not reveal that they protect the same passphrase
+and none can be compared against another. This is exactly what `holdout.py`'s docstring promises, and it
+delivers `acquire_once()`'s real purpose — refusing a wrong-but-non-empty passphrase *before any fetch*,
+closing I-015, where a typo would otherwise brick a family.
+
+**What is not stated anywhere, which is the finding.** A **single** SHA-256 is not key stretching. There
+is no PBKDF2, scrypt, bcrypt or Argon2 — no work factor, no iteration count. Against a human-chosen
+passphrase, an offline guessing attack on a captured verifier runs at hardware speed. **And `book/vaults/`
+is a tracked, committed directory** (A3 requires it), so the verifier is in git history permanently and
+travels with every clone, every remote and every backup snapshot.
+
+**This is CASE-14 exactly — a control read as covering a threat model broader than it covers.** The
+vault's honest threat model is **an honest party under schedule pressure**: it stops a researcher
+acquiring the holdout early, stops a typo bricking the family, and makes the acquisition attributable. It
+is **not** built against an adversary holding a copy of the repository. Nothing in the firm says so, and
+the phrase "the passphrase is never stored" is true in a way that invites the broader reading.
+
+**Why MEDIUM and not HIGH.** Nothing is compromised. The repository is private, and the consequence of a
+guessed passphrase is early holdout acquisition — which is **still attributable**, because
+`acquire_once()` logs the acquisition and the ceiling lift as registry events. The integrity control is
+the event trail, not the passphrase. **The passphrase's job is to make acquisition deliberate, and it
+still does that.**
+
+**Why it is filed now rather than never.** The firm has discussed **publishing the casebook and other
+artifacts publicly**, and this repository is where they live. **A decision to make any part of this repo
+public is a decision about this file**, and the connection should exist on the record before that decision
+is taken rather than be discovered after it.
+
+**Recommendations, none urgent, none this seat's to take.**
+1. **Do not re-key.** The verifier is sealed into the vault spec's identity; changing it post-seal is a
+   P7 question and is not worth raising for a private repository.
+2. **If any part of this repository is ever made public**, treat `book/vaults/*/verifier.json` as
+   material to exclude, and record that exclusion as a decision.
+3. **Record the threat model where the control is documented** — CASE-14's own rule — so
+   "never stored" is not read as "not guessable."
+4. Any FUTURE vault, for a future family, is where a KDF belongs if Validation wants one; that is a spec
+   act, not an implementer's choice.
+
+**Resolution:** open — **disclosure recorded pre-emptively; no action requested.** For the Principal to
+note, and for Validation whenever it next touches `holdout.py`.
+**Pattern tag:** `unstated-threat-model` · `control-read-broader-than-it-is` · `a-secret-derivative-in-a-tracked-file` · `read-before-publishing`

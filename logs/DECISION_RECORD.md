@@ -6625,3 +6625,80 @@ post-I-363 table → `--execute` → item 6's script → read-backs. Nothing fur
 before the act.
 
 **Review date:** on the Principal's read-backs.
+
+---
+
+## S4-D-023 · 2026-09-15 · **THE SEAL EXECUTED.** `funding-carry-conditioning-002` is registered, four holdouts are locked, and the forward window is open
+
+**Executed by:** the Principal, in his own terminal, on the printed run order. **C7 and C8 discharged.**
+**Units:** none. No seat was dispatched at any point in the seal sequence.
+
+### 1 · The act, measured from the live registry after the fact
+
+| | |
+|---|---|
+| `hypotheses` · `trials` · `events` · `write_grants` | **1 · 0 · 9 · 10** |
+| family | `funding-carry-conditioning-002`, `grant_id` 2 |
+| **C** = `forward_window_start` | **2026-09-15** |
+| `trial_budget` · `n_inherited` | **47 · 7** |
+| **`prereg_sha256`** | **`e5ebd3a6db02b97955518bc70db3906918e702f9879d3ad9928223ad6d2a105f`** |
+
+**Write grants — all CLEAN, all closed, none nested** [measured, grouped]:
+`MIGRATION`/`S4-D-012` ×1 · `REGISTER_HYPOTHESIS`/`S4-D-014-seal` ×1 ·
+`VAULT_SEAL`/`HoldoutVault.seal` ×4 · `VAULT_SEAL`/`HoldoutVault.holdout_spec_sealed` ×4.
+**Eight VAULT_SEAL rows, four and four, exactly as I-367 predicted** — and the number was right because
+it had been computed against a throwaway registry the day before rather than transcribed.
+
+**Four ceilings ACTIVE**, one per `(source, dataset_id)`, each at `2026-09-15T00:00:00+00:00`, each
+carrying a distinct `spec_sha256`. Four `spec.json`, four `verifier.json`, committed under A3.
+
+**I-311's ordering held.** Every `VAULT_SEAL` grant (ids 5–10) sits strictly above the
+`REGISTER_HYPOTHESIS` grant (id 2). The registration survived, which is what a nested grant would have
+destroyed.
+
+### 2 · What the forward window now fixes
+
+**KC-002's observation date is `C + 187 days` = 2027-03-21**, computed and absolute. It does not move for
+the sprint calendar, the ingest schedule, the harness, or any other reason — and **clause 5 makes silence
+a kill**, enforced by a person on a calendar (class (b): executor the Principal, cadence the Friday
+ritual, artifact the pasted evaluation). `forward_window_min_length` 12.0 months runs to 2027-09-15.
+
+### 3 · The last finding, and it arrived in the act itself
+
+**I-368** — the read-back queried `hypotheses.prereg_sha256`, **a column that does not exist**. Item 7 had
+already completed CLEAN and committed; what crashed was the **only evidence path the act has**, because
+`write_grant` and `open_hypothesis` print nothing on success (I-310). **The Principal had to reconstruct
+his own seal's hash from the event table by hand.** Repaired in both scripts, verified against the live
+registry, five regression tests including the general form — *no query may name a column that does not
+exist*.
+
+**Three findings in three days, one script, one cause:** I-363 (the worst error in the only untested
+function), I-367 (a count stated in four documents and computed in none), I-368 (the query no test ran).
+**The code path that runs once, at the end, in anger, is the path nothing rehearses.** CASE-16 carries the
+middle one; the standing corrective from the third is: **the evidence path of an irreversible act is
+exercised end-to-end before the act, or it is not an evidence path.**
+
+### 4 · Filed at the commit, not after it
+
+**I-369, MEDIUM** — `verifier.json` is a single salted SHA-256, not a key-stretching KDF, and
+`book/vaults/` is tracked and committed. Nothing is compromised and no action is requested; the vault's
+honest threat model is an honest party under schedule pressure, not an adversary holding the repo.
+**Filed now because the firm has discussed publishing artifacts from this repository, and that decision
+is a decision about this file.** CASE-14's rule applied before the fact rather than after.
+
+### 5 · State
+
+Suite **343 passed / 22 failed / 365**, reds unchanged at 22. Budget **18 of 30 · 8 of 12 Opus** —
+**unchanged across S4-D-020 through this entry; every act was the CIO's own hand under ruling.**
+Commit `dff9a13`, working tree clean. Hard stop 2026-09-24.
+
+### 6 · Next
+
+1. **The Sonnet doc unit** — block-end grace, `.castellan/session.lock`, per-dispatch duration field.
+2. **I-365 back-fill** — eleven phantom entries, by the filing seats, from their artifacts (§7.12),
+   allocating from the CLAIMED set (I-366).
+3. **`_schema_matches` red-first repair (I-326)** — bound by event: before this family's first Gate 1.
+4. Then **the first trials**, against a budget of 47 and a ceiling of 54 at Stage 1.
+5. Queued: I-310 success prints · I-323 snapshot SLA · I-119 index inflow · 22 suite reds · I-330 · I-369.
+
+**Review date:** at the first trial, and at 2027-03-21 whatever happens between now and then.
