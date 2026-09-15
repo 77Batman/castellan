@@ -6913,3 +6913,77 @@ an exception.
 **Moves no verdict.**
 
 **`book/pit.db` shows no diff** [measured]. **`PREREG-002` untouched** [measured].
+
+---
+
+## S4-D-029 · 2026-09-15 · Session close — the first trial is logged, the back-fill is verified, and step 3 is held on a §4 escalation
+
+**Closed by:** Principal instruction, an orderly close under `TEMPLATES.md` §7.10(6). **Not** context
+exhaustion, **not** a block-end termination. Close time **2026-09-15T17:06Z** [measured].
+
+**Format note.** §7.10(5)'s `started_utc`/`ended_utc`/`duration` binds **dispatch** entries; this is a
+session close and the field does not bind it. **S4-D-026, S4-D-027 and S4-D-028 each carry the fields.**
+
+### 1 · ORACLE POINTER READ-BACK — §7.10(6), as amended this session
+
+> **Pointer written. Memory id `M393`.** Kind `event`, tagged `castellan-session-close`,
+> `castellan-first-trial`, `f002-step2`, `backfill-executed`, `c11-hold`. **Supersedes `M392`** (this
+> session's open) **and `M367`** (stale by three sessions and one seal — I-371).
+
+**This is the first close to satisfy the read-back**, and the rule was written earlier in the same session
+that first obeys it. **The id is quoted because an id cannot be quoted unless the write returned one** —
+which is the whole mechanism. `M367` existed and was three sessions out of date; **no reminder would have
+caught that, and a quoted id does.**
+
+### 2 · Dirty-path disposition — §7.10(6)
+
+| Path class | Disposition |
+|---|---|
+| `logs/ISSUE_LOG.md`, `logs/DECISION_RECORD.md`, `reference/TEMPLATES.md` | **Committed** — `feda694`, `c08e906`, `72d3743`, `a3a568b` |
+| `book/registry.db` | **Committed at `a3a568b`** — trial 1 and grant 11 |
+| `research/DATA-IMPL-013-f002-step2.md`, `research/work/backfill-*.md` | **Committed** |
+| `book/pit.db` | **No diff** [measured] — read, not written, despite I-375 |
+| `research/PREREG-002-crypto-funding-basis.md` | **No diff** [measured] — P7 intact through a ten-entry back-fill about it |
+| `book/polymarket_universe.json`, `logs/capture/polymarket-book.{err,out}` | **Deliberately unstaged** — launchd capture churn, not this session's work. Capture healthy: 20/20 books at 900s; two transient DNS crashes at 10:51Z/11:06Z during the host OS update, self-recovered (I-047's retry earning its keep, Principal-noted, no act) |
+
+### 3 · What this session did
+
+**THE FIRM'S FIRST TRIAL.** Registry `1 · 0 · 9 · 10` → **`1 · 1 · 9 · 11`**. **I-219 Appendix B #9 —
+throughput zero — is ended**, 49 days after activation.
+
+**F-002 step 2: leg (0) and leg (iii) both DO NOT FIRE**, and **neither is evidence the family works.**
+The sealed §5.3 R7 said leg (iii) would not fire and that its survival may not be presented as a result;
+the measured −0.03%/yr cost drag against +12.92%/yr carry is that prediction landing exactly. **The
+falsification burden is entirely on legs (i) and (ii), and they were not run.**
+
+**The I-365 back-fill executed and verified: `PREREG-002` cites 110 issue numbers and all 110 now
+resolve, with the frozen document never opened for writing.** Ten entries, two seats, §7.12 intact —
+**the CIO concatenated and did not author.**
+
+**Six findings filed — I-370 through I-375 — of which two are this seat's own** (I-370's 18/4 table
+correction and I-374's unrunnable code block), and **one is the Director's, flagged rather than
+smoothed** (I-373). **Two doctrines added**, both Principal-ruled: §7.10(6)'s read-back and §7.14(a)'s
+whole-namespace rule.
+
+**Budget: 21 of 30 invocations · 8 of 12 Opus UNTOUCHED.** All three dispatches ran Sonnet. Suite
+**343 / 22 / 365**, unmoved across six runs.
+
+### 4 · THE ONE THING THAT BLOCKS THE NEXT SESSION
+
+**F-002 step 3 is HELD and only the Principal can release it.** C11's leg-(ii) null calibration *"runs
+before F-002, never after."* Validation removed C11 from seal-blocking **as circular** and re-imposed it
+**class (b) at Gate 1**. **Step 3 is E2 — evaluated ONCE, no re-run.** If leg (ii) runs first, its
+evidential value is destroyed permanently and **there is no repair.** This is the cheapest possible moment
+to be wrong about it and the most expensive one to be wrong in.
+
+### 5 · Queue, in order
+
+1. **Principal decision on C11**, then F-002 step 3 (legs i and ii, 2 trials).
+2. **I-326** `_schema_matches` red-first repair — bound by event, **before this family's first Gate 1
+   evaluation.**
+3. Stage 1 remainder — step 3b **only on the survive path** (C13(j), outside the 47), then steps 4–7.
+4. **I-372** as a Phase 2 go-live precondition, alongside M365's three.
+5. I-310 · I-323 · I-119 · 22 suite reds · I-330 · I-369 · I-374 · I-375.
+6. **After the 2026-09-24 hard stop:** the eleven deferred back-fills.
+
+**Review date:** at the open of the next session.
