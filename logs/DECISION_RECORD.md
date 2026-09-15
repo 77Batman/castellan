@@ -6987,3 +6987,75 @@ to be wrong about it and the most expensive one to be wrong in.
 6. **After the 2026-09-24 hard stop:** the eleven deferred back-fills.
 
 **Review date:** at the open of the next session.
+
+---
+
+## S4-D-030 · 2026-09-15 · Principal rulings — C11 sequencing, I-374's corrective, and the push · and the last free Opus unit authorized
+
+**Session reopened on a Principal act after the S4-D-029 close.** Four rulings received and recorded
+before any was executed, per the S4-D-019 lesson that rulings arriving at a boundary are lost unless
+transcribed out of the transcript.
+
+### 1 · C11 RUNS BEFORE STEP 3 — the ruling, and the distinction it turns on
+
+**RULED.** *"The sealed text governs the ordering; Gate 1's class-(b) placement governs **where C11 is
+graded, not when it runs.**"*
+
+**That distinction is the whole of it, and the CIO had not drawn it.** The CIO escalated on an apparent
+conflict: §15 step 1b says C11 *"runs before F-002, never after,"* while `VALIDATION-GATE0-002` §10.1
+removed C11 from seal-blocking **as circular** and re-imposed it **class (b) at Gate 1**. **There is no
+conflict.** Validation's ruling moved **the grading**; the frozen document's ordering **was never
+touched**. The CIO read a placement as a schedule.
+
+**The cost of being wrong, which is why the escalation was still correct:** step 3 is **E2 — evaluated
+ONCE, no re-run** — and running leg (ii) uncalibrated would **spend the family's only leg-(ii)
+evaluation on a term the frozen document itself marks [ASSUMED]** (§5.3's `≤ 0.10`, the single assumed
+probability in an otherwise derived chain).
+
+**SEQUENCE RULED:** (1) Validation specifies the calibration · (2) a Sonnet seat executes it, ≤2 logged
+trials as the sealed text allows · (3) then step 3, legs (i) and (ii), **once**.
+
+> **AND THE SLIP IS RULED IN ADVANCE, WHICH IS THE PART WORTH KEEPING.** *"If the calendar cannot reach
+> step 3 before the hard stop, the sprint closes with **C11 measured and step 3 unrun — a correct
+> outcome**, and cheaper than an irreversible leg run in the wrong order."* **This is SO-003 §2's own
+> doctrine applied before the deadline bites rather than after** — *the honest response is a scoped slip
+> ruled in advance, not a raise.* **The hard stop cannot now be used as an argument for running step 3
+> early**, because the outcome of not reaching it is already ruled correct.
+
+### 2 · I-374 — ACCEPTED, CORRECTIVE ADOPTED
+
+**Briefs name the grant's reason and attribution; they do NOT script the `write_grant` call for paths
+that self-grant.** **The scratch-registry rehearsal that caught it is the seal corrective — *"the
+evidence path exercised before the act"* — applied to trials, and it is now MANDATORY for every
+first-of-kind operation.** Written into the S4-D-030 dispatch brief as a required step of the
+specification.
+
+### 3 · THE PUSH IS PART OF THE CLOSE
+
+**RULED: `origin` is the private book-of-record mirror, not publication. The close includes the push,
+every time, without asking.** The CIO held five commits local at S4-D-029 on the reasoning that pushing
+is outward-facing — **right about publication, wrong about this remote.** Written into
+`TEMPLATES.md` §7.10(6) **so the question does not recur.** Pushed: `04f492b..6f74a3d`.
+
+### 4 · Dispositions
+
+**I-375** (`PITStore` has no read-only path) — **a Validation spec item, queued BEHIND trials.**
+**I-372** (seats not invocable) — **goes to the Phase 2 chat as a go-live precondition**, not worked here.
+**I-370's 18/4 correction** — **noted with its own lesson**: *a cardinal beside an uncountable phrase is
+I-342 inside I-342's own enumeration.*
+
+### 5 · S4-D-030 dispatch authorized — Head of Quantitative Validation
+
+**Opus, and it is the LAST of the nine freely-allocable units** (composition 9 / 2 / 1; 8 of 12 spent
+before it). **What remains after it is 2 termination insurance — explicitly not working capacity — and
+1 DA Gate 1 reserve. There is no retry, and the brief says so.** Scope: **specification only, ZERO
+trials, zero registry writes.** Deliverable `research/VALIDATION-SPEC-005-c11-null-calibration.md`.
+
+**The substantive question handed to Validation and NOT pre-answered by the CIO:** §5.3's joint
+false-survival rate of **1.3 × 10⁻⁴ is built on the assumed `≤ 0.10`**. **If the measured α exceeds it,
+the α is frozen and cannot be edited** — whether the correct disposition is disclosure, a recomputed
+joint rate reported alongside, or something bearing on Gate 1 **is Validation's ruling to make.**
+The brief states explicitly that a refusal, or a specification differing from the Principal's own
+framing, is a successful dispatch — **Validation reports to the Principal, not to the CIO.**
+
+**Budget after this dispatch: 22 of 30 invocations · 9 of 12 Opus · FREE OPUS EXHAUSTED.**

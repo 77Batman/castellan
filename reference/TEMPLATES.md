@@ -124,6 +124,10 @@ and the distinction is recorded rather than smoothed. The convention binds prosp
 
 > **THE ORACLE-POINTER READ-BACK.** *(Principal-ruled 2026-09-15, origin I-371.)* **A session is not closed until its Oracle pointer is written AND the pointer's memory id is quoted in the close entry.** No id in the entry, no close.
 >
+> **THE PUSH IS PART OF THE CLOSE, AND IS NEVER A HELD ACT.** *(Principal-ruled 2026-09-15.)* **A session close includes `git push`, every time, without asking.** **`origin` is the firm's PRIVATE BOOK-OF-RECORD MIRROR, not publication** — `77Batman/castellan-capital`, `"isPrivate": true` [measured, I-369]. **Pushing it is not an outward-facing act and does not become one by being reversible.**
+>
+> **Origin.** The CIO completed a close on 2026-09-15 with five commits local, and **held the push pending approval on the reasoning that pushing is outward-facing.** The reasoning is right about publication and **wrong about this remote.** A3 makes the repository the book of record; **a book of record that exists on one laptop is a book of record with a single point of failure**, and the close rule above exists precisely because continuity across sessions cannot depend on one machine's state. **Recorded so the question does not recur** — it is ruled, not judged per session.
+
 > **Origin.** Three consecutive sessions — `S4-D-023`, `S4-D-024`, `S4-D-025` — closed without writing a pointer. `S4-D-023` **executed the firm's first seal.** The newest CASTELLAN memory a cold start could retrieve was `M367`, which states *"the seal did NOT execute"* and cites a commit four commits stale. **The 2026-09-15 cold start recalled a pre-seal firm and would have reported one** had the repo not been read directly.
 >
 > **Why a read-back and not a reminder.** §7.10(6) already disposes every dirty PATH; a pointer is not a path and fell outside it — **the same shape as I-209, where a named-path discipline omitted what nobody thought to name.** A rule to "remember the pointer" fails the same way. **Quoting the id is the disposition, because an id cannot be quoted unless the write returned one.**
