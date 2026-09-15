@@ -1,0 +1,44 @@
+{
+  "cutoff": "2026-09-15T00:00:00+00:00",
+  "dataset_id": "ETH/USDT",
+  "family": "funding-carry-conditioning-002",
+  "holdout_end_rule": "open-ended, forward from C",
+  "instrument_identity": "ETH/USDT (spot) on binance; fields close/open/high/low/volume",
+  "query_semantics": {
+    "date_bounds": {
+      "since": "2020-01-01T00:00:00Z",
+      "until": "cutoff C, open-ended forward"
+    },
+    "fields_requested": [
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume"
+    ],
+    "filter_predicates": "none beyond (exchange_id, symbol, timeframe); every bar ccxt returns for that tuple since `since` is ingested unfiltered",
+    "loader": "castellan.loaders.fetch_ccxt_ohlcv",
+    "timeframe": "1d"
+  },
+  "resolution_source": "exchange settlement; funding prints final at settlement, never revised",
+  "schema_fingerprint": {
+    "columns": [
+      "close",
+      "high",
+      "low",
+      "open",
+      "volume"
+    ],
+    "dtypes": {
+      "close": "float64",
+      "high": "float64",
+      "low": "float64",
+      "open": "float64",
+      "volume": "float64"
+    }
+  },
+  "sealed_by": "pm-digital-markets",
+  "sealed_utc": 1789433598.805183,
+  "source": "binance",
+  "vault": "funding-carry-conditioning-002-binance-ETHUSDT"
+}
