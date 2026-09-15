@@ -7938,3 +7938,222 @@ attempt one trivial dispatch to a named seat, or assert the launch directory equ
 **Resolution:** open — **for the Principal**, as a Phase 2 go-live precondition alongside the three at
 `M365`. The immediate dispatches proceeded under I-006's ruled workaround with its cost disclosed.
 **Pattern tag:** `i-006-recurring` · `a-repair-to-the-repository-for-a-defect-in-the-invocation` · `the-silent-degradation-that-reads-as-success` · `instruction-enforced-where-the-harness-should-enforce`
+
+---
+
+# BACK-FILLED ENTRIES — filed 2026-09-15 under the Principal's Option-B ruling on I-370
+
+**Why these appear out of numeric sequence, at the end of a log that reaches I-372.** These ten entries
+were **cited as filed in six documents and never written.** Three are inside
+`research/PREREG-002-crypto-funding-basis.md`, which **P7 froze at the seal** (`dff9a13`, C = 2026-09-15)
+— seven more were found by the I-370 enumeration. **`logs/ISSUE_LOG.md` is not part of the sealed
+document and does not freeze**, so filing them here makes the frozen document's pointers resolve
+**without the frozen document being touched.** They are placed at the end because **the log is a record
+of when entries were written**, and these were written today.
+
+**Authored by their filing seats, from their own artifacts, per §7.12** — the CIO's only act was
+concatenating two files it did not write. **S4-D-026** (Director of Research, eight entries, artifacts
+`DIR-RESTATE-001-prereg002-mechanism.md` and `REGISTRATION-PAYLOAD-PREREG-002.md`) · **S4-D-027**
+(Head of Data & Infrastructure, two entries, artifact `DATA-IMPL-012-vault-arguments.md`). Both seats were
+invoked through the `I-006` workaround — see **I-372**.
+
+**Eleven further unfiled pointers are DEFERRED BY RULING** to after the 2026-09-24 hard stop and are
+listed by number in the I-370 ruling block above. **They are not missing; they are deferred.**
+
+---
+## I-290 · 2026-09-10 · The one-day carry budget on the suppression band's right-hand side is an undeclared convention, not a derivation · Severity: MEDIUM · Owner: director-of-research
+
+**BACK-FILLED 2026-09-15** under the Principal's Option-B ruling on I-370. The finding was made and described at `research/DIR-RESTATE-001-prereg002-mechanism.md:2511-2517` (§16.7(a)) on 2026-09-10, during revision R-010 (dispatch S4-D-011); the log entry was never written. **Authored from the artifact, not from the citation** (§7.12).
+
+While deriving `band` for revision R-010, this seat named — rather than re-derived — one term on the right-hand side of the governing inequality. *Why* one day of carry is the correct allowance for the smallest authorized rebalance is a **declared conservatism**, not something the artifact derives [measured, this seat's own §16.7 text: "Two terms in §16.4 are not derived, and this seat names them rather than presenting the inequality as fully determinate"]. Its direction runs in the family's favour: a two-day budget gives `band ≤ 1.083` — a wider band and a wider suppression window than the sealed `band = 0.54`. The one-day horizon was retained byte-identical because the governing ruling scoped the *charge*, not the horizon, and moving a binding literal's derivation on an unruled axis inside a scoped dispatch is what this seat's artifact calls the SO-003 §3.1 violation. Quoted from the artifact: *"Named, not repaired: filed I-290."*
+
+**Resolution:** open — disclosed as a convention running in the family's favour; not used; a future ruling on it moves `band` again, pre-seal, per the registration payload's own standing instruction (payload §3.5).
+**Pattern tag:** `undeclared-convention-in-familys-favour` · `unruled-axis-inside-a-scoped-dispatch`
+
+---
+
+## I-291 · 2026-09-10 · The impact term priced in the cost preset is omitted from the sealed carry-band figure, and the omission cannot be priced pre-seal · Severity: LOW · Owner: director-of-research
+
+**BACK-FILLED 2026-09-15** under the Principal's Option-B ruling on I-370. The finding was made and described at `research/DIR-RESTATE-001-prereg002-mechanism.md:2519-2524` (§16.7(b)) on 2026-09-10, during revision R-010 (dispatch S4-D-011); the log entry was never written. **Authored from the artifact, not from the citation** (§7.12).
+
+The second undeclared term named alongside I-290: `Y · σ · √(Q/ADV)` is present in the cost preset but is **not** in the sealed 6.0 bp figure, because pricing it requires a measured `σ` and a measured ADV inside a binding literal — exactly what I-223 objects to [this seat's own text]. Its direction also runs in the family's favour: including it would *raise* the charge and *narrow* the suppression window, so omitting it is the **against-family** choice and needs no relief; including it would need a measurement this dispatch forbids. Quoted: *"Filed I-291."*
+
+**Resolution:** open — disclosed, against-family, unpriceable pre-seal; not used; a future ruling on it moves `band` again, pre-seal.
+**Pattern tag:** `undeclared-convention-in-familys-favour` · `unpriceable-pre-seal`
+
+---
+
+## I-292 · 2026-09-10 · R-009 selected a cost convention the sanctioned engine contradicts in source, and the check that would have caught it was never run before the choice · Severity: MEDIUM · Owner: director-of-research
+
+**BACK-FILLED 2026-09-15** under the Principal's Option-B ruling on I-370. The finding was made and described at `research/DIR-RESTATE-001-prereg002-mechanism.md:2546-2549` (§16.9) on 2026-09-10, during revision R-010 (dispatch S4-D-011); the log entry was never written. **Authored from the artifact, not from the citation** (§7.12).
+
+R-009 had selected a 12 bp round-trip cost convention for the carry-band derivation as the "friendlier" reading and escalated on it. R-010 measured what the harness actually charges [measured — `engine.py:141-143`, `:197-198`, cited in the artifact: "the engine charges exactly one per-side price per unit of `|Δw|`, once, at the bar the weight changes"] and found the round-trip reading is a cost `run_backtest` will never apply, and is additionally not conservative-but-defensible: as a per-rebalance charge it counts every side twice, since the return leg of any increment is itself a band rebalance carrying its own charge, and on a monotone same-direction path there is no reversal at all. This seat's own words: *"the check that settles it was a two-line read of `engine.py` that this seat did not perform before choosing. The cheapest test of a cost convention is to read what the engine charges."* R-009's stated reason is withdrawn by this seat, not overruled by the Principal.
+
+**Resolution:** closed — resolved by R-010's derivation (`band` moved from the R-009 convention to the engine-consistent figure); the convention error itself is not repaired retroactively, it is corrected going forward.
+**Pattern tag:** `friendlier-reading-not-checked-against-source` · `cheapest-test-skipped-before-choosing`
+
+---
+
+## I-293 · 2026-09-10 · §20's `Blocking?` cell for C12 read BLOCKING ON SEALING for twenty days after the note beneath the table had already recorded it DISCHARGED · Severity: HIGH · Owner: director-of-research
+
+**BACK-FILLED 2026-09-15** under the Principal's Option-B ruling on I-370. The finding was made and described at `research/DIR-RESTATE-001-prereg002-mechanism.md:2549-2552` (§16.9) on 2026-09-10, during revision R-010 (dispatch S4-D-011); the log entry was never written. **Authored from the artifact, not from the citation** (§7.12).
+
+While conforming §20's `Blocking?` column against a ruling-supplied list naming C2, C3 and C11, this seat found a fourth cell in disagreement that the list never named: **C12's `Blocking?` cell had read `BLOCKING ON SEALING` since R5**, while the note directly beneath the same table had read `DISCHARGED` since R12 — twenty days, one 590-line Gate 0 verdict, a Red-Team memo, a withdrawal and four revisions apart. This seat's own words: *"a table asserting a seal blocker the document itself closed twenty days earlier, found only because §20 was read column-by-column rather than against a supplied list."* The transferable rule this seat records: *"when a ruling supplies the list of artifacts it touches, the executing seat still reads the table's own columns, because the list is evidence about the rulings and not about the table."* C12 was conformed to `DISCHARGED (NARROWLY)` on the face of R-010, verified by re-running the extractor: all sixteen hashed fields unchanged from the post-I-363 baseline, because §20 sits outside §21's fenced block.
+
+**Resolution:** closed — the §20 cell was conformed on the face of revision R-010, verified against the extractor.
+**Pattern tag:** `ruling-never-reached-the-artifact` · `list-is-evidence-about-rulings-not-about-the-table`
+
+---
+
+## I-296 · 2026-09-10 · The R-010 addendum ran 73% over its line-budget projection, and its own mid-task flag understated the overrun because it was estimated rather than measured · Severity: LOW · Owner: director-of-research
+
+**BACK-FILLED 2026-09-15** under the Principal's Option-B ruling on I-370. The finding was made and described at `research/DIR-RESTATE-001-prereg002-mechanism.md:2565-2567` (§16.9) on 2026-09-10, during revision R-010 (dispatch S4-D-011); the log entry was never written. **Authored from the artifact, not from the citation** (§7.12).
+
+This seat's own line-budget accounting for the R-010 addendum: *"this addendum authored 381 lines against a ~220 projection, 73% over, and its own mid-task budget flag understated the overrun as ~32% because it was estimated rather than measured; corrected on the face of R-010"* [measured]. The overrun figure was corrected once a real diff was taken rather than left standing on the earlier estimate.
+
+**Divergence flagged, not resolved (§7.12):** `PREREG-002:115`, inside the frozen R-010 revision block, gives different figures for what appears to be the same overrun measurement — total authored lines across `DIR-RESTATE` §16 (219) + `PREREG-002` (158) + payload (18) = **395**, stated as **80%** over the ~220 projection, with the mid-task estimate quoted as "~290, over by ~32%." Neither the 395-line total nor the 80% figure matches this seat's own 381-line / 73% figure at the cited artifact site, and it is not evident from either document alone whether "this addendum" in the artifact means the addendum's own line count versus the payload's three-file total. `PREREG-002` is P7-frozen and cannot be corrected; this entry is authored from the artifact per §7.12, and the disagreement between the two is recorded here rather than smoothed over.
+
+**Resolution:** closed — flagged on the face of R-010 in the artifact itself; the CIO's estimation habit named as the recurring defect (repeated one revision later at I-345).
+**Pattern tag:** `estimate-in-a-slot-that-calls-for-a-measurement` · `frozen-citation-disagrees-with-its-own-artifact`
+
+---
+
+## I-340 · 2026-09-14 · Three prior statements of the holdout-vault count disagreed with each other and with the lookup's own semantics; the correct count is four, and the rule was in the document the whole time · Severity: HIGH · Owner: director-of-research
+
+**BACK-FILLED 2026-09-15** under the Principal's Option-B ruling on I-370. The finding was made and described at `research/DIR-RESTATE-001-prereg002-mechanism.md:2697-2699` (§17.8) on 2026-09-14, during revision R-011 (dispatch S4-D-016); the log entry was never written. **Authored from the artifact, not from the citation** (§7.12).
+
+`HoldoutVault.seal()` and `PITStore.set_holdout_ceiling()` each bind exactly one `(source, dataset_id)` pair — an exact-match lookup with no wildcard [measured — `data.py:204`, `:271`]. The primary universe holds four such pairs, measured by a read-only `GROUP BY` against `book/pit.db`. Three prior statements of this one cardinal quantity existed and no two agreed: this seat's own words, *"the vault count: three prior statements of one cardinal quantity — §21's comment said two, the payload's item 6 said one, the CIO's report said two by reading the comment rather than the lookup semantics — and no two agreed; the correct rule was in §11.1 the whole time, making this a conformance failure rather than an analysis failure."* Sealing on any of the wrong counts would not have failed loudly — a `dataset_id` that does not exactly match a future `ingest()` call seals successfully and never binds, leaving three of four legs with no holdout ceiling while the record reports clean.
+
+**Resolution:** closed — repaired pre-seal at revision R-011: the vault block rewritten to four explicit `seal()` calls, one per pair, §20's C8 row and §11.1's sequencing row conformed with it.
+**Pattern tag:** `three-statements-of-one-cardinal-none-agreed` · `control-reports-clean-while-protecting-nothing` · `conformance-failure-not-analysis-failure`
+
+---
+
+## I-341 · 2026-09-14 · `instrument_identity` named all four universe symbols on a vault that binds exactly one pair, and the narrowing was authored rather than transcribed from measurement · Severity: MEDIUM · Owner: director-of-research
+
+**BACK-FILLED 2026-09-15** under the Principal's Option-B ruling on I-370. The finding was made and described at `research/DIR-RESTATE-001-prereg002-mechanism.md:2652-2662` (§17.5) on 2026-09-14, during revision R-011 (dispatch S4-D-016); the log entry was never written. **Authored from the artifact, not from the citation** (§7.12).
+
+`DATA-IMPL-012` §1 supplies three of the values transcribed into each vault's seal call; `instrument_identity` is not one of them. The prior single string named all four universe symbols on a vault that binds one pair — the same cardinality defect as I-340, in the adjacent field, four times over, inside a hashed spec. This seat's own words: *"The narrowing is a decomposition of the document's own existing string, and each vault's field list matches that vault's measured `columns` from `DATA-IMPL-012` §1. It is nonetheless authored rather than transcribed, and is labelled [inferred] rather than [measured] so no future reader mistakes it for Seat 9's measurement."* Ruling 001 §3.4 makes the field binding — a change to it retires the vault — so the error was not cosmetic and had to be fixed pre-seal or not at all.
+
+**Resolution:** closed — narrowed per vault at revision R-011, labelled [inferred]; covered by `harness/tests/test_vault_seal_script.py::test_instrument_identity_is_narrowed_to_one_pair_per_vault`.
+**Pattern tag:** `authored-not-transcribed-labelled-as-such` · `same-cardinality-defect-adjacent-field`
+
+---
+
+## I-345 · 2026-09-14 · The R-011 line-budget flag was first drafted from estimated figures in the slot reserved for a measurement, repeating the R-010/I-296 defect one revision later · Severity: LOW · Owner: director-of-research
+
+**BACK-FILLED 2026-09-15** under the Principal's Option-B ruling on I-370. The finding was made and described at `research/DIR-RESTATE-001-prereg002-mechanism.md:2712-2715` (§17.8) on 2026-09-14, during revision R-011 (dispatch S4-D-016); the log entry was never written. **Authored from the artifact, not from the citation** (§7.12).
+
+This seat's own words: *"R-011's line-budget flag was first drafted with estimated figures in the slot §7.12 reserves for a measurement, and the estimate for this section was 42% of its measured length — R-010's I-296 defect repeated one revision after it was filed. Corrected against `git diff --numstat` on the face of R-011"* [measured]. The corrected, measured figures given elsewhere in the R-011 revision block: `PREREG-002` 153 lines, `DIR-RESTATE` §17 151, payload 25, total 329 — 65% over the ~200 projection, with the §17 portion alone having been estimated at only 42% of its true measured length before the diff was taken.
+
+**Resolution:** closed — corrected on the face of R-011 against a real `git diff --numstat`, with the overrun located and attributed to specific subsections rather than defended in aggregate.
+**Pattern tag:** `estimate-in-a-slot-that-calls-for-a-measurement` · `same-defect-repeated-one-revision-later`
+
+---
+
+> **CIO PROVENANCE NOTE ON THE TWO ENTRIES BELOW — not the filing seat's words, and not part of the
+> findings.** Both carry the date **2026-09-11**, which is **[inferred], not [measured]**.
+> `research/DATA-IMPL-012-vault-arguments.md` **carries no seat date** — only data date-bounds
+> [measured]. The filing seat established 2026-09-11 from `logs/ISSUE_LOG.md`'s `I-325`, `I-326` and
+> `I-327`, all dated 2026-09-11 and all dispatching or quoting `S4-D-015` [measured], **and disclosed the
+> inference in its return.** The entries themselves state the date without the marker, so the CIO records
+> it here rather than editing a seat's text, which §7.12 forbids. **The inference is sound and the date is
+> not load-bearing for either finding.**
+
+## I-333 · 2026-09-11 · `query_semantics` is recorded in the vault spec but is read by no harness code path · Severity: MEDIUM · Owner: head-of-data-infra
+
+**BACK-FILLED 2026-09-15** under the Principal's Option-B ruling on I-370. The finding was made and described at `research/DATA-IMPL-012-vault-arguments.md:112` (§3) on 2026-09-11, during dispatch S4-D-015; the log entry was never written. **Authored from the artifact, not from the citation** (§7.12).
+
+Filling `query_semantics` for the four vault seals to Ruling 001 §3.4's standard, this seat traced the field's runtime path rather than assuming Ruling 001's declarative requirement implied enforcement [measured]: "`query_semantics` is **recorded** in `spec.json` but **never read** by any harness code path — `acquire_once()` calls the caller-supplied `fetch(spec)` callable, which may or may not actually consult `spec["query_semantics"]` to build its request. There is no code that checks the fetch implementation against the sealed query. Enforcement is human, at Gate 1 code review, comparing the two by eye." The artifact's own §5 places this in GATES.md §4.7.2's terms: the only property `seal()` checks for `query_semantics`, ever, is `bool(value)` at seal time — no type check, no structural check, and (§3, unlike `dataset_id` and `schema_fingerprint`) no downstream content check either. The provenance guarantee this field appears to give is, in the artifact's words, "a declared-commitment-not-a-control fact the firm should hold before relying on it."
+
+**Resolution:** open — `query_semantics` remains recorded but unenforced by any harness code path; the only check on whether a `fetch()` implementation actually matches its sealed spec is an unrecorded human comparison at Gate 1 code review.
+**Pattern tag:** `binding-control-declared-not-enforced` · `human-review-is-the-only-check`
+
+---
+
+## I-334 · 2026-09-11 · `schema_fingerprint`'s exact-order `columns` check is bound to a pandas pivot artifact, not a guaranteed Gate-1 output order · Severity: MEDIUM · Owner: head-of-data-infra
+
+**BACK-FILLED 2026-09-15** under the Principal's Option-B ruling on I-370. The finding was made and described at `research/DATA-IMPL-012-vault-arguments.md:91` (§1) on 2026-09-11, during dispatch S4-D-015; the log entry was never written. **Authored from the artifact, not from the citation** (§7.12).
+
+Measuring the four `schema_fingerprint` values directly off `book/pit.db` via `pd.read_sql(...).pivot_table(index="event_time", columns="field", values="value")`, one query per (source, symbol) pair [measured], this seat flagged a caveat it could not itself close: "`_schema_matches()` (`holdout.py`) does exact-order list equality on `columns`. The order above is pandas' pivot-table default (alphabetical); it is **not** a guarantee about what a not-yet-written Gate-1 `fetch()` will return. Whoever writes that function must match this order byte-for-byte or a legitimate acquisition spuriously fails — a false operational block, not a leak, but still a name-it-now problem while the fingerprint is about to freeze." The `columns` order is therefore an artifact of how this seat measured the schema, not a specification anyone chose, and it is about to be hashed into a frozen, binding field under Ruling 001 §3.4.
+
+**Resolution:** open — no Gate-1 `fetch()` implementation exists yet against which to verify column order; the frozen order must be matched byte-for-byte when one is written, or a legitimate acquisition will fail `_schema_matches()` on an ordering difference alone.
+**Pattern tag:** `implementation-artifact-frozen-as-contract` · `false-block-not-a-leak`
+
+---
+
+## I-373 · 2026-09-15 · The frozen PREREG-002 and the artifact it was authored from state the same measured cardinal two different ways, and the frozen one cannot be corrected · Severity: LOW · Owner: CIO
+
+**Surfaced by the Director of Research at S4-D-026, in the act of back-filling `I-296`, and filed by the
+CIO because it is outside that seat's eight.** The seat **flagged it and authored from its own artifact
+rather than reconciling the two** — which is §7.12 working exactly as written.
+
+**The two statements, both about the R-010 addendum against the same `~220` projection** [measured]:
+
+| Source | Authored lines | Over projection | Mid-task estimate quoted as |
+|---|---|---|---|
+| `DIR-RESTATE-001-prereg002-mechanism.md:2565` — the artifact | **381** | **73%** | *"~32%"* |
+| `PREREG-002-crypto-funding-basis.md:115` — **P7-FROZEN** | **395** (`DIR-RESTATE` §16 219 + `PREREG-002` 158 + payload 18) | **80%** | *"~290, over by ~32%"* |
+
+**Both are internally consistent.** 219 + 158 + 18 = 395 and 395/220 = 1.795 → 80%; 381/220 = 1.732 →
+73% [measured]. **Neither is arithmetically wrong. They disagree on what was counted.**
+
+**The gap is 14 lines, and the frozen document names a 14-line quantity in the same paragraph** — *"§20's
+conformance came in at ~14 lines and was not the cause."* **[INFERRED, NOT MEASURED:** the artifact's 381
+appears to exclude §20's conformance lines and the frozen 395 to include them. **The diff was not re-run
+and this reconciliation is not a measurement** — it is the obvious candidate and it is recorded as a
+candidate. §7.10(3) would require computing it, and the computation was not done.**]**
+
+**Why it is LOW.** The figure is a **line-budget self-report**, not a binding field, not a threshold, not
+an input to any gate. **`prereg_sha256` hashes the sixteen binding fields; this paragraph is prose in a
+revision block** and moves nothing about the family. Nobody trades on it.
+
+**Why it is filed at all.** The frozen document carries **`[measured — git diff --numstat]`** against the
+larger figure, **with a stated method and a three-file breakdown**, while the artifact's 381 carries no
+method. **The better-evidenced number is the one inside the document that can never be corrected** — so a
+later reader who trusts §7.12's *"the artifact governs"* would take the weaker figure. **That is the
+inversion worth recording:** the ordinary rule is that the frozen citation is the suspect one and the
+artifact is the source of truth. **Here it is the other way round**, and nothing in the log would have
+told anyone.
+
+**Recommendation, not taken:** if the reconciliation matters to anyone later, **re-run
+`git diff --numstat` for R-010 and record which of the two definitions of "this addendum" each figure
+counts.** One command. Not done here because the S4-D-026 dispatch was scoped to the back-fill and the
+CIO does not extend a seat's scope after the fact.
+
+**Resolution:** open — **disclosure only, no action requested.** For the Principal to note. The frozen
+document is not editable and **is not proposed for editing**; this entry is the correction.
+**Pattern tag:** `the-frozen-citation-is-better-evidenced-than-its-own-source` · `two-definitions-of-one-cardinal` · `a-reconciliation-that-is-obvious-and-unmeasured` · `flagged-by-the-seat-not-smoothed`
+
+---
+
+### **[2026-09-15 · CORRECTION TO I-370's OWN TABLE — A CARDINAL STATED BESIDE A LIST THAT CAN BE COUNTED, WHICH IS I-342's FINDING COMMITTED BY THE ENTRY THAT ENUMERATED I-342.]**
+
+**Found by the CIO at the post-back-fill verification, not by a reviewer.** I-370's class table states
+**19** declared-unused and **3** already-dispositioned. **The correct split is 18 and 4** [measured —
+the residual set after the ten were filed is 22, enumerated in full: `I-69, I-79, I-83, I-89, I-121,
+I-129, I-155, I-248, I-249, I-256, I-275, I-279, I-284, I-289, I-303, I-309, I-313, I-319, I-335, I-339,
+I-346, I-349`]. **The totals were right and the split was wrong in both directions at once**, which is why
+21 + 19 + 3 = 43 reconciled and concealed it.
+
+**`I-155` was counted in the wrong class.** It belongs with the already-dispositioned — the log discusses
+it as a sibling reference, not as a seat-declared unused range. The other three of that class are
+`I-248`, `I-256`, `I-275`.
+
+**WHAT ACTUALLY CONCEALED IT, and it is the part worth keeping.** The 19-row's list ended
+**`… I-346, I-349, + range endpoints`**. **That trailing phrase is not a number and not a name** — it
+made a list of 18 look like a list of 19 without ever asserting a nineteenth. **A cardinal stated beside
+a list that can be counted, where the list was made uncountable by a phrase.** That is **`I-342`
+exactly** — *"the payload's §6 heading has read 'six items' since S4-D-013 added a seventh"* — **committed
+in the body of the entry whose purpose was to enumerate `I-342` and ten others like it.**
+
+**The Principal accepted this disposition "as enumerated" on 2026-09-15**, so the correction is recorded
+rather than absorbed: **the accepted disposition is 18 / 4, not 19 / 3.** **Nothing else moves** — the
+back-fill set of 21, the ten executed, the eleven deferred and the total of 43 are all unchanged and were
+re-measured after the back-fill [measured: 33 remaining = 11 deferred + 22 residual].
+
+**Corrective, and it is narrower than "count things."** **A list offered as the extension of a count is
+written in full or the count is not stated.** No `+ others`, no `… and the rest`, no trailing category
+that cannot be counted. **If the list is too long to write, the count stands alone without a list beside
+it.**
+**Pattern tag:** `a-cardinal-beside-a-list-made-uncountable-by-a-phrase` · `i-342-committed-by-the-entry-that-enumerated-i-342` · `two-errors-that-reconcile-to-the-right-total`
