@@ -138,6 +138,9 @@ and the distinction is recorded rather than smoothed. The convention binds prosp
 
 **The class is I-100's, one layer over.** §7.10(7) requires a spec altering a call contract to state its measured caller count. **The symmetric question — can the seat perform the call at all — went unasked.** The CIO held Oracle tools and did not consider that the seat might not. **Reading one line of `agents/` costs less than the invocation it saves.**
 
+**10 · Dispatcher mechanics — session.lock, block-end grace, per-dispatch duration.** *(calendar-operator
+v2.0.)* These three rules live in `CLAUDE.md`'s "Session discipline" section, not here — see there.
+
 ---
 
 ### 7.11 Rulings name the artifacts they touch

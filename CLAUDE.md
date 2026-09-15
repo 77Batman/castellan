@@ -71,6 +71,30 @@ Full detail: `reference/GATES.md`, `reference/RISK.md`, `reference/CONSTRAINTS.m
 3. **Every artifact worth keeping is written to disk** under `research/`, `book/`, or `logs/` and delivered to the Principal.
 4. **Every meeting ends with an action list** — owner, deliverable, date. No exceptions.
 
+### Dispatcher mechanics (calendar-operator v2.0) — cold-start rules for a DISPATCHED session
+
+**Lock convention.** The dispatcher maintains `.castellan/session.lock` (gitignored), a JSON file
+`{pid, task, profile, block_end, started}`. The DISPATCHER writes this lock before launching the
+session and removes it at session end and on forced termination — no session writes or removes its
+own lock. At cold start, a session checks the lock in three exhaustive branches: (1) the lock's
+`pid` is this session's own process — this IS the dispatched session, proceed; (2) the lock names a
+live foreign pid — REFUSE to proceed, and report; (3) the pid is dead — clear the lock, file one
+incident line, and proceed. A session that finds no lock at all is a MANUAL (Principal-launched)
+session.
+
+**Block-end grace policy.** The dispatch envelope states `block_end`. The session checkpoints
+*before* `block_end`, not during grace — the close is dirty-path dispositions, named-path commit,
+decision-record entry, and Oracle pointer (see §7.10(6) for the dirty-path disposition duty
+specifically; the named-path commit and Oracle-pointer duties are items 3 and 2 of this Session
+discipline list; the decision-record entry duty is documented here). Fifteen minutes after
+`block_end` the dispatcher sends SIGTERM and files `dispatch_terminated` under I-049 handling: tree
+verified, partials kept by name, incident filed, unit counted per D-012. No new dispatch is opened
+after `block_end − 15 min`.
+
+**Per-dispatch duration field.** Every decision-record entry for a dispatch carries `started_utc` /
+`ended_utc` / `duration`, matching the dispatcher's own `decisions.jsonl` so the two ledgers
+reconcile by task id. Backfill is not required; this is mandatory from S4-D-024 forward.
+
 ## Repository layout
 
 ```

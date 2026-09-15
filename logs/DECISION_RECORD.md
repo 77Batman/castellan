@@ -6702,3 +6702,59 @@ Commit `dff9a13`, working tree clean. Hard stop 2026-09-24.
 5. Queued: I-310 success prints · I-323 snapshot SLA · I-119 index inflow · 22 suite reds · I-330 · I-369.
 
 **Review date:** at the first trial, and at 2027-03-21 whatever happens between now and then.
+
+## S4-D-024 · 2026-09-15 · Dispatcher mechanics documented — `session.lock`, block-end grace, per-dispatch duration
+
+**Task:** S4-D-024, ONE SONNET UNIT, Principal-funded outside SO-001 §1. Document three mechanics already
+implemented by the dispatcher (calendar-operator v2.0, tested) into `CLAUDE.md`'s Session discipline
+section, plus a forwarding line at `reference/TEMPLATES.md` §7.10.
+
+### 1 · What was written
+
+- **`CLAUDE.md`** — three rules under "Session discipline": lock convention (`.castellan/session.lock`,
+  JSON `{pid, task, profile, block_end, started}`, written/removed by the dispatcher, three-branch
+  cold-start check: own pid → proceed, live foreign pid → refuse, dead pid → clear + one incident line +
+  proceed; no lock at all → manual session); block-end grace policy (checkpoint *before* `block_end`, not
+  during grace; SIGTERM + `dispatch_terminated` under I-049 handling 15 min after `block_end`; no new
+  dispatch after `block_end − 15 min`); per-dispatch duration field (`started_utc`/`ended_utc`/`duration`
+  per decision-record entry, reconciling by task id with the dispatcher's own `decisions.jsonl`; backfill
+  not required, mandatory from this dispatch forward).
+- **`.gitignore`** — `.castellan/session.lock` added under a new comment block.
+- **`reference/TEMPLATES.md`** §7.10 — item 10, a forwarding line only, pointing to `CLAUDE.md`'s Session
+  discipline section for the three rules. §7.10(6) itself was not edited.
+
+### 2 · Finding (a) — §7.10(6)'s scope is narrower than the envelope's citation
+
+`reference/TEMPLATES.md:123`, §7.10(6) "Session-close disposition," specifies **only** the dirty-path
+disposition duty — staged by name, or named in the record as deliberately unstaged with its reason. The
+dispatch envelope cited §7.10(6) for **four** duties: dispositions, named-path commit, decision-record
+entry, Oracle pointer. The citation resolves; its scope does not cover all four. **Handled by not
+widening §7.10(6) and not editing it to match.** The `CLAUDE.md` block-end-grace text now cites §7.10(6)
+for the dirty-path disposition only, and states the other three duties against their real sources: the
+named-path commit and Oracle-pointer duties are Session-discipline items 3 and 2 (already present in
+`CLAUDE.md` before this dispatch, per the brief's own pointer); the decision-record entry duty is newly
+documented in this same `CLAUDE.md` addition, since no prior section specified it.
+
+### 3 · Finding (b) — no decision-record entry format section exists in TEMPLATES
+
+Grepped `reference/TEMPLATES.md` §7.1–§7.14 [measured]: no section defines a decision-record entry
+format. The per-dispatch duration field is therefore written into `CLAUDE.md` alongside the other two
+rules, not into TEMPLATES, per the brief. No new TEMPLATES section was created for it.
+
+### 4 · Named-and-stopped
+
+None. All work stayed inside the four files named in the brief: `CLAUDE.md`, `.gitignore`,
+`reference/TEMPLATES.md`, `logs/DECISION_RECORD.md`. `book/`, `research/`, `harness/` untouched.
+
+### 5 · Timing — the demonstration that the format works
+
+| | |
+|---|---|
+| `started_utc` | `2026-09-15T01:09:39Z` |
+| `ended_utc` | `2026-09-15T01:11:31Z` |
+| `duration` | `00:01:52` |
+
+### 6 · State
+
+Files touched: exactly the four named in the brief. Commit message: `S4-D-024: lock convention,
+block-end grace, per-dispatch duration into CLAUDE.md`.
