@@ -7819,3 +7819,122 @@ I-361). §7.12 binds: **authored from the artifacts, not from the citations of t
 **Resolution:** open — **the back-fill is NOT executed; the ruled scope is contradicted by measurement
 and the re-ruling is the Principal's.** Filed by the CIO's own hand, no dispatch, no unit spent.
 **Pattern tag:** `ruling-given-on-a-premise-the-measurement-contradicts` · `a-search-shaped-to-the-suspicion-that-prompted-it` · `the-remedy-failing-in-its-own-form` · `back-filling-a-finding-that-does-not-exist`
+
+### **[2026-09-15 · PRINCIPAL RULING — OPTION B. SCOPE RE-RULED AT TEN, AND THE ELEVEN UNFROZEN ARE DEFERRED BY RULING.]**
+
+**The Principal ruled I-370 on 2026-09-15.** I-370's disposition of the **19 unused-range endpoints and the
+3 already-handled is ACCEPTED AS ENUMERATED** — they are not back-fill candidates and are not deferred
+work; they are correctly unfiled and the matter is closed for them.
+
+**BACK-FILLED NOW — the ten frozen-exposure entries only**, dispatched to their filing seats under §7.12:
+`I-290`, `I-291`, `I-292`, `I-293`, `I-296`, `I-340`, `I-341`, `I-345` to the **Director of Research**
+(S4-D-026, artifacts `DIR-RESTATE-001` and `REGISTRATION-PAYLOAD-PREREG-002`); `I-333`, `I-334` to
+**Head of Data & Infrastructure** (S4-D-027, artifact `DATA-IMPL-012`). **Two dispatches because the ten
+span two filing seats** — the CIO authoring any of them from a description is what §7.12 forbids.
+
+**DEFERRED BY RULING to after the 2026-09-24 hard stop — ELEVEN unfrozen pointers:** **`I-294`, `I-295`,
+`I-300`, `I-301`, `I-302`, `I-332`, `I-342`, `I-343`, `I-344`, `I-360`, `I-361`.** These are real findings
+with real descriptions whose entries are missing; **they are cited only in documents P7 has NOT frozen**,
+so the pointers can be made live later at no integrity cost.
+
+**RECORDED HERE AT THE PRINCIPAL'S EXPRESS DIRECTION so that the deferral does not become the next
+finding's premise.** The failure mode being pre-empted is this entry's own: **a set of numbers known to
+be incomplete, left unrecorded, and rediscovered later by a seat that reads the count as new.** The count
+is **eleven**, the list is above, and it is deferred **by ruling, not by oversight.**
+
+**`I-360` and `I-361` are the CIO's own findings**, and the Principal ruled that the CIO authoring them
+by its own hand **is inside §7.12, not an exception to it** — §7.12 binds the finding to its author, and
+for those two the CIO is the author. **They are in the deferred set and are not written today.**
+
+**Resolution of I-370:** **CLOSED on the ruling.** Scope re-ruled at ten executed / eleven deferred /
+22 correctly unfiled. **The back-fill was not executed on the stated scope, which is why this entry exists.**
+
+---
+
+## I-371 · 2026-09-15 · Three consecutive sessions closed without writing an Oracle pointer, and the one that sealed the family is among them · Severity: MEDIUM · Owner: CIO
+
+**Found by the 2026-09-15 cold start, in the act of failing.** Charter Part IX step 1 is `recall`. The
+newest CASTELLAN memory Oracle held was **`M367`**, which states **"the seal did NOT execute"** and cites
+commit `4b52f55` [measured]. **The repository was at `04f492b`, four commits on, with the seal executed at
+`dff9a13`.**
+
+**Three sessions closed without a pointer — `S4-D-023`, `S4-D-024`, `S4-D-025`** [measured, no CASTELLAN
+memory between `M367` and this session]. **`S4-D-023` is the session that executed the firm's first seal.**
+
+**The consequence, stated exactly.** A cold start that trusts `recall` reports a **pre-seal firm**: no
+registered hypothesis, no locked holdouts, PREREG-002 pending, and a queue whose first item is a seal that
+already happened. **This session avoided it only because the repository was read directly** — A3 says the
+repo governs, and A3 is what saved the reading. **Oracle was wrong about the single most important act the
+firm has taken.**
+
+**Why §7.10(6) did not catch it.** §7.10(6) disposes every **dirty path** at close, and it works — `S4-D-025`
+recorded the firm's first empty disposition table. **A pointer is not a path.** It falls outside the
+check entirely, which is **I-209's shape again: a named-path discipline omits whatever nobody thought to
+name.** Three sessions passed the close rule and failed the thing the close rule exists to protect.
+
+**Corrective, Principal-ruled and adopted 2026-09-15 — the read-back.** **A session is not closed until
+its Oracle pointer is written AND the pointer's memory id is quoted in the close entry.** Written into
+`reference/TEMPLATES.md` §7.10(6). **The id is the disposition**, because an id cannot be quoted unless
+the write returned one — where a reminder to "write the pointer" fails in exactly the way these three
+closes failed.
+
+**Not a data-loss event.** Nothing was lost; the repo held everything. **The defect is in the retrieval
+path a cold start depends on**, and its cost is paid by a session that starts from a false state — which
+is the precise scenario the calendar-operator Phase 2 dispatcher will run unattended, with nobody to
+notice the firm has been described as pre-seal.
+
+**Resolution:** **closed** — corrective adopted and written into `TEMPLATES.md` §7.10(6); the pointer for
+this session is written and its id is quoted in this session's close entry.
+**Pattern tag:** `the-close-rule-that-disposes-paths-and-not-pointers` · `oracle-disagreeing-with-the-book-of-record` · `a-stale-pointer-in-front-of-a-cold-start` · `i-209-shape`
+
+---
+
+## I-372 · 2026-09-15 · The nine seats were not invocable — I-006 recurring, caused by the directory the session was launched from rather than by anything in the repository · Severity: MEDIUM · Owner: CIO
+
+**Measured this session.** Dispatching `director-of-research` and `head-of-data-infra` for the I-370
+back-fill **failed with "Agent type not found. Available agents: claude, claude-code-guide, Explore,
+general-purpose, Plan, statusline-setup"** — the built-ins only, none of the firm's nine.
+
+**The repository is not defective** [measured]: `.claude/agents -> ../agents` resolves, lists **nine**
+files, and both seat definitions carry valid frontmatter (`name:`, `description:`, `model:`, `tools:`).
+**The session was launched from `/Users/<user>`, not from the repository**, so the agent registry
+was fixed at startup against a directory with no `.claude/agents`. The working directory moved to the
+repository afterwards; **the registry did not move with it.**
+
+**This is `I-006` exactly, with a different cause.** I-006 (2026-07-28, CLOSED) was *"Seats not invocable
+in the activation session"* — the registry fixed at startup **before `.claude/agents` existed**. That was
+repaired by creating the symlink, and the repair holds. **The failure recurred anyway, because the
+condition was never "the symlink is missing" — it is "the registry was built somewhere the symlink
+isn't."** A repair to the repository cannot close a defect whose trigger is the invocation.
+
+**Workaround used, and its cost — I-006's ruled workaround, applied unchanged.** Both dispatches went to
+generic agents **instructed to read their seat definition in full and adopt it as their operating
+definition.** I-006 records the cost: **the generic agent does not inherit the definition's `tools:`
+restriction.** Narrowed here by naming each seat's exact tool list in the brief and binding the agent to
+it — including that `head-of-data-infra` holds **no `Task` tool** and may not spawn subagents.
+**This narrows the gap; it does not close it.** The restriction is now **instruction-enforced rather than
+harness-enforced**, and a seat that disregards its brief is unconstrained. **Disclosed rather than
+absorbed, per Charter house rule 7.**
+
+**Tier deviation, disclosed in the same breath.** `agents/director-of-research.md` declares `model: opus`.
+**The S4-D-026 dispatch ran Sonnet** — the unit is transcription from a named artifact under a
+no-invention rule, not derivation; I-365's own accepted recommendation was *"a Sonnet doc unit"*; and
+**8 Opus units against a 2026-09-24 hard stop are wanted by the first trials.** A judgment, not an
+oversight, and it is recorded because §7.10(5) requires standing deviations disclosed at adoption.
+
+**WHY THIS IS FILED AND NOT ABSORBED, AND IT IS NOT ABOUT TODAY.** The calendar-operator Phase 2
+dispatcher will invoke Claude Code **unattended**. **If it launches from any directory but the repository
+root, every seat silently disappears** — and the failure does not look like a failure. **The CIO can
+still do the work with its own hand.** Every §7.12 dispatch would degrade into the CIO authoring from
+descriptions, unattended, with no seat and no independent line, **and the transcript would read as a
+successful session.** M366's Q4 already records that VPS health is unverifiable from a seat; this is the
+same class and worse, because it is silent.
+
+**Recommendation, the Principal's to take:** the dispatcher's precondition set gains a **seat-roster
+check** — the run confirms the nine seats are invocable before it begins, and **aborts and reports if
+they are not**, rather than proceeding with the CIO's hand. **A cheap machine-checkable test exists:**
+attempt one trivial dispatch to a named seat, or assert the launch directory equals the repository root.
+
+**Resolution:** open — **for the Principal**, as a Phase 2 go-live precondition alongside the three at
+`M365`. The immediate dispatches proceeded under I-006's ruled workaround with its cost disclosed.
+**Pattern tag:** `i-006-recurring` · `a-repair-to-the-repository-for-a-defect-in-the-invocation` · `the-silent-degradation-that-reads-as-success` · `instruction-enforced-where-the-harness-should-enforce`

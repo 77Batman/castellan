@@ -122,6 +122,12 @@ and the distinction is recorded rather than smoothed. The convention binds prosp
 
 **6 · Session-close disposition.** At every session close, **`git status` is reviewed and every dirty path explicitly dispositioned** — staged by name, or **named in the record as deliberately unstaged with its reason.** Origin: I-054's corrective (*stage named paths only*) produced the opposite failure at **I-209**, because **a named-path discipline omits whatever nobody thought to name** — and `book/registry.db`, written by a seat, fell through it. **Seat-written files are the motivating case.**
 
+> **THE ORACLE-POINTER READ-BACK.** *(Principal-ruled 2026-09-15, origin I-371.)* **A session is not closed until its Oracle pointer is written AND the pointer's memory id is quoted in the close entry.** No id in the entry, no close.
+>
+> **Origin.** Three consecutive sessions — `S4-D-023`, `S4-D-024`, `S4-D-025` — closed without writing a pointer. `S4-D-023` **executed the firm's first seal.** The newest CASTELLAN memory a cold start could retrieve was `M367`, which states *"the seal did NOT execute"* and cites a commit four commits stale. **The 2026-09-15 cold start recalled a pre-seal firm and would have reported one** had the repo not been read directly.
+>
+> **Why a read-back and not a reminder.** §7.10(6) already disposes every dirty PATH; a pointer is not a path and fell outside it — **the same shape as I-209, where a named-path discipline omitted what nobody thought to name.** A rule to "remember the pointer" fails the same way. **Quoting the id is the disposition, because an id cannot be quoted unless the write returned one.**
+
 **8 · A masked failure population may not be assessed by sampling. Unmask, then count.** *(Added 2026-08-25, from I-260/I-261.)*
 
 **Origin.** `DATA-IMPL-008` §5 reported *"no new, independent bugs were found"* after the SPEC-004 grant control broke 149 tests. **The claim was false.** `holdout.py` shipped **8 call sites passing four positional arguments to a three-parameter method — 42 test instances, unconditional, predating the control entirely** — and the assessment missed all of them because **every traceback in the sampled population terminated at the same known blocker by construction.**
@@ -198,3 +204,17 @@ v2.0.)* These three rules live in `CLAUDE.md`'s "Session discipline" section, no
 **Why a failed search is not a measurement.** A query that fails to match is **indistinguishable, from the caller's side, from a store that holds nothing.** Two failed recalls are two failed queries. **This is I-046's pattern inverted:** there, an artifact was asserted present on weak evidence; here, absent on none.
 
 **The firm already applied this to counts** — *count the roster, not the memory of it.* **It now applies to existence.**
+
+#### 7.14(a) Enumeration means the whole namespace, not the prefixes under suspicion
+
+*Principal-ruled 2026-09-15. Origin I-370, on I-365.*
+
+> **A search shaped to the suspicion that prompted it finds only what it suspected. Enumerate the whole namespace and classify what comes back — never the subset you already doubt.**
+
+**Origin, and it is this section failing in its own form.** `I-365` corrected a Principal ruling that named **one** phantom issue number by enumerating — the right move, and §7.14 is why it happened. **But it enumerated *"every `I-33x`/`I-34x`/`I-36x` token in the repository."*** It found **eleven** phantoms, every one inside those three prefixes, **and none outside them, because it never looked outside them.**
+
+**The full namespace — every `I-nnn` token normalised across the `I-001`/`I-01`/`I-1` forms the log actually uses — gives 289 claimed, 246 filed, 43 unfiled** [measured, I-370]: **21 requiring back-fill, 19 correctly unfiled as seat-declared unused ranges, 3 already dispositioned.** **Three of the ruled eleven were unused range endpoints** — executing that scope literally would have **authored entries for findings that do not exist**, manufacturing the artefact the back-fill was ordered to remove.
+
+**Three premise-corrections on one finding: one, then eleven, then 21/19.** Each count was produced by a search scoped to the suspicion that prompted it. **The failure is not arithmetic and it is not carelessness — §7.14's remedy was applied correctly each time, to a window chosen in advance.**
+
+**Test for the situation:** if the search pattern encodes what you expect to find — a prefix, a date range, a directory, a file type — **it cannot report anything outside that expectation, and its silence outside the window is not evidence.** Enumerate the namespace, then classify. **Classification is where judgment belongs; the enumeration is where it does not.**
