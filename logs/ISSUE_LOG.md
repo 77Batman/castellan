@@ -7736,3 +7736,86 @@ is taken rather than be discovered after it.
 **Resolution:** open — **disclosure recorded pre-emptively; no action requested.** For the Principal to
 note, and for Validation whenever it next touches `holdout.py`.
 **Pattern tag:** `unstated-threat-model` · `control-read-broader-than-it-is` · `a-secret-derivative-in-a-tracked-file` · `read-before-publishing`
+
+---
+
+## I-370 · 2026-09-15 · The I-365 back-fill was ruled at eleven entries; the full enumeration finds twenty-one, three of the eleven are not back-fillable, and PREREG-002 carries ten dangling pointers rather than three · Severity: MEDIUM · Owner: CIO
+
+**Filed at the open of the session that was instructed to execute the back-fill, before executing it.**
+The queue item at `S4-D-025` §4(1) names **eleven** phantom entries and states that **three** of them sit
+inside the P7-frozen `PREREG-002`. **Both numbers are wrong, in opposite directions**, and the set itself
+is the wrong set.
+
+### 1 · The measurement
+
+Every `I-nnn` token in the repository (`.md`, `.py`, `.json`, `.txt`, `.toml`, `.yaml`, `.sh`; `.git`,
+`.venv`, `__pycache__` excluded) was extracted and normalised to an integer — **1–3 digits, because the
+log writes `I-001`, `I-01` and `I-1` for the same entry** — and compared against every heading matching
+`^#{1,4}\s*\**I-(\d{1,3})\b` in `logs/ISSUE_LOG.md` [measured].
+
+**289 numbers are claimed. 246 are filed. 43 are claimed and never filed.** `I-999` is a test-fixture
+string, excluded. **`logs/ISSUE_LOG.md` is the only issue log in the repository** — no `I-29x`, `I-30x`
+or `I-33x` heading exists in any other file [measured — §7.14, enumerated before concluding absent].
+
+**The 43 are three classes, and only one is back-fillable:**
+
+| Class | Count | Numbers | Disposition |
+|---|---|---|---|
+| **Cited as a filed finding, description present, entry missing** | **21** | I-290 – I-296 · I-300 – I-302 · I-332 – I-334 · I-340 – I-345 · I-360 · I-361 | **BACK-FILL** |
+| Declared unused by the allocating seat | 19 | I-69, I-79, I-83, I-89, I-121, I-129, I-249, I-279, I-284, I-289, I-303, I-309, I-313, I-319, I-335, I-339, I-346, I-349, + range endpoints | **Correctly unfiled — leave** |
+| Already documented as absent, or the named exemplar | 3 | I-155, I-248, I-256, I-275 | **Already dispositioned — leave** |
+
+`I-256` is excluded deliberately: it is the **origin exemplar quoted in `TEMPLATES.md` §7.12**. Filing an
+entry for it would destroy the example.
+
+### 2 · Three of the ruled eleven must NOT be back-filled
+
+**`I-339`, `I-346` and `I-349` are range endpoints their own authoring seats declared unused** —
+`DATA-IMPL-012` §3 reads *"Issue range: I-330 … I-339"* and `DIR-RESTATE-001` reads **"I-346 through
+I-349 unused"** [measured]. They are cited **only** in the phantom list at `S4-D-021` and in the queue
+item itself. **Executing the ruled scope literally would author three entries for findings that do not
+exist** — manufacturing the artefact the back-fill was ordered to remove. **Only eight of the eleven are
+real:** `I-340` – `I-345`, `I-360`, `I-361`.
+
+### 3 · Thirteen were never looked at, and why
+
+**`I-290` – `I-296`, `I-300` – `I-302`, `I-332` – `I-334`.** Each carries a severity and a full
+description at its citation site: `I-294` *"`§21 horizon` carries a negative bracket excursion under
+I-181's own checker criterion"* (HIGH); `I-332` *"`_schema_matches()` … returning `True`
+unconditionally"* (HIGH); `I-301`/`I-302` as table rows in `DATA-IMPL-010` §4 (LOW) [measured].
+
+**The cause is in I-365's own text.** Its enumeration states that *"every `I-33x`/`I-34x`/`I-36x` token
+in the repository was extracted and checked"* — and that is exactly what it did. **It found every phantom
+inside those three prefixes and none outside them, because it never looked outside them.** The scan was
+scoped to the block the CIO already suspected.
+
+**This is the third premise-correction on one finding.** The Principal ruled at **one** phantom
+(`I-342`, two sites); §7.14 enumeration corrected it to **eleven**; a full enumeration gives **21 to
+back-fill and 19 to leave alone**. **The pattern is not that the counts were wrong — it is that each
+count was produced by a search shaped to the suspicion that prompted it**, which is §7.14's failure mode
+surviving §7.14's own remedy.
+
+### 4 · The frozen exposure is ten, not three
+
+`PREREG-002` — **P7-frozen at `dff9a13`, `C = 2026-09-15`** — cites 110 issue numbers, of which **ten are
+phantom**: **`I-290`, `I-291`, `I-292`, `I-293`, `I-296`, `I-333`, `I-334`, `I-340`, `I-341`, `I-345`**
+[measured]. The queue names three.
+
+**The sharpest instance is `I-293`.** `PREREG-002:47` reads *"**This is I-293 repeating inside the
+document I-293 was filed against**"* — **the frozen document diagnoses itself by pointer to a finding
+that was never filed.**
+
+**I-365's disposition still holds and is why this is MEDIUM, not HIGH.** `logs/ISSUE_LOG.md` is not part
+of the sealed document and does not freeze; filing the entries resolves all ten pointers **without the
+frozen document being touched.** The exposure is larger than stated, not different in kind.
+
+### 5 · Recommendation
+
+**Re-rule the scope at 21, exclude `I-339`/`I-346`/`I-349` explicitly, and route by filing seat** —
+`DIR-RESTATE-001`'s to the Director of Research (I-290–I-296, I-340–I-345), `DATA-IMPL-010`/`-012`'s to
+Head of Data & Infrastructure (I-300–I-302, I-332–I-334), the CIO's own two by the CIO's hand (I-360,
+I-361). §7.12 binds: **authored from the artifacts, not from the citations of them.**
+
+**Resolution:** open — **the back-fill is NOT executed; the ruled scope is contradicted by measurement
+and the re-ruling is the Principal's.** Filed by the CIO's own hand, no dispatch, no unit spent.
+**Pattern tag:** `ruling-given-on-a-premise-the-measurement-contradicts` · `a-search-shaped-to-the-suspicion-that-prompted-it` · `the-remedy-failing-in-its-own-form` · `back-filling-a-finding-that-does-not-exist`
