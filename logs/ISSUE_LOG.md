@@ -8195,3 +8195,47 @@ it.**
 
 **Resolution:** open — **for Validation and Head of Data & Infrastructure.** Not blocking: no trial or verdict depends on it, and the store is measurably unmodified.
 **Pattern tag:** `the-read-path-that-must-open-for-writing` · `integrity-by-idempotence-rather-than-by-interface` · `one-store-hardened-and-its-sibling-not`
+
+---
+
+## I-385 · 2026-09-15 · The CIO's own hard-stop list manufactured nine phantom issue numbers in a single dispatch, one session after filing I-370 about exactly that defect · Severity: MEDIUM · Owner: CIO
+
+**This seat's defect, introduced today, caught at the return rather than by a later enumeration.**
+
+**What happened.** The `S4-D-030` brief's hard-stop list read, in the CIO's own words, *"DO NOT edit
+`PREREG-002`, `REGISTRATION-PAYLOAD`, **`logs/ISSUE_LOG.md`**, `logs/DECISION_RECORD.md`…"*. **Validation
+obeyed it exactly** and recorded that it did: *"`logs/ISSUE_LOG.md` not edited."* It then filed **nine
+findings — `I-376` through `I-384`, two of them HIGH — inside
+`research/VALIDATION-SPEC-005-c11-null-calibration.md`.**
+
+**Measured:** all nine appear in `VALIDATION-SPEC-005`; **zero have a heading in `logs/ISSUE_LOG.md`**
+[measured — `grep -cE "^#{1,4}\s*\**I-(37[6-9]|38[0-4])\b"` returns 0].
+
+**THIS IS I-365's DEFECT, REPRODUCED BY THE SEAT THAT SPENT THE SESSION REPAIRING IT.** Nine hours
+earlier this CIO enumerated 43 claimed-and-never-filed numbers, back-filled ten of them, wrote §7.14(a)
+about enumeration, and filed I-370. **It then wrote a brief whose prohibition makes the same defect
+inevitable** — and the seat could not have avoided it without disobeying the brief.
+
+**THE PROHIBITION WAS RIGHT AND ITS SCOPE WAS WRONG.** Keeping an out-of-scope seat out of the issue log
+is correct: the log is shared state, and S4-D-026/S4-D-027 were deliberately routed through staging files
+so two concurrent seats could not clobber it. **But "do not edit the log" and "do not file your own
+findings" are different instructions, and the brief conflated them.** A seat's own findings are exactly
+what the log exists to hold. **The CIO copied a hard-stop list forward from the back-fill briefs, where
+the seats genuinely had no findings of their own to file, into a dispatch whose entire output was
+findings.**
+
+**Corrective, and it is the narrow one.** **A brief that forbids editing `logs/ISSUE_LOG.md` states the
+carve-out for the seat's own entries, or it names the staging file they go to and who concatenates them.**
+A blanket prohibition on a dispatch that will produce findings **manufactures claims-without-entries by
+construction** — and the firm now has both halves of I-366's gap on the record from its own briefs:
+**entries-over-claims there, claims-without-entries here.**
+
+**Disposition of the nine, NOT executed by this seat.** §7.12 binds: **the filing seat authors from its
+artifact, and the CIO authoring them from `VALIDATION-SPEC-005`'s descriptions is the exact prohibition.**
+They are **queued, listed by number so they cannot become a later finding's premise** (I-370's rule,
+applied to a set nine hours old): **`I-376`, `I-377`, `I-378`, `I-379`, `I-380`, `I-381`, `I-382`,
+`I-383`, `I-384`.** Two are HIGH and are §4 hard interrupts addressed to the Principal — **surfaced
+unbatched, and their substance is not waiting on their log entries.**
+
+**Resolution:** open — **corrective for the Principal; the nine await a filing dispatch to Validation.**
+**Pattern tag:** `a-prohibition-that-manufactures-the-defect-it-neighbours` · `i-365-reproduced-by-the-seat-that-repaired-it` · `a-hard-stop-list-copied-into-a-dispatch-of-a-different-shape` · `the-seat-obeyed-and-that-is-why-it-happened`
