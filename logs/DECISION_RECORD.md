@@ -7059,3 +7059,92 @@ The brief states explicitly that a refusal, or a specification differing from th
 framing, is a successful dispatch — **Validation reports to the Principal, not to the CIO.**
 
 **Budget after this dispatch: 22 of 30 invocations · 9 of 12 Opus · FREE OPUS EXHAUSTED.**
+
+---
+
+## S4-D-031 · 2026-09-16 · Principal rulings on I-376–I-385 · **STEP 3 SLIPS TO SPRINT 5, RULED IN ADVANCE**
+
+### 1 · I-382 and I-384 — ADOPTED AS FILED
+
+**I-382.** The sealed **`1.3 × 10⁻⁴` is labeled in every artifact as THE INDEPENDENCE-ASSUMPTION FIGURE
+and is never restated as the joint rate.** SPEC-005's measured joint rate reports beside it. **The sealed
+figure is never deleted and never silently replaced** — both on the face of every artifact.
+
+**I-384.** **`I_max` and `I_0` run before step 3.** *"If `I_max < 0.25`, leg (ii) fires on every possible
+world and the family learns it before spending E2, which is the entire value of the sequencing."*
+Dispatched at **S4-D-031**.
+
+### 2 · I-376 / I-377 — DISCLOSURE, NOT REPAIR — **AND IT REACHES LEG (i)**
+
+**RULED: the payload governs. When `w < 1` the position carries NET LONG SPOT.** Two consequences enter
+the record now:
+
+**(a)** **No surrogate may be a scalar reweighting of trial 1's series.** C11's construction must
+**reproduce the actual un-hedged payoff** from component panels.
+
+**(b) — AND THIS IS THE ONE THAT MATTERS MOST IN THIS ENTRY.** **Leg (i)'s regression on `R_bench` alone
+cannot separate conditioning alpha from spot-directional return earned while un-hedged.**
+**THE SEALED TEST CAN PASS ON SPOT BETA.**
+
+> **This is not amendable under P7.** It is **disclosed on every artifact**, and **Gate 1's Charter 5.4
+> factor attribution MUST DECOMPOSE IT EXPLICITLY BEFORE ANY PROCEED IS POSSIBLE.**
+>
+> **What this does to the family's evidential position, stated plainly rather than left to be inferred:**
+> F-002's two substantive legs are now both qualified before either has run. **Leg (ii)** may be
+> untestable or spared by construction — S4-D-031 is measuring which. **Leg (i)** may pass on a
+> directional exposure the regression does not control for. **A family that survives F-002 in full has
+> not, on these readings, been shown to have a conditioning edge**, and the write-up may not say it has.
+
+Validation names this in `VALIDATION-SPEC-005` **in the three-register form** (economic · mechanical ·
+evidential, per R42's precedent) — **queued to Validation's first Sprint 5 unit with the I-385 filings**,
+because Validation holds no Opus and the ceiling does not move. **The substance is disclosed here now;
+the artifact amendment follows.**
+
+### 3 · I-380 — the estimator is implemented, and does not run until Validation reviews it
+
+**The sealed specification is COMPLETE and needs no interpretation:** the **Newey–West `t` on the
+intercept of `R_strat = α + β·R_bench + ε` at 21-lag truncation.** Implemented at **Sonnet**.
+
+**ACCEPTANCE IS COMPUTED AGAINST AN EXTERNAL ORACLE, NOT AGAINST AUTHORED TESTS** — **agreement to
+`1e-8` with `statsmodels` OLS + `HAC(maxlags=21)`** on synthetic series and on trial 1's derived series.
+**This is §7.10(3) — *acceptance is computed, not narrated* — taken one step further: the oracle is
+outside the firm, so the implementing seat cannot author the standard it is judged by.**
+
+**It does not run in step 3 until Validation has reviewed it, and Validation has no Opus.**
+
+### 4 · **STEP 3 SLIPS TO SPRINT 5 — RULED NOW, NOT DISCOVERED AT THE DEADLINE**
+
+**The ceiling does not move and insurance is not working capacity.** (SO-003 §2: 9 / 2 / 1; **free Opus
+exhausted at S4-D-030**; insurance is *"never drawn… not working capacity"* and is logged against the
+termination it covers — there has been none.)
+
+**THIS SPRINT CLOSES WITH:** objective 1 **MET** (the first trial logged) · **C11 measured** ·
+**`I_max` / `I_0` computed** · **the estimator implemented and awaiting review.**
+
+**SEQUENCE RULED:** `I_max` / `I_0` → **C11 execution** → **estimator implementation** → **close.**
+
+> **This is the second scoped slip ruled in advance in two days**, and the pattern is now the firm's
+> practice rather than an improvisation: **SO-003 §2's own doctrine — *the honest response is a scoped
+> slip ruled in advance, not a raise*.** The hard stop cannot be used to argue for running step 3 early,
+> **because the outcome of not reaching it is already ruled correct.**
+
+### 5 · I-385 — corrective adopted, in the CIO's own words
+
+**Hard-stop lists are scoped PER DISPATCH, never copied forward.** *"A prohibition correct for one brief
+and wrong for the next is a roster error in list form."* — applied at S4-D-031, whose hard-stop list
+carries an explicit carve-out permitting the seat to file its own findings, and says why.
+
+**The nine findings — `I-376`, `I-377`, `I-378`, `I-379`, `I-380`, `I-381`, `I-382`, `I-383`, `I-384` —
+are filed at Validation's first Sprint 5 unit. NUMBERS RESERVED AND LISTED HERE so none becomes a later
+finding's premise** (I-370's rule). **New allocations start at `I-386`** [measured — repo-wide maximum
+claimed is `I-385`; `I-999` is a test-fixture literal].
+
+### 6 · S4-D-031 dispatched — the feasibility gate
+
+Head of Data & Infrastructure, **Sonnet, declared tier, no deviation. ZERO new trials.** Computes `I_0`,
+`I_max`, `I_min` per `SPEC-005` §4.6, red-first, with the greedy bound verified against **brute force at
+`T = 10`** (D-4) and the **`funding_panel_sha256` drift control (B-7) as a STOP**. Brief carries the
+I-376/I-377 correction as a binding construction rule: **the surrogate is rebuilt from component panels,
+and a computed `I_0 ≈ 0` is evidence of that error, not a result** (D-3).
+
+**Budget after: 23 of 30 invocations · 9 of 12 Opus · free Opus exhausted.**
