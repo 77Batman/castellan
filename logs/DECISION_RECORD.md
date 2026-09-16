@@ -7258,3 +7258,32 @@ the **Monthly Letter**, both Principal acts. **The CIO completed the ruled work 
 session. It did not close the sprint**, and says so rather than letting a session close read as one.
 
 **Review date:** at the open of the next session.
+
+### 7 · **CORRECTION TO §3, SAME SESSION — the disposition table was wrong when written**
+
+**§3 above states "All work committed as produced." IT WAS NOT TRUE WHEN WRITTEN, and the path it missed
+is the book of record itself.**
+
+**`book/registry.db` was dirty and unstaged at the moment §3 was written.** The `S4-D-033` commit
+(`452cc01`) staged the C11 modules, tests, deliverable and issue log **by name** — and **did not stage
+`book/registry.db`**, which C11 had modified with **`log_event` id 10 and `write_grant` id 12**
+[measured]. The close entry asserted a clean disposition over a registry change that was sitting
+uncommitted.
+
+**Caught by running `git status` AFTER writing the disposition rather than before** — which is the only
+reason it was caught at all, and is worth making the practice.
+
+**THIS IS I-209's SHAPE FOR THE THIRD TIME IN THIS FIRM'S HISTORY, AND THE SECOND TIME TODAY.**
+§7.10(6) exists because *"a named-path discipline omits whatever nobody thought to name"* — and
+**`book/registry.db`, written by a seat, is I-209's own motivating case, named in §7.10(6)'s text.**
+I-371 found the same shape this morning in a different dimension (a pointer is not a path). **The rule
+that was written to catch exactly this did not catch it, because the CIO staged by name and the name it
+forgot was the one the rule names.**
+
+**Repaired:** `book/registry.db` committed below. **§3 as written is left standing and corrected here
+rather than edited**, because the log is a record of what was asserted at the time.
+
+**Corrective, narrower than "check git status":** **a session close runs `git status --porcelain` and
+pastes its ACTUAL output into the disposition table — never a prose summary of it.** An empty table is
+written only when the command returned empty. **A disposition is a measurement, not a recollection**,
+and §7.10(3)'s *acceptance is computed, not narrated* applies to the close rule itself.
