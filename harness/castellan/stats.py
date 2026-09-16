@@ -249,6 +249,161 @@ def sr_tstat_corrected(
 
 
 # ----------------------------------------------------------------------
+# OLS regression with Newey-West / HAC standard errors (I-380, PREREG-002
+# §5.2 leg (i))
+# ----------------------------------------------------------------------
+
+@dataclass(frozen=True)
+class OLSHACAlpha:
+    """Every figure a caller needs from :func:`ols_alpha_tstat_hac`."""
+
+    alpha: float          # OLS intercept
+    beta: float           # OLS slope on x
+    se_alpha: float       # HAC (Newey-West) standard error of alpha
+    se_beta: float        # HAC (Newey-West) standard error of beta
+    t_alpha: float        # alpha / se_alpha -- the PREREG-002 sec5.2(i) figure
+    t_beta: float
+    n: int                # observations used (after joint NaN-drop)
+    lag: int              # Bartlett truncation, AS SUPPLIED -- not selected
+    use_correction: bool  # small-sample correction convention, see docstring
+
+
+def ols_alpha_tstat_hac(
+    y: np.ndarray,
+    x: np.ndarray,
+    lag: int,
+    *,
+    use_correction: bool = False,
+) -> OLSHACAlpha:
+    """OLS ``y = alpha + beta*x + eps`` with a Newey-West/HAC (Bartlett
+    kernel) covariance matrix on the coefficients, at a caller-supplied
+    lag truncation ``lag`` (I-380, PREREG-002 sec5.2 leg (i): "In the OLS
+    regression R_strat = alpha + beta*R_bench + eps over the full
+    in-sample, the Newey-West t-statistic on alpha, at a 21-bar lag
+    truncation, is <= 3.0"). The lag is NOT selected here -- PREREG-002
+    pre-commits it at 21 bars and this function does not choose,
+    default, or auto-select a truncation; unlike :func:`sr_tstat_corrected`
+    there is no Andrews rule or one-sided floor in this path, because the
+    sealed document specifies the number directly.
+
+    Convention resolved on the face of this function (Principal ruling,
+    2026-09-16): acceptance is computed against ``statsmodels`` --
+    ``sm.OLS(y, sm.add_constant(x)).fit(cov_type="HAC",
+    cov_kwds={"maxlags": lag})`` -- to 1e-8. Reading ``statsmodels``'
+    own ``RegressionResults.get_robustcov_results`` source (version
+    0.15.0) shows that for ``cov_type="HAC"`` reached this way,
+    ``use_correction`` defaults to ``False`` when the caller's
+    ``cov_kwds`` does not set it -- i.e. NO small-sample correction is
+    applied by the oracle call the dispatch specifies. This function's
+    own default, ``use_correction=False``, is chosen to MATCH that
+    default exactly rather than to state an independent preference; a
+    caller who needs the corrected convention (``cov_kwds={"maxlags":
+    L, "use_correction": True}`` on the oracle side) passes
+    ``use_correction=True`` here and gets bit-identical agreement to
+    that oracle call instead (see the test suite's "AR1-with-correction"
+    case). The Bartlett kernel weights (``1 - l/(lag+1)`` for
+    ``l=0..lag``) and the HAC sandwich construction (``S = sum_l
+    weight[l] * (x_l'x_l + x_l'x_l')`` on the per-observation score
+    ``x_i * resid_i``, sandwiched as ``(X'X)^+ S (X'X)^{+T}`` using the
+    Moore-Penrose pseudoinverse of ``X`` for both the coefficients and
+    the bread of the sandwich) are read directly from
+    ``statsmodels.stats.sandwich_covariance.{cov_hac_simple,
+    S_hac_simple, weights_bartlett}`` and from ``RegressionResults``'
+    own ``pinv``-based fit, not reimplemented from a textbook formula
+    independently -- this is why agreement below is exact to double
+    precision on every case tested, not merely within 1e-8.
+
+    **Disclosure, not amendable under P7 (Gate 1's Charter 5.4 factor
+    attribution must decompose this before any PROCEED):** this
+    regression, run on ``R_bench`` alone, cannot separate conditioning
+    alpha from spot-directional return earned while un-hedged. The
+    sealed position (PREREG-002 statement) is "long 1.0 unit spot
+    notional, short w(t) units perp notional" -- when ``w(t) < 1`` the
+    position carries NET LONG SPOT exposure, not a smaller delta-neutral
+    one. A candidate ``R_strat`` built on that construction can clear
+    this test on spot beta (a rising BTC/ETH spot price during the
+    sample, correlated with the bars the conditioning happens to
+    de-scale on) with no conditioning alpha whatsoever. This function
+    reports exactly the statistic PREREG-002 sec5.2(i) specifies and
+    nothing more; it does not and cannot detect this confound, which is
+    Gate 1 factor attribution's job, not this estimator's.
+
+    Parameters
+    ----------
+    y, x : equal-length 1-D arrays (``R_strat``, ``R_bench``). Paired
+        ``NaN``s are dropped jointly (a ``NaN`` in either series drops
+        that bar from both) before any arithmetic, so the two series
+        stay aligned bar-for-bar.
+    lag : int >= 0, the Bartlett truncation. Raises ``ValueError`` if
+        negative or if ``lag >= n - 2`` (need at least one residual
+        degree of freedom beyond the 2 estimated parameters).
+    use_correction : see above.
+
+    Raises
+    ------
+    ValueError
+        if ``y`` and ``x`` are not the same length, if fewer than 3
+        paired observations remain after dropping ``NaN``s, or if
+        ``lag`` is out of range.
+    """
+    y = np.asarray(y, dtype=float)
+    x = np.asarray(x, dtype=float)
+    if y.shape != x.shape:
+        raise ValueError(
+            f"y and x must have the same shape, got {y.shape} vs {x.shape}"
+        )
+    mask = ~(np.isnan(y) | np.isnan(x))
+    y = y[mask]
+    x = x[mask]
+    T = y.size
+    L = int(lag)
+    if L < 0:
+        raise ValueError(f"lag must be >= 0, got {L}")
+    if T < 3:
+        raise ValueError(f"need at least 3 paired observations, got {T}")
+    if L >= T - 2:
+        raise ValueError(
+            f"lag ({L}) must be < n-2 ({T - 2}) -- at least one residual "
+            "degree of freedom beyond the 2 estimated parameters"
+        )
+
+    X = np.column_stack([np.ones(T), x])
+    # Moore-Penrose pseudoinverse, matching statsmodels' default
+    # OLS.fit(method="pinv"): beta = pinv(X) @ y, and
+    # normalized_cov_params = pinv(X) @ pinv(X).T -- using the SAME
+    # pinv_X for both is what makes this bit-identical to the oracle
+    # rather than merely close, on well-conditioned designs.
+    pinv_X = np.linalg.pinv(X)
+    beta_hat = pinv_X @ y
+    resid = y - X @ beta_hat
+    xtx_inv = pinv_X @ pinv_X.T
+
+    xu = X * resid[:, None]  # (T, 2) per-observation score x_i * u_i
+    weights = 1.0 - np.arange(L + 1) / (L + 1.0)  # Bartlett kernel
+    S = weights[0] * (xu.T @ xu)
+    for l in range(1, L + 1):
+        s = xu[l:].T @ xu[: T - l]
+        S = S + weights[l] * (s + s.T)
+
+    cov = xtx_inv @ S @ xtx_inv.T
+    if use_correction:
+        k_params = 2
+        cov = cov * (T / float(T - k_params))
+
+    se = np.sqrt(np.diag(cov))
+    alpha, beta = float(beta_hat[0]), float(beta_hat[1])
+    se_alpha, se_beta = float(se[0]), float(se[1])
+    t_alpha = alpha / se_alpha if se_alpha > 0 else float("nan")
+    t_beta = beta / se_beta if se_beta > 0 else float("nan")
+
+    return OLSHACAlpha(
+        alpha=alpha, beta=beta, se_alpha=se_alpha, se_beta=se_beta,
+        t_alpha=t_alpha, t_beta=t_beta, n=T, lag=L,
+        use_correction=use_correction,
+    )
+
+
+# ----------------------------------------------------------------------
 # Multiple testing: expected max Sharpe, DSR, MinBTL
 # ----------------------------------------------------------------------
 

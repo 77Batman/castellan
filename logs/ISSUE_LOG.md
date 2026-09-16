@@ -8274,3 +8274,20 @@ unbatched, and their substance is not waiting on their log entries.**
 
 **Resolution:** open — for Head of Quantitative Validation, alongside I-386.
 **Pattern tag:** `two-feasible-sets-one-sentence` · `average-exposure-held-fixed-used-two-ways-in-one-document`
+
+---
+
+## I-388 · 2026-09-15 · The dispatch's "reuse DATA-IMPL-014's reconstruction" instruction could not be honored literally — no importable artifact exists — and this seat rebuilt it independently instead · Severity: LOW · Owner: head-of-data-infra
+
+**Found by Head of Data & Infrastructure at S4-D-032, implementing the I-380 leg (i) estimator, while building the required trial-1-derived oracle-agreement fixture.**
+
+**What was instructed.** S4-D-032's brief: *"`research/DATA-IMPL-014-feasibility-gate.md`... contains an engine-validated off-engine reconstruction that matched trial 1's stored blob to `3.69e-10`... read it and reuse that reconstruction rather than writing a second one."*
+
+**What was found.** `DATA-IMPL-014` is a prose report of an interactive session's computation, not an importable module — this seat searched `research/work/` and the whole `harness/` tree (`find . -iname "*feasib*" -o -iname "*data-impl-014*"`) and confirmed **no script, notebook, or checked-in code artifact accompanies it** [measured]. There is nothing of the shape "reuse" could literally apply to.
+
+**What this seat did instead, disclosed rather than presented as full compliance.** Rebuilt the reconstruction independently from the same primitives DATA-IMPL-014 names — the sealed literals (`k=0.5`, `d=1.0`, `band=0.54`, `lookback=30`, `w_max=1.0`), the same panels (`pit_price_panel`/`pit_funding_panel` on `binance`/`binanceusdm` BTC+ETH), and `engine.run_backtest`'s exact net-return formula copied line-for-line off-engine (never calling `run_backtest` itself — zero trials, no scratch-registry rehearsal needed because the engine was never invoked) — rather than importing DATA-IMPL-014's code, because none exists to import. **The independent rebuild's own parity check against trial 1's stored blob at constant `w≡1.0` measured `3.693e-10` max abs diff**, matching DATA-IMPL-014's cited `3.69e-10` to within rounding — strong evidence the two sessions computed the same thing on the same data, but this is a CONVERGENCE check performed after the fact, not a guarantee derived from shared code, and the two reconstructions could in principle have diverged on a detail neither session's spot-check would catch (e.g. the exact turnover-band tie-break, or the K7-trigger window's inclusive/exclusive boundary).
+
+**Consequence.** None for I-380 itself: the resulting `R_strat` fixture is explicitly a test fixture for oracle-agreement purposes only (never a leg (i) result), and the statistic under test — `ols_alpha_tstat_hac`'s agreement with `statsmodels` — is verified exactly (0.0 max abs diff, see `DATA-IMPL-015`) regardless of which numbers are fed into it. Filed because the instruction could not be honestly marked "done as instructed," not because anything downstream is wrong.
+
+**Resolution:** closed — informational; no repair needed, no further action requested.
+**Pattern tag:** `an-instruction-to-reuse-code-that-was-never-checked-in` · `convergence-after-the-fact-is-not-the-same-guarantee-as-shared-code`
