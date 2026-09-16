@@ -7148,3 +7148,113 @@ I-376/I-377 correction as a binding construction rule: **the surrogate is rebuil
 and a computed `I_0 ≈ 0` is evidence of that error, not a result** (D-3).
 
 **Budget after: 23 of 30 invocations · 9 of 12 Opus · free Opus exhausted.**
+
+---
+
+## S4-D-032 · 2026-09-16 · Head of Data & Infrastructure · leg (i)'s estimator · **I-380 CLOSED**
+
+**Sonnet, declared tier · ZERO trials · registry untouched.** Implemented
+`castellan.stats.ols_alpha_tstat_hac` — OLS `R_strat = α + β·R_bench + ε`, Bartlett HAC, **lag
+caller-supplied and never auto-selected** (§5.2 pre-commits 21).
+
+**Acceptance computed against an EXTERNAL oracle, per the Principal's ruling: exact bitwise `0.0`**
+across AR(1), near-zero-α, high-α, `use_correction=True`, `lag=0`, a 5-lag sweep, and trial 1's derived
+series. **The ruling asked for `1e-8`.**
+
+> **What the exactness does and does not prove, stated because a number this clean invites over-reading.**
+> Both paths compute `pinv(X)@y` through the same numpy routine, so the oracle validates **the convention
+> and the assembly** — `use_correction` and the kernel are silent defaults and that is exactly where the
+> risk lay — **not the underlying linear algebra.** It is the right check, proving something narrower
+> than "two independent implementations agree."
+
+**No statsmodels dependency in the harness** [measured — `stats.py` imports numpy and scipy only; all
+four mentions are docstring prose]. **Test-only, so the oracle stays external.** Red-first: 20 tests, 12
+mutations; **one test failed to discriminate its own mutation, was caught by the dispatch's own process,
+repaired and re-verified rather than shipped** — the T-18 pattern, unprompted. Caller count **0**
+[measured]. Suite **343/22/365 → 363/22/385**, the 22 byte-identical. **No leg (i) verdict produced.**
+
+## S4-D-033 · 2026-09-16 · Head of Data & Infrastructure · **C11 MEASURED — BAND A**
+
+**Sonnet · ZERO new trials · one live `log_event`.** Circular block permutation, `L = 30`, `B = 10,000`,
+seed from `prereg_sha256`. **Sign-randomization rejected** — it cannot hold average exposure fixed
+without breaching `w_max = 1.0`, which **C-08 forbids**.
+
+**`α̂₂ = 0.0`** [measured], Clopper–Pearson 95% CI **[0.0, 0.00037]**, robust across all eight
+disclosure-grid cells, the alternative denominator, and the cost-free variant. **THE SINGLE [ASSUMED]
+TERM IN §5.3's OTHERWISE-DERIVED CHAIN IS NOW MEASURED, AND THE ASSUMPTION HOLDS DECISIVELY.**
+
+Registry **`1·1·9·11` → `1·1·10·12`**; **trials unchanged at 1** — C11 cost **0 of its ≤2 authorized**,
+because `R_bench` was already trial 1 and the rest are transforms. One `log_event` (id 10) under an
+explicit **`LOG_EVENT`** grant — the closed vocabulary's narrowest admitting reason — **token supplied by
+hand, not scripted (I-374)**, outcome CLEAN, hash chain intact, **scratch rehearsal clean beforehand**.
+**30/30 acceptance tests red-first**, every mutation RED-then-GREEN. Suite **363/22/385 → 393/22/415**.
+**I-388's substance closed** — `castellan/reconstruction.py` and `castellan/nullcal.py` checked in, so a
+fourth independent rebuild does not happen.
+
+### **I-389 · HIGH · ESCALATED — leg (i) is roughly 90× weaker than the sealed document assumes**
+
+**`α̂₁ = 0.119`** [measured — **calibration quantity only; no leg (i) verdict was produced or implied**]
+against the sealed **`≤ 0.0013`**. **Leg (i) spares a pure-noise conditioning about 12% of the time, not
+0.13%.**
+
+**`α̂_joint = 0.0`, product `= 0.0`, gap `= 0.0` — and the zero is degenerate**, because `α̂₂` floors at
+zero on all 10,000 draws. **I-382's substance is therefore UNTESTED by this measurement, not refuted.**
+Per the Principal's labelling ruling the sealed `1.3 × 10⁻⁴` carries **`[assumed — superseded by C11]`**
+beside the measured value and **is never deleted.**
+
+---
+
+## S4-D-034 · 2026-09-16 · Session close — the ruled sequence is complete
+
+**Closed under `TEMPLATES.md` §7.10(6)** as amended twice today.
+
+### 1 · ORACLE POINTER READ-BACK
+
+> **Pointer written. Memory id `M400`.** Kind `event`; supersedes `M393` and `M392`.
+
+### 2 · Push — §7.10(6) as amended
+
+**Pushed. `HEAD 452cc01`, in sync with `origin/main`.** Eleven commits: `feda694` `c08e906` `72d3743`
+`a3a568b` `6f74a3d` `ed807de` `3a71a5e` `ff02e74` `3e43257` `2cc4acb` `452cc01`. **No longer a held act
+and no longer asked about.**
+
+### 3 · Dirty-path disposition
+
+All work committed as produced. **Deliberately unstaged:** `book/polymarket_universe.json`,
+`logs/capture/polymarket-book.{err,out}` — launchd capture churn, not this session's work.
+
+### 4 · THE SYNTHESIS — what the day actually established about the family
+
+**F-002's two substantive legs each now carry a serious qualification, and the qualifications are
+complementary in the worst way.**
+
+**Leg (i) is doubly compromised.** It is **~90× weaker than sealed under the null** (I-389), **and** it
+**cannot separate conditioning alpha from spot-directional return earned while un-hedged** — I-376/I-377,
+Principal-ruled: the payload governs, `w < 1` carries net long spot, **the sealed test can pass on spot
+beta.** Not amendable under P7; Gate 1's Charter 5.4 attribution must decompose it before any PROCEED.
+
+**Leg (ii) carries the falsifier's entire decisiveness** — `α̂₂ = 0.0` — **and leg (ii) is precisely the
+leg whose TESTABILITY IS UNPROVEN**, because Band X rests on an instrument I-386 showed is not a bound.
+
+> **The family's falsification power now rests on the one leg nobody can yet show is a test.** That is
+> the sentence Sprint 5 has to answer, and **none of it would be known if step 3 had run today** — which
+> is what the Principal's ordering ruling bought.
+
+### 5 · State
+
+Suite **393 passed / 22 failed / 415** — the 22 **byte-identical to session open across nine runs**,
+**zero regressions all day, +50 tests added.** Registry **1 · 1 · 10 · 12**. Budget **25 of 30
+invocations · 9 of 12 Opus · FREE OPUS EXHAUSTED** (2 insurance, not working capacity; 1 DA reserve).
+Seal stands. Hard stop **2026-09-24**.
+
+**Twenty-three findings filed, I-370 – I-392. Three are this seat's own** — I-370's 18/4 correction,
+I-374's unrunnable code block, I-385's copied-forward prohibition. **Open HIGH: I-386, I-389, I-330,
+I-372.**
+
+### 6 · NOT DONE, AND IT IS THE PRINCIPAL'S ACT
+
+**Sprint 4 is not formally closed.** SO-003 §7 requires the **[would-have-asked] graduation audit** and
+the **Monthly Letter**, both Principal acts. **The CIO completed the ruled work sequence and closed the
+session. It did not close the sprint**, and says so rather than letting a session close read as one.
+
+**Review date:** at the open of the next session.
