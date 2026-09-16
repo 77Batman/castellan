@@ -8239,3 +8239,38 @@ unbatched, and their substance is not waiting on their log entries.**
 
 **Resolution:** open — **corrective for the Principal; the nine await a filing dispatch to Validation.**
 **Pattern tag:** `a-prohibition-that-manufactures-the-defect-it-neighbours` · `i-365-reproduced-by-the-seat-that-repaired-it` · `a-hard-stop-list-copied-into-a-dispatch-of-a-different-shape` · `the-seat-obeyed-and-that-is-why-it-happened`
+
+---
+
+## I-386 · 2026-09-15 · `VALIDATION-SPEC-005` §4.6's greedy construction for `I_max`/`I_min` does not compute a valid bound · Severity: HIGH · Owner: quant-validation
+
+**Found by Head of Data & Infrastructure at S4-D-031, executing the feasibility gate (`I_0`, `I_max`, `I_min`) that dispatch was scoped to compute, nothing else.**
+
+**What was specified.** §4.6: *"Assign the realized multiset of `w` values to bars greedily: smallest `w` on the most-negative bars, largest on the least. A deterministic upper bound on `I` over every schedule with this average exposure."* §4.6 further states this quantity is *"alignment-free"* and that `I_max` *"bounds it from above."*
+
+**What was measured, on the realized 2,415-bar BTC+ETH panel, engine-validated (see `DATA-IMPL-014` §3–§4):**
+
+- `I_0` (constant `w* ≡ w̄`, both assets) = **−8.274** [measured].
+- `I_max`, computed by the literal §4.6 rule (rank bars by realized `R_bench(t)`, pair the sorted realized-`w` multiset ascending) = **−20.243** [measured], cost-free variant **−20.139** — materially unchanged by cost, so the failure is not a friction artifact.
+- **`I_max` (−20.243) is less than `I_0` (−8.274).** The constant-`w̄` schedule achieving `I_0` has exactly the per-asset average exposure `w̄` that §4.6 says `I_max` bounds *"every schedule with this average exposure"* over — under that reading (the document's own phrase, and the same phrase §5.5(e) uses for "average exposure held fixed," which is explicitly a match on the **mean**, not the multiset), the constant schedule is a member of the class `I_max` is defined to dominate. **A quantity that is supposed to be the supremum over a class, coming in below a value that class demonstrably attains, is not the supremum.**
+- **Independent confirmation, exhaustive, no interpretive ambiguity:** at `T = 10` (D-4's own prescribed scale), brute force over **all 3,628,800 permutations** of a synthetic realized-`w` multiset shows the §4.6 greedy-by-`R_bench` rule's achieved statistic **does not match** the true combinatorial optimum, for both the max and the min direction. A second heuristic (sorting by the per-bar sensitivity term the return series actually depends on, rather than by `R_bench` itself) comes closer to the brute-force truth but **also does not match it exactly.** **The mean of the `k` smallest elements of a series is a concave function of a linear-in-`w` transform, and its supremum under a multiset-permutation constraint is a genuine combinatorial optimization — no single-key sort is shown to solve it exactly, and the sealed text does not derive one.**
+
+**Consequence for the Band X determination this gate exists to make.** `DATA-IMPL-014` reports a mathematically valid but loose alternative bound (drop the turnover-cost term and the exposure-match constraint; optimize each bar/asset independently) of `I_max ≤ 0.593`. This bound is valid (it optimizes over a strict superset of the feasible set, in the direction that can only inflate `I`) but **not tight enough to confirm or rule out `I_max < 0.25`.** **The feasibility gate's headline question — is 25% reachable at all — cannot be answered with confidence using the instrument §4.6 specifies, and the instrument itself is demonstrated defective, not merely imprecise.**
+
+**Not repaired here** — a corrected `I_max`/`I_min` construction (a properly-posed constrained optimization, e.g. an LP over the top-`k`-sum formulation, or an exhaustive/branch-and-bound method feasible at `T ≈ 2,415`) is Validation's to specify, per the same division of labor `VALIDATION-SPEC-005` itself observes (Validation specifies statistics and their construction; Data & Infrastructure executes against sealed rulings). This seat computed exactly what §4.6 named, red-first, verified it against brute force as D-4 requires, and is reporting the mismatch rather than quietly substituting a different algorithm.
+
+**Resolution:** open — for Head of Quantitative Validation. **This is itself a §4.6 Band-X-adjacent finding**, since it means the pre-check the Principal ordered ahead of step 3 (`I-384`'s "the leg fires on every possible world" check) cannot presently be closed in either direction.
+**Pattern tag:** `an-upper-bound-that-is-not-one` · `a-greedy-heuristic-asserted-without-a-brute-force-check-until-now` · `order-statistic-objectives-are-not-solved-by-a-single-sort`
+
+---
+
+## I-387 · 2026-09-15 · `VALIDATION-SPEC-005` §4.6 does not state whether `I_max`/`I_min`'s "every schedule with this average exposure" means every permutation of the exact realized `w` multiset, or every schedule matching only the per-asset mean `w̄` · Severity: MEDIUM · Owner: quant-validation
+
+**Found by Head of Data & Infrastructure at S4-D-031, while constructing the greedy assignment for I-386 above.**
+
+**The gap.** §4.6's construction paragraph (*"assign the realized multiset of `w` values to bars"*) describes a **multiset-permutation** feasible set. Its very next sentence (*"a deterministic upper bound on `I` over every schedule with this average exposure"*) describes a **mean-matching** feasible set — a strictly larger class that also contains, e.g., the constant-`w̄` schedule used for `I_0`, which is not a permutation of the realized multiset at all (the realized multiset is not constant). **These are different classes and the sealed spec does not say which one `I_max` is claimed to bound.** The choice matters: I-386's cleanest demonstration of the defect (`I_max < I_0`) is a direct contradiction under the mean-matching reading and merely a curiosity under the permutation-only reading — though the T=10 exhaustive brute-force check in I-386 shows the greedy fails **even under the narrower, permutation-only reading**, so the finding survives either way.
+
+**Ruled here, for this dispatch's own reporting only, not binding on Validation's eventual repair:** the broader (mean-matching) reading is used wherever this dispatch needed to construct a provably-valid bound (`DATA-IMPL-014` §4's relaxed `I_max ≤ 0.593`), because it is the only reading under which a bound can be verified airtight without an exhaustive search at full scale.
+
+**Resolution:** open — for Head of Quantitative Validation, alongside I-386.
+**Pattern tag:** `two-feasible-sets-one-sentence` · `average-exposure-held-fixed-used-two-ways-in-one-document`
