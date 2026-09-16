@@ -8291,3 +8291,59 @@ unbatched, and their substance is not waiting on their log entries.**
 
 **Resolution:** closed — informational; no repair needed, no further action requested.
 **Pattern tag:** `an-instruction-to-reuse-code-that-was-never-checked-in` · `convergence-after-the-fact-is-not-the-same-guarantee-as-shared-code`
+
+---
+
+## I-389 · 2026-09-15 · The measured leg-(i) calibration-only false-survival rate (11.9%, primary cell) is roughly 90x the sealed document's assumed 0.13% — a CALIBRATION quantity, never a leg-(i) verdict, but a gap large enough that step 3 should not run leg (i) without Validation seeing this number first · Severity: HIGH · Owner: quant-validation (via Principal, per I-382's own escalation path)
+
+**Found by Head of Data & Infrastructure at S4-D-033, executing `VALIDATION-SPEC-005`'s C11 null calibration (dispatch item: measure `α̂₁`, `α̂_joint`, `α̂₂`, the product, and the independence gap — §4.5).**
+
+**What was measured, primary cell (circular block permutation, `L=30`, `B=10,000`, `master_seed=16567568367804922233`):** on the SAME 10,000 surrogate schedules used for `α̂₂`, `castellan.stats.ols_alpha_tstat_hac(R*_strat, R_bench, lag=21)`'s `t_alpha` exceeded the firm's `3.0` hurdle on **`α̂₁ = 0.119`** (1,190 of 10,000 surrogates) [measured]. `PREREG-002` §5.3's sealed figure for this quantity is `≤ 0.0013` **[assumed]**. `α̂₂ = 0.0` on every one of the 8 disclosure-grid cells (Clopper–Pearson 95% CI `[0, 0.00037]`), so **`α̂_joint = 0.0`** and the independence gap is degenerate (`0.0 − 0.119×0.0 = 0.0`) at THIS measurement — I-382's concern (positive dependence making the joint exceed the product) does not manifest numerically here only because `α̂₂` itself floors at zero, not because the two legs are independent.
+
+**Why this is plausible and not (on this seat's reading) a computation defect.** `R*_strat`'s spot and perp RETURN components are the realized, unpermuted series — only the conditioning schedule `w(t)` is permuted (`VALIDATION-SPEC-005` §3, "the only object that moves is the time ordering of `w(·)`"). Four of `R*_strat`'s six additive terms (both spot legs' returns, both perp legs' raw returns before the `w`-multiplier) are therefore IDENTICAL, bar-for-bar, to `R_bench`'s own construction, regardless of which permutation is drawn. A regression of `R*_strat` on `R_bench` inherits this shared variance directly, and an 11.9% rate of clearing a `t=3.0` HAC hurdle by chance, under a null that shares this much structure with its own regressor, is not implausible on its face — but it was never checked before this dispatch, because C11 is the first time the leg-(i) estimator (`I-380`, itself still awaiting Validation's review) has been run against ANY null.
+
+**Hard-stop compliance, stated explicitly.** This is reported as a **calibration quantity only**, per this dispatch's own hard stop 2. No leg-(i) verdict is stated or implied; `ols_alpha_tstat_hac` was not run on the realized alignment (only on the 10,000 surrogates); step 3 was not run. What this finding says is narrower and, this seat believes, still important: **if step 3 runs leg (i) with this same estimator and this same pairing structure, its own false-positive behaviour may be far from the `0.13%` §5.3 assumes**, and Validation should see this measurement before, not after, that evaluation — echoing exactly the reasoning the Principal gave for ordering C11 before step 3 in the first place.
+
+**Resolution:** open — for Head of Quantitative Validation, escalated to the Principal per I-382's own precedent (both concern the same sealed `1.3×10⁻⁴` arithmetic).
+**Pattern tag:** `a-null-that-shares-four-of-six-terms-with-its-own-regressor` · `the-calibration-that-was-never-run-because-nothing-existed-to-run-it-against` · `the-assumed-figure-was-never-checked-in-either-direction-until-c11`
+
+---
+
+## I-390 · 2026-09-15 · The exposure-match scalar `c`'s engine-literal formula (`shift(execution_lag).fillna(0.0)`) is NOT exactly permutation-invariant; the reusable reconstruction module computes `c` from the plain time-average instead, ruled and disclosed here · Severity: MEDIUM · Owner: head-of-data-infra
+
+**Found by Head of Data & Infrastructure at S4-D-033, writing `VALIDATION-SPEC-005` acceptance test C-2 (`mean(w*) == mean(w)` to floating-point identity, therefore `c` invariant).**
+
+**What was found.** `c`'s literal definition (`VALIDATION-SPEC-005` §3.3) is a time-average of `gross_exposure_strat(t) = 1.0 + 0.5·w_BTC(t−1) + 0.5·w_ETH(t−1)`. Building this EXACTLY as the engine computes held positions (`target_weights.shift(execution_lag).fillna(0.0)`, `engine.py:138`) introduces a single-bar edge effect: bar 0's position is 0 (no decision has been made yet) and the schedule's own final bar is never applied to a position. Because a circular block permutation changes WHICH value lands at the first/last bar, this edge-truncated `c` is **not exactly invariant** across resamples — measured at order `1/T ≈ 4×10⁻⁴` relative, using `2,415`-bar test cases. Test C-2 requires exact invariance (`VALIDATION-SPEC-005` §2.1 reason 3 / §3.3: *"because block permutation preserves the multiset exactly, the surrogates' own average exposure equals c identically, and test C-2 asserts it rather than assuming it"*), which is a mathematically true statement only for the PLAIN time-average of `w`, not for the lag-and-fill construction.
+
+**Ruled here:** `castellan.reconstruction.exposure_match_c` computes `c = (1.0 + 0.5·mean(w_BTC) + 0.5·mean(w_ETH)) / 2.0` — a pure function of `mean(w)`, exactly preserved (to floating-point summation-order noise, `~1e-16` relative) by any permutation of the multiset. This differs from the engine-literal `c` by the same `~4×10⁻⁴` relative amount described above — immaterial to `M_b`, `I_0`, or any reported band (verified: `c=0.939484` under this ruling vs. `c≈0.939104` under the engine-literal construction, a difference far below anything that could move a band boundary).
+
+**Resolution:** closed — ruling made and disclosed on the function's own docstring (`harness/castellan/reconstruction.py::exposure_match_c`); binds this dispatch and any successor reading `c` from this module.
+**Pattern tag:** `floating-point-identity-is-not-the-same-claim-for-every-formula-that-computes-the-same-quantity` · `an-edge-effect-that-only-a-permutation-test-would-surface`
+
+---
+
+## I-391 · 2026-09-15 · `ols_alpha_tstat_hac`'s degenerate-regressor reduction does not equal `sr_tstat_nw` bit-for-bit as `VALIDATION-SPEC-005` test E-1 states — it equals it scaled by an exact, lag-invariant factor `sqrt(T/(T-1))` · Severity: LOW · Owner: quant-validation
+
+**Found by Head of Data & Infrastructure at S4-D-033, writing acceptance tests E-1/E-2.**
+
+**What `VALIDATION-SPEC-005` §7.5 E-1 claims:** *"The regression HAC estimator `nw_alpha_t(y, X, L)` with `X = [1]` (intercept only) equals `castellan.stats.sr_tstat_nw(y, L)` to 1e-10."* `castellan.stats.ols_alpha_tstat_hac(y, x, lag)` always fits a 2-column design (`X=[1,x]`); the nearest reachable proxy for "intercept only" is `x ≡ 0` (Moore–Penrose OLS then assigns `beta=0`, `alpha=mean(y)` exactly, matching an intercept-only fit's point estimate).
+
+**What was measured, not assumed:** at this reduction, `ols_alpha_tstat_hac(y, zeros, lag).t_alpha == sr_tstat_nw(y, lag) * sqrt(T/(T-1))` **exactly** (double-precision, `rel<1e-12`), confirmed across four lags (`0, 5, 21, 40`) and two sample sizes (`T=300, 500`) — the factor is **lag-invariant**, which is only possible if the two estimators' underlying Bartlett-kernel, `(T-1)`-divisor autocovariance construction is identical (it is: `ols_alpha_tstat_hac`'s HAC "meat" `S` is the RAW, undivided score sum; its "bread" `(X'X)^+` for a single-ones column is exactly `1/T`, giving `Var(alpha_hat)=σ²_NW(L)·(T−1)/T²` — one factor of `T` short of `sr_tstat_nw`'s own `Var(mean)=σ²_NW(L)/T`). **The two are "the same estimator" in the sense §7.5 E-2 intends (same kernel, same divisor) but NOT numerically identical outputs**, contradicting E-1's literal "equals... to 1e-10."
+
+**Materiality:** negligible at this family's `T=2,415` (`sqrt(2415/2414) = 1.00021`) — no band, no reported figure in this dispatch's deliverable is sensitive to a `0.02%` scale factor. Not a defect in the already oracle-verified `ols_alpha_tstat_hac` (`DATA-IMPL-015` matched it to `statsmodels` at `0.0` max abs diff on every case tested) — this is a estimator-CONVENTION footnote neither DATA-IMPL-015's oracle-agreement suite nor any prior test exercised, because none of them fed a degenerate/zero regressor column.
+
+**Resolution:** open — for Head of Quantitative Validation, to correct §7.5 E-1's literal text (either to state the `sqrt(T/(T-1))` factor explicitly, or to note the row applies only qualitatively). Not blocking; not repaired here (this seat does not edit `VALIDATION-SPEC-005`).
+**Pattern tag:** `same-kernel-different-normalization-is-not-the-same-number` · `an-equivalence-claim-no-existing-test-was-shaped-to-exercise`
+
+---
+
+## I-392 · 2026-09-15 · The live `null_calibration` registry event (event_id 10) recorded `alpha_2_ci95: null` due to a dict-key mismatch in the write script; the correct interval is preserved in the pinned `c11_results.json` artifact and in this dispatch's deliverable · Severity: LOW · Owner: head-of-data-infra
+
+**Found by Head of Data & Infrastructure at S4-D-033, reviewing the live write immediately after making it (`book/registry.db`, `events.event_id=10`, `write_grants.grant_id=12`).**
+
+**What happened.** `c11_rehearsal_and_live_write.py::live_write` read `results["primary"].get("alpha_2_ci95")` to populate the event detail, but the primary cell's Clopper–Pearson interval is stored under `results["disclosure_grid_8_cells"]["permutation_L30"]["alpha_2_ci95"]`, not under `results["primary"]`. The `.get()` therefore returned `None`, and the LIVE, UNEDITABLE registry event permanently carries `"alpha_2_ci95": null`.
+
+**Why this is not a STOP and was not repaired by a second write.** The dispatch authorizes exactly ONE live `log_event` call; a second write to correct a cosmetic field would itself be a second, unauthorized live write, which this seat declines to make on its own authority. The correct interval (`[0.0, 0.000369]`, Clopper–Pearson 95%, `B=10,000`) is: (a) present in `research/work/c11_results.json` under `disclosure_grid_8_cells.permutation_L30.alpha_2_ci95`, whose sha256 (`0123c031c93f08311307c42c28820960ff6611998f06a2970e4ee116cbb363cb`) IS pinned inside the live event's own `full_results_artifact_sha256` field; and (b) reported correctly in `DATA-IMPL-016-c11-null-calibration.md`. No figure this dispatch reports anywhere else is affected.
+
+**Resolution:** closed — informational; the pinned artifact hash makes the omission fully recoverable, and no further registry write is authorized to correct a cosmetic field.
+**Pattern tag:** `a-null-field-in-an-append-only-record` · `the-hash-pointer-that-makes-a-typo-recoverable-without-a-second-write`

@@ -1,0 +1,209 @@
+{
+  "test_a1_constant_schedule_matches_trial1_blob": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_a2_anchor_scratch_registry_matches_engine": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_a3_registry_hash_before_after_is_one_event_row": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_a4_costs_read_at_runtime_not_literal": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_a5_periods_per_year_persisted_as_365": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_a6_outer_grant_around_run_backtest_raises_nested_error": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_b1_w_in_zero_one_every_bar": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_b2_w_equals_one_wherever_z_le_d": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_b3_sizing_function_unit_values": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_b4_r1_burnin_first_30_bars_forced_to_one": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_b5_r2_trigger_exactly_30_bars_from_named_date": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_b6_turnover_band_both_branches_occur": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_b7_funding_panel_sha256_matches_trial1": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_b8_index_is_trial1s_2415_bars_terminal_20260811": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_c1_multiset_and_joint_pairing_preserved": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_c2_mean_preserved_exactly_and_c_computed_once": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_c3_no_surrogate_is_identity_and_rejection_branch_forced": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_c4_reproducibility_two_processes_same_seed": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_c5_exactly_81_blocks_and_bijection_at_l30": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_c6_eight_cells_from_independent_spawn_children": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_d1_worst_20_selected_per_series_not_reused": {
+    "method": "inline_dual_construction",
+    "note": "computes worst_k_mean (correct) and worst_k_mean_wrong (reuses R_bench's index set) on the SAME surrogate inline, asserts they differ -- the 'RED' evidence is `wrong` disagreeing with `correct`, exercised every run.",
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_d2_guard_negative_denominator_else_insufficient_data": {
+    "method": "inline_dual_construction",
+    "note": "exercises guarded_m_b's INSUFFICIENT-DATA branch on a synthetic all-positive series inline; the 'RED' case (omitting the guard) is shown by the fact that nullcal.worst_k_mean(all_positive) alone returns a definite (wrong-to-use) number rather than the sentinel.",
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_d3_i0_is_computed_and_is_not_approximately_zero": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_d4_greedy_vs_bruteforce_at_t10_reports_not_asserts_optimum": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_d5_null_percentiles_and_tie_count_reported": {
+    "method": "inline_dual_construction",
+    "note": "computes the tie fraction on a continuous series and on a deliberately-rounded (degenerate) copy inline, asserts the rounded copy's tie fraction is measurably higher -- the flagging logic's discriminating power is exercised in the same run.",
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_e1_reduction_to_mean_nw_tstat": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_e2_same_bartlett_kernel_and_divisor_as_sr_tstat_nw": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_e3_joint_alpha_computed_by_distinct_path_from_product": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_e4_no_print_asserts_a_conclusion": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  },
+  "test_e5_disclosure_grid_all_eight_cells_present": {
+    "method": "external_monkeypatch",
+    "red_exit_code": 1,
+    "red_failed_as_expected": true,
+    "green_exit_code": 0,
+    "green_pass": true
+  }
+}

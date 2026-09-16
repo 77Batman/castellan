@@ -1,0 +1,191 @@
+{
+  "provenance": {
+    "prereg_sha256": "e5ebd3a6db02b97955518bc70db3906918e702f9879d3ad9928223ad6d2a105f",
+    "master_seed": 16567568367804922233,
+    "numpy_version": "2.4.4",
+    "B_resamples": 10000,
+    "K_worst": 20,
+    "trial1_config_hash": "44532cc88ed7b1a9",
+    "trial1_n_bars": 2415
+  },
+  "b7_b8": {
+    "b7_pass": true,
+    "b7_fresh_sha256": "971d037d442cf1a5fb93ad2c797f54938fd6250cccd2079b903d8c853a58c791",
+    "b7_trial1_sha256": "971d037d442cf1a5fb93ad2c797f54938fd6250cccd2079b903d8c853a58c791",
+    "b8_pass": true,
+    "b8_n_bars": 2415,
+    "b8_first": "2020-01-01 00:00:00",
+    "b8_last": "2026-08-11 00:00:00"
+  },
+  "schedule": {
+    "c": 0.939484105777223,
+    "w_bar": {
+      "BTC": 0.8804133149880287,
+      "ETH": 0.8775231081208633
+    },
+    "bars_at_w1": {
+      "BTC": 1736,
+      "ETH": 1084
+    },
+    "forced_bars": {
+      "BTC": 60,
+      "ETH": 60
+    },
+    "triggered_bars": {
+      "BTC": 126,
+      "ETH": 138
+    }
+  },
+  "M_b": -0.0018012695518873645,
+  "guard_d2_M_b_negative": true,
+  "I_0": -8.264792444194992,
+  "I_max_literal_greedy": -30.158395627896102,
+  "I_min_literal_greedy": -35.01727108774797,
+  "I_max_defective_see_I386": true,
+  "primary": {
+    "L": 30,
+    "construction": "permutation",
+    "alpha_2": 0.0,
+    "alpha_1_calibration_only": 0.119,
+    "alpha_joint": 0.0,
+    "product_alpha1_alpha2": 0.0,
+    "independence_gap": 0.0,
+    "I_star_sha256": "20c1774c40886a0e2c66e8c7d65f6624ffb5e15cec2bda62e83806d20a81334c",
+    "null_percentiles_1_5_25_50_75_95_99": [
+      -34.587945217640495,
+      -29.64538328056057,
+      -24.694283228294196,
+      -22.04378309445018,
+      -19.817707809956403,
+      -17.06436500471456,
+      -15.504198172022576
+    ],
+    "tie_count": 0,
+    "tie_fraction": 0.0
+  },
+  "disclosure_grid_8_cells": {
+    "permutation_L21": {
+      "alpha_2": 0.0,
+      "alpha_2_ci95": [
+        0.0,
+        0.0003688199146187622
+      ],
+      "I_star_sha256": "c6a3f22e7cdf20741dce354cb9035e53da47c9ec2a8550f1c70401404f4ab1ae",
+      "spawn_index": 0
+    },
+    "permutation_L30": {
+      "alpha_2": 0.0,
+      "alpha_2_ci95": [
+        0.0,
+        0.0003688199146187622
+      ],
+      "I_star_sha256": "20c1774c40886a0e2c66e8c7d65f6624ffb5e15cec2bda62e83806d20a81334c",
+      "spawn_index": 1
+    },
+    "permutation_L60": {
+      "alpha_2": 0.0,
+      "alpha_2_ci95": [
+        0.0,
+        0.0003688199146187622
+      ],
+      "I_star_sha256": "f92514262d42f8eb6257aae903e613df57ac165c9aa1d375ad8a0351f678c1bc",
+      "spawn_index": 2
+    },
+    "permutation_L90": {
+      "alpha_2": 0.0,
+      "alpha_2_ci95": [
+        0.0,
+        0.0003688199146187622
+      ],
+      "I_star_sha256": "ade1312f02d7ad9306701f42a0f13bbed16a6b17a374058b274168f6da8e906f",
+      "spawn_index": 3
+    },
+    "stationary_L21": {
+      "alpha_2": 0.0,
+      "alpha_2_ci95": [
+        0.0,
+        0.0003688199146187622
+      ],
+      "I_star_sha256": "c3e7f9ac7227a7377ced095d698a9c79f99fbc1372a7185a3bb27ad0c07d91df",
+      "spawn_index": 4,
+      "mean_exposure_deviation_disclosure": {
+        "BTC": [
+          0.006822017188404805,
+          0.028994698092700166,
+          0.004332849572166508,
+          -0.0052427531721529474,
+          -0.015902461553392477,
+          "...B_RESAMPLES total, truncated"
+        ],
+        "BTC_std": 0.015197818368275962,
+        "ETH_std": 0.01277704850973266
+      }
+    },
+    "stationary_L30": {
+      "alpha_2": 0.0,
+      "alpha_2_ci95": [
+        0.0,
+        0.0003688199146187622
+      ],
+      "I_star_sha256": "aa146187ef95c9851d2d326b2ebdcba283a9b15aa2e7fbc114c1808c53936935",
+      "spawn_index": 5,
+      "mean_exposure_deviation_disclosure": {
+        "BTC": [
+          -0.01969417337636703,
+          0.00038057476988884176,
+          -0.023072253030540057,
+          0.009316522738930466,
+          0.00723598446908813,
+          "...B_RESAMPLES total, truncated"
+        ],
+        "BTC_std": 0.017611252550489852,
+        "ETH_std": 0.014559368195020673
+      }
+    },
+    "stationary_L60": {
+      "alpha_2": 0.0,
+      "alpha_2_ci95": [
+        0.0,
+        0.0003688199146187622
+      ],
+      "I_star_sha256": "00715b44d53bba2506e96552a51a8c26bb37ee96c906577b4adc79c5004906db",
+      "spawn_index": 6,
+      "mean_exposure_deviation_disclosure": {
+        "BTC": [
+          -0.011248598799500464,
+          -0.02156739606085456,
+          -0.0021423934348455687,
+          0.01407193904920967,
+          -0.01170214503713829,
+          "...B_RESAMPLES total, truncated"
+        ],
+        "BTC_std": 0.023044787535024047,
+        "ETH_std": 0.017829671413693966
+      }
+    },
+    "stationary_L90": {
+      "alpha_2": 0.0,
+      "alpha_2_ci95": [
+        0.0,
+        0.0003688199146187622
+      ],
+      "I_star_sha256": "96e39ae1d329317e76a05f937562c9b9fc8aa46fad5ffc4541e11b99ee74de24",
+      "spawn_index": 7,
+      "mean_exposure_deviation_disclosure": {
+        "BTC": [
+          0.013820574536328234,
+          -0.016961878594230595,
+          0.03347810960243458,
+          0.03414601781685522,
+          -0.00876486835468182,
+          "...B_RESAMPLES total, truncated"
+        ],
+        "BTC_std": 0.027584834644444663,
+        "ETH_std": 0.02046704132629904
+      }
+    }
+  },
+  "disclosure_alt_denominator_alpha_2": 0.0,
+  "disclosure_costfree_alpha_2": 0.0,
+  "elapsed_seconds": 9.637476921081543
+}
