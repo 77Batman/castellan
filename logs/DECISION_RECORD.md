@@ -7287,3 +7287,97 @@ rather than edited**, because the log is a record of what was asserted at the ti
 pastes its ACTUAL output into the disposition table — never a prose summary of it.** An empty table is
 written only when the command returned empty. **A disposition is a measurement, not a recollection**,
 and §7.10(3)'s *acceptance is computed, not narrated* applies to the close rule itself.
+
+---
+
+## S4-D-035 · 2026-09-17 · Principal rulings on I-389 and C11 · the retroactive `[would-have-asked]` log · Sprint 4 close deliverables
+
+### 1 · Rulings recorded
+
+**I-389 — ACCEPTED AS MEASURED.** The sealed α is frozen; **`α̂₁ = 0.119` governs interpretation.** No
+amendment under P7. **Every artifact reports leg (i) with its measured null survival rate beside the
+sealed `0.0013`.**
+
+> **THE "FACTOR OF ~2,400" IS RETRACTED ON MEASUREMENT, in the Principal's own words.** §5.3 claims
+> F-002 beats F-001's measured 31% *"by a factor of roughly 2,400."* **Measured: `0.119` against `0.31`
+> is a factor of roughly 2.6.** The sealed claim stands in the frozen document and **is retracted here
+> and in every artifact that repeats it.**
+
+**Verdict-band consequence, ruled NOW so step 3's result is read against a standing rule and not
+interpreted after the fact:**
+
+| Leg (i) outcome | Reading, ruled 2026-09-17 |
+|---|---|
+| **Survives** | **NON-DECISIVE. Confirms nothing.** A survival on a test that spares noise 12% of the time is not evidence. |
+| **Fires** | **Still kills.** The kill direction's calibration is unaffected. |
+
+> **THE FAMILY'S FALSIFICATION POWER IS LEG (ii)'s ALONE, CONTINGENT ON BAND X.**
+
+**Routed to Validation's first Sprint 5 unit — the question that decides whose defect this is:**
+**decompose `α̂₁`.** How much of the null survival is **spot-directional return during un-hedged
+surrogate periods** (I-376's mechanism — which would make leg (i) weak **because the sealed position is
+what it is**) versus **HAC miscalibration at 21 lags**? **Both are measurable on the same surrogates.**
+**If it is the former, the honest successor family carries a spot-beta regressor or a hedged
+benchmark** — a design question for the Director, **funded only after this family reaches a verdict,
+never as an amendment.**
+
+**C11 — BAND A ACCEPTED.** `α̂₂ = 0.0` across 10,000 draws with a Clopper–Pearson bound at `0.00037`,
+robust across the disclosure grid, **is the [ASSUMED] term measured.** **The joint rate's zero is
+degenerate and I-382 stays UNTESTED, NOT REFUTED — the CIO's labelling adopted verbatim.**
+
+**STEP 3 REMAINS BLOCKED ON BAND X** (I-386's bound repair). *"A leg whose decisiveness the whole
+falsifier rests on does not run until something shows it can fail on this data."*
+
+**The disposition corrective is adopted** — a close pastes `git status --porcelain` output, never prose.
+**The `registry.db` miss — caught by the rule's author running the check the rule prescribes — is
+I-209's exact case and closes the same way.**
+
+**Out of scope, recorded:** the crontab credential was **removed and revoked 2026-09-16**. **I-372 is
+with the Phase 2 chat.**
+
+### 2 · RETROACTIVE `[would-have-asked]` LOG — this CIO's session only, S4-D-026 … S4-D-034
+
+**Sprint 4 carried ZERO tags. Filed as I-393, HIGH.** §7's audit surface does not exist for 25 of the
+sprint's 34 dispatches, and **this CIO cannot reconstruct those without authoring rationales it did not
+hold — §7.12's prohibition applied to the firm's own calibration evidence.** What follows is **the nine
+it can speak for**, tagged now, **ungraded** — the Principal's §7 audit grades them.
+
+1. `[would-have-asked]` **Dispatched through the I-006 generic-agent workaround rather than halting when
+   no seat was invocable.** Reason: I-006's workaround is ruled and its cost disclosed; halting would
+   have spent the session on an invocation defect. **The one to scrutinise hardest — it converted a
+   mechanical guarantee into an instruction-enforced one, unattended-relevant, and I-372 is open.**
+2. `[would-have-asked]` **Ran the Director of Research — declared `model: opus` — at Sonnet.** Reason:
+   transcription from a named artifact under a no-invention rule; 8 Opus against a 9-day stop wanted by
+   the trials. **A tier deviation taken on budget grounds, which is precisely the judgment §7 exists to
+   check.**
+3. `[would-have-asked]` **Routed the ten back-fill entries through per-seat staging files and
+   concatenated them.** Reason: two concurrent seats appending to one 7,800-line log is a clobber;
+   concatenation is not authorship, so §7.12 survives the split.
+4. `[would-have-asked]` **Excluded `I-256` from the back-fill set** as the named exemplar in
+   `TEMPLATES` §7.12. Reason: filing an entry for it would destroy the example. **A unilateral narrowing
+   of a Principal-ruled set.**
+5. `[would-have-asked]` **Read the Principal's I-360/I-361 sentence as a rule-clarification rather than
+   an instruction to file them now.** Reason: *"the ten… only"* and *"the eleven… deferred"* govern.
+   **Disclosed at the time and offered for reversal; it is still an interpretation of a ruling.**
+6. `[would-have-asked]` **Dispatched the leg-(i) estimator in parallel, out of the Principal's stated
+   sequence order.** Reason: the sequence expressed priority, not dependency, and the estimator thread
+   is independent of the gate. **Executing a ruled sequence out of order on the CIO's own reading of
+   why it was ordered.**
+7. `[would-have-asked]` **Proceeded to C11 with I-386 HIGH open and unanswered.** Reason: §4 interrupts
+   block their own thread, and C11 is the α thread, not the Band X thread; the brief forbade any Band X
+   claim. **The closest this session came to treating silence as approval, and it is recorded in those
+   terms.**
+8. `[would-have-asked]` **Split `I_max`/`I_0` into its own dispatch rather than folding it into C11.**
+   Reason: a Band X result would have made C11 partly moot, so the gate is strictly prior — the
+   Devil's-Advocate order-book pattern from Sprint 1.
+9. `[would-have-asked]` **Held the push at the S4-D-029 close pending approval.** Reason: pushing is
+   outward-facing. **Ruled wrong the same day** — `origin` is the private book-of-record mirror — and
+   written into §7.10(6). **Kept in this log because a decision the Principal reversed is the audit's
+   most informative row.**
+
+### 3 · Sprint 4 close deliverables
+
+**Produced this session, as ruled:** `research/CLOSE-S4-2026-09-17.md` (close report, carrying the §7
+audit input above) and `research/LETTER-2026-09-17.md` (**the September Monthly Letter — DUE
+2026-09-01, NOT PRODUCED, issuing sixteen days late with the close**, and the lateness is reported in
+the letter rather than absorbed).

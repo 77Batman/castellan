@@ -8347,3 +8347,54 @@ unbatched, and their substance is not waiting on their log entries.**
 
 **Resolution:** closed — informational; the pinned artifact hash makes the omission fully recoverable, and no further registry write is authorized to correct a cosmetic field.
 **Pattern tag:** `a-null-field-in-an-append-only-record` · `the-hash-pointer-that-makes-a-typo-recoverable-without-a-second-write`
+
+---
+
+## I-393 · 2026-09-17 · Sprint 4 carries ZERO `[would-have-asked]` tags, so SO-003 §7's calibration audit has no surface for 25 of its 34 dispatches · Severity: HIGH · Owner: CIO
+
+**Found while preparing the §7 audit the Principal requested. The audit cannot be performed as written.**
+
+**Measured:** `logs/DECISION_RECORD.md` from line 5109 (`S4-D-001`) to the end contains **exactly one
+occurrence of `would-have-asked`, and it is the CIO's own reference to the audit at `S4-D-034`**
+[measured — `awk 'NR>=5109 && /would-have-asked/'`]. **No decision in Sprint 4 was tagged.**
+
+**SO-003 §3 requires the tag** — decisions the CIO would previously have checkpointed are tagged with a
+one-line rationale — **and §7 makes those tags the audit surface**: *"At sprint close the Principal
+audits every `[would-have-asked]` entry."* **An untagged sprint is an unauditable sprint**, and the
+order's calibration mechanism measures nothing.
+
+**THIS IS THE THIRD OCCURRENCE AND THE FIRST THAT WENT UNDETECTED UNTIL CLOSE.** Sprint 2's D-003 §3
+recorded *"no `[would-have-asked]` tags applied"* and **repaired it retroactively in the same entry**,
+four tags with rationales. Sprint 2's close then graded **sixteen** entries, *"fourteen clean, one …"*
+[cited — `STANDING-ORDER-002.md` provenance note]. **The mechanism worked once, was repaired once, and
+has now failed silently for an entire sprint** — including the sprint that executed the firm's first
+seal and first trial.
+
+**WHY IT MATTERS MORE THIS SPRINT, NOT LESS.** Sprint 4 is the sprint in which the CIO exercised the most
+consequential unreviewed judgment in the firm's history: **holding the seal**, **holding step 3**,
+**dispatching through the I-006 workaround rather than halting**, **running an Opus-tier seat at
+Sonnet**, and **proceeding to C11 with a HIGH interrupt open and unanswered.** Each is exactly what §3's
+tag exists to surface and §7's audit exists to grade. **None was tagged.**
+
+**THE HALF THAT CANNOT BE REPAIRED, AND SAYING SO IS THE POINT.** The CIO can tag **its own session's**
+decisions retroactively — `S4-D-026` to `S4-D-034`, done at `S4-D-035` §2 — because it took them and
+can state the rationale it actually held. **It CANNOT tag `S4-D-001` to `S4-D-025`.** Those decisions
+were taken in sessions this CIO was not in, and reconstructing a rationale from the decision record's
+prose would be **authoring a seat's reasoning from a description of it — §7.12's exact prohibition**,
+applied to the firm's own calibration evidence. **A fabricated audit surface is worse than an absent
+one, because it grades clean.**
+
+**So the Principal's Sprint 4 calibration audit covers 9 of 34 dispatches, and the other 25 are
+permanently unauditable.** Recorded as a loss, not smoothed into a partial pass.
+
+**Corrective, and it must be mechanical because exhortation has now failed twice.** **The tag is applied
+at the moment the decision is recorded, or the decision-record entry is not complete** — the same shape
+as §7.10(6)'s Oracle-pointer read-back adopted this sprint: **a check that cannot be satisfied by
+remembering.** Recommended form: **every `S<n>-D-nnn` entry carries a `[would-have-asked]` line or an
+explicit `[no-discretion]` line**, so that an untagged entry is visibly malformed rather than invisibly
+compliant. **Silence currently reads identically to "no discretionary decisions were taken," and in this
+sprint it was not.**
+
+**Resolution:** open — **for the Principal**, as a §7 graduation input and a candidate SO-004 amendment.
+The partial retroactive repair is at `S4-D-035` §2.
+**Pattern tag:** `the-audit-surface-that-was-never-written` · `silence-indistinguishable-from-compliance` · `a-governance-check-that-fails-silently` · `unauditable-by-construction-after-the-fact`
