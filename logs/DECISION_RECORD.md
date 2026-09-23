@@ -7381,3 +7381,81 @@ it can speak for**, tagged now, **ungraded** — the Principal's §7 audit grade
 audit input above) and `research/LETTER-2026-09-17.md` (**the September Monthly Letter — DUE
 2026-09-01, NOT PRODUCED, issuing sixteen days late with the close**, and the lateness is reported in
 the letter rather than absorbed).
+
+---
+
+## S4-D-036 · 2026-09-23 · Sprint 4 closed by the Principal · SO-004 drafted · two HIGH findings that contradict premises of the close
+
+`[no-discretion]` on the record of the Principal's act; `[would-have-asked]` tagged individually below,
+under SO-004 §3.2 as drafted.
+
+**Session opened 2026-09-23 after a six-day gap. Sprint hard stop is 2026-09-24 — tomorrow.**
+
+### 1 · The Principal's act, recorded
+
+**SPRINT 4 IS CLOSED** on the report as delivered. Objective 1 **met** — the seal and the firm's first
+trial, the registry moving for the first time since activation. Objective 2 partial. Objective 3
+**vacuous by construction.** Four CIO errors, self-found. The September letter issued **sixteen days
+late, saying so in its first line.**
+
+**I-393's mechanical corrective ADOPTED**, effective SO-004 §3.2. **The 25 untagged dispatches are
+recorded as an audit gap and are NOT reconstructed** — *"writing rationales nobody held would be §7.12
+applied to the firm's own calibration evidence, and the CIO's refusal is the correct act."*
+**Graduation is UNAVAILABLE on Sprint 4 by construction and is not proposed.**
+
+**§7 audit, provisional:** the **push hold — DECIDED DIFFERENTLY, one finding, mild**; **proceeding to
+C11 with I-386 open — CLEAN** (*"my sequencing put C11 before step 3, and I-386 blocks step 3, not
+C11"*). **Three will not be graded from a summary and are pasted verbatim to the Principal this
+message:** the I-006 workaround dispatch, the Opus-tier seat run at Sonnet, and the out-of-order
+execution of the ruled sequence. **The audit finalizes on receipt, before the 24th.**
+
+**Standing rule adopted:** the Monthly Letter issues with **the sprint close nearest the 1st** — SO-004
+§6.1.
+
+**THE CEILING HOLDS AT 12; THE COMPOSITION MOVES TO 10 / 1 / 1.** The 9/2/1 split was sized against a
+**27% termination rate now measured at 0% across two sprints and eighteen Opus dispatches.**
+*"Insurance sized against a risk that measurably retired is not insurance; it's stranded capacity."*
+**The repair is inside the ceiling** — the CIO's twice-repeated recommendation to hold composition was
+the binding constraint on the independent line, and the Principal repaired it without moving the ceiling
+the CIO defended.
+
+### 2 · **`ops/STANDING-ORDER-004.md` DRAFTED FOR SIGNATURE — NOT IN FORCE**
+
+Three objectives verbatim at §1; budget 12 · 10/1/1 at §2; **§3.2 the mechanical tag**; **§3.3
+reconstruction prohibited**; **§6.1 the letter's event trigger**; **§8.1 recording that the composition
+change creates no CIO claim on Validation's units**; **§10 measured opening state.** **It signs when the
+audit finalizes.**
+
+### 3 · I-330 — **THE INSTRUCTION TO CLOSE IS NOT EXECUTED**, and I-395 is why
+
+`[would-have-asked]` **Declined to close I-330 on the Principal's instruction, and filed the reason
+instead.** Reason: **the premise expired.** S4-D-020 §1 recorded *"`AGENTS.md` and `.codex/` absent from
+the tree… so I-330's revocation held"* — **true when written.** Measured today: **`AGENTS.md`, 10,658
+bytes, untracked, mtime 2026-09-15 10:05**, and **`.codex/agents/` holding nine `.toml` files** mirroring
+the nine seats, same mtime — **after the revocation was confirmed.** They were **recreated, not missed.**
+**Closing it would record the firm as having one governing brief while it has two**, in a sprint-close
+document. **The CIO did not delete them either** — the first revocation did that and it did not hold,
+and **a repair to the symptom whose writer is unknown is I-372's own pattern.** §2 reserved.
+
+### 4 · **I-394 · HIGH · the first finding this firm has filed about LOSING DATA**
+
+**The Polymarket depth capture has run at 22.4% of cadence for two weeks and lost 2026-09-19 entirely**
+— 172 of 768 expected books since 2026-09-10; nine DNS failures; **zero observations on the 19th**
+[measured]. **The capture is healthy right now — 20/20 at 14:06:33Z today — and that is why nobody saw
+it.**
+
+**The monitoring defect is the finding.** Every check run on this capture, **including three by the CIO
+this month**, asked *"is it alive?"* **A per-poll success check cannot see a missing poll.** I-047's
+retry — which the Principal praised on 2026-09-15 as *"earning its keep,"* **on the reading the CIO
+supplied** — **converts an outage into a gap and then reports success.**
+
+**The loss is permanent.** I-026 established Polymarket depth is **structurally unreconstructible**;
+Sprint 1's close called every day it runs *"irreplaceable."* **Cause NOT asserted** — `launchctl`,
+`crontab`, `ssh` and `sudo` are denied to every seat, so no seat can inspect the agent; host sleep, a
+mis-scheduled agent and DNS flapping are all consistent, **and naming one unmeasured is the error this
+log exists to record.** **The CIO recommends I-323's snapshot SLA be promoted above the trials it has
+been queued behind since Sprint 3, because the loss accrues daily while the queue does not move.**
+
+### 5 · Disposition — **actual `git status --porcelain`, per the adopted corrective**
+
+Pasted at the commit below, not summarized.

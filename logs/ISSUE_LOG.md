@@ -8398,3 +8398,115 @@ sprint it was not.**
 **Resolution:** open — **for the Principal**, as a §7 graduation input and a candidate SO-004 amendment.
 The partial retroactive repair is at `S4-D-035` §2.
 **Pattern tag:** `the-audit-surface-that-was-never-written` · `silence-indistinguishable-from-compliance` · `a-governance-check-that-fails-silently` · `unauditable-by-construction-after-the-fact`
+
+---
+
+## I-394 · 2026-09-23 · The Polymarket depth capture has been running at 22% of cadence for two weeks and lost 2026-09-19 entirely — the one dataset the firm has called unreconstructible · Severity: HIGH · Owner: head-of-data-infra
+
+**Found at the open of the 2026-09-23 session by checking the capture's continuity rather than its
+liveness. The capture is HEALTHY RIGHT NOW** — last book `2026-09-23T14:06:33Z`, 20/20 token books
+across 10 markets — **and that is exactly why nobody saw this.**
+
+**Measured** [`logs/capture/polymarket-book.out`, counting `captured` lines per day; **900s cadence
+implies 96 books/day**]:
+
+| Date | Books | of 96 |
+|---|---:|---:|
+| 2026-09-15 | 27 | 28% |
+| 2026-09-16 | 15 | 16% |
+| 2026-09-17 | 42 | 44% |
+| 2026-09-18 | 31 | 32% |
+| **2026-09-19** | **0** | **0% — THE DAY IS GONE** |
+| 2026-09-20 | 14 | 15% |
+| 2026-09-21 | 14 | 15% |
+| 2026-09-22 | 24 | 25% |
+| 2026-09-23 (to 14:06Z) | 5 | — |
+
+**172 of 768 expected books since 2026-09-10 — 22.4%.** The crash log carries **nine**
+`URLError(gaierror(8))` DNS failures in that window; the retry recovers the process and **does not
+recover the interval.**
+
+**WHY THIS IS HIGH AND NOT AN OPS ANNOYANCE.** The firm's own record states the case against itself:
+**Polymarket order-book depth is STRUCTURALLY UNRECONSTRUCTIBLE** — resting orders never touch the
+chain (I-026, the finding that killed `forward-lag-001`'s Gate 0) — so **this capture is the only depth
+history the firm will ever have, and every interval it misses is gone permanently.** Sprint 1's close
+recorded it in those terms: *"every day it runs is irreplaceable."* **Roughly three-quarters of a
+fortnight of an irreplaceable series was not captured, and 2026-09-19 has no observations at all.**
+
+**THE MONITORING DEFECT IS THE REAL FINDING.** Every check this firm has run on the capture — including
+**three by the CIO this month** — asked *"is it alive?"* and got *"yes, 20/20."* **A per-poll success
+check cannot see a missing poll.** I-047's retry, praised by the Principal on 2026-09-15 as *"earning
+its keep,"* **is precisely what makes the failure invisible: it converts an outage into a gap and then
+reports success.** The praise was given on the same reading the CIO offered, and the CIO had not counted
+the intervals.
+
+**This is I-362's shape on a data series** — a check that reports success in a form that cannot fail —
+and **I-323's snapshot SLA, queued and unbuilt since Sprint 3, is the control that would have caught
+it.** It has been in the queue behind trials the whole time.
+
+**NOT REPAIRED HERE.** `launchctl`, `crontab`, `ssh` and `sudo` are DENIED to every seat in
+`.claude/settings.json` [measured], so **no seat can inspect the launchd agent, its `StartInterval`, or
+its stderr routing.** The cause is therefore **not measured** and is not asserted: a DNS-flapping host,
+a launchd agent that is not being restarted on the declared interval, and a machine asleep for part of
+each day are all consistent with the data, **and the 2026-09-19 zero is consistent with the host being
+off.** Naming one without measuring it is the error this log exists to record.
+
+**For the Principal, as the only party who can act:** (1) confirm whether the host slept or was off on
+2026-09-19; (2) `launchctl list | grep castellan` and the agent's `StartInterval`; (3) decide whether
+**I-323's snapshot SLA is promoted above the trials it is queued behind** — on this evidence the CIO
+recommends it is, because **the loss is permanent and accrues daily while the queue does not move.**
+
+**Resolution:** open — **HIGH, and the first §4 interrupt this firm has filed about losing data rather
+than about reasoning wrongly.**
+**Pattern tag:** `a-liveness-check-that-cannot-see-a-gap` · `the-retry-that-converts-an-outage-into-invisible-loss` · `irreplaceable-by-construction` · `queued-behind-trials-while-the-loss-accrues`
+
+---
+
+## I-395 · 2026-09-23 · I-330 was closed on a revocation that did not hold — the second orchestrator brief and second seat roster are back on disk, untracked, dated after the revocation was confirmed · Severity: HIGH · Owner: Principal
+
+**Filed at the Principal's instruction to close I-330, after checking the premise rather than executing
+the instruction. §7.14: enumerate before concluding.**
+
+**The instruction, 2026-09-17:** *"I-330 closes on the revocation already recorded."* **A revocation IS
+recorded** — `logs/DECISION_RECORD.md` § S4-D-020 §1 reads *"`AGENTS.md` and `.codex/` absent from the
+tree and from `git status`, so **I-330's revocation held**."* **That statement was true when written.**
+
+**IT IS NOT TRUE NOW** [all measured, 2026-09-23]:
+
+| Artifact | State |
+|---|---|
+| `AGENTS.md` | **present**, 10,658 bytes, **mtime 2026-09-15 10:05**, **untracked** (`git ls-files` → *"did not match any file(s) known to git"*) |
+| `.codex/agents/` | **present**, **nine `.toml` files**, same mtime — `chief-risk-officer`, `devils-advocate`, `director-of-research`, `execution-ops`, `head-of-data-infra`, and the three PMs, and `quant-validation` |
+
+**They mirror the nine seats in `agents/` one-for-one.** The mtimes are **after** S4-D-020 confirmed the
+revocation, so **the artifacts were recreated, not merely missed** — something regenerated them on
+2026-09-15, and **this CIO does not know what, and does not assert it.** The obvious candidate is
+another tool operating in this repository; **candidate is not cause.**
+
+**WHY THIS DOES NOT CLOSE, AND IT IS I-330's OWN REASONING.** I-330 was filed HIGH because **which
+document governs the firm is a Charter §2 reserved question, not settleable by a `git add`** — and by
+the same logic it is not settleable by a deletion that does not stay deleted. **A second seat roster is
+on disk right now.** Closing the finding today would record the firm as having one governing brief while
+it has two, **and the close report and Monthly Letter for a sprint would carry that as fact.**
+
+**The sharper form, because this sprint supplies it.** **I-372** established that seats are invocable or
+not depending on **where the session was launched from** — a property of the invocation, not the
+repository. **A second roster in a second format is exactly the artifact that makes such a defect
+unfalsifiable from inside a transcript**: a run that loads `.codex/agents/*.toml` and a run that loads
+`agents/*.md` are indistinguishable in their output, and **both would report success.**
+
+**NOT DELETED BY THE CIO, and the restraint is the point.** Deleting them is what the first revocation
+did, and it did not hold; **deleting them again without knowing what writes them is a repair to the
+symptom, and this firm has a standing finding about exactly that** (I-372: *a repair to the repository
+for a defect in the invocation*). **Also, `AGENTS.md` may be another tool's required configuration**, in
+which case deleting it breaks that tool silently — and **which documents govern is §2 reserved.**
+
+**For the Principal:** I-330 **stays open**. The act it needs is not a closure but a ruling on (a) what
+regenerates these files, and (b) whether the firm tolerates a second roster in the tree — **tracked and
+subordinate, ignored by name in `.gitignore` so its absence is enforced rather than hoped, or
+prohibited.** **The CIO has not chosen among them.**
+
+**Resolution:** open — **the instruction to close I-330 is respectfully not executed, and this entry is
+why.** The Sprint 4 close report and the September letter both list I-330 as open HIGH; **neither is
+amended, because both were correct.**
+**Pattern tag:** `a-closure-on-a-premise-that-expired` · `a-revocation-that-did-not-hold` · `deleting-a-symptom-whose-writer-is-unknown` · `two-rosters-make-an-invocation-defect-unfalsifiable`
