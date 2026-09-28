@@ -7733,8 +7733,14 @@ is taken rather than be discovered after it.
 4. Any FUTURE vault, for a future family, is where a KDF belongs if Validation wants one; that is a spec
    act, not an implementer's choice.
 
-**Resolution:** open — **disclosure recorded pre-emptively; no action requested.** For the Principal to
-note, and for Validation whenever it next touches `holdout.py`.
+**Resolution:** **CLOSED 2026-09-28 — the exclusion is recorded as a decision, which is the one thing
+this entry asked for.** At `S5-D-001` the Principal ruled a public derived mirror and named
+`book/vaults/*/verifier.json` as excluded from all of its history, *"I-369, exclusion recorded here as
+the decision the CIO asked for."* **Recommendation 1 (do not re-key) stands unexercised and correct;
+recommendation 4 (a KDF belongs in a future vault's spec) remains for Validation whenever it next
+touches `holdout.py`.** **The entry was filed against a publication nobody had proposed, thirteen days
+before one was proposed** — the control existed before the decision that needed it, which is the whole
+argument for filing a threat model pre-emptively rather than at its first failure.
 **Pattern tag:** `unstated-threat-model` · `control-read-broader-than-it-is` · `a-secret-derivative-in-a-tracked-file` · `read-before-publishing`
 
 ---
@@ -8510,3 +8516,143 @@ prohibited.** **The CIO has not chosen among them.**
 why.** The Sprint 4 close report and the September letter both list I-330 as open HIGH; **neither is
 amended, because both were correct.**
 **Pattern tag:** `a-closure-on-a-premise-that-expired` · `a-revocation-that-did-not-hold` · `deleting-a-symptom-whose-writer-is-unknown` · `two-rosters-make-an-invocation-defect-unfalsifiable`
+
+---
+
+## I-396 · 2026-09-28 · The 22 reds are not 22 intentional reds: sixteen are ONE upstream fixture blocker masking the entire acceptance suite for the I-034 sign-error repair, which `PREREG-002` cites as passing · Severity: HIGH · Owner: quant-validation
+
+**Found while verifying a Principal instruction before executing it.** The instruction, for a public
+mirror read by an external reviewer, was to label *"the 22 intentional reds … as Validation-owned."*
+**The label is wrong on its most load-bearing word, and the measurement that shows it also surfaces a
+material defect nobody had looked at.**
+
+### 1 · What the 22 actually are [measured]
+
+| Count | Terminal error | Files |
+|---:|---|---|
+| **16** | **`sqlite3.OperationalError: no such table: write_grants`** — at **fixture setup**, before any assertion runs | `test_carry_accounting.py` **T4 – T18** |
+| 1 | `AssertionError: R-16: corrected MinBTL varies by 1.25× across bar sizes` | `test_minbtl_serial.py` |
+| 1 | `AssertionError: MinBTL=<num> not found in threshold string` | `test_minbtl_serial.py` / `test_seeded_n.py` |
+| 1 | `Failed: DID NOT RAISE RegistryNotInitialized…` | `test_registry_write_grant.py` |
+| 1 | `ValueError: Unknown family 'hac': not registered.` | `test_holdout_p1.py` / `test_seeded_n.py` |
+
+**They are not one population and they are not "intentional."** Sixteen are **a single upstream blocker**
+— a registry constructed without `write_grants` — **and the remaining handful are genuine substantive
+assertion failures.** Calling them twenty-two deliberate reds describes neither group.
+
+### 2 · THE PART THAT IS NOT ABOUT THE README
+
+**`test_carry_accounting.py` T4 – T18 is the acceptance suite for `VALIDATION-RULING-003` — the repair of
+I-034**, the firm's most consequential defect: `carry_per_bar` charging funding on **gross** notional and
+**only ever as a cost**, **−21.9%/yr where a delta-neutral pair receives +10.95%** — 32.85 points of
+error on a 10.95-point edge.
+
+**`PREREG-002` — P7-FROZEN — cites that suite as its evidence the repair landed:** *"`DATA-IMPL-004`
+§5–§6: **All nineteen T-cases are implemented and pass**"*, marked `[measured]`, and on that basis the
+document **struck** its own "breakeven cannot be stated" row.
+
+**Sixteen of those nineteen have not executed since `VALIDATION-SPEC-004`'s write-grant control landed**
+[measured — every one terminates at `registry.py:465`, at setup]. **The repair is not refuted and is not
+verified: the tests that certify it do not run.** The family's entire cost-and-carry treatment rests on
+a citation to a suite that is currently inert, and **the seal froze the citation.**
+
+### 3 · This is §7.10(8), and the firm wrote that rule from this exact shape
+
+*"A masked failure population may not be assessed by sampling. Unmask, then count."* Its origin (I-260 /
+I-261) is `DATA-IMPL-008` reporting *"no new, independent bugs were found"* after **the same SPEC-004
+control broke 149 tests** — because **every traceback in the sampled population terminated at the same
+known blocker by construction.**
+
+**It has happened again, in the same control, and this time it has been sitting behind a count.** "22
+reds" has appeared in every state report this CIO has written — **nine times in one session** — as a
+**stable number**, and stability was read as evidence that nothing was moving. **A constant is not a
+diagnosis.** No one, this seat included, ran one of them to see where it died. **The check that would
+have caught it costs one command and was never run because the number never changed.**
+
+### 4 · What is NOT claimed
+
+**Whether the sixteen would pass once unmasked is NOT measured**, and this entry does not guess. §7.10(8)
+is explicit: **remove the blocker, then count what remains — every instance, not a sample.** That is
+Validation's, and it is **bound by event: before this family's first Gate 1 evaluation**, alongside
+I-326. **Nothing here says the I-034 repair is wrong.** It says **the firm does not currently know**, and
+has been citing a frozen document that says it does.
+
+### 5 · Consequence for the mirror, which is how this was found
+
+**The honest public label is not "22 intentional reds."** It is: **one upstream fixture defect masking
+sixteen acceptance tests, plus a handful of substantive red-first failures — all owned by Validation,
+all bearing on the Gate 1 floor and not on any sealed act.** That is both true and more creditable than
+the instruction's own phrasing, **and a reviewer who runs one of them sees a fixture error, not a
+deliberate red.**
+
+**Resolution:** open — **§4 interrupt to the Principal.** Unmasking is Validation's first-unit work under
+SO-004 §1 objective 1, **bound by event before Gate 1**, and the README is written to the measured
+characterization rather than the instructed one.
+**Pattern tag:** `a-stable-count-read-as-a-diagnosis` · `spec-004-masking-a-population-for-the-second-time` · `a-frozen-citation-to-an-inert-test-suite` · `nobody-ran-one-of-them`
+
+---
+
+## I-397 · 2026-09-28 · The S5-D-001 dispatch brief cites the wrong `## VERDICT` block for the refused-seal link, off by roughly 270 lines · Severity: LOW · Owner: fable-5-cio
+
+**Found while verifying every figure in the S5-D-001 dispatch before writing it into the public-mirror
+README, per that dispatch's own instruction not to take the brief as the source.**
+
+**What was claimed.** The brief pointed to `research/VALIDATION-GATE0-001-forward-lag.md`, **"its
+`## VERDICT` block, ~line 22,"** as the citation for: *"the prior family `forward-lag-001` was
+ADMITTED-AS-EXPLORATORY with the seal refused and Gate 1 structurally unreachable."*
+
+**What is measured.** The document contains three `## VERDICT` headings — line 22, line 116, and line
+292. **Line 22 is Ruling C-001**, on whether inherited `N` deflates the confirmatory forward test —
+unrelated content. **The Gate 0 intake verdict** — `## VERDICT: **ADMITTED-AS-EXPLORATORY**` followed by
+`## **AND THE SEAL IS REFUSED ON THIS TEXT.**`, which is the substance the brief describes — is at
+**§4, line 292** [measured — `grep -n "VERDICT" research/VALIDATION-GATE0-001-forward-lag.md`]. The
+substance the brief attributes to "~line 22" is accurate; the line number is not.
+
+**Consequence.** None to the README as published — this seat located the correct block by content
+before citing it, and the mirror section cites `§4` rather than a line number, which is stable against
+exactly this kind of drift. Filed so the miscite doesn't propagate if a future dispatch reuses this
+brief's line numbers without re-measuring, and because **every number claimed anywhere in the repo**
+gets a number under this log's own doctrine (I-366), including numbers claimed in a dispatch rather
+than a committed file.
+
+**Every other figure in the S5-D-001 brief was re-verified and matched**: `T_STAT_HURDLE`/`DSR_MIN`/
+`PBO_MAX_PAPER` at both cited locations (`gates.py:29/31/32`; `FUND_CHARTER.md:394/353,395/354`); the
+pytest count (393 passed, 22 failed, 415 total); the I-396 16/6 composition; `prereg_sha256` against
+`book/registry.db` `event_id=5`; the paper book (USD 10,000,000, zero positions, zero trades); and the
+KC-002 observation date (`C = 2026-09-15` + 187 days = `2027-03-21`).
+
+**Resolution:** open — informational; no repair needed beyond this entry. Not blocking the README, which
+cites the correct location.
+**Pattern tag:** `a-brief-cited-the-wrong-heading-of-three` · `verified-before-trusted` · `a-number-claimed-in-a-dispatch-still-gets-a-number`
+
+---
+
+## I-398 · 2026-09-28 · The README's first draft pointed an external reviewer at a 1.6 GB file the mirror does not contain, and described the repository from the wrong side of the publication · Severity: LOW · Owner: CIO
+
+**Caught by the CIO reading the draft as the reviewer will read it — standing inside the public mirror,
+not inside this repository.** Four corrections, none of which the drafting seat could have caught from
+the brief, **because the brief did not tell it where the reader would be standing.**
+
+1. **`book/pit.db` does not ship.** The draft named it as the point-in-time store without qualification;
+   it is **1.6 GB and git-ignored** [measured — `.gitignore:8`, `git ls-files` returns nothing for it].
+   **A reviewer clones the mirror, opens `book/`, and finds the file the README just described absent.**
+   Corrected to say so, with what `book/` does contain — `book.db`, `registry.db`, four sealed holdout
+   specs — **and that the tests run without it**, which is the fact that matters to someone deciding
+   whether to bother.
+2. **`~6` where the number is exactly 6.** 22 − 16. **A tilde in a public document invites the reader to
+   check the arithmetic and find the author did not.**
+3. **"`python` is not on this machine's PATH"** — *this machine* means nothing to a stranger with a
+   clone. Generalised without losing the point, which is that **the piped form of the check cannot fail**
+   (I-362).
+4. **The last bullet was written from the private repository's vantage** — *"this repository is a
+   derived, private mirror's source"* — **which is backwards for the only person it is addressed to.**
+   The reviewer is standing in the derived copy. Rewritten so it is true read from either side.
+
+**The general defect, and it is the CIO's:** **the brief specified the reader's expertise and not the
+reader's position.** Every figure in it was verified, and **verification was the wrong axis** — nothing
+in the draft was false in this repository, and three of the four statements were false or meaningless in
+the one being published. **A document written for a copy of itself must be checked from inside the copy.**
+
+**Resolution:** closed — four corrections applied at `README.md` before the commit; **the mirror has not
+been generated, so nothing incorrect was published.**
+**Pattern tag:** `verified-in-the-wrong-repository` · `a-brief-that-specified-the-reader-but-not-their-vantage` · `pointing-at-a-file-the-reader-will-not-have` · `caught-before-publication-not-after`
